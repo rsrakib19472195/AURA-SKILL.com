@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="bn">
 <head>
     <link rel="preconnect" href="https://www.gstatic.com" crossorigin>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -291,11 +291,11 @@
     <div class="flex-1">
 
         <h4 class="text-sm font-bold text-white">
-            Enable Notifications
+            নোটিফিকেশন চালু করুন
         </h4>
 
         <p class="text-xs text-slate-400 mt-0.5">
-            Latest update o alert পেতে নোটিফিকেশন অন করুন।
+            সর্বশেষ আপডেট ও সতর্কতা পেতে নোটিফিকেশন চালু করুন।
         </p>
 
     </div>
@@ -314,7 +314,7 @@
                    rounded-xl
                    transition">
 
-            Allow
+            চালু করুন
 
         </button>
 
@@ -328,7 +328,7 @@
                    text-xs
                    rounded-xl">
 
-            Later
+            পরে
 
         </button>
 
@@ -357,12 +357,12 @@
         </div>
 
         <h1 class="text-2xl font-bold mb-3">
-            Site Maintenance
+            সাইট রক্ষণাবেক্ষণ চলছে
         </h1>
 
         <p class="text-slate-400 text-sm leading-relaxed">
-            Amader site bortomane maintenance-er modhye ache.
-            Kichukhon pore abar chesta korun.
+            আমাদের সাইট বর্তমানে রক্ষণাবেক্ষণের মধ্যে আছে।
+            কিছুক্ষণ পরে আবার চেষ্টা করুন।
         </p>
 
         <div
@@ -377,7 +377,7 @@
         </div>
 
         <div class="mt-5 text-xs text-slate-500">
-            Please try again later.
+            অনুগ্রহ করে পরে আবার চেষ্টা করুন।
         </div>
 
     </div>
@@ -405,7 +405,7 @@
         </div>
 
         <h1 class="text-2xl font-bold mb-3">
-            New Update Available!
+            নতুন আপডেট উপলব্ধ!
         </h1>
 
         <p
@@ -414,8 +414,8 @@
                    text-sm
                    leading-relaxed">
 
-            Apnar app-ti update kora porojon.
-            Doya kore update kore নিন।
+            আপনার অ্যাপটি আপডেট করা প্রয়োজন।
+            দয়া করে আপডেট করে নিন।
 
         </p>
 
@@ -435,7 +435,7 @@
                    transition
                    text-center">
 
-            Update Now
+            এখনই আপডেট করুন
 
         </a>
 
@@ -500,7 +500,7 @@
             id="forgotModalTitle"
             class="text-xl font-bold text-center">
 
-            Password Reset
+            পাসওয়ার্ড রিসেট
 
         </h3>
 
@@ -512,8 +512,8 @@
                    mt-2
                    mb-5">
 
-            Apnar registered Gmail din.
-            Amra password reset link pathabo.
+            আপনার নিবন্ধিত Gmail দিন।
+            আমরা পাসওয়ার্ড রিসেট লিংক পাঠাব।
 
         </p>
 
@@ -521,7 +521,7 @@
             id="forgotEmailInput"
             type="email"
             class="forgot-input"
-            placeholder="Apnar Gmail likhun"
+            placeholder="আপনার Gmail লিখুন"
             autocomplete="email"
         >
 
@@ -537,7 +537,7 @@
                        text-slate-300
                        font-semibold">
 
-                Batil
+                বাতিল
 
             </button>
 
@@ -551,7 +551,7 @@
                        text-white
                        font-bold">
 
-                Link Pathan
+                লিংক পাঠান
 
             </button>
 
@@ -614,7 +614,7 @@
         </h2>
 
         <p class="text-slate-400 text-sm mt-1">
-            Sign in to continue
+            চালিয়ে যেতে লগইন করুন
         </p>
 
     </div>
@@ -634,14 +634,14 @@
                        uppercase
                        mb-1">
 
-                Username or Gmail
+                Username অথবা Gmail
 
             </label>
 
             <input
                 type="text"
                 id="identifier"
-                placeholder="Enter username or Gmail"
+                placeholder="Username অথবা Gmail লিখুন"
                 autocomplete="username"
                 class="w-full
                        px-4
@@ -674,7 +674,7 @@
                 <input
                     type="password"
                     id="password"
-                    placeholder="Enter password"
+                    placeholder="Password লিখুন"
                     autocomplete="current-password"
                     class="w-full
                            px-4
@@ -718,7 +718,7 @@
                         id="remember"
                     >
 
-                    Remember Me
+                    আমাকে মনে রাখুন
 
                 </label>
 
@@ -728,7 +728,7 @@
                     id="forgotBtn"
                     class="text-xs text-blue-400">
 
-                    Forgot password?
+                    পাসওয়ার্ড ভুলে গেছেন?
 
                 </button>
 
@@ -748,7 +748,7 @@
                    font-semibold
                    rounded-xl">
 
-            Login
+            লগইন
 
         </button>
 
@@ -760,13 +760,13 @@
               text-slate-400
               mt-6">
 
-        Don't have an account?
+        আপনার কি কোনো account নেই?
 
         <a
             href="register.html"
             class="text-blue-400 font-semibold">
 
-            Register
+            রেজিস্টার করুন
 
         </a>
 
@@ -776,7 +776,7 @@
 
 
 <!-- ============================================================
-     MAIN JAVASCRIPT
+     JAVASCRIPT
 ============================================================ -->
 
 <script type="module">
@@ -852,9 +852,33 @@ const rememberInput =
 const loginBtn =
     document.getElementById('loginBtn');
 
+const forgotModal =
+    document.getElementById('forgotPasswordModal');
+
+const forgotEmailInput =
+    document.getElementById('forgotEmailInput');
+
+const forgotSendBtn =
+    document.getElementById('forgotSendBtn');
+
+const forgotCancelBtn =
+    document.getElementById('forgotCancelBtn');
+
+const forgotBtn =
+    document.getElementById('forgotBtn');
+
+const allowNotifBtn =
+    document.getElementById('allowNotifBtn');
+
+const closeNotifBtn =
+    document.getElementById('closeNotifBtn');
+
+const customNotifBanner =
+    document.getElementById('customNotifBanner');
+
 
 /* ============================================================
-   GLOBAL STATES
+   STATE
 ============================================================ */
 
 let maintenanceActive = false;
@@ -863,10 +887,42 @@ let loginRedirecting = false;
 
 
 /* ============================================================
+   TIMEOUT HELPER
+============================================================ */
+
+function withTimeout(
+    promise,
+    milliseconds
+) {
+
+    return Promise.race([
+
+        promise,
+
+        new Promise((_, reject) => {
+
+            setTimeout(() => {
+
+                reject(
+                    new Error(
+                        'REQUEST_TIMEOUT'
+                    )
+                );
+
+            }, milliseconds);
+
+        })
+
+    ]);
+
+}
+
+
+/* ============================================================
    TOAST
 ============================================================ */
 
-window.showToast = function(
+function showToast(
     message,
     type = 'success'
 ) {
@@ -876,22 +932,41 @@ window.showToast = function(
             'toastContainer'
         );
 
-    if (!container) return;
+    if (!container) {
+        return;
+    }
 
 
     const toast =
         document.createElement('div');
 
 
-    let bg = 'bg-emerald-600';
+    let icon =
+        'fa-circle-check';
+
+    let bg =
+        'bg-emerald-600';
 
 
     if (type === 'error') {
-        bg = 'bg-rose-600';
+
+        icon =
+            'fa-circle-exclamation';
+
+        bg =
+            'bg-rose-600';
+
     }
 
+
     if (type === 'warning') {
-        bg = 'bg-amber-600';
+
+        icon =
+            'fa-triangle-exclamation';
+
+        bg =
+            'bg-amber-600';
+
     }
 
 
@@ -903,201 +978,209 @@ window.showToast = function(
          rounded-xl
          text-sm
          shadow-xl
+         flex
+         items-center
+         gap-2
          toast`;
 
 
-    toast.innerText = message;
+    toast.innerHTML =
+        `
+        <i class="fa-solid ${icon}"></i>
+        <span>${message}</span>
+        `;
 
 
     container.appendChild(toast);
 
 
     setTimeout(() => {
-        toast.remove();
-    }, 3000);
 
-};
+        toast.remove();
+
+    }, 3500);
+
+}
 
 
 /* ============================================================
    ONESIGNAL
+   NEVER BLOCK LOGIN
 ============================================================ */
 
-/*
- * IMPORTANT:
- * OneSignal is initialized in background.
- *
- * Login does NOT wait for this.
- */
+function startOneSignal() {
 
-initOneSignal()
+    Promise.race([
+
+        initOneSignal(),
+
+        new Promise(resolve => {
+
+            setTimeout(
+                () => resolve(null),
+                5000
+            );
+
+        })
+
+    ])
     .then(() => {
 
         console.log(
-            '✅ OneSignal initialized'
+            'OneSignal background ready'
         );
 
     })
     .catch(error => {
 
         console.warn(
-            '⚠️ OneSignal initialization failed:',
+            'OneSignal error:',
             error
         );
 
     });
 
+}
+
+
+startOneSignal();
+
 
 /* ============================================================
-   NOTIFICATION BANNER
+   NOTIFICATION PERMISSION
 ============================================================ */
 
-window.addEventListener('load', () => {
+if (allowNotifBtn) {
 
-    const banner =
-        document.getElementById(
-            'customNotifBanner'
-        );
-
-    const allowBtn =
-        document.getElementById(
-            'allowNotifBtn'
-        );
-
-    const closeBtn =
-        document.getElementById(
-            'closeNotifBtn'
-        );
-
-
-    if (!banner || !allowBtn || !closeBtn) {
-        return;
-    }
-
-
-    if (
-        'Notification' in window &&
-        Notification.permission === 'granted'
-    ) {
-
-        banner.style.display = 'none';
-
-        return;
-
-    }
-
-
-    setTimeout(() => {
-
-        if (
-            'Notification' in window &&
-            Notification.permission !== 'granted'
-        ) {
-
-            banner.classList.add('show');
-
-        }
-
-    }, 2000);
-
-
-    /* ========================================================
-       ALLOW
-    ======================================================== */
-
-    allowBtn.addEventListener(
+    allowNotifBtn.addEventListener(
         'click',
         async () => {
 
-            banner.classList.remove('show');
+            allowNotifBtn.disabled =
+                true;
 
-            allowBtn.disabled = true;
+            const oldText =
+                allowNotifBtn.textContent;
 
-            allowBtn.textContent =
-                'Enabling...';
+            allowNotifBtn.textContent =
+                'চালু হচ্ছে...';
 
 
             try {
 
-                const granted =
-                    await requestOneSignalPermission();
-
-
-                if (granted) {
-
-                    localStorage.setItem(
-                        'notif_permission_status',
-                        'granted'
+                const result =
+                    await withTimeout(
+                        requestOneSignalPermission(),
+                        7000
                     );
 
 
-                    showToast(
-                        'Notification enabled successfully! 🎉',
-                        'success'
-                    );
+                if (
+                    result === false
+                ) {
 
-                } else {
-
-                    localStorage.setItem(
-                        'notif_permission_status',
-                        'denied'
-                    );
-
-
-                    showToast(
-                        'Notification permission দেওয়া হয়নি।',
-                        'warning'
+                    throw new Error(
+                        'NOTIFICATION_FAILED'
                     );
 
                 }
 
+
+                customNotifBanner.classList.remove(
+                    'show'
+                );
+
+
+                showToast(
+                    'নোটিফিকেশন সফলভাবে চালু হয়েছে! 🎉',
+                    'success'
+                );
+
+
             } catch (error) {
 
-                console.error(
+                console.warn(
                     'Notification error:',
                     error
                 );
 
 
                 showToast(
-                    'Notification enable করা যায়নি।',
+                    'নোটিফিকেশন চালু করা যায়নি।',
                     'error'
                 );
 
+
             } finally {
 
-                allowBtn.disabled = false;
+                allowNotifBtn.disabled =
+                    false;
 
-                allowBtn.textContent =
-                    'Allow';
+                allowNotifBtn.textContent =
+                    oldText;
 
             }
 
         }
     );
 
+}
 
-    /* ========================================================
-       LATER
-    ======================================================== */
 
-    closeBtn.addEventListener(
+if (closeNotifBtn) {
+
+    closeNotifBtn.addEventListener(
         'click',
         () => {
 
-            banner.classList.remove('show');
+            customNotifBanner.classList.remove(
+                'show'
+            );
 
         }
     );
 
-});
+}
+
+
+/* ============================================================
+   SHOW NOTIFICATION BANNER
+============================================================ */
+
+window.addEventListener(
+    'load',
+    () => {
+
+        setTimeout(() => {
+
+            if (
+                'Notification' in window &&
+                Notification.permission ===
+                'granted'
+            ) {
+
+                return;
+
+            }
+
+
+            customNotifBanner.classList.add(
+                'show'
+            );
+
+        }, 2000);
+
+    }
+);
 
 
 /* ============================================================
    MAINTENANCE
 ============================================================ */
 
-function applyMaintenance(data = {}) {
+function applyMaintenance(
+    data = {}
+) {
 
     maintenanceActive =
         data.enabled === true;
@@ -1107,7 +1190,7 @@ function applyMaintenance(data = {}) {
 
         maintenanceReason.textContent =
             data.reason ||
-            'Sitet bortomane maintenance-er modhye ache.';
+            'সাইট বর্তমানে রক্ষণাবেক্ষণের মধ্যে আছে।';
 
 
         maintenanceScreen.style.display =
@@ -1115,9 +1198,6 @@ function applyMaintenance(data = {}) {
 
         loginCard.style.display =
             'none';
-
-        document.body.style.overflow =
-            'hidden';
 
     } else {
 
@@ -1128,9 +1208,6 @@ function applyMaintenance(data = {}) {
         if (!updateActive) {
 
             loginCard.style.display =
-                '';
-
-            document.body.style.overflow =
                 '';
 
         }
@@ -1144,7 +1221,9 @@ function applyMaintenance(data = {}) {
    UPDATE
 ============================================================ */
 
-function applyUpdate(data = {}) {
+function applyUpdate(
+    data = {}
+) {
 
     updateActive =
         data.enabled === true ||
@@ -1155,7 +1234,7 @@ function applyUpdate(data = {}) {
 
         updateMessage.textContent =
             data.message ||
-            'Apnar app-ti update kora porojon. Doya kore update kore নিন।';
+            'আপনার অ্যাপটি আপডেট করা প্রয়োজন। দয়া করে আপডেট করে নিন।';
 
 
         updateLinkBtn.href =
@@ -1170,9 +1249,6 @@ function applyUpdate(data = {}) {
         loginCard.style.display =
             'none';
 
-        document.body.style.overflow =
-            'hidden';
-
     } else {
 
         updateScreen.style.display =
@@ -1184,9 +1260,6 @@ function applyUpdate(data = {}) {
             loginCard.style.display =
                 '';
 
-            document.body.style.overflow =
-                '';
-
         }
 
     }
@@ -1195,70 +1268,38 @@ function applyUpdate(data = {}) {
 
 
 /* ============================================================
-   FIREBASE STARTUP CHECK
+   STARTUP DATA
 ============================================================ */
-
-/*
- * IMPORTANT:
- *
- * This function has a timeout.
- * Firebase slow/hang korleo login আটকে থাকবে না.
- */
 
 async function checkStartupData() {
 
     try {
 
-        const timeoutPromise =
-            new Promise(resolve => {
-
-                setTimeout(() => {
-
-                    console.warn(
-                        '⚠️ Startup check timeout'
-                    );
-
-                    resolve(null);
-
-                }, 5000);
-
-            });
-
-
-        const firebasePromise =
-            Promise.all([
-
-                getDoc(
-                    doc(
-                        db,
-                        'settings',
-                        'siteMaintenance'
-                    )
-                ),
-
-                getDoc(
-                    doc(
-                        db,
-                        'settings',
-                        'appUpdate'
-                    )
-                )
-
-            ]);
-
-
         const result =
-            await Promise.race([
-                firebasePromise,
-                timeoutPromise
-            ]);
+            await withTimeout(
 
+                Promise.all([
 
-        if (!result) {
+                    getDoc(
+                        doc(
+                            db,
+                            'settings',
+                            'siteMaintenance'
+                        )
+                    ),
 
-            return false;
+                    getDoc(
+                        doc(
+                            db,
+                            'settings',
+                            'appUpdate'
+                        )
+                    )
 
-        }
+                ]),
+
+                5000
+            );
 
 
         const [
@@ -1281,37 +1322,23 @@ async function checkStartupData() {
         );
 
 
-        return (
-            maintenanceActive ||
-            updateActive
-        );
-
-
     } catch (error) {
 
-        console.error(
-            'STARTUP CHECK ERROR:',
+        console.warn(
+            'Startup data skipped:',
             error
         );
-
-
-        /*
-         * Error hole login block korbo na.
-         */
-
-        return false;
 
     }
 
 }
 
 
-const startupCheckPromise =
-    checkStartupData();
+checkStartupData();
 
 
 /* ============================================================
-   REALTIME MAINTENANCE LISTENER
+   REALTIME MAINTENANCE
 ============================================================ */
 
 try {
@@ -1337,7 +1364,7 @@ try {
         error => {
 
             console.warn(
-                'Maintenance listener error:',
+                'Maintenance listener:',
                 error
             );
 
@@ -1347,15 +1374,13 @@ try {
 
 } catch (error) {
 
-    console.warn(
-        error
-    );
+    console.warn(error);
 
 }
 
 
 /* ============================================================
-   REALTIME UPDATE LISTENER
+   REALTIME UPDATE
 ============================================================ */
 
 try {
@@ -1381,7 +1406,7 @@ try {
         error => {
 
             console.warn(
-                'Update listener error:',
+                'Update listener:',
                 error
             );
 
@@ -1391,9 +1416,7 @@ try {
 
 } catch (error) {
 
-    console.warn(
-        error
-    );
+    console.warn(error);
 
 }
 
@@ -1403,10 +1426,18 @@ try {
 ============================================================ */
 
 document
-    .getElementById('togglePasswordBtn')
+    .getElementById(
+        'togglePasswordBtn'
+    )
     .addEventListener(
         'click',
         () => {
+
+            const eye =
+                document.getElementById(
+                    'eyeIcon'
+                );
+
 
             if (
                 passwordInput.type ===
@@ -1416,12 +1447,7 @@ document
                 passwordInput.type =
                     'text';
 
-
-                document
-                    .getElementById(
-                        'eyeIcon'
-                    )
-                    .className =
+                eye.className =
                     'fa-regular fa-eye';
 
             } else {
@@ -1429,12 +1455,7 @@ document
                 passwordInput.type =
                     'password';
 
-
-                document
-                    .getElementById(
-                        'eyeIcon'
-                    )
-                    .className =
+                eye.className =
                     'fa-regular fa-eye-slash';
 
             }
@@ -1444,7 +1465,7 @@ document
 
 
 /* ============================================================
-   FIND EMAIL BY USERNAME
+   FIND USER EMAIL
 ============================================================ */
 
 async function findEmailByUsername(
@@ -1458,150 +1479,48 @@ async function findEmailByUsername(
         clean.toLowerCase();
 
 
-    /*
-     * usernameLower
-     */
-
     try {
 
         const snapshot =
-            await getDocs(
+            await withTimeout(
 
-                query(
-                    collection(
-                        db,
-                        'users'
-                    ),
+                getDocs(
 
-                    where(
-                        'usernameLower',
-                        '==',
-                        lower
-                    ),
+                    query(
+                        collection(
+                            db,
+                            'users'
+                        ),
 
-                    limit(1)
-                )
+                        where(
+                            'usernameLower',
+                            '==',
+                            lower
+                        ),
 
+                        limit(1)
+                    )
+
+                ),
+
+                7000
             );
 
 
         if (
-            !snapshot.empty &&
-            snapshot.docs[0]
-                .data()
-                .email
-        ) {
-
-            return String(
-                snapshot.docs[0]
-                    .data()
-                    .email
-            ).trim();
-
-        }
-
-    } catch (error) {
-
-        console.warn(
-            'usernameLower search:',
-            error
-        );
-
-    }
-
-
-    /*
-     * username
-     */
-
-    try {
-
-        const snapshot =
-            await getDocs(
-
-                query(
-                    collection(
-                        db,
-                        'users'
-                    ),
-
-                    where(
-                        'username',
-                        '==',
-                        clean
-                    ),
-
-                    limit(1)
-                )
-
-            );
-
-
-        if (
-            !snapshot.empty &&
-            snapshot.docs[0]
-                .data()
-                .email
-        ) {
-
-            return String(
-                snapshot.docs[0]
-                    .data()
-                    .email
-            ).trim();
-
-        }
-
-    } catch (error) {
-
-        console.warn(
-            'username search:',
-            error
-        );
-
-    }
-
-
-    /*
-     * Fallback
-     */
-
-    try {
-
-        const snapshot =
-            await getDocs(
-                collection(
-                    db,
-                    'users'
-                )
-            );
-
-
-        for (
-            const item
-            of snapshot.docs
+            !snapshot.empty
         ) {
 
             const data =
-                item.data() || {};
+                snapshot.docs[0]
+                    .data();
 
 
-            if (
-                String(
-                    data.username || ''
-                )
-                .trim()
-                .toLowerCase() ===
-                lower
-            ) {
+            if (data.email) {
 
-                if (data.email) {
-
-                    return String(
-                        data.email
-                    ).trim();
-
-                }
+                return String(
+                    data.email
+                ).trim();
 
             }
 
@@ -1610,7 +1529,64 @@ async function findEmailByUsername(
     } catch (error) {
 
         console.warn(
-            'Fallback username search:',
+            'Username lower search:',
+            error
+        );
+
+    }
+
+
+    try {
+
+        const snapshot =
+            await withTimeout(
+
+                getDocs(
+
+                    query(
+                        collection(
+                            db,
+                            'users'
+                        ),
+
+                        where(
+                            'username',
+                            '==',
+                            clean
+                        ),
+
+                        limit(1)
+                    )
+
+                ),
+
+                7000
+            );
+
+
+        if (
+            !snapshot.empty
+        ) {
+
+            const data =
+                snapshot.docs[0]
+                    .data();
+
+
+            if (data.email) {
+
+                return String(
+                    data.email
+                ).trim();
+
+            }
+
+        }
+
+    } catch (error) {
+
+        console.warn(
+            'Username search:',
             error
         );
 
@@ -1633,22 +1609,15 @@ loginForm.addEventListener(
         event.preventDefault();
 
 
-        /*
-         * IMPORTANT:
-         *
-         * এখানে আর
-         * await startupCheckPromise
-         * নেই.
-         *
-         * তাই Firebase startup check-এর
-         * জন্য login আটকে থাকবে না.
-         */
+        if (loginRedirecting) {
+            return;
+        }
 
 
         if (maintenanceActive) {
 
             showToast(
-                'Site bortomane maintenance-e ache.',
+                'সাইট বর্তমানে রক্ষণাবেক্ষণের মধ্যে আছে।',
                 'warning'
             );
 
@@ -1660,7 +1629,7 @@ loginForm.addEventListener(
         if (updateActive) {
 
             showToast(
-                'App update kora porojon.',
+                'অ্যাপ আপডেট করা প্রয়োজন।',
                 'warning'
             );
 
@@ -1675,14 +1644,11 @@ loginForm.addEventListener(
         const password =
             passwordInput.value;
 
-        const remember =
-            rememberInput.checked;
-
 
         if (!identifier) {
 
             showToast(
-                'Username othoba Gmail din',
+                'Username অথবা Gmail দিন।',
                 'warning'
             );
 
@@ -1696,7 +1662,7 @@ loginForm.addEventListener(
         if (!password) {
 
             showToast(
-                'Password din',
+                'Password দিন।',
                 'warning'
             );
 
@@ -1707,47 +1673,48 @@ loginForm.addEventListener(
         }
 
 
-        if (loginRedirecting) {
-            return;
-        }
-
-
         loginBtn.disabled =
             true;
 
 
         loginBtn.innerHTML =
-            '<i class="fa-solid fa-spinner fa-spin mr-2"></i>Signing in...';
+            '<i class="fa-solid fa-spinner fa-spin mr-2"></i>লগইন হচ্ছে...';
 
 
         try {
 
-            /*
-             * Firebase persistence
-             */
+            /* ================================================
+               PERSISTENCE
+            ================================================ */
 
             try {
 
-                await setPersistence(
-                    auth,
-                    remember
-                        ? browserLocalPersistence
-                        : browserSessionPersistence
+                await withTimeout(
+
+                    setPersistence(
+                        auth,
+
+                        rememberInput.checked
+                            ? browserLocalPersistence
+                            : browserSessionPersistence
+                    ),
+
+                    5000
                 );
 
             } catch (error) {
 
                 console.warn(
-                    'Persistence warning:',
+                    'Persistence skipped:',
                     error
                 );
 
             }
 
 
-            /*
-             * Get email
-             */
+            /* ================================================
+               GET EMAIL
+            ================================================ */
 
             let email;
 
@@ -1772,7 +1739,7 @@ loginForm.addEventListener(
             if (!email) {
 
                 showToast(
-                    'Ei username diye account paoa jayni.',
+                    'এই username দিয়ে কোনো account পাওয়া যায়নি।',
                     'error'
                 );
 
@@ -1783,53 +1750,50 @@ loginForm.addEventListener(
             }
 
 
-            /* ==================================================
+            /* ================================================
                FIREBASE LOGIN
-            ================================================== */
+               OneSignal এখানে নেই
+            ================================================ */
+
+            console.log(
+                'Firebase login started'
+            );
+
 
             const credential =
-                await signInWithEmailAndPassword(
-                    auth,
-                    email,
-                    password
+                await withTimeout(
+
+                    signInWithEmailAndPassword(
+                        auth,
+                        email,
+                        password
+                    ),
+
+                    12000
                 );
 
-
-            if (!credential.user) {
-
-                throw new Error(
-                    'Firebase user পাওয়া যায়নি.'
-                );
-
-            }
-
-
-            /* ==================================================
-               CHECK MAINTENANCE / UPDATE
-            ================================================== */
 
             if (
-                maintenanceActive ||
-                updateActive
+                !credential ||
+                !credential.user
             ) {
 
-                await auth.signOut();
-
-                resetLoginButton();
-
-                return;
+                throw new Error(
+                    'LOGIN_FAILED'
+                );
 
             }
 
 
-            /* ==================================================
-               ONE SIGNAL LINK
-               
-               IMPORTANT:
-               এটা await করা হচ্ছে না.
-               
-               অর্থাৎ login আটকে থাকবে না.
-            ================================================== */
+            console.log(
+                'Firebase login successful'
+            );
+
+
+            /* ================================================
+               ONESIGNAL BACKGROUND
+               NEVER AWAIT
+            ================================================ */
 
             Promise.resolve()
                 .then(
@@ -1841,38 +1805,43 @@ loginForm.addEventListener(
                 .then(() => {
 
                     console.log(
-                        '✅ Firebase UID linked with OneSignal:',
-                        credential.user.uid
+                        'OneSignal user linked'
                     );
 
                 })
                 .catch(error => {
 
                     console.warn(
-                        '⚠️ OneSignal linking failed:',
+                        'OneSignal link failed:',
                         error
                     );
 
                 });
 
 
-            /* ==================================================
-               LOGIN SUCCESS
-            ================================================== */
+            /* ================================================
+               SUCCESS
+            ================================================ */
 
             loginRedirecting =
                 true;
 
 
             showToast(
-                'Login successful! Welcome back 🎉💚',
+                'লগইন সফল হয়েছে! আবার স্বাগতম 🎉💚',
                 'success'
             );
 
 
+            loginBtn.innerHTML =
+                '<i class="fa-solid fa-circle-check mr-2"></i>সফল হয়েছে';
+
+
             /*
-             * Login success হলে
-             * সরাসরি redirect.
+             * Firebase login সফল হলেই
+             * index.html-এ যাবে।
+             *
+             * OneSignal-এর জন্য অপেক্ষা করবে না।
              */
 
             setTimeout(
@@ -1896,66 +1865,72 @@ loginForm.addEventListener(
 
 
             let message =
-                'Login korte somossa hoyeche.';
+                'লগইন করতে সমস্যা হয়েছে।';
 
 
-            switch (error.code) {
+            if (
+                error.message ===
+                'REQUEST_TIMEOUT'
+            ) {
 
-                case 'auth/invalid-credential':
+                message =
+                    'সার্ভার থেকে উত্তর পেতে বেশি সময় লাগছে। আবার চেষ্টা করুন।';
 
-                case 'auth/wrong-password':
+            } else if (
+                error.code ===
+                'auth/invalid-credential'
+            ) {
 
-                case 'auth/user-not-found':
+                message =
+                    'Username/Gmail অথবা Password ভুল।';
 
-                    message =
-                        'Username/Gmail othoba Password bhul!';
+            } else if (
+                error.code ===
+                'auth/wrong-password'
+            ) {
 
-                    break;
+                message =
+                    'Password ভুল হয়েছে।';
 
+            } else if (
+                error.code ===
+                'auth/user-not-found'
+            ) {
 
-                case 'auth/invalid-email':
+                message =
+                    'এই account পাওয়া যায়নি।';
 
-                    message =
-                        'Gmail address sothik noy.';
+            } else if (
+                error.code ===
+                'auth/invalid-email'
+            ) {
 
-                    break;
+                message =
+                    'Gmail address সঠিক নয়।';
 
+            } else if (
+                error.code ===
+                'auth/too-many-requests'
+            ) {
 
-                case 'auth/too-many-requests':
+                message =
+                    'অনেকবার চেষ্টা করা হয়েছে। কিছুক্ষণ পরে আবার চেষ্টা করুন।';
 
-                    message =
-                        'Anekbar bhul chesta hoyeche. Kichukhon pore abar chesta korun.';
+            } else if (
+                error.code ===
+                'auth/network-request-failed'
+            ) {
 
-                    break;
+                message =
+                    'Internet connection-এ সমস্যা হয়েছে।';
 
+            } else if (
+                error.code ===
+                'auth/user-disabled'
+            ) {
 
-                case 'auth/network-request-failed':
-
-                    message =
-                        'Internet connection somossa hoyeche.';
-
-                    break;
-
-
-                case 'auth/user-disabled':
-
-                    message =
-                        'Ei account bondho kora hoyeche.';
-
-                    break;
-
-
-                default:
-
-                    if (
-                        error.message &&
-                        error.message.length < 200
-                    ) {
-
-                        message =
-                            error.message;
-
-                    }
+                message =
+                    'এই account বন্ধ করে দেওয়া হয়েছে।';
 
             }
 
@@ -1984,7 +1959,7 @@ function resetLoginButton() {
         false;
 
     loginBtn.innerHTML =
-        'Login';
+        'লগইন';
 
 }
 
@@ -1997,19 +1972,21 @@ onAuthStateChanged(
     auth,
     user => {
 
-        /*
-         * এখানে startupCheckPromise-এর জন্য
-         * অপেক্ষা করা হচ্ছে না.
-         */
+        if (user) {
 
-        if (!user) {
-            return;
+            console.log(
+                'Firebase user:',
+                user.uid
+            );
+
         }
 
+    },
+    error => {
 
-        console.log(
-            'Current Firebase user:',
-            user.uid
+        console.warn(
+            'Auth state error:',
+            error
         );
 
     }
@@ -2017,67 +1994,43 @@ onAuthStateChanged(
 
 
 /* ============================================================
-   FORGOT PASSWORD
+   FORGOT PASSWORD OPEN
 ============================================================ */
 
-const forgotModal =
-    document.getElementById(
-        'forgotPasswordModal'
-    );
+forgotBtn.addEventListener(
+    'click',
+    () => {
 
-const forgotEmailInput =
-    document.getElementById(
-        'forgotEmailInput'
-    );
+        forgotModal.classList.add(
+            'show'
+        );
 
-const forgotSendBtn =
-    document.getElementById(
-        'forgotSendBtn'
-    );
-
-const forgotCancelBtn =
-    document.getElementById(
-        'forgotCancelBtn'
-    );
+        forgotModal.setAttribute(
+            'aria-hidden',
+            'false'
+        );
 
 
-document
-    .getElementById('forgotBtn')
-    .addEventListener(
-        'click',
-        () => {
-
-            if (
-                maintenanceActive ||
-                updateActive
-            ) {
-
-                return;
-
-            }
+        forgotEmailInput.value =
+            '';
 
 
-            forgotModal.classList.add(
-                'show'
-            );
+        setTimeout(
+            () => {
+
+                forgotEmailInput.focus();
+
+            },
+            100
+        );
+
+    }
+);
 
 
-            forgotEmailInput.value =
-                '';
-
-
-            setTimeout(
-                () => {
-
-                    forgotEmailInput.focus();
-
-                },
-                80
-            );
-
-        }
-    );
-
+/* ============================================================
+   FORGOT PASSWORD CLOSE
+============================================================ */
 
 forgotCancelBtn.addEventListener(
     'click',
@@ -2085,6 +2038,11 @@ forgotCancelBtn.addEventListener(
 
         forgotModal.classList.remove(
             'show'
+        );
+
+        forgotModal.setAttribute(
+            'aria-hidden',
+            'true'
         );
 
     }
@@ -2104,6 +2062,11 @@ forgotModal.addEventListener(
                 'show'
             );
 
+            forgotModal.setAttribute(
+                'aria-hidden',
+                'true'
+            );
+
         }
 
     }
@@ -2111,7 +2074,7 @@ forgotModal.addEventListener(
 
 
 /* ============================================================
-   SEND RESET EMAIL
+   SEND PASSWORD RESET
 ============================================================ */
 
 forgotSendBtn.addEventListener(
@@ -2119,11 +2082,9 @@ forgotSendBtn.addEventListener(
     async () => {
 
         const email =
-            String(
-                forgotEmailInput.value || ''
-            )
-            .trim()
-            .toLowerCase();
+            forgotEmailInput.value
+                .trim()
+                .toLowerCase();
 
 
         if (
@@ -2131,12 +2092,10 @@ forgotSendBtn.addEventListener(
             !email.includes('@')
         ) {
 
-            document
-                .getElementById(
-                    'forgotModalText'
-                )
-                .textContent =
-                'Doya kore ekti sothik Gmail address din.';
+            document.getElementById(
+                'forgotModalText'
+            ).textContent =
+                'দয়া করে একটি সঠিক Gmail ঠিকানা দিন।';
 
             return;
 
@@ -2148,31 +2107,32 @@ forgotSendBtn.addEventListener(
 
 
         forgotSendBtn.textContent =
-            'Pathano hocche...';
+            'পাঠানো হচ্ছে...';
 
 
         try {
 
-            await sendPasswordResetEmail(
-                auth,
-                email
+            await withTimeout(
+
+                sendPasswordResetEmail(
+                    auth,
+                    email
+                ),
+
+                10000
             );
 
 
-            document
-                .getElementById(
-                    'forgotModalTitle'
-                )
-                .textContent =
-                'Reset Link pathano hoyeche ✓';
+            document.getElementById(
+                'forgotModalTitle'
+            ).textContent =
+                'রিসেট লিংক পাঠানো হয়েছে ✓';
 
 
-            document
-                .getElementById(
-                    'forgotModalText'
-                )
-                .innerHTML =
-                'Apnar Gmail-e password reset link pathano hoyeche।<br><br><b class="text-amber-300">Spam / Junk folder-tio check korun।</b>';
+            document.getElementById(
+                'forgotModalText'
+            ).innerHTML =
+                'আপনার Gmail-এ পাসওয়ার্ড রিসেট লিংক পাঠানো হয়েছে।<br><br><b class="text-amber-300">Spam / Junk folder-টিও পরীক্ষা করুন।</b>';
 
 
             forgotEmailInput.style.display =
@@ -2180,7 +2140,7 @@ forgotSendBtn.addEventListener(
 
 
             forgotCancelBtn.textContent =
-                'Bondho korun';
+                'বন্ধ করুন';
 
 
             forgotSendBtn.style.display =
@@ -2188,7 +2148,7 @@ forgotSendBtn.addEventListener(
 
 
             showToast(
-                'Password reset link Gmail-e pathano hoyeche.',
+                'পাসওয়ার্ড রিসেট লিংক Gmail-এ পাঠানো হয়েছে।',
                 'success'
             );
 
@@ -2202,7 +2162,7 @@ forgotSendBtn.addEventListener(
 
 
             let message =
-                'Password reset kora jayni.';
+                'পাসওয়ার্ড রিসেট করা যায়নি।';
 
 
             if (
@@ -2211,7 +2171,7 @@ forgotSendBtn.addEventListener(
             ) {
 
                 message =
-                    'Ei Gmail diye kono account paoa jayni.';
+                    'এই Gmail দিয়ে কোনো account পাওয়া যায়নি।';
 
             } else if (
                 error.code ===
@@ -2219,7 +2179,15 @@ forgotSendBtn.addEventListener(
             ) {
 
                 message =
-                    'Gmail address sothik noy.';
+                    'Gmail address সঠিক নয়।';
+
+            } else if (
+                error.message ===
+                'REQUEST_TIMEOUT'
+            ) {
+
+                message =
+                    'অনুরোধের সময় শেষ হয়ে গেছে। আবার চেষ্টা করুন।';
 
             } else if (
                 error.code ===
@@ -2227,16 +2195,14 @@ forgotSendBtn.addEventListener(
             ) {
 
                 message =
-                    'Internet connection somossa hoyeche.';
+                    'Internet connection-এ সমস্যা হয়েছে।';
 
             }
 
 
-            document
-                .getElementById(
-                    'forgotModalText'
-                )
-                .textContent =
+            document.getElementById(
+                'forgotModalText'
+            ).textContent =
                 message;
 
 
@@ -2245,7 +2211,7 @@ forgotSendBtn.addEventListener(
 
 
             forgotSendBtn.textContent =
-                'Abar pathan';
+                'আবার পাঠান';
 
         }
 
@@ -2259,199 +2225,100 @@ forgotSendBtn.addEventListener(
 
 updateLinkBtn.addEventListener(
     'click',
-    function(event) {
+    event => {
 
         const rawUrl =
             (
-                this.getAttribute('href') ||
-                ''
+                updateLinkBtn.getAttribute(
+                    'href'
+                ) || ''
             ).trim();
 
 
-        let targetUrl;
-
-
-        try {
-
-            targetUrl =
-                new URL(
-                    rawUrl,
-                    window.location.href
-                );
-
-
-            if (
-                ![
-                    'http:',
-                    'https:'
-                ].includes(
-                    targetUrl.protocol
-                ) ||
-                rawUrl === '' ||
-                rawUrl === '#'
-            ) {
-
-                throw new Error(
-                    'Invalid URL'
-                );
-
-            }
-
-        } catch (_) {
+        if (
+            !rawUrl ||
+            rawUrl === '#'
+        ) {
 
             event.preventDefault();
 
-
             showToast(
-                'Update link set kora nei ba sothik noy.',
+                'আপডেট লিংক সেট করা হয়নি।',
                 'error'
             );
 
-
             return;
 
         }
-
-
-        event.preventDefault();
-
-
-        if (
-            this.dataset.updating ===
-            'true'
-        ) {
-
-            return;
-
-        }
-
-
-        this.dataset.updating =
-            'true';
-
-
-        this.innerHTML =
-            '<span style="display:inline-block;width:16px;height:16px;border:2px solid currentColor;border-top-color:transparent;border-radius:50%;animation:updateSpin .7s linear infinite;vertical-align:middle;margin-right:8px"></span>Updating...';
-
-
-        this.style.pointerEvents =
-            'none';
-
-        this.style.opacity =
-            '0.8';
-
-
-        setTimeout(
-            () => {
-
-                window.location.assign(
-                    targetUrl.href
-                );
-
-            },
-            300
-        );
 
     }
 );
 
 
 /* ============================================================
-   UPDATE SPINNER
+   STARTUP LOADER
+   MAXIMUM 5 SECONDS
 ============================================================ */
 
-if (
-    !document.getElementById(
-        'update-spin-style'
-    )
-) {
+function hideStartupLoader() {
 
-    const spinStyle =
-        document.createElement(
-            'style'
-        );
+    if (!startupLoader) {
+        return;
+    }
 
 
-    spinStyle.id =
-        'update-spin-style';
-
-
-    spinStyle.textContent =
-        '@keyframes updateSpin{to{transform:rotate(360deg)}}';
-
-
-    document.head.appendChild(
-        spinStyle
+    startupLoader.classList.add(
+        'hide'
     );
 
 }
 
 
-/* ============================================================
-   STARTUP LOADER
-============================================================ */
-
-async function finishStartup() {
-
-    /*
-     * Maximum 5 seconds wait.
-     */
-
-    await Promise.race([
-
-        startupCheckPromise,
-
-        new Promise(resolve => {
-
-            setTimeout(
-                resolve,
-                5000
-            );
-
-        })
-
-    ]);
-
-
-    /*
-     * Loader minimum time:
-     * 1.2 seconds
-     */
-
-    await new Promise(
-        resolve => {
-
-            setTimeout(
-                resolve,
-                1200
-            );
-
-        }
-    );
-
-
-    if (startupLoader) {
-
-        startupLoader.classList.add(
-            'hide'
-        );
-
+window.addEventListener(
+    'load',
+    () => {
 
         setTimeout(
-            () => {
-
-                startupLoader.remove();
-
-            },
-            400
+            hideStartupLoader,
+            700
         );
 
     }
+);
 
-}
+
+/*
+ * HARD FAILSAFE
+ *
+ * Firebase বা OneSignal কোনো কারণে
+ * আটকে গেলেও loader 5 sec-এর বেশি থাকবে না।
+ */
+
+setTimeout(
+    hideStartupLoader,
+    5000
+);
 
 
-finishStartup();
+/* ============================================================
+   FINAL
+============================================================ */
+
+console.log(
+    '✅ AURA SKILL Login loaded'
+);
+
+console.log(
+    '✅ Firebase login timeout protection enabled'
+);
+
+console.log(
+    '✅ OneSignal is non-blocking'
+);
+
+console.log(
+    '✅ বাংলা notification/text enabled'
+);
 
 </script>
 
