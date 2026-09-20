@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aura Skill - Match Rules</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Hind Siliguri', sans-serif; background-color: #050811; color: #f8fafc; }
+        .glass-card { background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(12px); border: 1px solid rgba(30, 41, 59, 0.9); }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col pb-20">
+
+    <!-- Header -->
+    <header class="bg-[#0b0f1a] px-6 py-4 border-b border-slate-900 flex justify-between items-center sticky top-0 z-30 shadow-md">
+        <div class="flex items-center space-x-3">
+            <a href="index.html" class="bg-slate-800 hover:bg-slate-700 text-slate-300 w-9 h-9 rounded-xl flex items-center justify-center transition">
+                <i class="fa-solid fa-arrow-left"></i>
+            </a>
+            <h1 class="text-sm font-bold tracking-wider text-white uppercase">Match Rules (নিয়মাবলী)</h1>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="max-w-4xl mx-auto px-4 py-6 w-full space-y-6">
+
+        <!-- Rule Category Switcher Tabs -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-2">
+            <button onclick="switchRuleTab('br_headshot')" id="rule-btn-br_headshot" class="py-2.5 px-2 rounded-xl text-xs font-bold bg-blue-600 text-white transition truncate shadow">BR HEADSHOT</button>
+            <button onclick="switchRuleTab('lone_wolf_headshot')" id="rule-btn-lone_wolf_headshot" class="py-2.5 px-2 rounded-xl text-xs font-bold bg-slate-800 text-slate-300 transition truncate">LONE WOLF HEADSHOT</button>
+            <button onclick="switchRuleTab('lone_wolf_bodyshot')" id="rule-btn-lone_wolf_bodyshot" class="py-2.5 px-2 rounded-xl text-xs font-bold bg-slate-800 text-slate-300 transition truncate">LONE WOLF BODYSHOT</button>
+            <button onclick="switchRuleTab('cs_headshot')" id="rule-btn-cs_headshot" class="py-2.5 px-2 rounded-xl text-xs font-bold bg-slate-800 text-slate-300 transition truncate">CS HEADSHOT</button>
+        </div>
+
+        <!-- Rules Content Display Box -->
+        <div class="glass-card p-6 rounded-2xl border border-slate-800 shadow-xl space-y-4">
+            <div class="flex items-center space-x-3 border-b border-slate-800 pb-3">
+                <div class="w-10 h-10 rounded-xl bg-blue-600/20 text-blue-400 flex items-center justify-center text-lg">
+                    <i class="fa-solid fa-book-open"></i>
+                </div>
+                <div>
+                    <h3 id="rule-title-heading" class="text-sm font-bold text-white uppercase tracking-wide">BR Headshot Rules</h3>
+                    <p class="text-[11px] text-slate-400">টুর্নামেন্টে অংশগ্রহণের পূর্বে অবশ্যই নিচের নিয়মগুলো ভালোভাবে পড়ে নিন।</p>
+                </div>
+            </div>
+
+            <div id="rule-content-box" class="text-xs text-slate-300 leading-relaxed whitespace-pre-line min-h-[250px]">
+                লোড হচ্ছে...
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Firebase Integration & Logic -->
+    <script type="module">
+        import { db } from "./firebase.js";
+        import { doc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        let currentActiveRule = 'br_headshot';
+
+        const categoryNames = {
+            'br_headshot': 'BR Headshot Rules',
+            'lone_wolf_headshot': 'Lone Wolf Headshot Rules',
+            'lone_wolf_bodyshot': 'Lone Wolf Bodyshot Rules',
+            'cs_headshot': 'CS Headshot Rules'
+        };
+
+        window.switchRuleTab = async function(category) {
+            currentActiveRule = category;
+
+            // Update Tab Active UI Classes
+            ['br_headshot', 'lone_wolf_headshot', 'lone_wolf_bodyshot', 'cs_headshot'].forEach(m => {
+                const btn = document.getElementById(`rule-btn-${m}`);
+                if(btn) {
+                    btn.className = (m === category) 
+                        ? "py-2.5 px-2 rounded-xl text-xs font-bold bg-blue-600 text-white transition truncate shadow" 
+                        : "py-2.5 px-2 rounded-xl text-xs font-bold bg-slate-800 text-slate-300 transition truncate";
+                }
+            });
+
+            // Update Header Title
+            const heading = document.getElementById('rule-title-heading');
+            if(heading) heading.innerText = categoryNames[category] || 'Match Rules';
+
+            // Fetch Data from Firestore
+            const contentBox = document.getElementById('rule-content-box');
+            if(contentBox) contentBox.innerText = "লোড হচ্ছে...";
+
+            try {
+                const docRef = doc(db, "matchRules", category);
+                const docSnap = await getDoc(docRef);
+
+                if(docSnap.exists()) {
+                    const data = docSnap.data();
+                    contentBox.innerText = data.text ? data.text : "এই ক্যাটাগরিতে বর্তমানে কোনো নিয়ম যুক্ত করা হয়নি।";
+                } else {
+                    contentBox.innerText = "কোনো নিয়ম খুঁজে পাওয়া যায়নি।";
+                }
+            } catch(e) {
+                console.error("Error fetching rules:", e);
+                contentBox.innerText = "নিয়ম লোড করার সময় একটি সমস্যা হয়েছে। দয়া করে আবার চেষ্টা করুন।";
+            }
+        };
+
+        // Initial Load on Page Startup
+        switchRuleTab('br_headshot');
+    </script>
+
+</body>
+</html>

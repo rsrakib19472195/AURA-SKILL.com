@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="bn" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AᴜʀᴀㅤAʀᴍᴀɴㅤƬᴏᴜʀ - টুর্নামেন্ট প্ল্যাটফর্ম</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        darkBg: '#0b0f19',
+                        cardBg: '#111827',
+                        accentColor: '#f59e0b', // Free Fire Gold Accent
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts: Hind Siliguri -->
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Firebase App & Firestore SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+
+    <style>
+        body { font-family: 'Hind Siliguri', sans-serif; }
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 10px; }
+        
+        /* Toast Notification CSS */
+        #toast-container {
+            position: fixed; top: 20px; right: 20px; z-index: 9999; display: flex; flex-direction: column; gap: 10px;
+        }
+        .toast {
+            background: rgba(17, 24, 39, 0.95); backdrop-filter: blur(12px); border-left: 4px solid #f59e0b;
+            color: #fff; padding: 12px 20px; border-radius: 12px; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
+            font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 10px;
+            animation: slideIn 0.3s ease, fadeOut 0.3s ease 2.7s forwards;
+        }
+        .toast.success { border-left-color: #10b981; }
+        .toast.error { border-left-color: #ef4444; }
+        .toast.warning { border-left-color: #f59e0b; }
+        @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+        @keyframes fadeOut { from { opacity: 1; } to { opacity: 0; transform: translateY(-10px); } }
+    </style>
+</head>
+<body class="bg-darkBg text-gray-100 font-sans antialiased selection:bg-accentColor selection:text-black flex flex-col min-h-screen">
+
+    <!-- Toast Notification Container -->
+    <div id="toast-container"></div>
+
+    <!-- Navbar -->
+    <header class="sticky top-0 z-50 backdrop-blur-md bg-darkBg/90 border-b border-gray-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <img src="https://videotourl.com/images/1789398622974-9155730f-42c5-45f4-911c-43ca35b2a0e4.jpg" alt="Logo" class="h-11 w-11 rounded-xl object-cover border border-amber-500/30 shadow-lg shadow-amber-500/10">
+                <span class="text-lg sm:text-xl font-black tracking-wider text-white">AᴜʀᴀㅤAʀᴍᴀɴㅤƬᴏᴜʀ</span>
+            </div>
+
+            <nav class="hidden md:flex items-center space-x-8 font-medium">
+                <a href="#home" class="hover:text-accentColor transition-colors">হোম</a>
+                <a href="#features" class="hover:text-accentColor transition-colors">বৈশিষ্ট্যসমূহ</a>
+                <a href="#tutorial" class="hover:text-accentColor transition-colors">টিউটোরিয়াল</a>
+            </nav>
+
+            <div class="flex items-center space-x-3">
+                <button onclick="openPasswordModal()" class="bg-gray-800 hover:bg-gray-700 text-amber-400 border border-amber-500/30 px-3 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all flex items-center gap-2">
+                    <i class="fa-solid fa-lock"></i> অ্যাডমিন
+                </button>
+                <a id="navDownloadBtn" href="#" class="bg-accentColor hover:bg-amber-600 text-black px-4 py-2 sm:px-5 sm:py-2.5 rounded-xl font-bold text-xs sm:text-sm shadow-lg shadow-amber-500/20 transition-all">অ্যাপ ডাউনলোড</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section id="home" class="relative overflow-hidden pt-16 pb-24">
+        <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-amber-600/10 via-darkBg to-darkBg -z-10"></div>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <span class="inline-block bg-amber-500/10 border border-amber-500/30 text-accentColor px-4 py-1.5 rounded-full text-sm font-bold mb-6">
+                <i class="fa-solid fa-fire mr-2"></i> বাংলাদেশের প্রথম ই-স্পোর্টস প্ল্যাটফর্ম
+            </span>
+            <h1 class="text-4xl sm:text-6xl font-black tracking-tight text-white mb-6 leading-tight">
+                চূড়ান্ত ফ্রি ফায়ার <br><span class="bg-clip-text text-transparent bg-gradient-to-r from-amber-400 to-orange-500">টুর্নামেন্ট প্ল্যাটফর্ম</span>
+            </h1>
+            <p class="max-w-2xl mx-auto text-lg text-gray-400 mb-10">
+                প্রতিযোগিতায় অংশ নিন, দক্ষতা প্রমাণ করুন এবং জিতে নিন আকর্ষণীয় পুরস্কার। নিরাপদ পেমেন্ট এবং ২৪/৭ সাপোর্টের সাথে সেরা গেমিং অভিজ্ঞতা।
+            </p>
+            <div class="flex flex-col sm:flex-row justify-center items-center gap-4">
+                <a id="heroDownloadBtn" href="#" class="w-full sm:w-auto bg-accentColor hover:bg-amber-600 text-black px-8 py-4 rounded-xl font-bold text-lg shadow-xl shadow-amber-500/30 transition-all flex items-center justify-center gap-3">
+                    <i class="fa-solid fa-download"></i> অ্যাপ ডাউনলোড করুন
+                </a>
+                <a href="#tutorial" class="w-full sm:w-auto bg-gray-900 hover:bg-gray-800 text-gray-200 border border-gray-800 px-8 py-4 rounded-xl font-bold text-lg transition-all flex items-center justify-center gap-3">
+                    <i class="fa-solid fa-play text-accentColor"></i> কীভাবে খেলবেন?
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Bar -->
+    <section class="border-y border-gray-800 bg-gray-900/50 py-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-center text-center">
+            <div>
+                <h3 class="text-3xl font-black text-accentColor mb-1">২৪/৭</h3>
+                <p class="text-gray-400 text-sm">সাপোর্ট সিস্টেম</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Video Tutorial Section -->
+    <section id="tutorial" class="py-20 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <h2 class="text-3xl font-bold text-white mb-4">কিভাবে খেলবেন?</h2>
+        <p class="text-gray-400 mb-10">নিচের ভিডিওটি দেখে খুব সহজেই টুর্নামেন্টে অংশগ্রহণ করার নিয়ম জেনে নিন।</p>
+        
+        <div class="relative w-full aspect-video rounded-2xl overflow-hidden border border-gray-800 shadow-2xl bg-black">
+            <iframe id="displayVideo" class="w-full h-full" src="https://www.youtube.com/embed/dQw4w9WgXcQ" title="Tutorial Video" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="py-20 bg-gray-900/30 border-t border-gray-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl font-bold text-white mb-4">গেমিং বৈশিষ্ট্যসমূহ</h2>
+                <p class="text-gray-400">কেন AᴜʀᴀㅤAʀᴍᴀɴㅤƬᴏᴜʀ সবার সেরা?</p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="bg-cardBg border border-gray-800 p-8 rounded-2xl">
+                    <div class="w-12 h-12 bg-amber-500/10 rounded-xl flex items-center justify-center text-accentColor mb-6 text-xl">
+                        <i class="fa-solid fa-bolt"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-2">বিদ্যুৎ দ্রুত গতি</h3>
+                    <p class="text-gray-400 text-sm">সুপার ফাস্ট সার্ভার যা কোনো ল্যাগ ছাড়াই স্মুথ গেমিং অভিজ্ঞতা নিশ্চিত করে।</p>
+                </div>
+                <div class="bg-cardBg border border-gray-800 p-8 rounded-2xl">
+                    <div class="w-12 h-12 bg-amber-500/10 rounded-xl flex items-center justify-center text-accentColor mb-6 text-xl">
+                        <i class="fa-solid fa-shield-halved"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-2">নিরাপদ পেমেন্ট (বিকাশ ও নগদ)</h3>
+                    <p class="text-gray-400 text-sm">বিকাশ ও নগদের মাধ্যমে দ্রুত ও নিরাপদ লেনদেনের সুবিধা।</p>
+                </div>
+                <div class="bg-cardBg border border-gray-800 p-8 rounded-2xl">
+                    <div class="w-12 h-12 bg-amber-500/10 rounded-xl flex items-center justify-center text-accentColor mb-6 text-xl">
+                        <i class="fa-solid fa-trophy"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-2">মহাকাব্যিক টুর্নামেন্ট</h3>
+                    <p class="text-gray-400 text-sm">প্রতিদিন বড় বড় স্কোয়াড এবং সোলো ম্যাচ টুর্নামেন্টে অংশ নেওয়ার সুযোগ।</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Custom Password Modal -->
+    <div id="passwordModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
+        <div class="bg-cardBg border border-amber-500/30 w-full max-w-sm rounded-2xl p-6 shadow-2xl relative">
+            <button onclick="closePasswordModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white text-xl">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <div class="text-center mb-5">
+                <div class="w-12 h-12 bg-amber-500/10 text-accentColor rounded-full flex items-center justify-center mx-auto mb-3 text-xl border border-amber-500/20">
+                    <i class="fa-solid fa-lock"></i>
+                </div>
+                <h3 class="text-xl font-bold text-white">অ্যাডমিন সিকিউরিটি</h3>
+                <p class="text-gray-400 text-xs mt-1">প্যানেল খুলতে সঠিক পাসওয়ার্ড দিন</p>
+            </div>
+
+            <div class="space-y-4">
+                <input type="password" id="adminPasswordInput" placeholder="পাসওয়ার্ড লিখুন..." class="w-full bg-darkBg border border-gray-700 rounded-xl px-4 py-3 text-white text-center tracking-widest focus:outline-none focus:border-amber-500 text-sm">
+                <button onclick="verifyPassword()" class="w-full bg-accentColor hover:bg-amber-600 text-black font-bold py-3 rounded-xl transition-all shadow-lg shadow-amber-500/20">
+                    প্রবেশ করুন
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin Panel Control Modal -->
+    <div id="adminModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
+        <div class="bg-cardBg border border-gray-700 w-full max-w-md rounded-2xl p-6 shadow-2xl relative max-h-[90vh] overflow-y-auto">
+            <button onclick="toggleAdminPanel()" class="absolute top-4 right-4 text-gray-400 hover:text-white text-xl">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <h3 class="text-2xl font-bold text-white mb-2 flex items-center gap-2">
+                <i class="fa-solid fa-gear text-accentColor"></i> অ্যাডমিন কন্ট্রোল প্যানেল
+            </h3>
+            <p class="text-gray-400 text-sm mb-6">ফায়ারবেস ডাটাবেস থেকে লিংক ম্যানেজ করুন।</p>
+
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-300 mb-1">নতুন APK ডাউনলোড লিংক:</label>
+                    <input type="text" id="inputApkLink" placeholder="https://example.com/app.apk" class="w-full bg-darkBg border border-gray-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-amber-500 text-sm">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-300 mb-1">ইউটিউব ভিডিও এমবেড লিংক (Embed URL):</label>
+                    <input type="text" id="inputVideoLink" placeholder="https://www.youtube.com/embed/VIDEO_ID" class="w-full bg-darkBg border border-gray-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-amber-500 text-sm">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-300 mb-1">ডেভেলপার ইনফো লিংক (Developer Info Link):</label>
+                    <input type="text" id="inputDevLink" placeholder="https://example.com/developer" class="w-full bg-darkBg border border-gray-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-amber-500 text-sm">
+                </div>
+                <button onclick="saveAdminData()" class="w-full bg-accentColor hover:bg-amber-600 text-black font-bold py-3 rounded-xl transition-all shadow-lg">
+                    ফায়ারবেসে সংরক্ষণ করুন (Save)
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer with Developer Info & RS RAKIB branding -->
+    <footer class="bg-darkBg border-t border-gray-800 py-8 mt-auto text-gray-400 text-sm">
+        <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left">
+            <div class="flex items-center space-x-3 justify-center">
+                <img src="https://videotourl.com/images/1789398622974-9155730f-42c5-45f4-911c-43ca35b2a0e4.jpg" alt="Logo" class="h-8 w-8 rounded-lg object-cover">
+                <span>&copy; ২০২৬ AᴜʀᴀㅤAʀᴍᴀɴㅤƬᴏᴜʀ। সর্বস্বত্ব সংরক্ষিত।</span>
+            </div>
+            
+            <div class="flex flex-col sm:flex-row items-center gap-3">
+                <span class="text-xs text-gray-400">Developed by <strong class="text-accentColor">RS RAKIB</strong></span>
+                <a id="devInfoBtn" href="#" target="_blank" class="bg-gray-800 hover:bg-gray-700 text-amber-400 border border-amber-500/30 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all">
+                    <i class="fa-solid fa-circle-info mr-1"></i> Developer Info
+                </a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Firebase Integration & App Script -->
+    <script>
+        // Toast Notification System
+        function showToast(message, type = 'success') {
+            const container = document.getElementById('toast-container');
+            if (!container) return;
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            
+            let iconClass = "fa-solid fa-circle-check text-emerald-400";
+            if (type === 'error') iconClass = "fa-solid fa-circle-xmark text-red-400";
+            if (type === 'warning') iconClass = "fa-solid fa-triangle-exclamation text-amber-400";
+
+            toast.innerHTML = `<i class="${iconClass}"></i> <span>${message}</span>`;
+            container.appendChild(toast);
+            setTimeout(() => { toast.remove(); }, 3500);
+        }
+
+        // Firebase Configuration Setup
+        const firebaseConfig = {
+            apiKey: "AIzaSyA2wYMZAMx6p2GRC21KGgsHgiCoVz--81A",
+            authDomain: "aura-arman-tour.firebaseapp.com",
+            databaseURL: "https://aura-arman-tour-default-rtdb.firebaseio.com",
+            projectId: "aura-arman-tour",
+            storageBucket: "aura-arman-tour.firebasestorage.app",
+            messagingSenderId: "502326798792",
+            appId: "1:502326798792:web:2afd27cb9cd44da48cb8fd"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
+        // Default local fallback values
+        let currentApkLink = '#download';
+        let currentVideoLink = 'https://www.youtube.com/embed/dQw4w9WgXcQ';
+        let currentDevLink = '#';
+
+        // Fetch Data from Firebase Firestore in Real-time
+        db.collection("settings").doc("site_config").onSnapshot((doc) => {
+            if (doc.exists) {
+                const data = doc.data();
+                currentApkLink = data.apkLink || '#download';
+                currentVideoLink = data.videoLink || 'https://www.youtube.com/embed/dQw4w9WgXcQ';
+                currentDevLink = data.devLink || '#';
+            } else {
+                // If document doesn't exist yet, create default entry
+                db.collection("settings").doc("site_config").set({
+                    apkLink: currentApkLink,
+                    videoLink: currentVideoLink,
+                    devLink: currentDevLink
+                });
+            }
+            updateLinksOnUI();
+        }, (error) => {
+            console.error("Firebase fetch error: ", error);
+            showToast("ডাটা লোড করতে সমস্যা হয়েছে!", "error");
+        });
+
+        function updateLinksOnUI() {
+            document.getElementById('navDownloadBtn').href = currentApkLink;
+            document.getElementById('heroDownloadBtn').href = currentApkLink;
+            document.getElementById('displayVideo').src = currentVideoLink;
+            document.getElementById('devInfoBtn').href = currentDevLink;
+            
+            document.getElementById('inputApkLink').value = currentApkLink;
+            document.getElementById('inputVideoLink').value = currentVideoLink;
+            document.getElementById('inputDevLink').value = currentDevLink;
+        }
+
+        function openPasswordModal() {
+            document.getElementById('adminPasswordInput').value = '';
+            document.getElementById('passwordModal').classList.remove('hidden');
+        }
+
+        function closePasswordModal() {
+            document.getElementById('passwordModal').classList.add('hidden');
+        }
+
+        function verifyPassword() {
+            let password = document.getElementById('adminPasswordInput').value;
+            if (password === "19472195") {
+                closePasswordModal();
+                toggleAdminPanel();
+                showToast("সফলভাবে অ্যাডমিন প্যানেলে প্রবেশ করেছেন!", "success");
+            } else {
+                showToast("ভুল পাসওয়ার্ড! প্রবেশাধিকার সংরক্ষিত।", "error");
+                document.getElementById('adminPasswordInput').value = '';
+            }
+        }
+
+        function toggleAdminPanel() {
+            const modal = document.getElementById('adminModal');
+            modal.classList.toggle('hidden');
+        }
+
+        // Save data to Firebase Firestore
+        function saveAdminData() {
+            const newApk = document.getElementById('inputApkLink').value;
+            const newVideo = document.getElementById('inputVideoLink').value;
+            const newDev = document.getElementById('inputDevLink').value;
+
+            db.collection("settings").doc("site_config").set({
+                apkLink: newApk,
+                videoLink: newVideo,
+                devLink: newDev
+            })
+            .then(() => {
+                toggleAdminPanel();
+                showToast("সফলভাবে ফায়ারবেসে আপডেট করা হয়েছে!", "success");
+            })
+            .catch((error) => {
+                showToast("আপডেট করতে সমস্যা হয়েছে: " + error.message, "error");
+            });
+        }
+    </script>
+</body>
+</html>

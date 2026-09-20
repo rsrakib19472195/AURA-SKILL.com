@@ -1,0 +1,1003 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <!-- Performance: establish connections to critical third-party origins early. -->
+    <link rel="preconnect" href="https://www.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aura Skill Official - Tournaments</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Hind Siliguri', sans-serif; background-color: #050811; color: #f8fafc; }
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 10px; }
+        .glass-card { background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(12px); border: 1px solid rgba(30, 41, 59, 0.9); }
+        .glow-effect:hover { box-shadow: 0 0 25px rgba(59, 130, 246, 0.2); border-color: rgba(59, 130, 246, 0.5); transform: translateY(-2px); transition: all 0.25s ease-in-out; }
+        @keyframes pulseLive {
+            0% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.4; transform: scale(1.05); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+        .animate-live-pulse { animation: pulseLive 1.5s infinite; }
+        
+        #toast-container {
+            position: fixed; top: 20px; right: 20px; z-index: 9999; display: flex; flex-direction: column; gap: 10px;
+        }
+        .toast {
+            background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(12px); border-left: 4px solid #3b82f6;
+            color: #fff; padding: 12px 20px; border-radius: 12px; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
+            font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 10px;
+            animation: slideIn 0.3s ease, fadeOut 0.3s ease 2.7s forwards;
+        }
+        .toast.success { border-left-color: #10b981; }
+        .toast.error { border-left-color: #ef4444; }
+        .toast.warning { border-left-color: #f59e0b; }
+        @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+        @keyframes fadeOut { from { opacity: 1; } to { opacity: 0; transform: translateY(-10px); } }
+    
+#cornerSupportBtn{position:fixed;right:14px;bottom:76px;width:46px;height:46px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:#16a34a;color:#fff;text-decoration:none;font-size:21px;box-shadow:0 8px 24px rgba(0,0,0,.38);border:2px solid rgba(255,255,255,.12);z-index:60;transition:transform .2s ease,background .2s ease}
+#cornerSupportBtn:hover{transform:scale(1.06);background:#22c55e}
+</style>
+</head>
+<body class="min-h-screen flex flex-col pb-28 overflow-x-hidden">
+
+    <div id="toast-container"></div>
+
+    <div id="maintenance-screen" class="fixed inset-0 z-[9999999] bg-[#050811] text-white flex items-center justify-center px-5" style="display:none;">
+        <div class="w-full max-w-md text-center">
+            <div class="w-20 h-20 mx-auto rounded-full bg-amber-500/10 border border-amber-500/30 flex items-center justify-center mb-5">
+                <i class="fa-solid fa-screwdriver-wrench text-amber-400 text-3xl"></i>
+            </div>
+            <h1 class="text-2xl font-bold mb-3">Site Maintenance</h1>
+            <p class="text-slate-400 text-sm leading-relaxed">আমাদের সাইট বর্তমানে maintenance-এর মধ্যে আছে। কিছুক্ষণ পরে আবার চেষ্টা করুন।</p>
+            <div id="maintenance-reason" class="mt-5 bg-[#0f172a] border border-slate-800 rounded-2xl px-4 py-3 text-sm text-amber-300"></div>
+            <div class="mt-5 text-xs text-slate-500">Please try again later.</div>
+        </div>
+    </div>
+
+    <!-- App Update Screen -->
+    <div id="update-screen" class="fixed inset-0 z-[9999999] bg-[#050811] text-white flex items-center justify-center px-5" style="display:none;">
+        <div class="w-full max-w-md text-center">
+            <div class="w-20 h-20 mx-auto rounded-full bg-blue-500/10 border border-blue-500/30 flex items-center justify-center mb-5">
+                <i class="fa-solid fa-rocket text-blue-400 text-3xl"></i>
+            </div>
+            <h1 class="text-2xl font-bold mb-3">New Update Available!</h1>
+            <p id="update-message" class="text-slate-400 text-sm leading-relaxed">আপনার অ্যাপ-টি আপডেট করা প্রয়োজন। দয়া করে আপডেট করে নিন।</p>
+            <a id="update-link-btn" href="#" target="_blank" class="mt-6 inline-block w-full py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl text-sm transition text-center shadow-lg shadow-blue-600/30">Update Now</a>
+        </div>
+    </div>
+
+    <!-- Fixed App Loader Safety Handling -->
+    <div id="app-loader" class="fixed inset-0 z-50 flex flex-col items-center justify-center bg-[#050811] space-y-4">
+        <div class="w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
+        <p class="text-xs tracking-widest text-slate-400 font-semibold uppercase">লোড হচ্ছে...</p>
+    </div>
+
+    <div id="logoutModal" class="fixed inset-0 z-[99999] flex items-center justify-center bg-black/80 backdrop-blur-md px-4" style="display: none;">
+        <div class="bg-[#0f172a] border border-red-500/40 rounded-3xl p-6 max-w-sm w-full shadow-2xl text-center space-y-4 transform transition-all scale-100">
+            <div class="w-16 h-16 bg-red-500/10 border border-red-500/30 rounded-full flex items-center justify-center mx-auto text-red-500 text-2xl shadow-lg shadow-red-500/10">
+                <i class="fa-solid fa-right-from-bracket"></i>
+            </div>
+            <div>
+                <h3 class="text-lg font-bold text-white tracking-wide">লগআউট করতে চান?</h3>
+                <p class="text-xs text-slate-400 mt-1">আপনি কি নিশ্চিতভাবে আপনার অ্যাকাউন্ট থেকে বের হয়ে যেতে চান?</p>
+            </div>
+            <div class="grid grid-cols-2 gap-3 pt-2">
+                <button onclick="closeLogoutModal()" class="py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold text-xs transition border border-slate-700">বাতিল</button>
+                <button onclick="confirmLogout()" class="py-2.5 rounded-xl bg-red-600 hover:bg-red-500 text-white font-bold text-xs transition shadow-lg shadow-red-600/30">লগআউট</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="custom-action-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm px-4" style="display: none;">
+        <div class="bg-[#0f172a] border border-blue-500/40 rounded-2xl p-6 max-w-sm w-full shadow-2xl relative max-h-[90vh] overflow-y-auto">
+            <div class="flex justify-between items-center mb-4">
+                <h3 id="custom-modal-title" class="text-sm font-bold text-white uppercase tracking-wider">Join Match</h3>
+                <button onclick="closeCustomModal()" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
+            </div>
+            <div id="custom-modal-body" class="space-y-3 text-xs"></div>
+        </div>
+    </div>
+
+    <header class="bg-[#0b0f1a]/90 backdrop-blur-md px-4 py-3 sticky top-0 z-30 flex justify-between items-center border-b border-slate-900 shadow-md">
+        <div class="flex items-center space-x-2">
+            <button id="back-btn" onclick="goBackToHome()" style="display: none;" class="bg-slate-800 text-slate-300 hover:text-white px-2.5 py-1.5 rounded-xl text-xs font-bold transition mr-1">
+                <i class="fa-solid fa-arrow-left"></i>
+            </button>
+            <div class="bg-blue-600/30 border border-blue-500/40 text-blue-400 px-3 py-1 rounded-lg text-xs font-black tracking-wider">AURA SKILL</div>
+        </div>
+        <div class="flex items-center space-x-2">
+            <div onclick="window.location.href='wallet.html'" class="cursor-pointer bg-[#131b2e] border border-slate-800 text-blue-400 px-2.5 py-1.5 rounded-xl text-xs font-semibold flex items-center space-x-1 shadow">
+                <i class="fa-solid fa-wallet text-[10px]"></i>
+                <span>৳ <span id="wallet-balance">0</span></span>
+            </div>
+            <button onclick="handleLogout()" class="bg-red-600/20 border border-red-500/40 hover:bg-red-600/30 text-red-400 px-2.5 py-1.5 rounded-xl text-xs font-bold shadow flex items-center space-x-1 transition">
+                <i class="fa-solid fa-right-from-bracket text-[10px]"></i>
+                <span id="user-display-name">Account</span>
+            </button>
+        </div>
+    </header>
+
+    <main class="max-w-md mx-auto px-4 py-4 flex-grow w-full space-y-5">
+        <div id="banner-container" class="relative w-full rounded-2xl overflow-hidden shadow-2xl border border-blue-500/20" style="display: none;">
+            <div id="banner-slider" class="flex transition-transform duration-500 ease-out"></div>
+        </div>
+        
+        <div id="view-sections" class="space-y-4">
+            <div class="flex justify-between items-center px-1">
+                <h3 class="text-xs font-extrabold tracking-widest text-slate-400 uppercase">Select Category</h3>
+            </div>
+            <div id="sections-grid" class="space-y-3"></div>
+        </div>
+
+        <div id="view-groups" class="space-y-4" style="display: none;">
+            <div class="flex justify-between items-center px-1">
+                <h3 id="current-section-title" class="text-xs font-extrabold tracking-widest text-blue-400 uppercase">GROUPS</h3>
+            </div>
+            <div id="groups-grid" class="space-y-3"></div>
+        </div>
+
+        <div id="view-tournaments" class="space-y-4" style="display: none;">
+            <div class="flex space-x-1.5 bg-[#0d1322] p-1.5 rounded-2xl border border-slate-800/80">
+                <button onclick="filterTournaments('upcoming')" id="t-tab-upcoming" class="flex-1 py-2 text-[11px] font-bold rounded-xl bg-blue-600 text-white shadow transition">upcoming</button>
+                <button onclick="filterTournaments('live')" id="t-tab-live" class="flex-1 py-2 text-[11px] font-bold rounded-xl text-slate-400 hover:text-white transition">live</button>
+                <button onclick="filterTournaments('completed')" id="t-tab-complete" class="flex-1 py-2 text-[11px] font-bold rounded-xl text-slate-400 hover:text-white transition">complete</button>
+            </div>
+
+            <div class="flex justify-between items-center px-1">
+                <h3 id="current-group-title" class="text-xs font-extrabold tracking-widest text-slate-400 uppercase">MATCHES</h3>
+                <span id="match-count-badge" class="text-[10px] text-blue-400 font-semibold bg-blue-500/10 px-2 py-0.5 rounded-md border border-blue-500/20">0 Matches Available</span>
+            </div>
+
+            <div id="tournaments-grid" class="space-y-4"></div>
+        </div>
+    </main>
+
+    <a id="cornerSupportBtn" href="https://chat.whatsapp.com/DCxfqldDvbl8wOtk7PzCP9?s=cl&p=a&mlu=4&ilr=4" target="_blank" rel="noopener noreferrer" aria-label="Support" title="Support">
+        <i class="fa-brands fa-whatsapp"></i>
+    </a>
+
+    <nav class="fixed bottom-0 left-0 right-0 max-w-md mx-auto bg-[#0b0f1a]/95 backdrop-blur-md border-t border-slate-900 px-6 py-2.5 flex justify-around items-center z-40 shadow-2xl">
+        <a href="index.html" class="flex flex-col items-center text-blue-400 space-y-1">
+            <i class="fa-solid fa-house text-base"></i>
+            <span class="text-[10px] font-bold">Home</span>
+        </a>
+        <a href="wallet.html" class="flex flex-col items-center text-slate-400 hover:text-blue-400 transition space-y-1">
+            <i class="fa-solid fa-wallet text-base"></i>
+            <span class="text-[10px] font-semibold">Wallet</span>
+        </a>
+        <a href="profile.html" class="flex flex-col items-center text-slate-400 hover:text-blue-400 transition space-y-1">
+            <i class="fa-solid fa-user text-base"></i>
+            <span class="text-[10px] font-semibold">Profile</span>
+        </a>
+    </nav>
+
+    <script type="module">
+        import { auth, db } from "./firebase.js";
+        import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { doc, getDoc, collection, getDocs, updateDoc, arrayUnion, runTransaction } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        
+        let currentUserUid = null;
+        let currentUserName = "User";
+        let currentUserBalance = 0;
+        let globalSections = [];
+        let globalGroups = [];
+        let globalTournaments = [];
+        let globalBanners = [];
+        
+        let selectedSectionId = null;
+        let selectedGroupId = null;
+        let currentTournamentFilter = 'upcoming';
+        let countdownInterval = null;
+
+        window.showToast = function(message, type = 'success') {
+            const container = document.getElementById('toast-container');
+            if (!container) return;
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            
+            let iconClass = "fa-solid fa-circle-check text-emerald-400";
+            if (type === 'error') iconClass = "fa-solid fa-circle-xmark text-red-400";
+            if (type === 'warning') iconClass = "fa-solid fa-triangle-exclamation text-amber-400";
+
+            toast.innerHTML = `<i class="${iconClass}"></i> <span>${message}</span>`;
+            container.appendChild(toast);
+            setTimeout(() => { toast.remove(); }, 3500);
+        }
+
+        let siteMaintenanceActive = false;
+        let appUpdateActive = false;
+
+        function showSiteMaintenance(data = {}) {
+            siteMaintenanceActive = true;
+            const screen = document.getElementById('maintenance-screen');
+            const reason = document.getElementById('maintenance-reason');
+            if (reason) reason.textContent = data.reason || 'সাইটটি বর্তমানে maintenance-এর মধ্যে আছে।';
+            if (screen) screen.style.display = 'flex';
+            const loader = document.getElementById('app-loader');
+            if (loader) loader.style.display = 'none';
+            document.body.style.overflow = 'hidden';
+        }
+
+        function hideSiteMaintenance() {
+            siteMaintenanceActive = false;
+            const screen = document.getElementById('maintenance-screen');
+            if (screen) screen.style.display = 'none';
+            if (!appUpdateActive) document.body.style.overflow = '';
+        }
+
+        function showAppUpdate(data = {}) {
+            appUpdateActive = data.enabled === true || data.forceUpdate === true;
+            const screen = document.getElementById('update-screen');
+            const msgEl = document.getElementById('update-message');
+            const linkBtn = document.getElementById('update-link-btn');
+            if (msgEl) msgEl.textContent = data.message || 'আপনার অ্যাপ-টি আপডেট করা প্রয়োজন। দয়া করে আপডেট করে নিন।';
+            if (linkBtn) linkBtn.href = data.link || data.updateUrl || '#';
+            if (screen) screen.style.display = appUpdateActive ? 'flex' : 'none';
+            const loader = document.getElementById('app-loader');
+            if (loader) loader.style.display = 'none';
+            if (appUpdateActive) document.body.style.overflow = 'hidden';
+            else if (!siteMaintenanceActive) document.body.style.overflow = '';
+        }
+
+        const updateNowButton = document.getElementById('update-link-btn');
+        if (updateNowButton) {
+            updateNowButton.addEventListener('click', function (event) {
+                event.preventDefault();
+                if (this.dataset.updating === 'true') return;
+                const raw = (this.getAttribute('href') || '').trim();
+                let destination;
+                try {
+                    destination = new URL(raw, window.location.href);
+                    if (!['http:', 'https:'].includes(destination.protocol) || raw === '' || raw === '#') throw new Error('Invalid URL');
+                } catch (_) {
+                    window.showToast?.('Update link set kora nei ba sothik noy.', 'error');
+                    return;
+                }
+                this.dataset.updating = 'true';
+                this.innerHTML = '<span style="display:inline-block;width:16px;height:16px;border:2px solid #fff;border-top-color:transparent;border-radius:50%;animation:updateSpin .7s linear infinite;vertical-align:middle;margin-right:8px"></span> আপডেট হচ্ছে...';
+                this.style.pointerEvents = 'none';
+                this.setAttribute('aria-busy', 'true');
+                setTimeout(() => window.location.assign(destination.href), 300);
+            });
+        }
+        if (!document.getElementById('update-spin-style')) {
+            const spinStyle = document.createElement('style');
+            spinStyle.id = 'update-spin-style';
+            spinStyle.textContent = '@keyframes updateSpin{to{transform:rotate(360deg)}}';
+            document.head.appendChild(spinStyle);
+        }
+
+        async function checkStartupSettings() {
+            try {
+                const [mSnap, uSnap] = await Promise.all([
+                    getDoc(doc(db, 'settings', 'siteMaintenance')).catch(() => ({ exists: () => false })),
+                    getDoc(doc(db, 'settings', 'appUpdate')).catch(() => ({ exists: () => false }))
+                ]);
+
+                if (mSnap.exists() && mSnap.data()?.enabled === true) {
+                    showSiteMaintenance(mSnap.data());
+                } else {
+                    hideSiteMaintenance();
+                }
+
+                if (uSnap.exists()) {
+                    showAppUpdate(uSnap.data());
+                }
+
+                return siteMaintenanceActive || appUpdateActive;
+            } catch (e) {
+                console.error('Startup settings check failed:', e);
+                return false;
+            }
+        }
+
+        const initialStartupPromise = checkStartupSettings();
+
+        onAuthStateChanged(auth, async (user) => {
+            const blocked = await initialStartupPromise;
+            if (blocked) return;
+            if (!user) { window.location.replace('login.html'); return; }
+            currentUserUid = user.uid;
+
+            const safetyTimer = setTimeout(() => {
+                const loader = document.getElementById('app-loader');
+                if (loader && loader.style.display !== 'none') {
+                    loader.style.display = 'none';
+                }
+            }, 6000);
+
+            try {
+                await Promise.all([fetchUserData(user.uid), loadAllData()]);
+            } catch (err) {
+                console.error("Initialization error:", err);
+            } finally {
+                clearTimeout(safetyTimer);
+                const loader = document.getElementById('app-loader');
+                if(loader) loader.style.display = 'none';
+            }
+        });
+
+        async function fetchUserData(uid) {
+            try {
+                const snap = await getDoc(doc(db, "users", uid));
+                if (snap.exists()) {
+                    const userData = snap.data() || {};
+                    currentUserBalance = Number(userData.balance ?? 0);
+                    currentUserName = userData.name || userData.fullName || 'User';
+                    const nameEl = document.getElementById('user-display-name');
+                    const balEl = document.getElementById('wallet-balance');
+                    if(nameEl) nameEl.innerText = currentUserName;
+                    if(balEl) balEl.innerText = currentUserBalance;
+                }
+            } catch (e) { console.error(e); }
+        }
+
+        async function loadAllData() {
+            if (siteMaintenanceActive || appUpdateActive) return;
+            try {
+                const [homePageSnap, oldSecSnap, newSecSnap, oldGroupSnap, newGroupSnap, tourSnap] = await Promise.all([
+                    getDoc(doc(db, "settings", "homePage")).catch(() => ({ exists: () => false })),
+                    getDocs(collection(db, "sections")).catch(() => ({ forEach: () => {} })),
+                    getDocs(collection(db, "tournamentSections")).catch(() => ({ forEach: () => {} })),
+                    getDocs(collection(db, "groups")).catch(() => ({ forEach: () => {} })),
+                    getDocs(collection(db, "tournamentGroups")).catch(() => ({ forEach: () => {} })),
+                    getDocs(collection(db, "tournaments")).catch(() => ({ forEach: () => {} }))
+                ]);
+
+                globalBanners = [];
+                if (homePageSnap.exists()) {
+                    const home = homePageSnap.data() || {};
+                    if (home.heroEnabled !== false && Array.isArray(home.heroMedia)) {
+                        home.heroMedia.forEach((m, i) => {
+                            if (!m || !m.url) return;
+                            globalBanners.push({id:'home_'+i,imageUrl:m.url,type:m.type==='video'?'video':'image',link:m.link||''});
+                        });
+                    }
+                }
+
+                const sectionMap = new Map();
+                [oldSecSnap, newSecSnap].forEach(snap => {
+                    if(snap && typeof snap.forEach === 'function') {
+                        snap.forEach(d => {
+                            const data = d.data() || {};
+                            if (data.active === false) return;
+                            sectionMap.set(d.id, { id: d.id, ...data });
+                        });
+                    }
+                });
+                globalSections = Array.from(sectionMap.values()).map(sec => ({
+                    ...sec,
+                    name: sec.name || sec.title || 'Tournament Section',
+                    icon: sec.icon || 'fa-solid fa-gamepad'
+                }));
+
+                const groupMap = new Map();
+                [oldGroupSnap, newGroupSnap].forEach(snap => {
+                    if(snap && typeof snap.forEach === 'function') {
+                        snap.forEach(d => {
+                            const data = d.data() || {};
+                            if (data.active === false) return;
+                            groupMap.set(d.id, { id: d.id, ...data });
+                        });
+                    }
+                });
+                globalGroups = Array.from(groupMap.values()).map(g => ({
+                    ...g,
+                    sectionId: g.sectionId || g.section || g.sectionID || g.parentSectionId || '',
+                    name: g.name || g.groupName || g.title || 'Tournament Group',
+                    logo: g.logo || g.logoUrl || g.image || g.imageUrl || ''
+                }));
+
+                globalTournaments = [];
+                const now = Date.now();
+                if(tourSnap && typeof tourSnap.forEach === 'function') {
+                    tourSnap.forEach(d => {
+                        const data = d.data() || {};
+                        if (data.active === false || data.deleted === true) return;
+                        
+                        let tStatus = String(data.status || 'upcoming').toLowerCase();
+                        if(tStatus === 'complete') tStatus = 'completed';
+                        const startTime = Number(data.startTime || 0);
+
+                        if(startTime > 0) {
+                            if(tStatus === 'upcoming' && now >= startTime) {
+                                tStatus = 'live';
+                            }
+                            if(tStatus === 'live' && now >= (startTime + 10 * 60 * 1000)) {
+                                tStatus = 'completed';
+                            }
+                        }
+
+                        if(tStatus === 'completed') {
+                            const completedAt = Number(data.completedAt || startTime || 0);
+                            if(completedAt > 0 && now >= (completedAt + 60 * 60 * 1000 + 10 * 60 * 1000)) {
+                                return; 
+                            }
+                        }
+
+                        globalTournaments.push({ id: d.id, ...data, status: tStatus });
+                    });
+                }
+
+                globalTournaments.forEach(t => {
+                    if (!t.groupId && t.groupName) {
+                        const wanted = String(t.groupName).trim().toLowerCase();
+                        const found = globalGroups.find(g => String(g.name || '').trim().toLowerCase() === wanted);
+                        if (found) t.groupId = found.id;
+                    }
+                });
+
+                renderBanners();
+                renderSections();
+            } catch (e) {
+                console.error("Tournament data load error:", e);
+                showToast("Tournament data load করতে সমস্যা হয়েছে!", "error");
+            }
+        }
+
+        let bannerIndex = 0;
+        let bannerTimer = null;
+
+        function renderBanners() {
+            const container = document.getElementById('banner-container');
+            const slider = document.getElementById('banner-slider');
+            if(!container || !slider) return;
+            const activeBanners = globalBanners.filter(b => b && b.imageUrl);
+            clearInterval(bannerTimer);
+            bannerIndex = 0;
+            if(activeBanners.length === 0) { container.style.display = 'none'; return; }
+            container.style.display = 'block';
+            slider.innerHTML = '';
+            activeBanners.forEach((b, i) => {
+                const wrap = document.createElement('div');
+                wrap.className = 'w-full flex-shrink-0 h-36 relative bg-slate-900';
+                if (b.type === 'video') {
+                    const video = document.createElement('video');
+                    video.src = b.imageUrl; video.className='w-full h-full object-cover';
+                    video.muted=true; video.autoplay=i===0; video.playsInline=true; video.loop=true;
+                    wrap.appendChild(video);
+                } else {
+                    const img=document.createElement('img'); img.src=b.imageUrl; img.className='w-full h-full object-cover'; img.alt='Banner'; img.loading=i===0?'eager':'lazy'; wrap.appendChild(img);
+                }
+                if(b.link){ const a=document.createElement('a'); a.href=b.link; a.target='_blank'; a.rel='noopener noreferrer'; a.className='absolute inset-0'; wrap.appendChild(a); }
+                slider.appendChild(wrap);
+            });
+            const showBanner=(i)=>{ bannerIndex=(i+activeBanners.length)%activeBanners.length; slider.style.transform=`translateX(-${bannerIndex*100}%)`; };
+            showBanner(0);
+            if(activeBanners.length>1) bannerTimer=setInterval(()=>showBanner(bannerIndex+1),5000);
+        }
+
+        function renderSections() {
+            const grid = document.getElementById('sections-grid');
+            if(!grid) return;
+            grid.innerHTML = "";
+            document.getElementById('view-sections').style.display = 'block';
+            document.getElementById('view-groups').style.display = 'none';
+            document.getElementById('view-tournaments').style.display = 'none';
+            document.getElementById('back-btn').style.display = 'none';
+
+            globalSections.forEach(sec => {
+                const groupsInSec = globalGroups.filter(g => String(g.sectionId) === String(sec.id)).map(g => g.id);
+                const liveCount = globalTournaments.filter(t => groupsInSec.includes(t.groupId) && ['live','playing','ongoing_live','in_progress','upcoming'].includes(String(t.status || '').toLowerCase())).length;
+
+                grid.innerHTML += `
+                    <div onclick="openSection('${sec.id}', '${sec.name}')" class="glass-card glow-effect rounded-2xl p-4 cursor-pointer flex items-center justify-between shadow-lg">
+                        <div class="flex items-center space-x-4 pointer-events-none">
+                            <div class="w-14 h-14 rounded-xl bg-blue-600/20 border border-blue-500/30 flex items-center justify-center text-blue-400 text-2xl">
+                                <i class="${sec.icon || 'fa-solid fa-gamepad'}"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-base font-bold text-white">${sec.name}</h4>
+                                <span class="text-[11px] text-emerald-400 font-semibold block mt-0.5"><i class="fa-solid fa-circle text-[8px] mr-1"></i> ${liveCount} Matches Available</span>
+                            </div>
+                        </div>
+                        <div class="text-slate-500 text-sm pointer-events-none"><i class="fa-solid fa-chevron-right"></i></div>
+                    </div>
+                `;
+            });
+        }
+
+        window.openSection = function(secId, secName) {
+            selectedSectionId = secId;
+            const titleEl = document.getElementById('current-section-title');
+            if(titleEl) titleEl.innerText = secName;
+            renderGroups(secId);
+        }
+
+        function renderGroups(secId) {
+            const grid = document.getElementById('groups-grid');
+            if(!grid) return;
+            grid.innerHTML = "";
+            document.getElementById('view-sections').style.display = 'none';
+            document.getElementById('view-groups').style.display = 'block';
+            document.getElementById('back-btn').style.display = 'block';
+
+            const groups = globalGroups.filter(g => String(g.sectionId) === String(secId));
+            groups.forEach(g => {
+                const groupTours = globalTournaments.filter(t => String(t.groupId || '') === String(g.id) || (!t.groupId && String(t.groupName || '').trim().toLowerCase() === String(g.name || '').trim().toLowerCase()));
+                const liveCount = groupTours.filter(t => ['live','playing','ongoing_live','in_progress','upcoming'].includes(String(t.status || '').toLowerCase())).length;
+
+                grid.innerHTML += `
+                    <div onclick="openGroup('${g.id}', '${g.name}')" class="glass-card glow-effect rounded-2xl p-4 cursor-pointer flex items-center justify-between shadow-lg">
+                        <div class="flex items-center space-x-4 pointer-events-none">
+                            <div class="w-14 h-14 rounded-xl bg-slate-800 border border-slate-700 flex items-center justify-center text-blue-400 text-xl">
+                                <i class="fa-solid fa-fire"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-base font-bold text-white">${g.name}</h4>
+                                <span class="text-[11px] text-blue-400 font-semibold block mt-0.5"><i class="fa-solid fa-gamepad mr-1"></i> ${liveCount} Matches Active</span>
+                            </div>
+                        </div>
+                        <div class="text-slate-500 text-sm pointer-events-none"><i class="fa-solid fa-chevron-right"></i></div>
+                    </div>
+                `;
+            });
+        }
+
+        window.openGroup = function(groupId, groupName) {
+            selectedGroupId = groupId;
+            const titleEl = document.getElementById('current-group-title');
+            if(titleEl) titleEl.innerText = groupName;
+            renderTournaments(groupId);
+        }
+
+        function startLiveCountdowns() {
+            if(countdownInterval) clearInterval(countdownInterval);
+            countdownInterval = setInterval(() => {
+                document.querySelectorAll('.match-countdown').forEach(el => {
+                    const startTime = Number(el.getAttribute('data-starttime'));
+                    if(!startTime) return;
+                    const diff = startTime - Date.now();
+                    if(diff <= 0) {
+                        el.innerText = "LIVE NOW";
+                        el.className = "text-[11px] text-emerald-400 font-bold animate-live-pulse block mt-0.5";
+                    } else {
+                        const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                        const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                        const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+                        el.innerText = `Starts in: ${hours > 0 ? hours + 'h ' : ''}${minutes}m ${seconds}s`;
+                    }
+                });
+            }, 1000);
+        }
+
+        function renderTournaments(groupId) {
+            const grid = document.getElementById('tournaments-grid');
+            if(!grid) return;
+            grid.innerHTML = "";
+            document.getElementById('view-groups').style.display = 'none';
+            document.getElementById('view-tournaments').style.display = 'block';
+            document.getElementById('back-btn').style.display = 'block';
+
+            const selectedGroup = globalGroups.find(g => String(g.id) === String(groupId));
+            const selectedGroupName = selectedGroup ? String(selectedGroup.name || '').trim().toLowerCase() : '';
+            let groupTours = globalTournaments.filter(t => String(t.groupId || '') === String(groupId) || (!t.groupId && selectedGroupName && String(t.groupName || '').trim().toLowerCase() === selectedGroupName));
+            
+            if(currentTournamentFilter !== 'all') {
+                groupTours = groupTours.filter(t => String(t.status || 'upcoming').toLowerCase() === currentTournamentFilter);
+            }
+
+            groupTours = groupTours
+                .map((t, index) => ({ ...t, __sortTime: Number(t.startTime || 0), __originalIndex: index }))
+                .sort((a, b) => {
+                    const aTime = Number.isFinite(a.__sortTime) && a.__sortTime > 0 ? a.__sortTime : Number.POSITIVE_INFINITY;
+                    const bTime = Number.isFinite(b.__sortTime) && b.__sortTime > 0 ? b.__sortTime : Number.POSITIVE_INFINITY;
+                    return aTime - bTime || a.__originalIndex - b.__originalIndex;
+                })
+                .map(({ __sortTime, __originalIndex, ...t }) => t);
+
+            const badge = document.getElementById('match-count-badge');
+            if(badge) badge.innerText = `${groupTours.length} Matches Available`;
+
+            if(groupTours.length === 0) {
+                grid.innerHTML = `<div class="text-center py-12 text-slate-500 text-xs">কোনো ম্যাচ পাওয়া যায়নি</div>`;
+                return;
+            }
+
+            groupTours.forEach(t => {
+                const entryFee = Number(t.entryFee || 0);
+                const participants = Array.isArray(t.participants) ? t.participants : [];
+                const usedSlots = participants.reduce((sum, p) => sum + Number(p.count || (Array.isArray(p.players) ? p.players.length : 1) || 0), 0);
+                const parsedTotalSlots = ((String(t.slots || '').match(/(?:\/|of)\s*(\d+)$/i) || [])[1]);
+                const totalSlots = Number(t.totalSlots || parsedTotalSlots || 50);
+                const slotsText = `${Math.min(usedSlots, totalSlots)} / ${totalSlots}`;
+                const startTimeAttr = t.startTime || (Date.now() + 3600000);
+                const matchTypeLabel = t.matchType || t.type || 'Solo';
+                const typeLower = String(matchTypeLabel).toLowerCase();
+                const maxTeamSize = typeLower === 'solo' ? 1 : (typeLower === 'duo' ? 2 : (typeLower === 'squad' ? 4 : Number(t.slotSize || 1)));
+
+                const hasJoined = participants.some(p => p.uid === currentUserUid);
+                let joinBtnHtml = '';
+                if(hasJoined) {
+                    joinBtnHtml = `
+                        <button disabled class="w-full bg-slate-800 text-emerald-400 border border-emerald-500/30 text-xs font-bold py-2.5 rounded-xl shadow-lg cursor-not-allowed flex items-center justify-center space-x-1.5 opacity-90">
+                            <i class="fa-solid fa-circle-check"></i>
+                            <span>Joined</span>
+                        </button>
+                    `;
+                } else {
+                    joinBtnHtml = `
+                        <button onclick="handleJoinClick('${t.id}', ${entryFee}, '${t.name}', '${matchTypeLabel}', ${maxTeamSize}, ${totalSlots}, ${usedSlots})" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold py-2.5 rounded-xl shadow-lg transition flex items-center justify-center space-x-1.5">
+                            <i class="fa-solid fa-circle-plus"></i>
+                            <span>Join Match</span>
+                        </button>
+                    `;
+                }
+
+                grid.innerHTML += `
+                    <div class="glass-card rounded-2xl p-4 space-y-3 shadow-xl border border-slate-800">
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <h4 class="text-xs font-bold text-white leading-tight">${t.name}</h4>
+                                <span class="text-[10px] text-slate-300 font-semibold block">${t.time || 'Scheduled'}</span>
+                                <span class="text-[11px] text-amber-400 font-bold match-countdown block mt-0.5" data-starttime="${startTimeAttr}">Calculating...</span>
+                            </div>
+                            <span class="bg-blue-600/20 text-blue-400 border border-blue-500/30 px-2.5 py-1 rounded-lg text-[10px] font-bold">${matchTypeLabel} (${maxTeamSize}P)</span>
+                        </div>
+
+                        <div class="grid grid-cols-3 gap-2 text-center text-[10px]">
+                            <div class="bg-[#0b0f1a] border border-slate-800/80 p-2 rounded-xl">
+                                <span class="text-slate-400 block mb-0.5"><i class="fa-solid fa-trophy text-amber-400"></i> PRIZE</span>
+                                <strong class="text-white text-xs">${t.prize || '0 TK'}</strong>
+                            </div>
+                            <div class="bg-[#0b0f1a] border border-slate-800/80 p-2 rounded-xl">
+                                <span class="text-slate-400 block mb-0.5"><i class="fa-solid fa-crosshairs text-rose-400"></i> KILL</span>
+                                <strong class="text-white text-xs">${t.perKill || '0 TK'}</strong>
+                            </div>
+                            <div class="bg-[#0b0f1a] border border-slate-800/80 p-2 rounded-xl">
+                                <span class="text-slate-400 block mb-0.5"><i class="fa-solid fa-wallet text-blue-400"></i> FEE</span>
+                                <strong class="text-white text-xs">${entryFee} TK</strong>
+                            </div>
+                            <div class="bg-[#0b0f1a] border border-slate-800/80 p-2 rounded-xl">
+                                <span class="text-slate-400 block mb-0.5"><i class="fa-solid fa-user text-purple-400"></i> TYPE</span>
+                                <strong class="text-white text-xs">${matchTypeLabel}</strong>
+                            </div>
+                            <div class="bg-[#0b0f1a] border border-slate-800/80 p-2 rounded-xl">
+                                <span class="text-slate-400 block mb-0.5"><i class="fa-solid fa-map text-emerald-400"></i> MAP</span>
+                                <strong class="text-white text-xs">${t.map || 'Bermuda'}</strong>
+                            </div>
+                            <div class="bg-[#0b0f1a] border border-slate-800/80 p-2 rounded-xl">
+                                <span class="text-slate-400 block mb-0.5"><i class="fa-solid fa-users text-indigo-400"></i> SLOTS</span>
+                                <strong class="text-white text-xs">${slotsText}</strong>
+                            </div>
+                        </div>
+
+                        ${joinBtnHtml}
+
+                        <div class="grid grid-cols-2 gap-2">
+                            <button onclick="openRoomDetails('${t.id}')" class="bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold py-2 rounded-xl border border-slate-700/80 transition flex items-center justify-center space-x-1.5">
+                                <i class="fa-solid fa-door-open text-blue-400"></i>
+                                <span>Room</span>
+                            </button>
+                            <button onclick="openPrizeModal('${encodeURIComponent(t.prizeDetails || 'কোনো প্রাইজ বিবরণ দেওয়া হয়নি।')}', '${t.name}')" class="bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold py-2 rounded-xl border border-slate-700/80 transition flex items-center justify-center space-x-1.5">
+                                <i class="fa-solid fa-trophy text-amber-400"></i>
+                                <span>Prizes</span>
+                            </button>
+                        </div>
+                    </div>
+                `;
+            });
+            startLiveCountdowns();
+        }
+
+        window.openPrizeModal = function(detailsText, matchName) {
+            document.getElementById('custom-modal-title').innerText = "Prizes: " + matchName;
+            document.getElementById('custom-modal-body').innerHTML = `
+                <div class="bg-[#0b0f1a] p-3 rounded-xl border border-slate-800 text-slate-200 text-xs leading-relaxed space-y-2">
+                    <p>${decodeURIComponent(detailsText)}</p>
+                </div>
+            `;
+            document.getElementById('custom-action-modal').style.display = 'flex';
+        }
+
+        let pendingJoinTournamentId = null;
+        let pendingJoinEntryFee = 0;
+
+        window.handleJoinClick = function(tournamentId, entryFee, matchName, matchType, maxTeamSize, totalSlots, usedSlots) {
+            pendingJoinTournamentId = tournamentId;
+            pendingJoinEntryFee = Number(entryFee || 0);
+
+            const type = String(matchType || 'Solo');
+            const lower = type.toLowerCase();
+            const maxPlayers = lower === 'solo' ? 1 : (lower === 'duo' ? 2 : (lower === 'squad' ? 4 : Number(maxTeamSize || 1)));
+            const remainingSlots = Math.max(0, Number(totalSlots || 50) - Number(usedSlots || 0));
+
+            if(remainingSlots <= 0) {
+                showToast("এই ম্যাচের সব স্লট পূর্ণ হয়ে গেছে!", "error");
+                return;
+            }
+
+            const allowedMax = Math.min(maxPlayers, remainingSlots);
+            let selectorHtml = '';
+
+            if(lower === 'solo') {
+                selectorHtml = `
+                    <div class="bg-[#0b0f1a] border border-blue-500/30 rounded-xl p-3">
+                        <p class="text-blue-400 font-bold">SOLO Registration</p>
+                        <p class="text-slate-400 text-[10px] mt-1">শুধু ১ জন প্লেয়ারের registration করা যাবে।</p>
+                        <input type="hidden" id="selected-member-count" value="1">
+                    </div>
+                `;
+            } else {
+                let options = '';
+                for(let n = 1; n <= allowedMax; n++) {
+                    options += `<option value="${n}">${n} Player${n > 1 ? 's' : ''}</option>`;
+                }
+                selectorHtml = `
+                    <div>
+                        <label class="text-slate-400 block mb-1">${type} — কতজন Player?</label>
+                        <select id="selected-member-count" onchange="renderPlayerRegistrationFields()" class="w-full bg-[#050811] border border-slate-800 rounded-xl p-2.5 text-white">
+                            ${options}
+                        </select>
+                        <p class="text-[9px] text-slate-500 mt-1">${type === 'Duo' ? '১ বা ২ জন select করতে পারবেন।' : '১, ২, ৩ বা ৪ জন select করতে পারবেন।'}</p>
+                    </div>
+                `;
+            }
+
+            document.getElementById('custom-modal-title').innerText = `Join (${type}): ${matchName}`;
+            document.getElementById('custom-modal-body').innerHTML = `
+                <div class="space-y-3">
+                    ${selectorHtml}
+                    <div id="player-registration-fields"></div>
+                    <div id="registration-fee-summary"></div>
+                </div>
+            `;
+            renderPlayerRegistrationFields();
+            document.getElementById('custom-action-modal').style.display = 'flex';
+        }
+
+        window.renderPlayerRegistrationFields = function() {
+            const countEl = document.getElementById('selected-member-count');
+            if(!countEl) return;
+
+            const memberCount = Number(countEl.value || 1);
+            let inputsHtml = '';
+            for(let i = 1; i <= memberCount; i++) {
+                inputsHtml += `
+                    <div>
+                        <label class="text-slate-400 block mb-1">Player ${i} In-Game Name</label>
+                        <input type="text" id="ign-player-${i}" placeholder="IGN ${i} লিখুন..." class="w-full bg-[#050811] border border-slate-800 rounded-xl p-2.5 text-white player-ign-input">
+                    </div>
+                `;
+            }
+
+            const totalFee = pendingJoinEntryFee * memberCount;
+            document.getElementById('player-registration-fields').innerHTML = inputsHtml;
+            document.getElementById('registration-fee-summary').innerHTML = `
+                <p class="text-[11px] text-blue-400 font-semibold">Total Entry Fee: ৳${totalFee} (${memberCount} Player Slot)</p>
+                <button id="confirm-payment-btn" onclick="submitCurrentTournamentJoin(${totalFee}, ${memberCount})" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2.5 rounded-xl mt-2 transition shadow flex items-center justify-center gap-2">
+                    <span id="btn-text">কনফার্ম ও পেমেন্ট করুন</span>
+                </button>
+            `;
+        }
+
+        window.submitCurrentTournamentJoin = async function(totalFee, memberCount) {
+            if(!pendingJoinTournamentId) {
+                showToast("ম্যাচ সিলেক্ট করা হয়নি!", "error");
+                return;
+            }
+            const btn = document.getElementById('confirm-payment-btn');
+            if(btn) {
+                btn.disabled = true;
+                btn.innerHTML = `<div class="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div> <span>প্রসেসিং হচ্ছে...</span>`;
+            }
+            try {
+                await submitJoinTournament(pendingJoinTournamentId, totalFee, memberCount);
+            } finally {
+                if(btn) {
+                    btn.disabled = false;
+                    btn.innerHTML = `<span id="btn-text">কনফার্ম ও পেমেন্ট করুন</span>`;
+                }
+            }
+        }
+
+        window.submitJoinTournament = async function(tournamentId, totalFee, memberCount) {
+            try {
+                const tourRef = doc(db, "tournaments", tournamentId);
+                const userRef = doc(db, "users", currentUserUid);
+
+                const players = [];
+                for(let i = 1; i <= memberCount; i++) {
+                    const input = document.getElementById(`ign-player-${i}`);
+                    const val = input ? input.value.trim() : '';
+                    if(!val) {
+                        showToast(`দয়া করে প্লেয়ার ${i} এর নাম দিন!`, "warning");
+                        return;
+                    }
+                    players.push(val);
+                }
+
+                await runTransaction(db, async (transaction) => {
+                    const tourSnap = await transaction.get(tourRef);
+                    const userSnap = await transaction.get(userRef);
+
+                    if(!tourSnap.exists() || !userSnap.exists()) throw new Error("DATA_NOT_FOUND");
+
+                    const tour = tourSnap.data() || {};
+                    const user = userSnap.data() || {};
+                    const currentBalance = Number(user.balance || 0);
+
+                    if(currentBalance < Number(totalFee || 0)) throw new Error("INSUFFICIENT_BALANCE");
+
+                    const type = String(tour.matchType || tour.type || 'Solo');
+                    const lower = type.toLowerCase();
+                    const maxPlayers = lower === 'solo' ? 1 : (lower === 'duo' ? 2 : (lower === 'squad' ? 4 : Number(tour.slotSize || 1)));
+
+                    if(memberCount < 1 || memberCount > maxPlayers) throw new Error("INVALID_TEAM_SIZE");
+
+                    const participants = Array.isArray(tour.participants) ? tour.participants : [];
+                    if(participants.some(p => p.uid === currentUserUid)) throw new Error("ALREADY_JOINED");
+
+                    const usedSlots = participants.reduce((sum, p) => sum + Number(p.count || (Array.isArray(p.players) ? p.players.length : 1) || 0), 0);
+                    const parsedTotal = ((String(tour.slots || '').match(/(?:\/|of)\s*(\d+)$/i) || [])[1]);
+                    const totalSlots = Number(tour.totalSlots || parsedTotal || 50);
+
+                    if(usedSlots + memberCount > totalSlots) throw new Error("NOT_ENOUGH_SLOTS");
+
+                    transaction.update(userRef, { balance: currentBalance - Number(totalFee || 0) });
+                    transaction.update(tourRef, {
+                        participants: [...participants, {
+                            uid: currentUserUid,
+                            userName: currentUserName,
+                            players,
+                            count: memberCount,
+                            registeredAt: Date.now()
+                        }],
+                        slots: `${usedSlots + memberCount} / ${totalSlots}`
+                    });
+                });
+
+                currentUserBalance -= Number(totalFee || 0);
+                const balEl = document.getElementById('wallet-balance');
+                if(balEl) balEl.innerText = currentUserBalance;
+                showToast("সফলভাবে টুর্নামেন্টে জয়েন করেছেন!", "success");
+                closeCustomModal();
+                await loadAllData();
+            } catch(e) {
+                const messages = {
+                    INSUFFICIENT_BALANCE: "আপনার পর্যাপ্ত পরিমাণ টাকা নাই!",
+                    ALREADY_JOINED: "আপনি এই ম্যাচে ইতিমধ্যে registration করেছেন!",
+                    NOT_ENOUGH_SLOTS: "যতগুলো slot বাকি আছে, ততজন player নেওয়া যাবে না!",
+                    INVALID_TEAM_SIZE: "এই ম্যাচের team size সঠিক নয়!",
+                    DATA_NOT_FOUND: "ম্যাচ বা user data পাওয়া যায়নি!"
+                };
+                showToast(messages[e.message] || "জয়েন করতে সমস্যা হয়েছে!", "error");
+            }
+        }
+
+        window.openRoomDetails = async function(tournamentId) {
+            try {
+                const tourSnap = await getDoc(doc(db, "tournaments", tournamentId));
+                if(!tourSnap.exists()) return;
+                const data = tourSnap.data();
+                const participants = data.participants || [];
+                const hasJoined = participants.some(p => p.uid === currentUserUid);
+
+                if(!hasJoined) {
+                    document.getElementById('custom-modal-title').innerText = "Access Restricted";
+                    document.getElementById('custom-modal-body').innerHTML = `<p class="text-center text-rose-400 py-4">আপনি এই ম্যাচে জয়েন করেননি!</p>`;
+                    document.getElementById('custom-action-modal').style.display = 'flex';
+                    showToast("প্রথমে ম্যাচে জয়েন করুন!", "warning");
+                    return;
+                }
+
+                const roomId = data.roomId || '';
+                const roomPass = data.roomPass || '';
+
+                document.getElementById('custom-modal-title').innerText = "Room Details";
+                if(roomId || roomPass) {
+                    document.getElementById('custom-modal-body').innerHTML = `
+                        <div class="space-y-3 p-3 bg-[#0b0f1a] rounded-xl border border-slate-800 text-xs">
+                            <div class="flex justify-between items-center bg-slate-900/60 p-2.5 rounded-lg border border-slate-800">
+                                <span class="text-slate-400">Room ID: <strong class="text-blue-400 ml-1 select-all" id="room-id-text">${roomId || 'N/A'}</strong></span>
+                                <button onclick="copyToClipboard('room-id-text')" class="bg-blue-600/20 hover:bg-blue-600/30 text-blue-400 border border-blue-500/30 px-2.5 py-1 rounded-md text-[10px] font-bold transition">
+                                    <i class="fa-regular fa-copy mr-1"></i> Copy
+                                </button>
+                            </div>
+                            <div class="flex justify-between items-center bg-slate-900/60 p-2.5 rounded-lg border border-slate-800">
+                                <span class="text-slate-400">Password: <strong class="text-amber-400 ml-1 select-all" id="room-pass-text">${roomPass || 'N/A'}</strong></span>
+                                <button onclick="copyToClipboard('room-pass-text')" class="bg-amber-600/20 hover:bg-amber-600/30 text-amber-400 border border-amber-500/30 px-2.5 py-1 rounded-md text-[10px] font-bold transition">
+                                    <i class="fa-regular fa-copy mr-1"></i> Copy
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    document.getElementById('custom-modal-body').innerHTML = `<p class="text-center text-slate-300 py-4">রুম ডিটেইলস এখনো দেওয়া হয়নি।</p>`;
+                    showToast("রুম ডিটেইলস এখনো দেওয়া হয়নি!", "warning");
+                }
+                document.getElementById('custom-action-modal').style.display = 'flex';
+            } catch(e) { console.error(e); }
+        }
+
+        window.copyToClipboard = function(elementId) {
+            const el = document.getElementById(elementId);
+            if(!el) return;
+            const text = el.innerText;
+            
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(text).then(() => {
+                    showToast("সফলভাবে কপি করা হয়েছে!", "success");
+                }).catch(() => {
+                    fallbackCopyText(text);
+                });
+            } else {
+                fallbackCopyText(text);
+            }
+        }
+
+        function fallbackCopyText(text) {
+            const textArea = document.createElement("textarea");
+            textArea.value = text;
+            textArea.style.position = "fixed";
+            textArea.style.top = "0";
+            textArea.style.left = "0";
+            textArea.style.opacity = "0";
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+            try {
+                const successful = document.execCommand('copy');
+                if (successful) {
+                    showToast("সফলভাবে কপি করা হয়েছে!", "success");
+                } else {
+                    showToast("কপি করতে সমস্যা হয়েছে!", "error");
+                }
+            } catch (err) {
+                showToast("কপি করতে সমস্যা হয়েছে!", "error");
+            }
+            document.body.removeChild(textArea);
+        }
+
+        window.filterTournaments = function(filterType) {
+            currentTournamentFilter = filterType;
+            ['upcoming', 'live', 'complete'].forEach(f => {
+                const btn = document.getElementById(`t-tab-${f}`);
+                if(btn) {
+                    btn.className = f === filterType ? "flex-1 py-2 text-[11px] font-bold rounded-xl bg-blue-600 text-white shadow transition" : "flex-1 py-2 text-[11px] font-bold rounded-xl text-slate-400 hover:text-white transition";
+                }
+            });
+            renderTournaments(selectedGroupId);
+        }
+
+        window.goBackToHome = function() {
+            selectedGroupId = null;
+            selectedSectionId = null;
+            renderSections();
+        }
+
+        window.closeCustomModal = function() {
+            document.getElementById('custom-action-modal').style.display = 'none';
+            pendingJoinTournamentId = null;
+            pendingJoinEntryFee = 0;
+        }
+
+        window.handleLogout = function() {
+            const modal = document.getElementById("logoutModal");
+            if(modal) modal.style.display = "flex";
+        };
+
+        window.closeLogoutModal = function() {
+            const modal = document.getElementById("logoutModal");
+            if(modal) modal.style.display = "none";
+        };
+
+        window.confirmLogout = async function() {
+            try {
+                await signOut(auth);
+                window.location.replace('login.html');
+            } catch(error) {
+                console.error(error);
+                showToast("Logout করা যায়নি!", "error");
+            }
+        };
+    </script>
+</body>
+</html>

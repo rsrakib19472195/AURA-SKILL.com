@@ -1,0 +1,1342 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Edit Profile</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    >
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&display=swap"
+        rel="stylesheet"
+    >
+
+    <style>
+
+        body {
+            font-family: 'Hind Siliguri', sans-serif;
+            background-color: #050811;
+            color: #f8fafc;
+        }
+
+        .glass-card {
+            background: rgba(15, 23, 42, 0.75);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(30, 41, 59, 0.8);
+        }
+
+        #toast-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            left: 20px;
+            z-index: 9999;
+
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 10px;
+
+            pointer-events: none;
+        }
+
+        .toast {
+            background: rgba(15, 23, 42, 0.96);
+            backdrop-filter: blur(12px);
+
+            border-left: 4px solid #3b82f6;
+
+            color: #fff;
+
+            padding: 12px 18px;
+
+            border-radius: 12px;
+
+            box-shadow:
+                0 10px 25px -5px rgba(0,0,0,0.5);
+
+            font-size: 13px;
+            font-weight: 600;
+
+            display: flex;
+            align-items: center;
+            gap: 10px;
+
+            animation:
+                slideIn 0.3s ease,
+                fadeOut 0.3s ease 2.7s forwards;
+
+            max-width: 360px;
+        }
+
+        .toast.success {
+            border-left-color: #10b981;
+        }
+
+        .toast.error {
+            border-left-color: #ef4444;
+        }
+
+        .toast.warning {
+            border-left-color: #f59e0b;
+        }
+
+        @keyframes slideIn {
+
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+
+        }
+
+        @keyframes fadeOut {
+
+            from {
+                opacity: 1;
+            }
+
+            to {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+
+        }
+
+        .locked-field {
+            opacity: 0.75;
+            cursor: not-allowed !important;
+        }
+
+        .profile-photo {
+            width: 82px;
+            height: 82px;
+            object-fit: cover;
+            border-radius: 9999px;
+            border: 3px solid rgba(59,130,246,0.35);
+            box-shadow: 0 0 25px rgba(59,130,246,0.15);
+        }
+
+    </style>
+</head>
+
+
+<body class="min-h-screen flex flex-col pb-24">
+
+
+    <!-- Toast -->
+    <div id="toast-container"></div>
+
+
+    <!-- Header -->
+    <header
+        class="px-4 py-3 flex items-center space-x-3 sticky top-0 z-30
+        bg-[#050811]/90 backdrop-blur-md border-b border-slate-900"
+    >
+
+        <a
+            href="profile.html"
+            class="w-9 h-9 rounded-xl bg-slate-800/80
+            hover:bg-slate-800 text-slate-300
+            flex items-center justify-center text-sm transition"
+        >
+            <i class="fa-solid fa-arrow-left"></i>
+        </a>
+
+        <h1 class="text-sm font-black text-white tracking-wide">
+            Edit Profile
+        </h1>
+
+    </header>
+
+
+    <main class="max-w-md mx-auto px-4 py-6 w-full space-y-6">
+
+
+        <!-- PROFILE PREVIEW -->
+
+        <div class="glass-card rounded-3xl p-6 text-center shadow-xl">
+
+            <img
+                id="profile-photo"
+                class="profile-photo mx-auto mb-3"
+                src="https://videotourl.com/images/1789800604014-b96e1edf-d789-4513-8557-9fb63a327a13.jpg"
+                alt="Profile"
+            >
+
+            <h2
+                id="profile-display-name"
+                class="text-base font-bold text-white"
+            >
+                Loading...
+            </h2>
+
+            <p
+                id="profile-display-username"
+                class="text-xs text-slate-500 mt-1"
+            >
+                @username
+            </p>
+
+        </div>
+
+
+        <!-- PERSONAL INFORMATION -->
+
+        <div
+            class="glass-card rounded-3xl p-6 space-y-4
+            border border-slate-800 shadow-xl"
+        >
+
+            <h3
+                class="text-xs font-extrabold text-blue-400
+                uppercase tracking-widest"
+            >
+                Personal Information
+            </h3>
+
+
+            <!-- Full Name -->
+
+            <div class="space-y-1.5">
+
+                <label
+                    class="text-[11px] text-slate-400 font-medium"
+                >
+                    Full Name
+                </label>
+
+                <div class="relative flex items-center">
+
+                    <i
+                        class="fa-solid fa-user
+                        absolute left-3.5 text-slate-500 text-xs"
+                    ></i>
+
+                    <input
+                        type="text"
+                        id="full-name"
+                        placeholder="Enter full name"
+                        autocomplete="name"
+                        class="w-full bg-[#0b101d]
+                        border border-slate-800
+                        rounded-xl py-3 pl-10 pr-4
+                        text-xs text-white
+                        focus:border-blue-500
+                        outline-none transition"
+                    >
+
+                </div>
+
+            </div>
+
+
+            <!-- Username -->
+
+            <div class="space-y-1.5">
+
+                <label
+                    class="text-[11px] text-slate-400 font-medium"
+                >
+                    Username (Locked)
+                </label>
+
+                <div class="relative flex items-center">
+
+                    <i
+                        class="fa-solid fa-at
+                        absolute left-3.5 text-slate-500 text-xs"
+                    ></i>
+
+                    <input
+                        type="text"
+                        id="username"
+                        disabled
+                        readonly
+                        class="locked-field w-full
+                        bg-[#0b101d]/60
+                        border border-slate-900
+                        rounded-xl py-3 pl-10 pr-10
+                        text-xs text-slate-400"
+                    >
+
+                    <i
+                        class="fa-solid fa-lock
+                        absolute right-3.5 text-slate-600 text-xs"
+                    ></i>
+
+                </div>
+
+            </div>
+
+
+            <!-- EMAIL -->
+
+            <div class="space-y-1.5">
+
+                <label
+                    class="text-[11px] text-slate-400 font-medium"
+                >
+                    Email Address (Locked)
+                </label>
+
+                <div class="relative flex items-center">
+
+                    <i
+                        class="fa-solid fa-envelope
+                        absolute left-3.5 text-slate-500 text-xs"
+                    ></i>
+
+                    <input
+                        type="email"
+                        id="email-address"
+                        disabled
+                        readonly
+                        autocomplete="email"
+                        class="locked-field w-full
+                        bg-[#0b101d]/60
+                        border border-slate-900
+                        rounded-xl py-3 pl-10 pr-10
+                        text-xs text-slate-400"
+                    >
+
+                    <i
+                        class="fa-solid fa-lock
+                        absolute right-3.5 text-slate-600 text-xs"
+                    ></i>
+
+                </div>
+
+            </div>
+
+
+            <!-- WHATSAPP / PHONE -->
+
+            <div class="space-y-1.5">
+
+                <label
+                    class="text-[11px] text-slate-400 font-medium"
+                >
+                    WhatsApp Number (Locked)
+                </label>
+
+                <div class="relative flex items-center">
+
+                    <i
+                        class="fa-brands fa-whatsapp
+                        absolute left-3.5 text-slate-500 text-xs"
+                    ></i>
+
+                    <input
+                        type="text"
+                        id="phone-number"
+                        disabled
+                        readonly
+                        autocomplete="tel"
+                        class="locked-field w-full
+                        bg-[#0b101d]/60
+                        border border-slate-900
+                        rounded-xl py-3 pl-10 pr-10
+                        text-xs text-slate-400"
+                    >
+
+                    <i
+                        class="fa-solid fa-lock
+                        absolute right-3.5 text-slate-600 text-xs"
+                    ></i>
+
+                </div>
+
+            </div>
+
+
+            <!-- UPDATE -->
+
+            <button
+                id="update-profile-btn"
+                onclick="updateProfileInfo()"
+                class="w-full bg-blue-600
+                hover:bg-blue-500
+                text-white text-xs font-black
+                py-3.5 rounded-xl transition
+                shadow-lg shadow-blue-600/20
+                uppercase tracking-wider mt-2"
+            >
+                Update Profile
+            </button>
+
+        </div>
+
+
+        <!-- SECURITY -->
+
+        <div
+            class="glass-card rounded-3xl p-6 space-y-4
+            border border-slate-800 shadow-xl"
+        >
+
+            <h3
+                class="text-xs font-extrabold text-rose-400
+                uppercase tracking-widest"
+            >
+                Security
+            </h3>
+
+
+            <!-- CURRENT PASSWORD -->
+
+            <div class="space-y-1.5">
+
+                <label
+                    class="text-[11px] text-slate-400 font-medium"
+                >
+                    Current Password
+                </label>
+
+                <div class="relative flex items-center">
+
+                    <i
+                        class="fa-solid fa-lock
+                        absolute left-3.5 text-slate-500 text-xs"
+                    ></i>
+
+                    <input
+                        type="password"
+                        id="current-password"
+                        placeholder="Enter current password"
+                        autocomplete="current-password"
+                        class="w-full bg-[#0b101d]
+                        border border-slate-800
+                        rounded-xl py-3 pl-10 pr-4
+                        text-xs text-white
+                        focus:border-blue-500
+                        outline-none transition"
+                    >
+
+                </div>
+
+            </div>
+
+
+            <!-- NEW PASSWORD -->
+
+            <div class="space-y-1.5">
+
+                <label
+                    class="text-[11px] text-slate-400 font-medium"
+                >
+                    New Password
+                </label>
+
+                <div class="relative flex items-center">
+
+                    <i
+                        class="fa-solid fa-key
+                        absolute left-3.5 text-slate-500 text-xs"
+                    ></i>
+
+                    <input
+                        type="password"
+                        id="new-password"
+                        placeholder="Enter new password"
+                        autocomplete="new-password"
+                        class="w-full bg-[#0b101d]
+                        border border-slate-800
+                        rounded-xl py-3 pl-10 pr-4
+                        text-xs text-white
+                        focus:border-blue-500
+                        outline-none transition"
+                    >
+
+                </div>
+
+            </div>
+
+
+            <!-- CONFIRM -->
+
+            <div class="space-y-1.5">
+
+                <label
+                    class="text-[11px] text-slate-400 font-medium"
+                >
+                    Confirm New Password
+                </label>
+
+                <div class="relative flex items-center">
+
+                    <i
+                        class="fa-solid fa-key
+                        absolute left-3.5 text-slate-500 text-xs"
+                    ></i>
+
+                    <input
+                        type="password"
+                        id="confirm-password"
+                        placeholder="Confirm new password"
+                        autocomplete="new-password"
+                        class="w-full bg-[#0b101d]
+                        border border-slate-800
+                        rounded-xl py-3 pl-10 pr-4
+                        text-xs text-white
+                        focus:border-blue-500
+                        outline-none transition"
+                    >
+
+                </div>
+
+                <div
+                    id="password-status"
+                    class="hidden text-[11px]"
+                ></div>
+
+            </div>
+
+
+            <!-- CHANGE PASSWORD -->
+
+            <button
+                id="change-password-btn"
+                onclick="changeUserPassword()"
+                class="w-full bg-rose-600
+                hover:bg-rose-500
+                text-white text-xs font-black
+                py-3.5 rounded-xl transition
+                shadow-lg shadow-rose-600/20
+                uppercase tracking-wider mt-2"
+            >
+                Change Password
+            </button>
+
+        </div>
+
+    </main>
+
+
+
+<script type="module">
+
+import {
+    auth,
+    db,
+    DEFAULT_PROFILE_PHOTO
+} from "./firebase.js";
+
+
+import {
+    onAuthStateChanged,
+    EmailAuthProvider,
+    reauthenticateWithCredential,
+    updatePassword
+} from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+
+
+import {
+    doc,
+    getDoc,
+    setDoc,
+    updateDoc,
+    serverTimestamp
+} from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+
+
+const FALLBACK_PROFILE_PHOTO =
+    "https://videotourl.com/images/1789800604014-b96e1edf-d789-4513-8557-9fb63a327a13.jpg";
+
+
+const PROFILE_PHOTO =
+    DEFAULT_PROFILE_PHOTO ||
+    FALLBACK_PROFILE_PHOTO;
+
+
+let currentUser = null;
+
+
+window.showToast = function(
+    message,
+    type = "success"
+){
+
+    const container =
+        document.getElementById(
+            "toast-container"
+        );
+
+    if(!container) return;
+
+
+    const toast =
+        document.createElement("div");
+
+
+    toast.className =
+        `toast ${type}`;
+
+
+    let icon =
+        "fa-solid fa-circle-check text-emerald-400";
+
+
+    if(type === "error"){
+
+        icon =
+            "fa-solid fa-circle-xmark text-red-400";
+
+    }
+
+
+    if(type === "warning"){
+
+        icon =
+            "fa-solid fa-triangle-exclamation text-amber-400";
+
+    }
+
+
+    toast.innerHTML = `
+        <i class="${icon}"></i>
+        <span>${message}</span>
+    `;
+
+
+    container.appendChild(toast);
+
+
+    setTimeout(
+        ()=>{
+            toast.remove();
+        },
+        3000
+    );
+
+};
+
+
+async function loadUserProfile(user){
+
+    const userRef =
+        doc(
+            db,
+            "users",
+            user.uid
+        );
+
+
+    const snapshot =
+        await getDoc(userRef);
+
+    if(!snapshot.exists()){
+
+        const defaultData = {
+
+            uid:
+                user.uid,
+
+            email:
+                user.email || "",
+
+            name:
+                user.displayName ||
+                user.email?.split("@")[0] ||
+                "User",
+
+            fullName:
+                user.displayName ||
+                user.email?.split("@")[0] ||
+                "User",
+
+            displayName:
+                user.displayName ||
+                user.email?.split("@")[0] ||
+                "User",
+
+            username:
+                "",
+
+            whatsapp:
+                "",
+
+            whatsappNumber:
+                "",
+
+            phone:
+                "",
+
+            photoURL:
+                PROFILE_PHOTO,
+
+            balance:
+                0,
+
+            winnings:
+                0,
+
+            matchesPlayed:
+                0,
+
+            matchesWon:
+                0,
+
+            matchesLost:
+                0,
+
+            totalEarnings:
+                0,
+
+            createdAt:
+                serverTimestamp(),
+
+            updatedAt:
+                serverTimestamp()
+
+        };
+
+
+        await setDoc(
+            userRef,
+            defaultData,
+            { merge:true }
+        );
+
+
+        fillProfileForm(
+            defaultData,
+            user
+        );
+
+
+        return;
+    }
+
+
+    const data =
+        snapshot.data();
+
+    fillProfileForm(
+        data,
+        user
+    );
+
+}
+
+
+function fillProfileForm(
+    data,
+    user
+){
+
+    const name =
+        data.name ||
+        data.fullName ||
+        data.displayName ||
+        user.displayName ||
+        (
+            user.email
+                ? user.email.split("@")[0]
+                : "User"
+        );
+
+
+    const username =
+        data.username ||
+        "";
+
+
+    const email =
+        user.email ||
+        data.email ||
+        "";
+
+
+    const phone =
+        data.whatsapp ||
+        data.whatsappNumber ||
+        data.phone ||
+        "";
+
+
+    const photo =
+        data.photoURL ||
+        PROFILE_PHOTO;
+
+
+    document.getElementById(
+        "full-name"
+    ).value = name;
+
+
+    document.getElementById(
+        "username"
+    ).value =
+        username
+        ? "@" + username
+        : "";
+
+
+    document.getElementById(
+        "email-address"
+    ).value =
+        email;
+
+
+    document.getElementById(
+        "phone-number"
+    ).value =
+        phone;
+
+
+    document.getElementById(
+        "profile-photo"
+    ).src =
+        photo;
+
+
+    document.getElementById(
+        "profile-display-name"
+    ).textContent =
+        name;
+
+
+    document.getElementById(
+        "profile-display-username"
+    ).textContent =
+        username
+        ? "@" + username
+        : "Username not set";
+
+}
+
+
+onAuthStateChanged(
+    auth,
+    async(user)=>{
+
+        if(!user){
+
+            showToast(
+                "দয়া করে login করুন!",
+                "warning"
+            );
+
+
+            setTimeout(
+                ()=>{
+                    window.location.replace(
+                        "login.html"
+                    );
+                },
+                700
+            );
+
+
+            return;
+        }
+
+
+        currentUser =
+            user;
+
+
+        try{
+
+            await loadUserProfile(
+                user
+            );
+
+        }catch(error){
+
+            console.error(
+                "PROFILE LOAD ERROR:",
+                error
+            );
+
+
+            showToast(
+                "Profile data load করতে সমস্যা হয়েছে!",
+                "error"
+            );
+
+        }
+
+    }
+);
+
+
+window.updateProfileInfo =
+async function(){
+
+    if(!currentUser){
+
+        showToast(
+            "User পাওয়া যায়নি!",
+            "error"
+        );
+
+        return;
+    }
+
+
+    const name =
+        document
+        .getElementById(
+            "full-name"
+        )
+        .value
+        .trim();
+
+
+    if(!name){
+
+        showToast(
+            "Full name খালি রাখা যাবে না!",
+            "warning"
+        );
+
+        return;
+    }
+
+
+    const button =
+        document.getElementById(
+            "update-profile-btn"
+        );
+
+
+    button.disabled =
+        true;
+
+    button.innerText =
+        "Updating...";
+
+
+    try{
+
+        const userRef =
+            doc(
+                db,
+                "users",
+                currentUser.uid
+            );
+
+        await setDoc(
+            userRef,
+            {
+
+                uid:
+                    currentUser.uid,
+
+                name:
+                    name,
+
+                fullName:
+                    name,
+
+                photoURL:
+                    PROFILE_PHOTO,
+
+                updatedAt:
+                    serverTimestamp()
+
+            },
+            {
+                merge:true
+            }
+        );
+
+
+        document.getElementById(
+            "profile-display-name"
+        ).textContent =
+            name;
+
+
+        document.getElementById(
+            "profile-photo"
+        ).src =
+            PROFILE_PHOTO;
+
+
+        showToast(
+            "Profile successfully updated!",
+            "success"
+        );
+
+
+    }catch(error){
+
+        console.error(
+            "PROFILE UPDATE ERROR:",
+            error
+        );
+
+
+        showToast(
+            "Profile update করা যায়নি!",
+            "error"
+        );
+
+    }finally{
+
+        button.disabled =
+            false;
+
+        button.innerText =
+            "Update Profile";
+
+    }
+
+};
+
+
+const newPasswordInput =
+    document.getElementById(
+        "new-password"
+    );
+
+
+const confirmPasswordInput =
+    document.getElementById(
+        "confirm-password"
+    );
+
+
+const passwordStatus =
+    document.getElementById(
+        "password-status"
+    );
+
+
+function checkPasswordMatch(){
+
+    const newPass =
+        newPasswordInput.value;
+
+
+    const confirmPass =
+        confirmPasswordInput.value;
+
+
+    if(!confirmPass){
+
+        passwordStatus.classList.add(
+            "hidden"
+        );
+
+        return;
+    }
+
+
+    passwordStatus.classList.remove(
+        "hidden"
+    );
+
+
+    if(newPass === confirmPass){
+
+        passwordStatus.className =
+            "text-[11px] text-emerald-400";
+
+
+        passwordStatus.innerHTML =
+            '<i class="fa-solid fa-circle-check mr-1"></i>Password match করছে';
+
+    }else{
+
+        passwordStatus.className =
+            "text-[11px] text-rose-400";
+
+
+        passwordStatus.innerHTML =
+            '<i class="fa-solid fa-circle-xmark mr-1"></i>Password match করছে না';
+
+    }
+
+}
+
+
+newPasswordInput.addEventListener(
+    "input",
+    checkPasswordMatch
+);
+
+
+confirmPasswordInput.addEventListener(
+    "input",
+    checkPasswordMatch
+);
+
+
+window.changeUserPassword =
+async function(){
+
+    if(!currentUser){
+
+        showToast(
+            "User পাওয়া যায়নি!",
+            "error"
+        );
+
+        return;
+    }
+
+
+    const currentPass =
+        document
+        .getElementById(
+            "current-password"
+        )
+        .value;
+
+
+    const newPass =
+        document
+        .getElementById(
+            "new-password"
+        )
+        .value;
+
+
+    const confirmPass =
+        document
+        .getElementById(
+            "confirm-password"
+        )
+        .value;
+
+
+    if(
+        !currentPass ||
+        !newPass ||
+        !confirmPass
+    ){
+
+        showToast(
+            "সব password field পূরণ করুন!",
+            "warning"
+        );
+
+        return;
+    }
+
+
+    if(newPass.length < 6){
+
+        showToast(
+            "Password কমপক্ষে 6 characters হতে হবে!",
+            "warning"
+        );
+
+        return;
+    }
+
+
+    if(newPass !== confirmPass){
+
+        showToast(
+            "New password match করছে না!",
+            "error"
+        );
+
+        return;
+    }
+
+
+    if(currentPass === newPass){
+
+        showToast(
+            "নতুন password আগের password-এর মতো হতে পারবে না!",
+            "warning"
+        );
+
+        return;
+    }
+
+
+    const button =
+        document.getElementById(
+            "change-password-btn"
+        );
+
+
+    button.disabled =
+        true;
+
+    button.innerText =
+        "Changing...";
+
+
+    try{
+
+        if(!currentUser.email){
+
+            throw new Error(
+                "No email associated with account."
+            );
+
+        }
+
+
+        const credential =
+            EmailAuthProvider.credential(
+                currentUser.email,
+                currentPass
+            );
+
+        await reauthenticateWithCredential(
+            currentUser,
+            credential
+        );
+
+        await updatePassword(
+            currentUser,
+            newPass
+        );
+
+
+        showToast(
+            "Password successfully changed!",
+            "success"
+        );
+
+
+        document.getElementById(
+            "current-password"
+        ).value = "";
+
+
+        document.getElementById(
+            "new-password"
+        ).value = "";
+
+
+        document.getElementById(
+            "confirm-password"
+        ).value = "";
+
+
+        passwordStatus.classList.add(
+            "hidden"
+        );
+
+
+    }catch(error){
+
+        console.error(
+            "PASSWORD CHANGE ERROR:",
+            error
+        );
+
+
+        if(
+            error.code ===
+            "auth/wrong-password"
+            ||
+            error.code ===
+            "auth/invalid-credential"
+        ){
+
+            showToast(
+                "Current password ভুল!",
+                "error"
+            );
+
+        }
+
+        else if(
+            error.code ===
+            "auth/too-many-requests"
+        ){
+
+            showToast(
+                "অনেকবার চেষ্টা হয়েছে। কিছুক্ষণ পরে আবার চেষ্টা করুন!",
+                "warning"
+            );
+
+        }
+
+        else if(
+            error.code ===
+            "auth/requires-recent-login"
+        ){
+
+            showToast(
+                "Security-এর জন্য আবার login করে চেষ্টা করুন!",
+                "warning"
+            );
+
+        }
+
+        else{
+
+            showToast(
+                "Password change করা যায়নি!",
+                "error"
+            );
+
+        }
+
+    }finally{
+
+        button.disabled =
+            false;
+
+        button.innerText =
+            "Change Password";
+
+    }
+
+};
+
+
+[
+    "username",
+    "email-address",
+    "phone-number"
+].forEach(id=>{
+
+    const element =
+        document.getElementById(id);
+
+
+    element.addEventListener(
+        "keydown",
+        e=>{
+            e.preventDefault();
+        }
+    );
+
+
+    element.addEventListener(
+        "paste",
+        e=>{
+            e.preventDefault();
+        }
+    );
+
+
+    element.addEventListener(
+        "cut",
+        e=>{
+            e.preventDefault();
+        }
+    );
+
+});
+
+</script>
+
+</body>
+</html>

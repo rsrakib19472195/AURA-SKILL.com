@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AURA ARMAN TOUR - Add Money</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Hind Siliguri', sans-serif; background-color: #050811; color: #f8fafc; }
+        .glass-card { background: rgba(15, 23, 42, 0.75); backdrop-filter: blur(12px); border: 1px solid rgba(30, 41, 59, 0.8); }
+        #toast-container { position: fixed; top: 20px; right: 20px; z-index: 9999; display: flex; flex-direction: column; gap: 10px; }
+        .toast {
+            background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(12px); border-left: 4px solid #3b82f6;
+            color: #fff; padding: 12px 20px; border-radius: 12px; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
+            font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 10px;
+            animation: slideIn 0.3s ease, fadeOut 0.3s ease 2.7s forwards;
+        }
+        .toast.success { border-left-color: #10b981; }
+        .toast.error { border-left-color: #ef4444; }
+        .toast.warning { border-left-color: #f59e0b; }
+        @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+        @keyframes fadeOut { from { opacity: 1; } to { opacity: 0; transform: translateY(-10px); } }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col pb-24">
+
+    <div id="toast-container"></div>
+
+    <!-- Header -->
+    <header class="px-4 py-3 flex items-center space-x-3 sticky top-0 z-30 bg-[#050811]/90 backdrop-blur-md border-b border-slate-900">
+        <a href="wallet.html" class="w-9 h-9 rounded-xl bg-slate-800/85 hover:bg-slate-800 text-slate-300 flex items-center justify-center text-sm transition">
+            <i class="fa-solid fa-arrow-left"></i>
+        </a>
+        <h1 class="text-sm font-black text-white tracking-wide">Add Money</h1>
+    </header>
+
+    <main class="max-w-md mx-auto px-4 py-6 w-full space-y-6">
+        
+        <!-- Active Gateway Card -->
+        <div class="glass-card rounded-2xl p-4 flex items-center justify-between border border-slate-800">
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center text-base">
+                    <i class="fa-solid fa-wallet"></i>
+                </div>
+                <div>
+                    <h4 class="text-xs font-bold text-white">Add Money</h4>
+                    <p class="text-[10px] text-slate-400">Secure payment via gateway</p>
+                </div>
+            </div>
+            <span class="bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-[10px] font-bold px-2.5 py-1 rounded-lg">Active</span>
+        </div>
+
+        <!-- Enter Amount Card -->
+        <div class="glass-card rounded-3xl p-6 space-y-4 border border-slate-800 shadow-xl">
+            <p class="text-[11px] font-extrabold text-slate-400 uppercase tracking-widest">Enter Amount</p>
+            
+            <div class="relative flex items-center">
+                <span class="absolute left-4 text-base font-black text-slate-400">৳</span>
+                <input type="number" id="deposit-amount" placeholder="Amount" class="w-full bg-[#0b101d] border border-slate-800 rounded-2xl py-3.5 pl-10 pr-4 text-sm font-bold text-white focus:border-emerald-500 outline-none transition">
+            </div>
+
+            <button type="button" onclick="proceedToDeposit()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-slate-950 text-xs font-extrabold py-4 rounded-2xl transition shadow-lg shadow-emerald-600/20 uppercase tracking-wider">
+                <i class="fa-solid fa-lock mr-1.5 text-[10px]"></i> Proceed to Payment
+            </button>
+        </div>
+
+        <!-- Info / Security List -->
+        <div class="glass-card rounded-2xl p-4 space-y-3 border border-slate-800/80 text-[11px] text-slate-400">
+            <div class="flex items-center space-x-2.5">
+                <i class="fa-solid fa-shield-halved text-blue-400"></i>
+                <span>Secure payment powered by our gateway</span>
+            </div>
+            <div class="flex items-center space-x-2.5">
+                <i class="fa-solid fa-bolt text-amber-400"></i>
+                <span>Balance is credited after admin review</span>
+            </div>
+            <div class="flex items-center space-x-2.5">
+                <i class="fa-solid fa-headset text-emerald-400"></i>
+                <span>Contact support if payment is not reflected</span>
+            </div>
+        </div>
+
+        <!-- Deposit Admin Contact Box -->
+        <div class="glass-card rounded-2xl p-4 bg-gradient-to-r from-blue-950/40 to-slate-900/60 border border-blue-500/20 text-center space-y-3">
+            <p class="text-xs text-slate-300 font-semibold leading-relaxed">
+                ৫ মিনিটের ভিতরে যদি আপনার ব্যালেন্স add না হয়, তাহলে নিচে deposit admin-কে মেসেজ দিন।
+            </p>
+            <button onclick="contactAdminWhatsApp()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs py-3 rounded-xl transition shadow-lg shadow-emerald-600/20 flex items-center justify-center space-x-2">
+                <i class="fa-brands fa-whatsapp text-sm"></i>
+                <span>Deposit Admin Contact (WhatsApp)</span>
+            </button>
+        </div>
+
+    </main>
+
+    <!-- Script Logic -->
+    <script type="module">
+        import { auth, db } from "./firebase.js";
+        import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { doc, getDoc, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        let currentUser = null;
+        let currentUserData = null;
+
+        window.showToast = function(message, type = 'success') {
+            const container = document.getElementById('toast-container');
+            if (!container) return;
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            
+            let iconClass = "fa-solid fa-circle-check text-emerald-400";
+            if (type === 'error') iconClass = "fa-solid fa-circle-xmark text-red-400";
+            if (type === 'warning') iconClass = "fa-solid fa-triangle-exclamation text-amber-400";
+
+            toast.innerHTML = `<i class="${iconClass}"></i> <span>${message}</span>`;
+            container.appendChild(toast);
+            setTimeout(() => toast.remove(), 3000);
+        }
+
+        onAuthStateChanged(auth, async (user) => {
+            if (!user) {
+                showToast("দয়া করে লগইন করুন!", "warning");
+                setTimeout(() => { window.location.href = 'login.html'; }, 1000);
+            } else {
+                currentUser = user;
+                const userSnap = await getDoc(doc(db, "users", user.uid));
+                if (userSnap.exists()) {
+                    currentUserData = userSnap.data();
+                }
+            }
+        });
+
+        window.proceedToDeposit = function() {
+            const input = document.getElementById('deposit-amount');
+            const amountInput = input.value.trim();
+            const amount = parseFloat(amountInput);
+
+            // Amount is mandatory
+            if (!amountInput || Number.isNaN(amount)) {
+                showToast("দয়া করে একটি Amount লিখুন!", "warning");
+                input.focus();
+                return;
+            }
+
+            // Minimum deposit is ৳10
+            if (amount < 10) {
+                showToast("Minimum Deposit Amount ৳10!", "warning");
+                input.focus();
+                return;
+            }
+
+            // Only proceed after a valid amount is entered
+            window.location.href = 'deposit.html?amount=' + encodeURIComponent(amount.toFixed(2));
+        };
+
+        window.contactAdminWhatsApp = function() {
+            let email = "Not Found";
+            let uid = "Not Found";
+
+            const user = auth.currentUser;
+            if (user) {
+                email = user.email || "Not Found";
+                uid = user.uid || "Not Found";
+            } else if (currentUser) {
+                email = currentUser.email || "Not Found";
+                uid = currentUser.uid || "Not Found";
+            }
+
+            const text = `ASSALAMUALAIKUM ami AURA ARMAN TOUR app theke support er jonno esechi amar gmail: ${email}, uid: ${uid}. Amar deposit akhono success hoy nai please check kore taratari balance add kore den`;
+            const encodedText = encodeURIComponent(text);
+            window.open(`https://wa.me/8801738990063?text=${encodedText}`, '_blank');
+        }
+    </script>
+
+    <!-- Amount validation is kept outside the Firebase module so the button still works even if Firebase takes time to load. -->
+    <script>
+        window.proceedToDeposit = function() {
+            const input = document.getElementById('deposit-amount');
+            const raw = input ? input.value.trim() : '';
+            const amount = Number(raw);
+
+            const toast = (message, type = 'warning') => {
+                if (typeof window.showToast === 'function') {
+                    window.showToast(message, type);
+                } else {
+                    alert(message);
+                }
+            };
+
+            if (!raw || !Number.isFinite(amount)) {
+                toast('দয়া করে একটি Amount লিখুন!', 'warning');
+                if (input) input.focus();
+                return false;
+            }
+
+            if (amount < 10) {
+                toast('Minimum Deposit Amount ৳10!', 'warning');
+                if (input) input.focus();
+                return false;
+            }
+
+            if (amount > 10000000) {
+                toast('Amount অনেক বেশি হয়েছে!', 'warning');
+                if (input) input.focus();
+                return false;
+            }
+
+            window.location.href = 'deposit.html?amount=' + encodeURIComponent(amount.toFixed(2));
+            return true;
+        };
+    </script>
+</body>
+</html>

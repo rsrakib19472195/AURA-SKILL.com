@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DEVLOPER RS RAKIB - RS Web Studio</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        * { font-family: 'Poppins', sans-serif; }
+        body { background-color: #0b0f19; color: #f3f4f6; overflow-x: hidden; }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #0b0f19; }
+        ::-webkit-scrollbar-thumb { background: #3b82f6; border-radius: 4px; }
+        @keyframes floatImage {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-12px); }
+        }
+        .floating-img { animation: floatImage 4s ease-in-out infinite; }
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        .toast-slide { animation: slideIn 0.3s ease-out forwards; }
+    </style>
+</head>
+<body class="selection:bg-blue-600 selection:text-white">
+
+    <!-- Custom Toast Notification Container -->
+    <div id="toastContainer" class="fixed top-24 right-6 z-50 flex flex-col gap-3 max-w-sm w-full pointer-events-none"></div>
+
+    <header class="fixed top-0 left-0 w-full flex justify-between items-center px-6 lg:px-[8%] py-4 bg-[#0b0f19]/85 backdrop-blur-md z-40 border-b border-white/10">
+        <div class="text-lg lg:text-xl font-bold text-blue-500 tracking-wider">DEVLOPER RS RAKIB</div>
+        <nav class="hidden md:flex items-center space-x-8">
+            <a href="#" class="text-slate-300 hover:text-blue-500 font-medium transition">Home</a>
+            <a href="#services" class="text-slate-300 hover:text-blue-500 font-medium transition">Services</a>
+            <a href="#order-history" class="text-slate-300 hover:text-blue-500 font-medium transition">My Orders</a>
+            <a href="#custom-order" class="text-slate-300 hover:text-blue-500 font-medium transition">Order Project</a>
+            <a href="admin.html" target="_blank" class="bg-indigo-600 hover:bg-indigo-700 px-4 py-2 rounded-xl text-white text-sm font-semibold transition">Admin Panel</a>
+        </nav>
+    </header>
+
+    <section class="min-h-screen flex flex-col lg:flex-row items-center justify-between px-6 lg:px-[8%] pt-32 pb-16 gap-12 bg-[radial-gradient(circle_at_20%_30%,rgba(59,130,246,0.15),transparent_40%),radial-gradient(circle_at_80%_70%,rgba(147,51,234,0.1),transparent_40%)]">
+        <div class="max-w-xl text-center lg:text-left" data-aos="fade-right" data-aos-duration="800">
+            <h3 class="text-xl text-purple-500 font-semibold mb-2">Hello, I'm</h3>
+            <h1 class="text-4xl sm:text-5xl font-bold mb-4 leading-tight">DEVLOPER <span class="text-blue-500">RS RAKIB</span></h1>
+            <p class="text-slate-400 text-sm sm:text-base mb-6 leading-relaxed">Passionate about creating modern, dynamic, and animated web experiences. Expert in Portfolio Websites, App Download Landings, E-commerce, Tournament Platforms & Bug Fixing.</p>
+            <div class="flex justify-center lg:justify-start gap-4 mb-8">
+                <a href="https://wa.link/3whxgj" target="_blank" class="w-11 h-11 flex items-center justify-center bg-white/5 border border-white/10 rounded-full text-slate-100 hover:bg-blue-600 hover:text-white transition"><i class="fab fa-whatsapp text-lg"></i></a>
+                <a href="https://www.tiktok.com/@rsrakib_19?_r=1&_t=ZS-99iv62WPP6t" target="_blank" class="w-11 h-11 flex items-center justify-center bg-white/5 border border-white/10 rounded-full text-slate-100 hover:bg-blue-600 hover:text-white transition"><i class="fab fa-tiktok text-lg"></i></a>
+                <a href="https://www.facebook.com/profile.php?id=61578791656727" target="_blank" class="w-11 h-11 flex items-center justify-center bg-white/5 border border-white/10 rounded-full text-slate-100 hover:bg-blue-600 hover:text-white transition"><i class="fab fa-facebook-f text-lg"></i></a>
+            </div>
+            <div class="flex flex-wrap justify-center lg:justify-start gap-4">
+                <a href="#services" class="bg-blue-600 hover:bg-blue-700 px-8 py-3.5 rounded-xl font-semibold transition shadow-lg shadow-blue-600/30 text-white">Explore Services</a>
+                <a href="#order-history" class="bg-slate-800 hover:bg-slate-700 px-8 py-3.5 rounded-xl font-semibold transition text-slate-200 border border-slate-700">Check My Orders</a>
+            </div>
+        </div>
+        <div class="relative w-[280px] h-[340px] sm:w-[340px] sm:h-[400px] rounded-2xl overflow-hidden shadow-2xl border-2 border-blue-500/30 floating-img" data-aos="fade-left" data-aos-duration="800">
+            <img src="https://videotourl.com/images/1789382393644-5135ec64-61da-4f7d-a575-46ea3a65d62a.png" alt="Developer RS Rakib" class="w-full h-full object-cover">
+        </div>
+    </section>
+
+    <section id="services" class="py-20 px-6 lg:px-[8%] bg-[#0e1626] border-t border-white/5">
+        <h2 class="text-3xl font-bold text-center mb-12" data-aos="fade-up">Our Professional <span>Services</span></h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+            <div class="bg-slate-900 border border-slate-800 p-6 rounded-3xl transition hover:border-blue-500/50 flex flex-col justify-between">
+                <div>
+                    <div class="text-blue-500 text-3xl mb-4"><i class="fas fa-id-card"></i></div>
+                    <h3 class="text-lg font-bold mb-2">Portfolio Website</h3>
+                    <p class="text-slate-400 text-xs mb-4">Modern dark-themed animated personal portfolio websites.</p>
+                </div>
+                <div>
+                    <div class="text-xl font-extrabold text-blue-400 mb-4">price er jonno whatsapp koren</div>
+                    <button onclick="selectCategory('Portfolio Website')" class="w-full bg-blue-600 hover:bg-blue-700 py-2.5 rounded-xl font-semibold text-xs text-white transition">Order Portfolio</button>
+                </div>
+            </div>
+            <div class="bg-slate-900 border border-slate-800 p-6 rounded-3xl transition hover:border-blue-500/50 flex flex-col justify-between">
+                <div>
+                    <div class="text-purple-500 text-3xl mb-4"><i class="fas fa-mobile-screen-button"></i></div>
+                    <h3 class="text-lg font-bold mb-2">App Download Website</h3>
+                    <p class="text-slate-400 text-xs mb-4">APK download landing page with admin panel controls.</p>
+                </div>
+                <div>
+                    <div class="text-xl font-extrabold text-purple-400 mb-4">Price via WhatsApp</div>
+                    <button onclick="selectCategory('App Download Website')" class="w-full bg-purple-600 hover:bg-purple-700 py-2.5 rounded-xl font-semibold text-xs text-white transition">Order App Website</button>
+                </div>
+            </div>
+            <div class="bg-slate-900 border border-slate-800 p-6 rounded-3xl transition hover:border-blue-500/50 flex flex-col justify-between">
+                <div>
+                    <div class="text-blue-500 text-3xl mb-4"><i class="fas fa-shopping-cart"></i></div>
+                    <h3 class="text-lg font-bold mb-2">E-commerce Website</h3>
+                    <p class="text-slate-400 text-xs mb-4">Complete online store with product management and cart.</p>
+                </div>
+                <div>
+                    <div class="text-xl font-extrabold text-blue-400 mb-4">Price via WhatsApp</div>
+                    <button onclick="selectCategory('E-commerce Website')" class="w-full bg-blue-600 hover:bg-blue-700 py-2.5 rounded-xl font-semibold text-xs text-white transition">Order E-commerce</button>
+                </div>
+            </div>
+            <div class="bg-slate-900 border border-slate-800 p-6 rounded-3xl transition hover:border-blue-500/50 flex flex-col justify-between">
+                <div>
+                    <div class="text-amber-500 text-3xl mb-4"><i class="fas fa-trophy"></i></div>
+                    <h3 class="text-lg font-bold mb-2">Tournament Website</h3>
+                    <p class="text-slate-400 text-xs mb-4">Professional esports tournament management platforms.</p>
+                </div>
+                <div>
+                    <div class="text-xl font-extrabold text-amber-400 mb-4">Price via WhatsApp</div>
+                    <button onclick="selectCategory('Tournament Website')" class="w-full bg-amber-500 hover:bg-amber-600 text-black py-2.5 rounded-xl font-bold text-xs transition">Order Tournament Site</button>
+                </div>
+            </div>
+            <div class="bg-slate-900 border border-slate-800 p-6 rounded-3xl transition hover:border-blue-500/50 flex flex-col justify-between">
+                <div>
+                    <div class="text-blue-500 text-3xl mb-4"><i class="fas fa-laptop-code"></i></div>
+                    <h3 class="text-lg font-bold mb-2">Custom Website Design</h3>
+                    <p class="text-slate-400 text-xs mb-4">Tailored UI/UX and custom web apps built for your needs.</p>
+                </div>
+                <div>
+                    <div class="text-xl font-extrabold text-blue-400 mb-4">Price via WhatsApp</div>
+                    <button onclick="selectCategory('Custom Website Design')" class="w-full bg-blue-600 hover:bg-blue-700 py-2.5 rounded-xl font-semibold text-xs text-white transition">Get Custom Quote</button>
+                </div>
+            </div>
+            <div class="bg-slate-900 border border-slate-800 p-6 rounded-3xl transition hover:border-blue-500/50 flex flex-col justify-between">
+                <div>
+                    <div class="text-blue-500 text-3xl mb-4"><i class="fas fa-bug"></i></div>
+                    <h3 class="text-lg font-bold mb-2">Bug Fix & Updates</h3>
+                    <p class="text-slate-400 text-xs mb-4">Fix errors or integrate brand new exciting features.</p>
+                </div>
+                <div>
+                    <div class="text-xl font-extrabold text-blue-400 mb-4">Price via WhatsApp</div>
+                    <button onclick="selectCategory('Existing Website Bug Fix')" class="w-full bg-blue-600 hover:bg-blue-700 py-2.5 rounded-xl font-semibold text-xs text-white transition">Fix Bugs / Update</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Order History Section -->
+    <section id="order-history" class="py-20 px-4 max-w-4xl mx-auto">
+        <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 sm:p-10 shadow-2xl">
+            <h2 class="text-2xl font-bold mb-2 text-center text-blue-400"><i class="fas fa-history"></i> My Order History</h2>
+            <p class="text-slate-400 text-sm text-center mb-6">Track your submitted project orders and communicate with the admin.</p>
+            
+            <div id="noOrderContainer" class="text-center py-10">
+                <div class="w-16 h-16 bg-slate-800 rounded-full flex items-center justify-center mx-auto text-slate-500 text-2xl mb-4">
+                    <i class="fas fa-box-open"></i>
+                </div>
+                <p class="text-slate-400 text-sm mb-4">No recent orders found from this device.</p>
+                <a href="#custom-order" class="inline-block bg-blue-600 hover:bg-blue-700 px-6 py-2.5 rounded-xl text-white text-xs font-semibold transition">Place a New Order</a>
+            </div>
+
+            <div id="ordersListContainer" class="hidden space-y-4"></div>
+        </div>
+    </section>
+
+    <!-- Custom Order & Live Chat Section -->
+    <section id="custom-order" class="py-20 px-4 max-w-3xl mx-auto">
+        <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 sm:p-10 shadow-2xl">
+            <h2 class="text-2xl font-bold mb-2 text-center">Place Project / Website Order</h2>
+            <p class="text-slate-400 text-sm text-center mb-8">Fill out the form below to submit your order and start live chat with admin.</p>
+            
+            <form id="orderForm" onsubmit="submitCustomOrder(event)" class="space-y-6">
+                <div>
+                    <label class="block text-sm font-medium mb-2">Your Name</label>
+                    <input type="text" id="clientName" required class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 focus:outline-none focus:border-blue-500 text-white text-sm" placeholder="Rakib Hossain">
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium mb-2">Gmail / Email</label>
+                        <input type="email" id="clientEmail" required class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 focus:outline-none focus:border-blue-500 text-white text-sm" placeholder="email@gmail.com">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-2">WhatsApp Number (11 digits, 01...)</label>
+                        <input type="text" id="clientPhone" required maxlength="11" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 focus:outline-none focus:border-blue-500 text-white text-sm" placeholder="01712345678">
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium mb-2">Service Category</label>
+                        <select id="clientCategory" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 focus:outline-none focus:border-blue-500 text-white text-sm">
+                            <option value="Portfolio Website">Portfolio Website</option>
+                            <option value="App Download Website">App Download Website</option>
+                            <option value="E-commerce Website">E-commerce Website</option>
+                            <option value="Tournament Website">Tournament Website</option>
+                            <option value="Custom Website Design">Custom Website Design</option>
+                            <option value="Existing Website Bug Fix">Existing Website Bug Fix</option>
+                            <option value="Add New Feature">Add New Feature Update</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-2">Hosting & Domain Preference</label>
+                        <select id="clientDomain" onchange="toggleDomainInput()" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 focus:outline-none focus:border-blue-500 text-white text-sm">
+                            <option value="Don't need, I have my own domain">Don't need, I have my own domain</option>
+                            <option value="Need Custom domain and hosting setup">Need Custom domain and hosting setup</option>
+                            <option value="Normal Hosting / Google Publish">Normal Hosting / Google Publish</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div id="domainNameBox" class="hidden">
+                    <label class="block text-sm font-medium mb-2 text-blue-400">Desired Domain Name (e.g. rsweb)</label>
+                    <div class="flex gap-2">
+                        <input type="text" id="clientDomainName" oninput="validateDomainInput(this)" class="w-2/3 bg-slate-950 border border-blue-500/50 rounded-xl px-4 py-3 focus:outline-none focus:border-blue-500 text-white text-sm" placeholder="rsweb">
+                        <select id="clientDomainExt" class="w-1/3 bg-slate-950 border border-blue-500/50 rounded-xl px-3 py-3 focus:outline-none focus:border-blue-500 text-white text-sm"></select>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="flex justify-between items-center mb-2">
+                        <label class="block text-sm font-medium">Project Details / Requirements</label>
+                        <span id="charCountDisplay" class="text-xs text-slate-400">0 / 1000 characters (Min: 20)</span>
+                    </div>
+                    <textarea id="clientDetails" rows="4" required minlength="20" maxlength="1000" oninput="updateCharCount(this)" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 focus:outline-none focus:border-blue-500 text-white text-sm" placeholder="Describe your project specifications (Minimum 20 characters)..."></textarea>
+                </div>
+                <button type="submit" id="submitBtn" class="w-full bg-blue-600 hover:bg-blue-700 py-4 rounded-xl font-semibold transition text-white shadow-lg shadow-blue-600/30 text-sm">Submit Order & Open Live Chat</button>
+            </form>
+            <div id="successMsg" class="hidden mt-6 p-4 bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-center rounded-xl font-medium text-xs">
+                Order submitted successfully! You can track it in your Order History.
+            </div>
+
+            <div id="userChatSection" class="hidden mt-10 border-t border-slate-800 pt-8">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 id="chatSectionHeader" class="text-base font-bold text-blue-400"><i class="fas fa-comments"></i> Direct Chat with Admin</h3>
+                    <button onclick="closeUserChat()" class="text-slate-400 hover:text-white text-xs bg-slate-800 px-3 py-1 rounded-lg">Close Chat</button>
+                </div>
+                <div id="chatMessagesBox" class="h-60 bg-slate-950 border border-slate-800 rounded-2xl p-4 overflow-y-auto space-y-3 mb-4 flex flex-col"></div>
+                <form id="chatForm" onsubmit="sendUserMessage(event)" class="flex gap-2">
+                    <input type="text" id="userMsgInput" required placeholder="Type your message..." class="flex-1 bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 focus:outline-none focus:border-blue-500 text-white text-sm">
+                    <button type="submit" class="bg-blue-600 hover:bg-blue-700 px-6 py-3 rounded-xl font-semibold text-sm transition text-white shadow-lg"><i class="fas fa-paper-plane"></i></button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <footer class="text-center py-8 bg-[#060910] text-slate-500 text-xs border-t border-white/5">
+        <p>&copy; 2026 DEVLOPER RS RAKIB. All Rights Reserved.</p>
+    </footer>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getDatabase, ref, push, onValue, get, child } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyA7QKz2-6LCs3IcQ-4aWB8BGZo_i50lpB0",
+            authDomain: "diamond-top-up-571e4.firebaseapp.com",
+            databaseURL: "https://diamond-top-up-571e4-default-rtdb.firebaseio.com",
+            projectId: "diamond-top-up-571e4",
+            storageBucket: "diamond-top-up-571e4.firebasestorage.app",
+            messagingSenderId: "523646682095",
+            appId: "1:523646682095:web:9cc29b83ea1c6957416c1a",
+            measurementId: "G-7NHVVJVXCP"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+        
+        let myOrders = JSON.parse(localStorage.getItem('rs_my_orders') || '[]');
+        let activeChatOrderId = null;
+
+        window.showToast = function(message, type = 'info') {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = `pointer-events-auto toast-slide flex items-center justify-between gap-3 p-4 rounded-2xl shadow-2xl border text-xs font-medium backdrop-blur-md transition-all `;
+            
+            let icon = 'fa-info-circle text-blue-400';
+            if (type === 'error') {
+                toast.className += ' bg-red-950/90 border-red-500/40 text-red-200';
+                icon = 'fa-triangle-exclamation text-red-400';
+            } else if (type === 'success') {
+                toast.className += ' bg-emerald-950/90 border-emerald-500/40 text-emerald-200';
+                icon = 'fa-check-circle text-emerald-400';
+            } else {
+                toast.className += ' bg-slate-900/95 border-slate-700 text-slate-200';
+            }
+
+            toast.innerHTML = `
+                <div class="flex items-center gap-2.5">
+                    <i class="fas ${icon} text-base"></i>
+                    <span>${message}</span>
+                </div>
+                <button onclick="this.parentElement.remove()" class="text-slate-400 hover:text-white px-1 text-sm">&times;</button>
+            `;
+            
+            container.appendChild(toast);
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                setTimeout(() => toast.remove(), 300);
+            }, 4000);
+        };
+
+        window.updateCharCount = function(textarea) {
+            const len = textarea.value.length;
+            const display = document.getElementById('charCountDisplay');
+            display.textContent = `${len} / 1000 characters (Min: 20)`;
+            if(len < 20) {
+                display.className = "text-xs text-amber-400 font-medium";
+            } else {
+                display.className = "text-xs text-emerald-400 font-medium";
+            }
+        };
+
+        onValue(ref(db, 'domainExtensions'), (snapshot) => {
+            const extSelect = document.getElementById('clientDomainExt');
+            if(!extSelect) return;
+            extSelect.innerHTML = '';
+            const data = snapshot.val();
+            if (data) {
+                Object.values(data).forEach(ext => {
+                    const opt = document.createElement('option');
+                    opt.value = ext; opt.textContent = ext;
+                    extSelect.appendChild(opt);
+                });
+            } else {
+                ['.com', '.org', '.net', '.xyz'].forEach(ext => {
+                    const opt = document.createElement('option');
+                    opt.value = ext; opt.textContent = ext;
+                    extSelect.appendChild(opt);
+                });
+            }
+        });
+
+        window.toggleDomainInput = function() {
+            const domainOption = document.getElementById('clientDomain').value;
+            const domainBox = document.getElementById('domainNameBox');
+            const domainInput = document.getElementById('clientDomainName');
+            if(domainOption.includes('Need Custom domain') || domainOption.includes('own domain')) {
+                domainBox.classList.remove('hidden');
+                domainInput.required = true;
+            } else {
+                domainBox.classList.add('hidden');
+                domainInput.required = false;
+                domainInput.value = '';
+            }
+        };
+
+        window.validateDomainInput = function(input) {
+            if (input.value.includes('.')) {
+                input.value = input.value.replace(/\./g, '');
+                showToast("ডোমেইন নামের সাথে সরাসরি ডট (.) দেওয়া যাবে না। অনুগ্রহ করে এক্সটেনশন ড্রপডাউন থেকে সিলেক্ট করুন।", "error");
+            }
+        };
+
+        window.selectCategory = function(cat) {
+            document.getElementById('clientCategory').value = cat;
+            window.location.href = '#custom-order';
+        };
+
+        window.submitCustomOrder = async function(event) {
+            event.preventDefault();
+            const phone = document.getElementById('clientPhone').value.trim();
+            if (!/^01\d{9}$/.test(phone)) {
+                showToast("সঠিক ১১ ডিজিটের মোবাইল নম্বর দিন যা '01' দিয়ে শুরু (যেমন: 01712345678)", "error");
+                document.getElementById('clientPhone').focus();
+                return;
+            }
+
+            const details = document.getElementById('clientDetails').value.trim();
+            if(details.length < 20) {
+                showToast("প্রজেক্ট ডিটেইলস কমপক্ষে ২০ অক্ষরের (Characters) হতে হবে!", "error");
+                document.getElementById('clientDetails').focus();
+                return;
+            }
+
+            const btn = document.getElementById('submitBtn');
+            const domainChoice = document.getElementById('clientDomain').value;
+            const domainInputName = document.getElementById('clientDomainName').value.trim().toLowerCase();
+            const domainExt = document.getElementById('clientDomainExt').value;
+            
+            let finalDomainText = domainChoice;
+            let fullDomainKey = "";
+
+            if(domainInputName) {
+                fullDomainKey = `${domainInputName}${domainExt}`.toLowerCase();
+                finalDomainText = `${domainChoice} (${fullDomainKey})`;
+            }
+
+            btn.disabled = true; 
+            btn.innerText = "Checking Domain...";
+
+            try {
+                if(fullDomainKey) {
+                    const dbRef = ref(db);
+                    const snapshot = await get(child(dbRef, 'customOrders'));
+                    if(snapshot.exists()) {
+                        let isDuplicate = false;
+                        snapshot.forEach((childSnapshot) => {
+                            const order = childSnapshot.val();
+                            if(order.status !== 'Cancelled' && order.domainOption && order.domainOption.toLowerCase().includes(fullDomainKey)) {
+                                isDuplicate = true;
+                            }
+                        });
+
+                        if(isDuplicate) {
+                            showToast(`দুঃখিত! "${fullDomainKey}" ডোমেইনটি বর্তমানে একটিভ কোনো অর্ডারে বুক করা আছে।`, "error");
+                            btn.disabled = false; 
+                            btn.innerText = "Submit Order & Open Live Chat";
+                            return;
+                        }
+                    }
+                }
+            } catch (err) {
+                console.error(err);
+            }
+
+            btn.innerText = "Submitting...";
+
+            const orderData = {
+                name: document.getElementById('clientName').value,
+                email: document.getElementById('clientEmail').value,
+                phone: phone,
+                category: document.getElementById('clientCategory').value,
+                domainOption: finalDomainText,
+                details: details,
+                status: "Pending",
+                timestamp: new Date().toLocaleString()
+            };
+
+            const newOrderRef = push(ref(db, 'customOrders'), orderData);
+            newOrderRef.then(() => {
+                const orderId = newOrderRef.key;
+                if(!myOrders.includes(orderId)) {
+                    myOrders.push(orderId);
+                    localStorage.setItem('rs_my_orders', JSON.stringify(myOrders));
+                }
+                document.getElementById('orderForm').reset();
+                document.getElementById('domainNameBox').classList.add('hidden');
+                document.getElementById('successMsg').classList.remove('hidden');
+                document.getElementById('charCountDisplay').textContent = "0 / 1000 characters (Min: 20)";
+                document.getElementById('charCountDisplay').className = "text-xs text-slate-400 font-medium";
+                btn.disabled = false; 
+                btn.innerText = "Submit Order & Open Live Chat";
+                loadOrderHistory();
+                openUserChat(orderId, orderData.category);
+                showToast("Order submitted successfully!", "success");
+                setTimeout(() => document.getElementById('successMsg').classList.add('hidden'), 4000);
+            }).catch(() => {
+                showToast("Database error occurred!", "error");
+                btn.disabled = false; 
+                btn.innerText = "Submit Order & Open Live Chat";
+            });
+        };
+
+        function loadOrderHistory() {
+            const container = document.getElementById('ordersListContainer');
+            const noOrder = document.getElementById('noOrderContainer');
+            if(myOrders.length === 0) {
+                noOrder.classList.remove('hidden');
+                container.classList.add('hidden');
+                return;
+            }
+
+            noOrder.classList.add('hidden');
+            container.classList.remove('hidden');
+            container.innerHTML = '';
+
+            myOrders.forEach(orderId => {
+                onValue(ref(db, `customOrders/${orderId}`), (snapshot) => {
+                    const order = snapshot.val();
+                    if(!order) return;
+
+                    if(order.status === 'Cancelled' && activeChatOrderId === orderId) {
+                        closeUserChat();
+                        showToast("Your order was cancelled by the admin. Chat closed.", "error");
+                    }
+
+                    let statusBadge = `<span class="bg-amber-500/10 border border-amber-500/20 text-amber-400 px-2.5 py-1 rounded-lg text-xs font-semibold">Pending</span>`;
+                    if(order.status === 'Completed') {
+                        statusBadge = `<span class="bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 px-2.5 py-1 rounded-lg text-xs font-semibold">Completed</span>`;
+                    } else if(order.status === 'Cancelled') {
+                        statusBadge = `<span class="bg-red-500/10 border border-red-500/20 text-red-400 px-2.5 py-1 rounded-lg text-xs font-semibold">Cancelled</span>`;
+                    }
+
+                    let card = document.getElementById(`order-card-${orderId}`);
+                    if(!card) {
+                        card = document.createElement('div');
+                        card.id = `order-card-${orderId}`;
+                        card.className = "bg-slate-950 border border-slate-800 p-5 rounded-2xl flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 transition hover:border-blue-500/40";
+                        container.appendChild(card);
+                    }
+
+                    card.innerHTML = `
+                        <div class="space-y-1">
+                            <div class="flex items-center gap-2">
+                                <span class="text-xs text-slate-400">${order.timestamp}</span>
+                                ${statusBadge}
+                            </div>
+                            <h3 class="font-bold text-white text-base">${order.category}</h3>
+                            <p class="text-xs text-purple-300">Domain: ${order.domainOption}</p>
+                            <p class="text-xs text-slate-400 max-w-md truncate">Details: ${order.details}</p>
+                        </div>
+                        <div>
+                            <button onclick="openUserChat('${orderId}', '${order.category}')" class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-xl text-white text-xs font-semibold transition flex items-center gap-2 shadow-lg">
+                                <i class="fas fa-comments"></i> Open Chat
+                            </button>
+                        </div>
+                    `;
+                });
+            });
+        }
+
+        window.openUserChat = function(orderId, categoryName) {
+            activeChatOrderId = orderId;
+            const chatSec = document.getElementById('userChatSection');
+            chatSec.classList.remove('hidden');
+            document.getElementById('chatSectionHeader').innerHTML = `<i class="fas fa-comments"></i> Chat with Admin (${categoryName})`;
+            
+            chatSec.scrollIntoView({ behavior: 'smooth' });
+
+            onValue(ref(db, `chats/${orderId}`), (snapshot) => {
+                const box = document.getElementById('chatMessagesBox');
+                if(!box) return;
+                box.innerHTML = '';
+                const data = snapshot.val();
+                if(data) {
+                    Object.values(data).forEach(m => {
+                        const div = document.createElement('div');
+                        div.className = `max-w-[80%] p-3 rounded-2xl text-xs ${m.sender === 'user' ? 'bg-blue-600 text-white ml-auto rounded-br-none' : 'bg-slate-800 text-slate-200 mr-auto rounded-bl-none'}`;
+                        div.innerHTML = `<p class="font-bold text-[10px] opacity-75 mb-0.5">${m.sender === 'user' ? 'You' : 'Admin'}</p><p>${m.text}</p>`;
+                        box.appendChild(div);
+                    });
+                    box.scrollTop = box.scrollHeight;
+                } else {
+                    box.innerHTML = '<p class="text-slate-500 text-xs text-center my-auto">No messages yet. Start chatting with Admin.</p>';
+                }
+            });
+        };
+
+        window.closeUserChat = function() {
+            activeChatOrderId = null;
+            document.getElementById('userChatSection').classList.add('hidden');
+        };
+
+        window.sendUserMessage = function(event) {
+            event.preventDefault();
+            const textInput = type = document.getElementById('userMsgInput');
+            const text = textInput.value.trim();
+            if(!text || !activeChatOrderId) return;
+            push(ref(db, `chats/${activeChatOrderId}`), {
+                sender: 'user', text: text, timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+            }).then(() => textInput.value = '');
+        };
+
+        loadOrderHistory();
+    </script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>AOS.init({ once: true });</script>
+</body>
+</html>
