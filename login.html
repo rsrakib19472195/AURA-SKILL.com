@@ -861,9 +861,6 @@ let maintenanceActive = false;
 let updateActive = false;
 let loginRedirecting = false;
 
-let maintenanceListener = null;
-let updateListener = null;
-
 
 /* ============================================================
    TOAST
@@ -923,43 +920,32 @@ window.showToast = function(
 
 
 /* ============================================================
-   ONESIGNAL STARTUP
+   ONESIGNAL
 ============================================================ */
 
-async function prepareOneSignal() {
+/*
+ * IMPORTANT:
+ * OneSignal is initialized in background.
+ *
+ * Login does NOT wait for this.
+ */
 
-    try {
-
-        await initOneSignal();
+initOneSignal()
+    .then(() => {
 
         console.log(
-            '✅ OneSignal initialized on login page'
+            '✅ OneSignal initialized'
         );
 
-        return true;
+    })
+    .catch(error => {
 
-    } catch (error) {
-
-        console.error(
-            '❌ OneSignal initialization failed:',
+        console.warn(
+            '⚠️ OneSignal initialization failed:',
             error
         );
 
-        return false;
-
-    }
-
-}
-
-
-/*
- * Start OneSignal early.
- *
- * This does NOT automatically ask
- * the browser for permission.
- */
-
-prepareOneSignal();
+    });
 
 
 /* ============================================================
@@ -989,11 +975,6 @@ window.addEventListener('load', () => {
     }
 
 
-    /*
-     * Do not show if permission
-     * was already granted.
-     */
-
     if (
         'Notification' in window &&
         Notification.permission === 'granted'
@@ -1002,12 +983,9 @@ window.addEventListener('load', () => {
         banner.style.display = 'none';
 
         return;
+
     }
 
-
-    /*
-     * Show banner after 2 seconds.
-     */
 
     setTimeout(() => {
 
@@ -1023,9 +1001,9 @@ window.addEventListener('load', () => {
     }, 2000);
 
 
-    /*
-     * ALLOW BUTTON
-     */
+    /* ========================================================
+       ALLOW
+    ======================================================== */
 
     allowBtn.addEventListener(
         'click',
@@ -1041,11 +1019,11 @@ window.addEventListener('load', () => {
 
             try {
 
-                const result =
+                const granted =
                     await requestOneSignalPermission();
 
 
-                if (result) {
+                if (granted) {
 
                     localStorage.setItem(
                         'notif_permission_status',
@@ -1076,7 +1054,7 @@ window.addEventListener('load', () => {
             } catch (error) {
 
                 console.error(
-                    'Notification permission error:',
+                    'Notification error:',
                     error
                 );
 
@@ -1099,9 +1077,9 @@ window.addEventListener('load', () => {
     );
 
 
-    /*
-     * LATER BUTTON
-     */
+    /* ========================================================
+       LATER
+    ======================================================== */
 
     closeBtn.addEventListener(
         'click',
@@ -1148,14 +1126,9 @@ function applyMaintenance(data = {}) {
 
 
         if (!updateActive) {
-            loginCard.style.display = '';
-        }
 
-
-        if (
-            !updateActive &&
-            !maintenanceActive
-        ) {
+            loginCard.style.display =
+                '';
 
             document.body.style.overflow =
                 '';
@@ -1207,14 +1180,9 @@ function applyUpdate(data = {}) {
 
 
         if (!maintenanceActive) {
-            loginCard.style.display = '';
-        }
 
-
-        if (
-            !updateActive &&
-            !maintenanceActive
-        ) {
+            loginCard.style.display =
+                '';
 
             document.body.style.overflow =
                 '';
@@ -1227,39 +1195,76 @@ function applyUpdate(data = {}) {
 
 
 /* ============================================================
-   STARTUP FIREBASE CHECK
+   FIREBASE STARTUP CHECK
 ============================================================ */
+
+/*
+ * IMPORTANT:
+ *
+ * This function has a timeout.
+ * Firebase slow/hang korleo login আটকে থাকবে না.
+ */
 
 async function checkStartupData() {
 
     try {
 
+        const timeoutPromise =
+            new Promise(resolve => {
+
+                setTimeout(() => {
+
+                    console.warn(
+                        '⚠️ Startup check timeout'
+                    );
+
+                    resolve(null);
+
+                }, 5000);
+
+            });
+
+
+        const firebasePromise =
+            Promise.all([
+
+                getDoc(
+                    doc(
+                        db,
+                        'settings',
+                        'siteMaintenance'
+                    )
+                ),
+
+                getDoc(
+                    doc(
+                        db,
+                        'settings',
+                        'appUpdate'
+                    )
+                )
+
+            ]);
+
+
+        const result =
+            await Promise.race([
+                firebasePromise,
+                timeoutPromise
+            ]);
+
+
+        if (!result) {
+
+            return false;
+
+        }
+
+
         const [
             maintenanceSnap,
             updateSnap
-        ] = await Promise.all([
-
-            getDoc(
-                doc(
-                    db,
-                    'settings',
-                    'siteMaintenance'
-                )
-            ),
-
-            getDoc(
-                doc(
-                    db,
-                    'settings',
-                    'appUpdate'
-                )
-            ).catch(
-                () => ({
-                    exists: () => false
-                })
-            )
-
-        ]);
+        ] = result;
 
 
         applyMaintenance(
@@ -1285,9 +1290,14 @@ async function checkStartupData() {
     } catch (error) {
 
         console.error(
-            'STARTUP CHECK ERROR',
+            'STARTUP CHECK ERROR:',
             error
         );
+
+
+        /*
+         * Error hole login block korbo na.
+         */
 
         return false;
 
@@ -1301,75 +1311,89 @@ const startupCheckPromise =
 
 
 /* ============================================================
-   FIRESTORE LISTENERS
+   REALTIME MAINTENANCE LISTENER
 ============================================================ */
 
 try {
 
-    maintenanceListener =
-        onSnapshot(
+    onSnapshot(
 
-            doc(
-                db,
-                'settings',
-                'siteMaintenance'
-            ),
+        doc(
+            db,
+            'settings',
+            'siteMaintenance'
+        ),
 
-            snapshot => {
+        snapshot => {
 
-                applyMaintenance(
-                    snapshot.exists()
-                        ? snapshot.data()
-                        : {}
-                );
+            applyMaintenance(
+                snapshot.exists()
+                    ? snapshot.data()
+                    : {}
+            );
 
-            },
+        },
 
-            error => {
+        error => {
 
-                console.error(
-                    'Maintenance listener',
-                    error
-                );
+            console.warn(
+                'Maintenance listener error:',
+                error
+            );
 
-            }
+        }
 
-        );
-
-
-    updateListener =
-        onSnapshot(
-
-            doc(
-                db,
-                'settings',
-                'appUpdate'
-            ),
-
-            snapshot => {
-
-                applyUpdate(
-                    snapshot.exists()
-                        ? snapshot.data()
-                        : {}
-                );
-
-            },
-
-            error => {
-
-                console.error(
-                    'Update listener',
-                    error
-                );
-
-            }
-
-        );
+    );
 
 } catch (error) {
 
-    console.error(error);
+    console.warn(
+        error
+    );
+
+}
+
+
+/* ============================================================
+   REALTIME UPDATE LISTENER
+============================================================ */
+
+try {
+
+    onSnapshot(
+
+        doc(
+            db,
+            'settings',
+            'appUpdate'
+        ),
+
+        snapshot => {
+
+            applyUpdate(
+                snapshot.exists()
+                    ? snapshot.data()
+                    : {}
+            );
+
+        },
+
+        error => {
+
+            console.warn(
+                'Update listener error:',
+                error
+            );
+
+        }
+
+    );
+
+} catch (error) {
+
+    console.warn(
+        error
+    );
 
 }
 
@@ -1435,7 +1459,7 @@ async function findEmailByUsername(
 
 
     /*
-     * First search usernameLower
+     * usernameLower
      */
 
     try {
@@ -1468,17 +1492,18 @@ async function findEmailByUsername(
                 .email
         ) {
 
-            return snapshot
-                .docs[0]
-                .data()
-                .email
-                .trim();
+            return String(
+                snapshot.docs[0]
+                    .data()
+                    .email
+            ).trim();
 
         }
 
     } catch (error) {
 
         console.warn(
+            'usernameLower search:',
             error
         );
 
@@ -1486,7 +1511,7 @@ async function findEmailByUsername(
 
 
     /*
-     * Second search username
+     * username
      */
 
     try {
@@ -1519,17 +1544,18 @@ async function findEmailByUsername(
                 .email
         ) {
 
-            return snapshot
-                .docs[0]
-                .data()
-                .email
-                .trim();
+            return String(
+                snapshot.docs[0]
+                    .data()
+                    .email
+            ).trim();
 
         }
 
     } catch (error) {
 
         console.warn(
+            'username search:',
             error
         );
 
@@ -1537,7 +1563,7 @@ async function findEmailByUsername(
 
 
     /*
-     * Final fallback
+     * Fallback
      */
 
     try {
@@ -1552,12 +1578,12 @@ async function findEmailByUsername(
 
 
         for (
-            const document
+            const item
             of snapshot.docs
         ) {
 
             const data =
-                document.data() || {};
+                item.data() || {};
 
 
             if (
@@ -1566,13 +1592,16 @@ async function findEmailByUsername(
                 )
                 .trim()
                 .toLowerCase() ===
-                lower &&
-                data.email
+                lower
             ) {
 
-                return String(
-                    data.email
-                ).trim();
+                if (data.email) {
+
+                    return String(
+                        data.email
+                    ).trim();
+
+                }
 
             }
 
@@ -1581,6 +1610,7 @@ async function findEmailByUsername(
     } catch (error) {
 
         console.warn(
+            'Fallback username search:',
             error
         );
 
@@ -1603,7 +1633,16 @@ loginForm.addEventListener(
         event.preventDefault();
 
 
-        await startupCheckPromise;
+        /*
+         * IMPORTANT:
+         *
+         * এখানে আর
+         * await startupCheckPromise
+         * নেই.
+         *
+         * তাই Firebase startup check-এর
+         * জন্য login আটকে থাকবে না.
+         */
 
 
         if (maintenanceActive) {
@@ -1668,6 +1707,11 @@ loginForm.addEventListener(
         }
 
 
+        if (loginRedirecting) {
+            return;
+        }
+
+
         loginBtn.disabled =
             true;
 
@@ -1702,7 +1746,7 @@ loginForm.addEventListener(
 
 
             /*
-             * Find email
+             * Get email
              */
 
             let email;
@@ -1739,9 +1783,9 @@ loginForm.addEventListener(
             }
 
 
-            /*
-             * FIREBASE LOGIN
-             */
+            /* ==================================================
+               FIREBASE LOGIN
+            ================================================== */
 
             const credential =
                 await signInWithEmailAndPassword(
@@ -1751,9 +1795,18 @@ loginForm.addEventListener(
                 );
 
 
-            /*
-             * Maintenance/update check
-             */
+            if (!credential.user) {
+
+                throw new Error(
+                    'Firebase user পাওয়া যায়নি.'
+                );
+
+            }
+
+
+            /* ==================================================
+               CHECK MAINTENANCE / UPDATE
+            ================================================== */
 
             if (
                 maintenanceActive ||
@@ -1770,50 +1823,42 @@ loginForm.addEventListener(
 
 
             /* ==================================================
+               ONE SIGNAL LINK
+               
                IMPORTANT:
-               FIREBASE UID → ONESIGNAL EXTERNAL ID
+               এটা await করা হচ্ছে না.
+               
+               অর্থাৎ login আটকে থাকবে না.
             ================================================== */
 
-            try {
-
-                const linked =
-                    await linkOneSignalUser(
-                        credential.user
-                    );
-
-
-                if (linked) {
-
-                    console.log(
-                        '✅ Firebase UID linked with OneSignal'
-                    );
+            Promise.resolve()
+                .then(
+                    () =>
+                        linkOneSignalUser(
+                            credential.user
+                        )
+                )
+                .then(() => {
 
                     console.log(
-                        'Firebase UID:',
+                        '✅ Firebase UID linked with OneSignal:',
                         credential.user.uid
                     );
 
-                } else {
+                })
+                .catch(error => {
 
                     console.warn(
-                        '⚠️ OneSignal linking failed.'
+                        '⚠️ OneSignal linking failed:',
+                        error
                     );
 
-                }
-
-            } catch (oneSignalError) {
-
-                console.error(
-                    'OneSignal linking error:',
-                    oneSignalError
-                );
-
-            }
+                });
 
 
-            /*
-             * Login successful
-             */
+            /* ==================================================
+               LOGIN SUCCESS
+            ================================================== */
 
             loginRedirecting =
                 true;
@@ -1825,6 +1870,11 @@ loginForm.addEventListener(
             );
 
 
+            /*
+             * Login success হলে
+             * সরাসরি redirect.
+             */
+
             setTimeout(
                 () => {
 
@@ -1833,13 +1883,14 @@ loginForm.addEventListener(
                     );
 
                 },
-                2000
+                700
             );
 
 
         } catch (error) {
 
             console.error(
+                'LOGIN ERROR:',
                 error
             );
 
@@ -1896,9 +1947,14 @@ loginForm.addEventListener(
 
                 default:
 
-                    if (error.message) {
+                    if (
+                        error.message &&
+                        error.message.length < 200
+                    ) {
+
                         message =
                             error.message;
+
                     }
 
             }
@@ -1939,28 +1995,22 @@ function resetLoginButton() {
 
 onAuthStateChanged(
     auth,
-    async user => {
+    user => {
 
-        await startupCheckPromise;
+        /*
+         * এখানে startupCheckPromise-এর জন্য
+         * অপেক্ষা করা হচ্ছে না.
+         */
 
-
-        if (
-            maintenanceActive ||
-            updateActive
-        ) {
-
+        if (!user) {
             return;
-
         }
 
-        if (user) {
 
-            console.log(
-                'Current Firebase user:',
-                user.uid
-            );
-
-        }
+        console.log(
+            'Current Firebase user:',
+            user.uid
+        );
 
     }
 );
@@ -2018,7 +2068,9 @@ document
 
             setTimeout(
                 () => {
+
                     forgotEmailInput.focus();
+
                 },
                 80
             );
@@ -2142,6 +2194,12 @@ forgotSendBtn.addEventListener(
 
 
         } catch (error) {
+
+            console.error(
+                'Password reset error:',
+                error
+            );
+
 
             let message =
                 'Password reset kora jayni.';
@@ -2282,11 +2340,6 @@ updateLinkBtn.addEventListener(
         this.style.opacity =
             '0.8';
 
-        this.setAttribute(
-            'aria-busy',
-            'true'
-        );
-
 
         setTimeout(
             () => {
@@ -2304,7 +2357,7 @@ updateLinkBtn.addEventListener(
 
 
 /* ============================================================
-   UPDATE SPINNER STYLE
+   UPDATE SPINNER
 ============================================================ */
 
 if (
@@ -2335,42 +2388,46 @@ if (
 
 
 /* ============================================================
-   FINISH STARTUP
+   STARTUP LOADER
 ============================================================ */
-
-const startupStartedAt =
-    Date.now();
-
 
 async function finishStartup() {
 
-    await startupCheckPromise;
+    /*
+     * Maximum 5 seconds wait.
+     */
+
+    await Promise.race([
+
+        startupCheckPromise,
+
+        new Promise(resolve => {
+
+            setTimeout(
+                resolve,
+                5000
+            );
+
+        })
+
+    ]);
 
 
-    const elapsed =
-        Date.now() -
-        startupStartedAt;
+    /*
+     * Loader minimum time:
+     * 1.2 seconds
+     */
 
+    await new Promise(
+        resolve => {
 
-    const wait =
-        Math.max(
-            0,
-            2500 - elapsed
-        );
+            setTimeout(
+                resolve,
+                1200
+            );
 
-
-    if (wait) {
-
-        await new Promise(
-            resolve => {
-                setTimeout(
-                    resolve,
-                    wait
-                );
-            }
-        );
-
-    }
+        }
+    );
 
 
     if (startupLoader) {
