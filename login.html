@@ -1,307 +1,2402 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <!-- Performance: establish connections to critical third-party origins early. -->
     <link rel="preconnect" href="https://www.gstatic.com" crossorigin>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
 
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Welcome Back</title>
-<script src="https://cdn.tailwindcss.com"></script>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<style>
-body{background:#0b0f19;font-family:Segoe UI,Tahoma,Geneva,Verdana,sans-serif}
-.custom-input{background:#131b2e;border:1px solid #1e293b}.custom-input:focus{border-color:#3b82f6;outline:none}
-@keyframes slideIn{from{transform:translateX(100%);opacity:0}to{transform:translateX(0);opacity:1}}
-.toast{animation:slideIn .25s ease}
-#startupLoader{position:fixed;inset:0;z-index:999999;display:flex;align-items:center;justify-content:center;background:#0b0b10;opacity:1;visibility:visible;transition:opacity .35s ease,visibility .35s ease}
-#startupLoader.hide{opacity:0;visibility:hidden;pointer-events:none}.startup-inner{width:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}
-.startup-logo-box{width:108px;height:108px;border-radius:50%;overflow:hidden;display:flex;align-items:center;justify-content:center;box-shadow:0 0 18px rgba(20,230,194,.18),0 0 55px rgba(20,230,194,.14);animation:startupPulse 1.35s ease-in-out infinite}
-.startup-logo{width:100%;height:100%;object-fit:cover;display:block}.startup-title{margin:22px 0 0;color:#fff;font-size:32px;line-height:1;font-weight:700;letter-spacing:.4px}.startup-subtitle{margin-top:9px;color:#a7a7b0;font-size:15px;letter-spacing:4px}.startup-spinner{width:42px;height:42px;margin-top:42px;border-radius:50%;border:4px solid rgba(255,255,255,.10);border-top-color:#16e6c2;border-right-color:#16e6c2;animation:startupSpin .8s linear infinite}
-@keyframes startupSpin{to{transform:rotate(360deg)}}@keyframes startupPulse{0%,100%{transform:scale(1);filter:brightness(1)}50%{transform:scale(1.035);filter:brightness(1.08)}}
-#forgotPasswordModal{position:fixed;inset:0;z-index:1000000;display:none;align-items:center;justify-content:center;padding:18px;background:rgba(0,0,0,.78);backdrop-filter:blur(12px)}
-#forgotPasswordModal.show{display:flex}.forgot-card{width:100%;max-width:390px;border:1px solid rgba(59,130,246,.35);background:linear-gradient(145deg,#111827,#0b1220);border-radius:28px;padding:25px;color:#fff;box-shadow:0 25px 80px rgba(0,0,0,.65),0 0 35px rgba(37,99,235,.12)}
-.forgot-icon{width:58px;height:58px;border-radius:18px;display:flex;align-items:center;justify-content:center;margin:0 auto 15px;background:rgba(59,130,246,.12);color:#60a5fa;font-size:23px;border:1px solid rgba(96,165,250,.2)}
-.forgot-input{width:100%;box-sizing:border-box;background:#0b1220;border:1px solid #26344d;color:#fff;border-radius:15px;padding:13px 14px;outline:none}.forgot-input:focus{border-color:#3b82f6;box-shadow:0 0 0 3px rgba(59,130,246,.1)}
-#maintenanceScreen{display:none;position:fixed;inset:0;z-index:10000000;background:#050811;color:#fff;align-items:center;justify-content:center;padding:20px;text-align:center}
-#updateScreen{display:none;position:fixed;inset:0;z-index:10000000;background:#050811;color:#fff;align-items:center;justify-content:center;padding:20px;text-align:center}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-#customNotifBanner {
-  position: fixed;
-  bottom: 20px;
-  left: 50%;
-  transform: translateX(-50%) translateY(150px);
-  width: 90%;
-  max-width: 420px;
-  background: linear-gradient(145deg, #111827, #0f172a);
-  border: 1px solid rgba(59, 130, 246, 0.3);
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
-  border-radius: 20px;
-  padding: 16px 20px;
-  z-index: 99999;
-  display: flex;
-  align-items: center;
-  gap: 15px;
-  color: #fff;
-  transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
-#customNotifBanner.show {
-  transform: translateX(-50%) translateY(0);
-}
-</style>
+    <title>Welcome Back</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    >
+
+    <style>
+        body{
+            background:#0b0f19;
+            font-family:Segoe UI,Tahoma,Geneva,Verdana,sans-serif
+        }
+
+        .custom-input{
+            background:#131b2e;
+            border:1px solid #1e293b
+        }
+
+        .custom-input:focus{
+            border-color:#3b82f6;
+            outline:none
+        }
+
+        @keyframes slideIn{
+            from{
+                transform:translateX(100%);
+                opacity:0
+            }
+            to{
+                transform:translateX(0);
+                opacity:1
+            }
+        }
+
+        .toast{
+            animation:slideIn .25s ease
+        }
+
+        #startupLoader{
+            position:fixed;
+            inset:0;
+            z-index:999999;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            background:#0b0b10;
+            opacity:1;
+            visibility:visible;
+            transition:opacity .35s ease,visibility .35s ease
+        }
+
+        #startupLoader.hide{
+            opacity:0;
+            visibility:hidden;
+            pointer-events:none
+        }
+
+        .startup-inner{
+            width:100%;
+            display:flex;
+            flex-direction:column;
+            align-items:center;
+            justify-content:center;
+            text-align:center
+        }
+
+        .startup-logo-box{
+            width:108px;
+            height:108px;
+            border-radius:50%;
+            overflow:hidden;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            box-shadow:
+                0 0 18px rgba(20,230,194,.18),
+                0 0 55px rgba(20,230,194,.14);
+            animation:startupPulse 1.35s ease-in-out infinite
+        }
+
+        .startup-logo{
+            width:100%;
+            height:100%;
+            object-fit:cover;
+            display:block
+        }
+
+        .startup-title{
+            margin:22px 0 0;
+            color:#fff;
+            font-size:32px;
+            line-height:1;
+            font-weight:700;
+            letter-spacing:.4px
+        }
+
+        .startup-subtitle{
+            margin-top:9px;
+            color:#a7a7b0;
+            font-size:15px;
+            letter-spacing:4px
+        }
+
+        .startup-spinner{
+            width:42px;
+            height:42px;
+            margin-top:42px;
+            border-radius:50%;
+            border:4px solid rgba(255,255,255,.10);
+            border-top-color:#16e6c2;
+            border-right-color:#16e6c2;
+            animation:startupSpin .8s linear infinite
+        }
+
+        @keyframes startupSpin{
+            to{
+                transform:rotate(360deg)
+            }
+        }
+
+        @keyframes startupPulse{
+            0%,100%{
+                transform:scale(1);
+                filter:brightness(1)
+            }
+            50%{
+                transform:scale(1.035);
+                filter:brightness(1.08)
+            }
+        }
+
+        #forgotPasswordModal{
+            position:fixed;
+            inset:0;
+            z-index:1000000;
+            display:none;
+            align-items:center;
+            justify-content:center;
+            padding:18px;
+            background:rgba(0,0,0,.78);
+            backdrop-filter:blur(12px)
+        }
+
+        #forgotPasswordModal.show{
+            display:flex
+        }
+
+        .forgot-card{
+            width:100%;
+            max-width:390px;
+            border:1px solid rgba(59,130,246,.35);
+            background:linear-gradient(145deg,#111827,#0b1220);
+            border-radius:28px;
+            padding:25px;
+            color:#fff;
+            box-shadow:
+                0 25px 80px rgba(0,0,0,.65),
+                0 0 35px rgba(37,99,235,.12)
+        }
+
+        .forgot-icon{
+            width:58px;
+            height:58px;
+            border-radius:18px;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            margin:0 auto 15px;
+            background:rgba(59,130,246,.12);
+            color:#60a5fa;
+            font-size:23px;
+            border:1px solid rgba(96,165,250,.2)
+        }
+
+        .forgot-input{
+            width:100%;
+            box-sizing:border-box;
+            background:#0b1220;
+            border:1px solid #26344d;
+            color:#fff;
+            border-radius:15px;
+            padding:13px 14px;
+            outline:none
+        }
+
+        .forgot-input:focus{
+            border-color:#3b82f6;
+            box-shadow:0 0 0 3px rgba(59,130,246,.1)
+        }
+
+        #maintenanceScreen{
+            display:none;
+            position:fixed;
+            inset:0;
+            z-index:10000000;
+            background:#050811;
+            color:#fff;
+            align-items:center;
+            justify-content:center;
+            padding:20px;
+            text-align:center
+        }
+
+        #updateScreen{
+            display:none;
+            position:fixed;
+            inset:0;
+            z-index:10000000;
+            background:#050811;
+            color:#fff;
+            align-items:center;
+            justify-content:center;
+            padding:20px;
+            text-align:center
+        }
+
+        #customNotifBanner{
+            position:fixed;
+            bottom:20px;
+            left:50%;
+            transform:
+                translateX(-50%)
+                translateY(150px);
+            width:90%;
+            max-width:420px;
+            background:
+                linear-gradient(
+                    145deg,
+                    #111827,
+                    #0f172a
+                );
+            border:1px solid rgba(59,130,246,.3);
+            box-shadow:
+                0 20px 40px rgba(0,0,0,.6);
+            border-radius:20px;
+            padding:16px 20px;
+            z-index:99999;
+            display:flex;
+            align-items:center;
+            gap:15px;
+            color:#fff;
+            transition:
+                transform .4s
+                cubic-bezier(
+                    .175,
+                    .885,
+                    .32,
+                    1.275
+                )
+        }
+
+        #customNotifBanner.show{
+            transform:
+                translateX(-50%)
+                translateY(0)
+        }
+    </style>
 </head>
+
 <body class="flex items-center justify-center min-h-screen px-4">
 
+<!-- ============================================================
+     NOTIFICATION BANNER
+============================================================ -->
+
 <div id="customNotifBanner">
-  <div class="w-12 h-12 rounded-2xl bg-blue-500/10 border border-blue-500/30 flex items-center justify-center shrink-0 text-blue-400 text-xl">
-    <i class="fa-solid fa-bell"></i>
-  </div>
-  <div class="flex-1">
-    <h4 class="text-sm font-bold text-white">Enable Notifications</h4>
-    <p class="text-xs text-slate-400 mt-0.5">Latest update o alert পেতে নোটিফিকেশন অন করুন।</p>
-  </div>
-  <div class="flex flex-col gap-1.5 shrink-0">
-    <button type="button" id="allowNotifBtn" class="px-3.5 py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded-xl transition">Allow</button>
-    <button type="button" id="closeNotifBtn" class="px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs rounded-xl transition">Later</button>
-  </div>
+
+    <div class="w-12 h-12 rounded-2xl
+                bg-blue-500/10
+                border border-blue-500/30
+                flex items-center justify-center
+                shrink-0 text-blue-400 text-xl">
+
+        <i class="fa-solid fa-bell"></i>
+
+    </div>
+
+    <div class="flex-1">
+
+        <h4 class="text-sm font-bold text-white">
+            Enable Notifications
+        </h4>
+
+        <p class="text-xs text-slate-400 mt-0.5">
+            Latest update o alert পেতে নোটিফিকেশন অন করুন।
+        </p>
+
+    </div>
+
+    <div class="flex flex-col gap-1.5 shrink-0">
+
+        <button
+            type="button"
+            id="allowNotifBtn"
+            class="px-3.5 py-1.5
+                   bg-blue-600
+                   hover:bg-blue-700
+                   text-white
+                   text-xs
+                   font-bold
+                   rounded-xl
+                   transition">
+
+            Allow
+
+        </button>
+
+        <button
+            type="button"
+            id="closeNotifBtn"
+            class="px-3.5 py-1.5
+                   bg-slate-800
+                   hover:bg-slate-700
+                   text-slate-300
+                   text-xs
+                   rounded-xl">
+
+            Later
+
+        </button>
+
+    </div>
+
 </div>
+
+
+<!-- ============================================================
+     MAINTENANCE
+============================================================ -->
 
 <div id="maintenanceScreen">
-  <div class="w-full max-w-md">
-    <div class="w-20 h-20 mx-auto rounded-full bg-amber-500/10 border border-amber-500/30 flex items-center justify-center mb-5"><i class="fa-solid fa-screwdriver-wrench text-amber-400 text-3xl"></i></div>
-    <h1 class="text-2xl font-bold mb-3">Site Maintenance</h1>
-    <p class="text-slate-400 text-sm leading-relaxed">Amader site bortomane maintenance-er modhye ache. Kichukhon pore abar chesta korun.</p>
-    <div id="maintenanceReason" class="mt-5 bg-[#0f172a] border border-slate-800 rounded-2xl px-4 py-3 text-sm text-amber-300"></div>
-    <div class="mt-5 text-xs text-slate-500">Please try again later.</div>
-  </div>
+
+    <div class="w-full max-w-md">
+
+        <div class="w-20 h-20 mx-auto
+                    rounded-full
+                    bg-amber-500/10
+                    border border-amber-500/30
+                    flex items-center justify-center mb-5">
+
+            <i class="fa-solid fa-screwdriver-wrench
+                      text-amber-400 text-3xl"></i>
+
+        </div>
+
+        <h1 class="text-2xl font-bold mb-3">
+            Site Maintenance
+        </h1>
+
+        <p class="text-slate-400 text-sm leading-relaxed">
+            Amader site bortomane maintenance-er modhye ache.
+            Kichukhon pore abar chesta korun.
+        </p>
+
+        <div
+            id="maintenanceReason"
+            class="mt-5
+                   bg-[#0f172a]
+                   border border-slate-800
+                   rounded-2xl
+                   px-4 py-3
+                   text-sm
+                   text-amber-300">
+        </div>
+
+        <div class="mt-5 text-xs text-slate-500">
+            Please try again later.
+        </div>
+
+    </div>
+
 </div>
+
+
+<!-- ============================================================
+     UPDATE SCREEN
+============================================================ -->
 
 <div id="updateScreen">
-  <div class="w-full max-w-md">
-    <div class="w-20 h-20 mx-auto rounded-full bg-blue-500/10 border border-blue-500/30 flex items-center justify-center mb-5"><i class="fa-solid fa-rocket text-blue-400 text-3xl"></i></div>
-    <h1 class="text-2xl font-bold mb-3">New Update Available!</h1>
-    <p id="updateMessage" class="text-slate-400 text-sm leading-relaxed">Apnar app-ti update kora porojon. Doya kore update kore নিন।</p>
-    <a id="updateLinkBtn" href="#" class="mt-6 inline-block w-full py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl text-sm transition text-center">Update Now</a>
-  </div>
+
+    <div class="w-full max-w-md">
+
+        <div class="w-20 h-20 mx-auto
+                    rounded-full
+                    bg-blue-500/10
+                    border border-blue-500/30
+                    flex items-center justify-center mb-5">
+
+            <i class="fa-solid fa-rocket
+                      text-blue-400 text-3xl"></i>
+
+        </div>
+
+        <h1 class="text-2xl font-bold mb-3">
+            New Update Available!
+        </h1>
+
+        <p
+            id="updateMessage"
+            class="text-slate-400
+                   text-sm
+                   leading-relaxed">
+
+            Apnar app-ti update kora porojon.
+            Doya kore update kore নিন।
+
+        </p>
+
+        <a
+            id="updateLinkBtn"
+            href="#"
+            class="mt-6
+                   inline-block
+                   w-full
+                   py-3
+                   bg-blue-600
+                   hover:bg-blue-700
+                   text-white
+                   font-bold
+                   rounded-xl
+                   text-sm
+                   transition
+                   text-center">
+
+            Update Now
+
+        </a>
+
+    </div>
+
 </div>
 
-<div id="startupLoader"><div class="startup-inner"><div class="startup-logo-box"><img class="startup-logo" src="https://videotourl.com/images/1789792991627-2a906ffa-fbc0-4f79-9d9b-8dddb80ca667.jpg" alt="Aura Skill"></div><h1 class="startup-title">Aura Skill</h1><div class="startup-subtitle">Play &amp; Earn</div><div class="startup-spinner" aria-hidden="true"></div></div></div>
 
-<div id="forgotPasswordModal" aria-hidden="true"><div class="forgot-card"><div class="forgot-icon"><i class="fa-solid fa-key"></i></div><h3 id="forgotModalTitle" class="text-xl font-bold text-center">Password Reset</h3><p id="forgotModalText" class="text-sm text-slate-400 text-center mt-2 mb-5">Apnar registered Gmail din. Amra password reset link pathabo.</p><input id="forgotEmailInput" type="email" class="forgot-input" placeholder="Apnar Gmail likhun" autocomplete="email"><div class="flex gap-2 mt-4"><button type="button" id="forgotCancelBtn" class="flex-1 py-3 rounded-xl bg-slate-800 text-slate-300 font-semibold">Batil</button><button type="button" id="forgotSendBtn" class="flex-1 py-3 rounded-xl bg-blue-600 text-white font-bold">Link Pathan</button></div></div></div>
-<div id="toastContainer" class="fixed top-5 right-5 z-50 flex flex-col gap-3"></div>
+<!-- ============================================================
+     STARTUP LOADER
+============================================================ -->
 
-<div id="loginCard" class="w-full max-w-md bg-[#0f172a] p-8 rounded-3xl shadow-2xl border border-[#1e293b]">
-  <div class="flex flex-col items-center mb-6"><div class="w-20 h-20 rounded-full overflow-hidden mb-3"><img src="https://videotourl.com/images/1789792991627-2a906ffa-fbc0-4f79-9d9b-8dddb80ca667.jpg" class="w-full h-full object-cover" alt="Logo" decoding="async"></div><h2 class="text-2xl font-bold text-white">Welcome Back</h2><p class="text-slate-400 text-sm mt-1">Sign in to continue</p></div>
-  <form id="loginForm" class="space-y-4">
-    <div><label class="block text-xs font-semibold text-slate-300 uppercase mb-1">Username or Gmail</label><input type="text" id="identifier" placeholder="Enter username or Gmail" autocomplete="username" class="w-full px-4 py-3 rounded-xl text-sm text-white custom-input"></div>
-    <div><label class="block text-xs font-semibold text-slate-300 uppercase mb-1">Password</label><div class="relative"><input type="password" id="password" placeholder="Enter password" autocomplete="current-password" class="w-full px-4 py-3 pr-12 rounded-xl text-sm text-white custom-input"><button type="button" id="togglePasswordBtn" class="absolute right-4 top-3 text-slate-400"><i id="eyeIcon" class="fa-regular fa-eye-slash"></i></button></div><div class="flex justify-between mt-2"><label class="text-xs text-slate-400 flex items-center gap-2"><input type="checkbox" id="remember"> Remember Me</label><button type="button" id="forgotBtn" class="text-xs text-blue-400">Forgot password?</button></div></div>
-    <button type="submit" id="loginBtn" class="w-full py-3.5 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl">Login</button>
-  </form>
-  <p class="text-center text-xs text-slate-400 mt-6">Don't have an account? <a href="register.html" class="text-blue-400 font-semibold">Register</a></p>
+<div id="startupLoader">
+
+    <div class="startup-inner">
+
+        <div class="startup-logo-box">
+
+            <img
+                class="startup-logo"
+                src="https://videotourl.com/images/1789792991627-2a906ffa-fbc0-4f79-9d9b-8dddb80ca667.jpg"
+                alt="Aura Skill"
+            >
+
+        </div>
+
+        <h1 class="startup-title">
+            Aura Skill
+        </h1>
+
+        <div class="startup-subtitle">
+            Play &amp; Earn
+        </div>
+
+        <div
+            class="startup-spinner"
+            aria-hidden="true">
+        </div>
+
+    </div>
+
 </div>
+
+
+<!-- ============================================================
+     FORGOT PASSWORD
+============================================================ -->
+
+<div
+    id="forgotPasswordModal"
+    aria-hidden="true">
+
+    <div class="forgot-card">
+
+        <div class="forgot-icon">
+
+            <i class="fa-solid fa-key"></i>
+
+        </div>
+
+        <h3
+            id="forgotModalTitle"
+            class="text-xl font-bold text-center">
+
+            Password Reset
+
+        </h3>
+
+        <p
+            id="forgotModalText"
+            class="text-sm
+                   text-slate-400
+                   text-center
+                   mt-2
+                   mb-5">
+
+            Apnar registered Gmail din.
+            Amra password reset link pathabo.
+
+        </p>
+
+        <input
+            id="forgotEmailInput"
+            type="email"
+            class="forgot-input"
+            placeholder="Apnar Gmail likhun"
+            autocomplete="email"
+        >
+
+        <div class="flex gap-2 mt-4">
+
+            <button
+                type="button"
+                id="forgotCancelBtn"
+                class="flex-1
+                       py-3
+                       rounded-xl
+                       bg-slate-800
+                       text-slate-300
+                       font-semibold">
+
+                Batil
+
+            </button>
+
+            <button
+                type="button"
+                id="forgotSendBtn"
+                class="flex-1
+                       py-3
+                       rounded-xl
+                       bg-blue-600
+                       text-white
+                       font-bold">
+
+                Link Pathan
+
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- ============================================================
+     TOAST
+============================================================ -->
+
+<div
+    id="toastContainer"
+    class="fixed
+           top-5
+           right-5
+           z-50
+           flex
+           flex-col
+           gap-3">
+</div>
+
+
+<!-- ============================================================
+     LOGIN CARD
+============================================================ -->
+
+<div
+    id="loginCard"
+    class="w-full
+           max-w-md
+           bg-[#0f172a]
+           p-8
+           rounded-3xl
+           shadow-2xl
+           border
+           border-[#1e293b]">
+
+    <div class="flex flex-col items-center mb-6">
+
+        <div class="w-20 h-20
+                    rounded-full
+                    overflow-hidden
+                    mb-3">
+
+            <img
+                src="https://videotourl.com/images/1789792991627-2a906ffa-fbc0-4f79-9d9b-8dddb80ca667.jpg"
+                class="w-full h-full object-cover"
+                alt="Logo"
+                decoding="async"
+            >
+
+        </div>
+
+        <h2 class="text-2xl font-bold text-white">
+            Welcome Back
+        </h2>
+
+        <p class="text-slate-400 text-sm mt-1">
+            Sign in to continue
+        </p>
+
+    </div>
+
+
+    <form
+        id="loginForm"
+        class="space-y-4">
+
+        <div>
+
+            <label
+                class="block
+                       text-xs
+                       font-semibold
+                       text-slate-300
+                       uppercase
+                       mb-1">
+
+                Username or Gmail
+
+            </label>
+
+            <input
+                type="text"
+                id="identifier"
+                placeholder="Enter username or Gmail"
+                autocomplete="username"
+                class="w-full
+                       px-4
+                       py-3
+                       rounded-xl
+                       text-sm
+                       text-white
+                       custom-input"
+            >
+
+        </div>
+
+
+        <div>
+
+            <label
+                class="block
+                       text-xs
+                       font-semibold
+                       text-slate-300
+                       uppercase
+                       mb-1">
+
+                Password
+
+            </label>
+
+            <div class="relative">
+
+                <input
+                    type="password"
+                    id="password"
+                    placeholder="Enter password"
+                    autocomplete="current-password"
+                    class="w-full
+                           px-4
+                           py-3
+                           pr-12
+                           rounded-xl
+                           text-sm
+                           text-white
+                           custom-input"
+                >
+
+                <button
+                    type="button"
+                    id="togglePasswordBtn"
+                    class="absolute
+                           right-4
+                           top-3
+                           text-slate-400">
+
+                    <i
+                        id="eyeIcon"
+                        class="fa-regular fa-eye-slash">
+                    </i>
+
+                </button>
+
+            </div>
+
+
+            <div class="flex justify-between mt-2">
+
+                <label
+                    class="text-xs
+                           text-slate-400
+                           flex
+                           items-center
+                           gap-2">
+
+                    <input
+                        type="checkbox"
+                        id="remember"
+                    >
+
+                    Remember Me
+
+                </label>
+
+
+                <button
+                    type="button"
+                    id="forgotBtn"
+                    class="text-xs text-blue-400">
+
+                    Forgot password?
+
+                </button>
+
+            </div>
+
+        </div>
+
+
+        <button
+            type="submit"
+            id="loginBtn"
+            class="w-full
+                   py-3.5
+                   bg-blue-600
+                   hover:bg-blue-700
+                   text-white
+                   font-semibold
+                   rounded-xl">
+
+            Login
+
+        </button>
+
+    </form>
+
+
+    <p class="text-center
+              text-xs
+              text-slate-400
+              mt-6">
+
+        Don't have an account?
+
+        <a
+            href="register.html"
+            class="text-blue-400 font-semibold">
+
+            Register
+
+        </a>
+
+    </p>
+
+</div>
+
+
+<!-- ============================================================
+     MAIN JAVASCRIPT
+============================================================ -->
 
 <script type="module">
-import {auth,db} from './firebase.js';
-import {onAuthStateChanged,signInWithEmailAndPassword,sendPasswordResetEmail,setPersistence,browserLocalPersistence,browserSessionPersistence} from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js';
-import {collection,query,where,getDocs,limit,doc,getDoc,onSnapshot} from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js';
+
+import {
+    auth,
+    db,
+    initOneSignal,
+    linkOneSignalUser,
+    requestOneSignalPermission
+} from './firebase.js';
+
+
+import {
+    onAuthStateChanged,
+    signInWithEmailAndPassword,
+    sendPasswordResetEmail,
+    setPersistence,
+    browserLocalPersistence,
+    browserSessionPersistence
+} from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js';
+
+
+import {
+    collection,
+    query,
+    where,
+    getDocs,
+    limit,
+    doc,
+    getDoc,
+    onSnapshot
+} from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js';
+
+
+/* ============================================================
+   ELEMENTS
+============================================================ */
+
+const startupLoader =
+    document.getElementById('startupLoader');
+
+const maintenanceScreen =
+    document.getElementById('maintenanceScreen');
+
+const maintenanceReason =
+    document.getElementById('maintenanceReason');
+
+const updateScreen =
+    document.getElementById('updateScreen');
+
+const updateMessage =
+    document.getElementById('updateMessage');
+
+const updateLinkBtn =
+    document.getElementById('updateLinkBtn');
+
+const loginCard =
+    document.getElementById('loginCard');
+
+const loginForm =
+    document.getElementById('loginForm');
+
+const identifierInput =
+    document.getElementById('identifier');
+
+const passwordInput =
+    document.getElementById('password');
+
+const rememberInput =
+    document.getElementById('remember');
+
+const loginBtn =
+    document.getElementById('loginBtn');
+
+
+/* ============================================================
+   GLOBAL STATES
+============================================================ */
+
+let maintenanceActive = false;
+let updateActive = false;
+let loginRedirecting = false;
+
+let maintenanceListener = null;
+let updateListener = null;
+
+
+/* ============================================================
+   TOAST
+============================================================ */
+
+window.showToast = function(
+    message,
+    type = 'success'
+) {
+
+    const container =
+        document.getElementById(
+            'toastContainer'
+        );
+
+    if (!container) return;
+
+
+    const toast =
+        document.createElement('div');
+
+
+    let bg = 'bg-emerald-600';
+
+
+    if (type === 'error') {
+        bg = 'bg-rose-600';
+    }
+
+    if (type === 'warning') {
+        bg = 'bg-amber-600';
+    }
+
+
+    toast.className =
+        `${bg}
+         text-white
+         px-5
+         py-3
+         rounded-xl
+         text-sm
+         shadow-xl
+         toast`;
+
+
+    toast.innerText = message;
+
+
+    container.appendChild(toast);
+
+
+    setTimeout(() => {
+        toast.remove();
+    }, 3000);
+
+};
+
+
+/* ============================================================
+   ONESIGNAL STARTUP
+============================================================ */
+
+async function prepareOneSignal() {
+
+    try {
+
+        await initOneSignal();
+
+        console.log(
+            '✅ OneSignal initialized on login page'
+        );
+
+        return true;
+
+    } catch (error) {
+
+        console.error(
+            '❌ OneSignal initialization failed:',
+            error
+        );
+
+        return false;
+
+    }
+
+}
+
+
+/*
+ * Start OneSignal early.
+ *
+ * This does NOT automatically ask
+ * the browser for permission.
+ */
+
+prepareOneSignal();
+
+
+/* ============================================================
+   NOTIFICATION BANNER
+============================================================ */
 
 window.addEventListener('load', () => {
-  if ('Notification' in window) {
-    const banner = document.getElementById('customNotifBanner');
-    const allowBtn = document.getElementById('allowNotifBtn');
-    const closeBtn = document.getElementById('closeNotifBtn');
 
-    if (Notification.permission === 'default') {
-      setTimeout(() => {
-        banner.classList.add('show');
-      }, 2000);
+    const banner =
+        document.getElementById(
+            'customNotifBanner'
+        );
+
+    const allowBtn =
+        document.getElementById(
+            'allowNotifBtn'
+        );
+
+    const closeBtn =
+        document.getElementById(
+            'closeNotifBtn'
+        );
+
+
+    if (!banner || !allowBtn || !closeBtn) {
+        return;
     }
 
-    allowBtn.addEventListener('click', () => {
-      banner.classList.remove('show');
-      Notification.requestPermission().then(permission => {
-        localStorage.setItem('notif_permission_status', permission);
-        if (permission === 'granted') {
-          showToast('Notification enabled successfully! 🎉', 'success');
+
+    /*
+     * Do not show if permission
+     * was already granted.
+     */
+
+    if (
+        'Notification' in window &&
+        Notification.permission === 'granted'
+    ) {
+
+        banner.style.display = 'none';
+
+        return;
+    }
+
+
+    /*
+     * Show banner after 2 seconds.
+     */
+
+    setTimeout(() => {
+
+        if (
+            'Notification' in window &&
+            Notification.permission !== 'granted'
+        ) {
+
+            banner.classList.add('show');
+
         }
-      });
-    });
 
-    closeBtn.addEventListener('click', () => {
-      banner.classList.remove('show');
-    });
-  } else {
-    document.getElementById('customNotifBanner').style.display = 'none';
-  }
-});
-
-const startupLoader=document.getElementById('startupLoader');
-const maintenanceScreen=document.getElementById('maintenanceScreen');
-const maintenanceReason=document.getElementById('maintenanceReason');
-const updateScreen=document.getElementById('updateScreen');
-const updateMessage=document.getElementById('updateMessage');
-const updateLinkBtn=document.getElementById('updateLinkBtn');
-let maintenanceActive=false,updateActive=false,loginRedirecting=false,maintenanceListener=null,updateListener=null;
-
-function applyMaintenance(data={}){
-  maintenanceActive=data.enabled===true;
-  if(maintenanceActive){
-    maintenanceReason.textContent=data.reason||'Sitet bortomane maintenance-er modhye ache.';
-    maintenanceScreen.style.display='flex';
-    loginCard.style.display='none';
-    document.body.style.overflow='hidden';
-  }else{
-    maintenanceScreen.style.display='none';
-    if(!updateActive) loginCard.style.display='';
-    if(!updateActive && !maintenanceActive) document.body.style.overflow='';
-  }
-}
-
-function applyUpdate(data={}){
-  updateActive=data.enabled===true || data.forceUpdate===true;
-  if(updateActive){
-    updateMessage.textContent=data.message||'Apnar app-ti update kora porojon. Doya kore update kore নিন।';
-    updateLinkBtn.href=data.link||data.updateUrl||'#';
-    updateScreen.style.display='flex';
-    loginCard.style.display='none';
-    document.body.style.overflow='hidden';
-  }else{
-    updateScreen.style.display='none';
-    if(!maintenanceActive) loginCard.style.display='';
-    if(!updateActive && !maintenanceActive) document.body.style.overflow='';
-  }
-}
-
-async function checkStartupData(){
-  try{
-    const [mSnap, uSnap] = await Promise.all([
-      getDoc(doc(db,'settings','siteMaintenance')),
-      getDoc(doc(db,'settings','appUpdate')).catch(()=>({exists:()=>false}))
-    ]);
-    applyMaintenance(mSnap.exists()?mSnap.data():{});
-    applyUpdate(uSnap.exists()?uSnap.data():{});
-    return maintenanceActive || updateActive;
-  }catch(e){
-    console.error('STARTUP CHECK ERROR',e);
-    return false;
-  }
-}
-const startupCheckPromise=checkStartupData();
-
-try{
-  maintenanceListener=onSnapshot(doc(db,'settings','siteMaintenance'),s=>applyMaintenance(s.exists()?s.data():{}),e=>console.error('Maintenance listener',e));
-  updateListener=onSnapshot(doc(db,'settings','appUpdate'),s=>applyUpdate(s.exists()?s.data():{}),e=>console.error('Update listener',e));
-}catch(e){console.error(e)}
-
-const loginForm=document.getElementById('loginForm'),identifierInput=document.getElementById('identifier'),passwordInput=document.getElementById('password'),rememberInput=document.getElementById('remember'),loginBtn=document.getElementById('loginBtn');
-window.showToast=function(message,type='success'){const c=document.getElementById('toastContainer');if(!c)return;const t=document.createElement('div');let bg=type==='error'?'bg-rose-600':type==='warning'?'bg-amber-600':'bg-emerald-600';t.className=`${bg} text-white px-5 py-3 rounded-xl text-sm shadow-xl toast`;t.innerText=message;c.appendChild(t);setTimeout(()=>t.remove(),3000)};
-
-document.getElementById('togglePasswordBtn').addEventListener('click',()=>{if(passwordInput.type==='password'){passwordInput.type='text';document.getElementById('eyeIcon').className='fa-regular fa-eye'}else{passwordInput.type='password';document.getElementById('eyeIcon').className='fa-regular fa-eye-slash'}});
-
-async function findEmailByUsername(username){const clean=username.trim(),lower=clean.toLowerCase();try{const s=await getDocs(query(collection(db,'users'),where('usernameLower','==',lower),limit(1)));if(!s.empty&&s.docs[0].data().email)return s.docs[0].data().email.trim()}catch(e){console.warn(e)}try{const s=await getDocs(query(collection(db,'users'),where('username','==',clean),limit(1)));if(!s.empty&&s.docs[0].data().email)return s.docs[0].data().email.trim()}catch(e){console.warn(e)}try{const s=await getDocs(collection(db,'users'));for(const d of s.docs){const x=d.data()||{};if(String(x.username||'').trim().toLowerCase()===lower&&x.email)return String(x.email).trim()}}catch(e){console.warn(e)}return null}
-
-loginForm.addEventListener('submit',async e=>{
-  e.preventDefault();
-  await startupCheckPromise;
-  if(maintenanceActive){showToast('Site bortomane maintenance-e ache.','warning');return;}
-  if(updateActive){showToast('App update kora porojon.','warning');return;}
-  const identifier=identifierInput.value.trim(),password=passwordInput.value,remember=rememberInput.checked;
-  if(!identifier){showToast('Username othoba Gmail din','warning');identifierInput.focus();return;}
-  if(!password){showToast('Password din','warning');passwordInput.focus();return;}
-  loginBtn.disabled=true;
-  loginBtn.innerHTML='<i class="fa-solid fa-spinner fa-spin mr-2"></i>Signing in...';
-  
-  try{
-    try {
-      await setPersistence(auth, remember ? browserLocalPersistence : browserSessionPersistence);
-    } catch(err) {
-      console.warn("Persistence warning:", err);
-    }
-
-    let email=identifier.includes('@')?identifier.toLowerCase():await findEmailByUsername(identifier);
-    if(!email){showToast('Ei username diye account paoa jayni.','error');resetLoginButton();return;}
-    
-    await signInWithEmailAndPassword(auth,email,password);
-    if(maintenanceActive || updateActive){await auth.signOut();return;}
-    
-    loginRedirecting=true;
-    showToast('Login successful! Welcome back 🎉💚', 'success');
-    
-    setTimeout(()=>{
-      window.location.replace('./index.html');
     }, 2000);
 
-  }catch(error){
-    console.error(error);
-    let m='Login korte somossa hoyeche.';
-    switch(error.code){
-      case'auth/invalid-credential':
-      case'auth/wrong-password':
-      case'auth/user-not-found':m='Username/Gmail othoba Password bhul!';break;
-      case'auth/invalid-email':m='Gmail address sothik noy.';break;
-      case'auth/too-many-requests':m='Anekbar bhul chesta hoyeche. Kichukhon pore abar chesta korun.';break;
-      case'auth/network-request-failed':m='Internet connection somossa hoyeche.';break;
-      case'auth/user-disabled':m='Ei account bondho kora hoyeche.';break;
-      default:if(error.message)m=error.message;
+
+    /*
+     * ALLOW BUTTON
+     */
+
+    allowBtn.addEventListener(
+        'click',
+        async () => {
+
+            banner.classList.remove('show');
+
+            allowBtn.disabled = true;
+
+            allowBtn.textContent =
+                'Enabling...';
+
+
+            try {
+
+                const result =
+                    await requestOneSignalPermission();
+
+
+                if (result) {
+
+                    localStorage.setItem(
+                        'notif_permission_status',
+                        'granted'
+                    );
+
+
+                    showToast(
+                        'Notification enabled successfully! 🎉',
+                        'success'
+                    );
+
+                } else {
+
+                    localStorage.setItem(
+                        'notif_permission_status',
+                        'denied'
+                    );
+
+
+                    showToast(
+                        'Notification permission দেওয়া হয়নি।',
+                        'warning'
+                    );
+
+                }
+
+            } catch (error) {
+
+                console.error(
+                    'Notification permission error:',
+                    error
+                );
+
+
+                showToast(
+                    'Notification enable করা যায়নি।',
+                    'error'
+                );
+
+            } finally {
+
+                allowBtn.disabled = false;
+
+                allowBtn.textContent =
+                    'Allow';
+
+            }
+
+        }
+    );
+
+
+    /*
+     * LATER BUTTON
+     */
+
+    closeBtn.addEventListener(
+        'click',
+        () => {
+
+            banner.classList.remove('show');
+
+        }
+    );
+
+});
+
+
+/* ============================================================
+   MAINTENANCE
+============================================================ */
+
+function applyMaintenance(data = {}) {
+
+    maintenanceActive =
+        data.enabled === true;
+
+
+    if (maintenanceActive) {
+
+        maintenanceReason.textContent =
+            data.reason ||
+            'Sitet bortomane maintenance-er modhye ache.';
+
+
+        maintenanceScreen.style.display =
+            'flex';
+
+        loginCard.style.display =
+            'none';
+
+        document.body.style.overflow =
+            'hidden';
+
+    } else {
+
+        maintenanceScreen.style.display =
+            'none';
+
+
+        if (!updateActive) {
+            loginCard.style.display = '';
+        }
+
+
+        if (
+            !updateActive &&
+            !maintenanceActive
+        ) {
+
+            document.body.style.overflow =
+                '';
+
+        }
+
     }
-    showToast(m,'error');
-    resetLoginButton();
-  }
-});
 
-function resetLoginButton(){loginBtn.disabled=false;loginBtn.innerHTML='Login'}
-
-onAuthStateChanged(auth,async user=>{
-  await startupCheckPromise;
-  if(maintenanceActive || updateActive)return;
-});
-
-const forgotModal=document.getElementById('forgotPasswordModal'),forgotEmailInput=document.getElementById('forgotEmailInput'),forgotSendBtn=document.getElementById('forgotSendBtn'),forgotCancelBtn=document.getElementById('forgotCancelBtn');
-document.getElementById('forgotBtn').addEventListener('click',()=>{if(maintenanceActive || updateActive)return;forgotModal.classList.add('show');forgotEmailInput.value='';setTimeout(()=>forgotEmailInput.focus(),80)});forgotCancelBtn.addEventListener('click',()=>forgotModal.classList.remove('show'));forgotModal.addEventListener('click',e=>{if(e.target===forgotModal)forgotModal.classList.remove('show')});
-forgotSendBtn.addEventListener('click',async()=>{const email=String(forgotEmailInput.value||'').trim().toLowerCase();if(!email||!email.includes('@')){document.getElementById('forgotModalText').textContent='Doya kore ekti sothik Gmail address din.';return}forgotSendBtn.disabled=true;forgotSendBtn.textContent='Pathano hocche...';try{await sendPasswordResetEmail(auth,email);document.getElementById('forgotModalTitle').textContent='Reset Link pathano hoyeche ✓';document.getElementById('forgotModalText').innerHTML='Apnar Gmail-e password reset link pathano hoyeche。<br><br><b class="text-amber-300">Spam / Junk folder-tio check korun।</b>';forgotEmailInput.style.display='none';forgotCancelBtn.textContent='Bondho korun';forgotSendBtn.style.display='none';showToast('Password reset link Gmail-e pathano hoyeche.','success')}catch(error){let m=error.code==='auth/user-not-found'?'Ei Gmail diye kono account paoa jayni.':error.code==='auth/invalid-email'?'Gmail address sothik noy.':error.code==='auth/network-request-failed'?'Internet connection somossa hoyeche.':'Password reset kora jayni.';document.getElementById('forgotModalText').textContent=m;forgotSendBtn.disabled=false;forgotSendBtn.textContent='Abar pathan'}});
-
-updateLinkBtn.addEventListener('click', function(e) {
-  const rawUrl = (this.getAttribute('href') || '').trim();
-  let targetUrl;
-  try {
-    targetUrl = new URL(rawUrl, window.location.href);
-    if (!['http:', 'https:'].includes(targetUrl.protocol) || rawUrl === '' || rawUrl === '#') throw new Error('Invalid URL');
-  } catch (_) {
-    e.preventDefault();
-    showToast('Update link set kora nei ba sothik noy.', 'error');
-    return;
-  }
-  e.preventDefault();
-  if (this.dataset.updating === 'true') return;
-  this.dataset.updating = 'true';
-  this.innerHTML = '<span style="display:inline-block;width:16px;height:16px;border:2px solid currentColor;border-top-color:transparent;border-radius:50%;animation:updateSpin .7s linear infinite;vertical-align:middle;margin-right:8px"></span>Updating...';
-  this.style.pointerEvents = 'none';
-  this.style.opacity = '0.8';
-  this.setAttribute('aria-busy', 'true');
-  setTimeout(() => { window.location.assign(targetUrl.href); }, 300);
-});
-if (!document.getElementById('update-spin-style')) {
-  const spinStyle = document.createElement('style');
-  spinStyle.id = 'update-spin-style';
-  spinStyle.textContent = '@keyframes updateSpin{to{transform:rotate(360deg)}}';
-  document.head.appendChild(spinStyle);
 }
 
-async function finishStartup(){
-  await startupCheckPromise;
-  const elapsed=Date.now()-startupStartedAt;
-  const wait=Math.max(0,2500-elapsed);
-  if(wait)await new Promise(r=>setTimeout(r,wait));
-  if(startupLoader){
-    startupLoader.classList.add('hide');
-    setTimeout(()=>startupLoader.remove(),400);
-  }
+
+/* ============================================================
+   UPDATE
+============================================================ */
+
+function applyUpdate(data = {}) {
+
+    updateActive =
+        data.enabled === true ||
+        data.forceUpdate === true;
+
+
+    if (updateActive) {
+
+        updateMessage.textContent =
+            data.message ||
+            'Apnar app-ti update kora porojon. Doya kore update kore নিন।';
+
+
+        updateLinkBtn.href =
+            data.link ||
+            data.updateUrl ||
+            '#';
+
+
+        updateScreen.style.display =
+            'flex';
+
+        loginCard.style.display =
+            'none';
+
+        document.body.style.overflow =
+            'hidden';
+
+    } else {
+
+        updateScreen.style.display =
+            'none';
+
+
+        if (!maintenanceActive) {
+            loginCard.style.display = '';
+        }
+
+
+        if (
+            !updateActive &&
+            !maintenanceActive
+        ) {
+
+            document.body.style.overflow =
+                '';
+
+        }
+
+    }
+
 }
-const startupStartedAt=Date.now();
+
+
+/* ============================================================
+   STARTUP FIREBASE CHECK
+============================================================ */
+
+async function checkStartupData() {
+
+    try {
+
+        const [
+            maintenanceSnap,
+            updateSnap
+        ] = await Promise.all([
+
+            getDoc(
+                doc(
+                    db,
+                    'settings',
+                    'siteMaintenance'
+                )
+            ),
+
+            getDoc(
+                doc(
+                    db,
+                    'settings',
+                    'appUpdate'
+                )
+            ).catch(
+                () => ({
+                    exists: () => false
+                })
+            )
+
+        ]);
+
+
+        applyMaintenance(
+            maintenanceSnap.exists()
+                ? maintenanceSnap.data()
+                : {}
+        );
+
+
+        applyUpdate(
+            updateSnap.exists()
+                ? updateSnap.data()
+                : {}
+        );
+
+
+        return (
+            maintenanceActive ||
+            updateActive
+        );
+
+
+    } catch (error) {
+
+        console.error(
+            'STARTUP CHECK ERROR',
+            error
+        );
+
+        return false;
+
+    }
+
+}
+
+
+const startupCheckPromise =
+    checkStartupData();
+
+
+/* ============================================================
+   FIRESTORE LISTENERS
+============================================================ */
+
+try {
+
+    maintenanceListener =
+        onSnapshot(
+
+            doc(
+                db,
+                'settings',
+                'siteMaintenance'
+            ),
+
+            snapshot => {
+
+                applyMaintenance(
+                    snapshot.exists()
+                        ? snapshot.data()
+                        : {}
+                );
+
+            },
+
+            error => {
+
+                console.error(
+                    'Maintenance listener',
+                    error
+                );
+
+            }
+
+        );
+
+
+    updateListener =
+        onSnapshot(
+
+            doc(
+                db,
+                'settings',
+                'appUpdate'
+            ),
+
+            snapshot => {
+
+                applyUpdate(
+                    snapshot.exists()
+                        ? snapshot.data()
+                        : {}
+                );
+
+            },
+
+            error => {
+
+                console.error(
+                    'Update listener',
+                    error
+                );
+
+            }
+
+        );
+
+} catch (error) {
+
+    console.error(error);
+
+}
+
+
+/* ============================================================
+   PASSWORD TOGGLE
+============================================================ */
+
+document
+    .getElementById('togglePasswordBtn')
+    .addEventListener(
+        'click',
+        () => {
+
+            if (
+                passwordInput.type ===
+                'password'
+            ) {
+
+                passwordInput.type =
+                    'text';
+
+
+                document
+                    .getElementById(
+                        'eyeIcon'
+                    )
+                    .className =
+                    'fa-regular fa-eye';
+
+            } else {
+
+                passwordInput.type =
+                    'password';
+
+
+                document
+                    .getElementById(
+                        'eyeIcon'
+                    )
+                    .className =
+                    'fa-regular fa-eye-slash';
+
+            }
+
+        }
+    );
+
+
+/* ============================================================
+   FIND EMAIL BY USERNAME
+============================================================ */
+
+async function findEmailByUsername(
+    username
+) {
+
+    const clean =
+        username.trim();
+
+    const lower =
+        clean.toLowerCase();
+
+
+    /*
+     * First search usernameLower
+     */
+
+    try {
+
+        const snapshot =
+            await getDocs(
+
+                query(
+                    collection(
+                        db,
+                        'users'
+                    ),
+
+                    where(
+                        'usernameLower',
+                        '==',
+                        lower
+                    ),
+
+                    limit(1)
+                )
+
+            );
+
+
+        if (
+            !snapshot.empty &&
+            snapshot.docs[0]
+                .data()
+                .email
+        ) {
+
+            return snapshot
+                .docs[0]
+                .data()
+                .email
+                .trim();
+
+        }
+
+    } catch (error) {
+
+        console.warn(
+            error
+        );
+
+    }
+
+
+    /*
+     * Second search username
+     */
+
+    try {
+
+        const snapshot =
+            await getDocs(
+
+                query(
+                    collection(
+                        db,
+                        'users'
+                    ),
+
+                    where(
+                        'username',
+                        '==',
+                        clean
+                    ),
+
+                    limit(1)
+                )
+
+            );
+
+
+        if (
+            !snapshot.empty &&
+            snapshot.docs[0]
+                .data()
+                .email
+        ) {
+
+            return snapshot
+                .docs[0]
+                .data()
+                .email
+                .trim();
+
+        }
+
+    } catch (error) {
+
+        console.warn(
+            error
+        );
+
+    }
+
+
+    /*
+     * Final fallback
+     */
+
+    try {
+
+        const snapshot =
+            await getDocs(
+                collection(
+                    db,
+                    'users'
+                )
+            );
+
+
+        for (
+            const document
+            of snapshot.docs
+        ) {
+
+            const data =
+                document.data() || {};
+
+
+            if (
+                String(
+                    data.username || ''
+                )
+                .trim()
+                .toLowerCase() ===
+                lower &&
+                data.email
+            ) {
+
+                return String(
+                    data.email
+                ).trim();
+
+            }
+
+        }
+
+    } catch (error) {
+
+        console.warn(
+            error
+        );
+
+    }
+
+
+    return null;
+
+}
+
+
+/* ============================================================
+   LOGIN
+============================================================ */
+
+loginForm.addEventListener(
+    'submit',
+    async event => {
+
+        event.preventDefault();
+
+
+        await startupCheckPromise;
+
+
+        if (maintenanceActive) {
+
+            showToast(
+                'Site bortomane maintenance-e ache.',
+                'warning'
+            );
+
+            return;
+
+        }
+
+
+        if (updateActive) {
+
+            showToast(
+                'App update kora porojon.',
+                'warning'
+            );
+
+            return;
+
+        }
+
+
+        const identifier =
+            identifierInput.value.trim();
+
+        const password =
+            passwordInput.value;
+
+        const remember =
+            rememberInput.checked;
+
+
+        if (!identifier) {
+
+            showToast(
+                'Username othoba Gmail din',
+                'warning'
+            );
+
+            identifierInput.focus();
+
+            return;
+
+        }
+
+
+        if (!password) {
+
+            showToast(
+                'Password din',
+                'warning'
+            );
+
+            passwordInput.focus();
+
+            return;
+
+        }
+
+
+        loginBtn.disabled =
+            true;
+
+
+        loginBtn.innerHTML =
+            '<i class="fa-solid fa-spinner fa-spin mr-2"></i>Signing in...';
+
+
+        try {
+
+            /*
+             * Firebase persistence
+             */
+
+            try {
+
+                await setPersistence(
+                    auth,
+                    remember
+                        ? browserLocalPersistence
+                        : browserSessionPersistence
+                );
+
+            } catch (error) {
+
+                console.warn(
+                    'Persistence warning:',
+                    error
+                );
+
+            }
+
+
+            /*
+             * Find email
+             */
+
+            let email;
+
+
+            if (
+                identifier.includes('@')
+            ) {
+
+                email =
+                    identifier.toLowerCase();
+
+            } else {
+
+                email =
+                    await findEmailByUsername(
+                        identifier
+                    );
+
+            }
+
+
+            if (!email) {
+
+                showToast(
+                    'Ei username diye account paoa jayni.',
+                    'error'
+                );
+
+                resetLoginButton();
+
+                return;
+
+            }
+
+
+            /*
+             * FIREBASE LOGIN
+             */
+
+            const credential =
+                await signInWithEmailAndPassword(
+                    auth,
+                    email,
+                    password
+                );
+
+
+            /*
+             * Maintenance/update check
+             */
+
+            if (
+                maintenanceActive ||
+                updateActive
+            ) {
+
+                await auth.signOut();
+
+                resetLoginButton();
+
+                return;
+
+            }
+
+
+            /* ==================================================
+               IMPORTANT:
+               FIREBASE UID → ONESIGNAL EXTERNAL ID
+            ================================================== */
+
+            try {
+
+                const linked =
+                    await linkOneSignalUser(
+                        credential.user
+                    );
+
+
+                if (linked) {
+
+                    console.log(
+                        '✅ Firebase UID linked with OneSignal'
+                    );
+
+                    console.log(
+                        'Firebase UID:',
+                        credential.user.uid
+                    );
+
+                } else {
+
+                    console.warn(
+                        '⚠️ OneSignal linking failed.'
+                    );
+
+                }
+
+            } catch (oneSignalError) {
+
+                console.error(
+                    'OneSignal linking error:',
+                    oneSignalError
+                );
+
+            }
+
+
+            /*
+             * Login successful
+             */
+
+            loginRedirecting =
+                true;
+
+
+            showToast(
+                'Login successful! Welcome back 🎉💚',
+                'success'
+            );
+
+
+            setTimeout(
+                () => {
+
+                    window.location.replace(
+                        './index.html'
+                    );
+
+                },
+                2000
+            );
+
+
+        } catch (error) {
+
+            console.error(
+                error
+            );
+
+
+            let message =
+                'Login korte somossa hoyeche.';
+
+
+            switch (error.code) {
+
+                case 'auth/invalid-credential':
+
+                case 'auth/wrong-password':
+
+                case 'auth/user-not-found':
+
+                    message =
+                        'Username/Gmail othoba Password bhul!';
+
+                    break;
+
+
+                case 'auth/invalid-email':
+
+                    message =
+                        'Gmail address sothik noy.';
+
+                    break;
+
+
+                case 'auth/too-many-requests':
+
+                    message =
+                        'Anekbar bhul chesta hoyeche. Kichukhon pore abar chesta korun.';
+
+                    break;
+
+
+                case 'auth/network-request-failed':
+
+                    message =
+                        'Internet connection somossa hoyeche.';
+
+                    break;
+
+
+                case 'auth/user-disabled':
+
+                    message =
+                        'Ei account bondho kora hoyeche.';
+
+                    break;
+
+
+                default:
+
+                    if (error.message) {
+                        message =
+                            error.message;
+                    }
+
+            }
+
+
+            showToast(
+                message,
+                'error'
+            );
+
+
+            resetLoginButton();
+
+        }
+
+    }
+);
+
+
+/* ============================================================
+   RESET LOGIN BUTTON
+============================================================ */
+
+function resetLoginButton() {
+
+    loginBtn.disabled =
+        false;
+
+    loginBtn.innerHTML =
+        'Login';
+
+}
+
+
+/* ============================================================
+   AUTH STATE
+============================================================ */
+
+onAuthStateChanged(
+    auth,
+    async user => {
+
+        await startupCheckPromise;
+
+
+        if (
+            maintenanceActive ||
+            updateActive
+        ) {
+
+            return;
+
+        }
+
+        if (user) {
+
+            console.log(
+                'Current Firebase user:',
+                user.uid
+            );
+
+        }
+
+    }
+);
+
+
+/* ============================================================
+   FORGOT PASSWORD
+============================================================ */
+
+const forgotModal =
+    document.getElementById(
+        'forgotPasswordModal'
+    );
+
+const forgotEmailInput =
+    document.getElementById(
+        'forgotEmailInput'
+    );
+
+const forgotSendBtn =
+    document.getElementById(
+        'forgotSendBtn'
+    );
+
+const forgotCancelBtn =
+    document.getElementById(
+        'forgotCancelBtn'
+    );
+
+
+document
+    .getElementById('forgotBtn')
+    .addEventListener(
+        'click',
+        () => {
+
+            if (
+                maintenanceActive ||
+                updateActive
+            ) {
+
+                return;
+
+            }
+
+
+            forgotModal.classList.add(
+                'show'
+            );
+
+
+            forgotEmailInput.value =
+                '';
+
+
+            setTimeout(
+                () => {
+                    forgotEmailInput.focus();
+                },
+                80
+            );
+
+        }
+    );
+
+
+forgotCancelBtn.addEventListener(
+    'click',
+    () => {
+
+        forgotModal.classList.remove(
+            'show'
+        );
+
+    }
+);
+
+
+forgotModal.addEventListener(
+    'click',
+    event => {
+
+        if (
+            event.target ===
+            forgotModal
+        ) {
+
+            forgotModal.classList.remove(
+                'show'
+            );
+
+        }
+
+    }
+);
+
+
+/* ============================================================
+   SEND RESET EMAIL
+============================================================ */
+
+forgotSendBtn.addEventListener(
+    'click',
+    async () => {
+
+        const email =
+            String(
+                forgotEmailInput.value || ''
+            )
+            .trim()
+            .toLowerCase();
+
+
+        if (
+            !email ||
+            !email.includes('@')
+        ) {
+
+            document
+                .getElementById(
+                    'forgotModalText'
+                )
+                .textContent =
+                'Doya kore ekti sothik Gmail address din.';
+
+            return;
+
+        }
+
+
+        forgotSendBtn.disabled =
+            true;
+
+
+        forgotSendBtn.textContent =
+            'Pathano hocche...';
+
+
+        try {
+
+            await sendPasswordResetEmail(
+                auth,
+                email
+            );
+
+
+            document
+                .getElementById(
+                    'forgotModalTitle'
+                )
+                .textContent =
+                'Reset Link pathano hoyeche ✓';
+
+
+            document
+                .getElementById(
+                    'forgotModalText'
+                )
+                .innerHTML =
+                'Apnar Gmail-e password reset link pathano hoyeche।<br><br><b class="text-amber-300">Spam / Junk folder-tio check korun।</b>';
+
+
+            forgotEmailInput.style.display =
+                'none';
+
+
+            forgotCancelBtn.textContent =
+                'Bondho korun';
+
+
+            forgotSendBtn.style.display =
+                'none';
+
+
+            showToast(
+                'Password reset link Gmail-e pathano hoyeche.',
+                'success'
+            );
+
+
+        } catch (error) {
+
+            let message =
+                'Password reset kora jayni.';
+
+
+            if (
+                error.code ===
+                'auth/user-not-found'
+            ) {
+
+                message =
+                    'Ei Gmail diye kono account paoa jayni.';
+
+            } else if (
+                error.code ===
+                'auth/invalid-email'
+            ) {
+
+                message =
+                    'Gmail address sothik noy.';
+
+            } else if (
+                error.code ===
+                'auth/network-request-failed'
+            ) {
+
+                message =
+                    'Internet connection somossa hoyeche.';
+
+            }
+
+
+            document
+                .getElementById(
+                    'forgotModalText'
+                )
+                .textContent =
+                message;
+
+
+            forgotSendBtn.disabled =
+                false;
+
+
+            forgotSendBtn.textContent =
+                'Abar pathan';
+
+        }
+
+    }
+);
+
+
+/* ============================================================
+   UPDATE BUTTON
+============================================================ */
+
+updateLinkBtn.addEventListener(
+    'click',
+    function(event) {
+
+        const rawUrl =
+            (
+                this.getAttribute('href') ||
+                ''
+            ).trim();
+
+
+        let targetUrl;
+
+
+        try {
+
+            targetUrl =
+                new URL(
+                    rawUrl,
+                    window.location.href
+                );
+
+
+            if (
+                ![
+                    'http:',
+                    'https:'
+                ].includes(
+                    targetUrl.protocol
+                ) ||
+                rawUrl === '' ||
+                rawUrl === '#'
+            ) {
+
+                throw new Error(
+                    'Invalid URL'
+                );
+
+            }
+
+        } catch (_) {
+
+            event.preventDefault();
+
+
+            showToast(
+                'Update link set kora nei ba sothik noy.',
+                'error'
+            );
+
+
+            return;
+
+        }
+
+
+        event.preventDefault();
+
+
+        if (
+            this.dataset.updating ===
+            'true'
+        ) {
+
+            return;
+
+        }
+
+
+        this.dataset.updating =
+            'true';
+
+
+        this.innerHTML =
+            '<span style="display:inline-block;width:16px;height:16px;border:2px solid currentColor;border-top-color:transparent;border-radius:50%;animation:updateSpin .7s linear infinite;vertical-align:middle;margin-right:8px"></span>Updating...';
+
+
+        this.style.pointerEvents =
+            'none';
+
+        this.style.opacity =
+            '0.8';
+
+        this.setAttribute(
+            'aria-busy',
+            'true'
+        );
+
+
+        setTimeout(
+            () => {
+
+                window.location.assign(
+                    targetUrl.href
+                );
+
+            },
+            300
+        );
+
+    }
+);
+
+
+/* ============================================================
+   UPDATE SPINNER STYLE
+============================================================ */
+
+if (
+    !document.getElementById(
+        'update-spin-style'
+    )
+) {
+
+    const spinStyle =
+        document.createElement(
+            'style'
+        );
+
+
+    spinStyle.id =
+        'update-spin-style';
+
+
+    spinStyle.textContent =
+        '@keyframes updateSpin{to{transform:rotate(360deg)}}';
+
+
+    document.head.appendChild(
+        spinStyle
+    );
+
+}
+
+
+/* ============================================================
+   FINISH STARTUP
+============================================================ */
+
+const startupStartedAt =
+    Date.now();
+
+
+async function finishStartup() {
+
+    await startupCheckPromise;
+
+
+    const elapsed =
+        Date.now() -
+        startupStartedAt;
+
+
+    const wait =
+        Math.max(
+            0,
+            2500 - elapsed
+        );
+
+
+    if (wait) {
+
+        await new Promise(
+            resolve => {
+                setTimeout(
+                    resolve,
+                    wait
+                );
+            }
+        );
+
+    }
+
+
+    if (startupLoader) {
+
+        startupLoader.classList.add(
+            'hide'
+        );
+
+
+        setTimeout(
+            () => {
+
+                startupLoader.remove();
+
+            },
+            400
+        );
+
+    }
+
+}
+
+
 finishStartup();
+
 </script>
+
 </body>
 </html>
