@@ -526,6 +526,8 @@
                         if(tStatus === 'complete') tStatus = 'completed';
                         const startTime = Number(data.startTime || 0);
 
+                        // Room Details update NEVER changes lifecycle.
+                        // Result/status marks a match completed; otherwise startTime controls Upcoming -> Live.
                         const hasResult =
                             data.result != null ||
                             data.matchResult != null ||
@@ -536,7 +538,6 @@
                             data.winnerUid != null ||
                             (Array.isArray(data.winnerUids) && data.winnerUids.length > 0);
 
-                        // Fix: If already completed or has result, force it to 'completed' and bypass time-based live override
                         if (['complete','completed','finished','finish','result'].includes(tStatus) ||
                             data.completed === true || data.isCompleted === true || hasResult) {
                             tStatus = 'completed';
@@ -548,9 +549,9 @@
 
                         if(tStatus === 'completed') {
                             const completedAt = Number(data.completedAt || startTime || 0);
-                            if(completedAt > 0 && now >= (completedAt + 60 * 60 * 1000 + 10 * 60 * 1000)) {
-                                return; 
-                            }
+                            const deleteAfter = Number(data.deleteAfter || (completedAt + 60 * 60 * 1000));
+                            // Complete section e 1 hour por tournament আর দেখাবে না; My Matches history আলাদা archive থেকে থাকবে।
+                            if(completedAt > 0 && now >= deleteAfter) return;
                         }
 
                         globalTournaments.push({ id: d.id, ...data, status: tStatus });
@@ -683,14 +684,6 @@
             if(countdownInterval) clearInterval(countdownInterval);
             countdownInterval = setInterval(() => {
                 document.querySelectorAll('.match-countdown').forEach(el => {
-                    const status = el.getAttribute('data-status');
-                    // Fix: If status is completed, do not run live countdown
-                    if (status === 'completed') {
-                        el.innerText = "COMPLETED";
-                        el.className = "text-[11px] text-slate-400 font-bold block mt-0.5";
-                        return;
-                    }
-
                     const startTime = Number(el.getAttribute('data-starttime'));
                     if(!startTime) return;
                     const diff = startTime - Date.now();
@@ -754,7 +747,6 @@
                 const matchTypeLabel = t.matchType || t.type || 'Solo';
                 const typeLower = String(matchTypeLabel).toLowerCase();
                 const maxTeamSize = typeLower === 'solo' ? 1 : (typeLower === 'duo' ? 2 : (typeLower === 'squad' ? 4 : Number(t.slotSize || 1)));
-                const tStatus = String(t.status || 'upcoming').toLowerCase();
 
                 const hasJoined = participants.some(p => p.uid === currentUserUid);
                 let joinBtnHtml = '';
@@ -774,21 +766,13 @@
                     `;
                 }
 
-                // If completed, show completed text instead of live countdown
-                let timeDisplayHtml = '';
-                if(tStatus === 'completed') {
-                    timeDisplayHtml = `<span class="text-[11px] text-slate-400 font-bold block mt-0.5">COMPLETED</span>`;
-                } else {
-                    timeDisplayHtml = `<span class="text-[11px] text-amber-400 font-bold match-countdown block mt-0.5" data-starttime="${startTimeAttr}" data-status="${tStatus}">Calculating...</span>`;
-                }
-
                 grid.innerHTML += `
                     <div class="glass-card rounded-2xl p-4 space-y-3 shadow-xl border border-slate-800">
                         <div class="flex justify-between items-center">
                             <div>
                                 <h4 class="text-xs font-bold text-white leading-tight">${t.name}</h4>
                                 <span class="text-[10px] text-slate-300 font-semibold block">${t.time || 'Scheduled'}</span>
-                                ${timeDisplayHtml}
+                                <span class="text-[11px] text-amber-400 font-bold match-countdown block mt-0.5" data-starttime="${startTimeAttr}">Calculating...</span>
                             </div>
                             <span class="bg-blue-600/20 text-blue-400 border border-blue-500/30 px-2.5 py-1 rounded-lg text-[10px] font-bold">${matchTypeLabel} (${maxTeamSize}P)</span>
                         </div>

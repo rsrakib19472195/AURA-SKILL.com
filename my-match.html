@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aura Skill - My Matches</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Hind Siliguri', sans-serif; background-color: #050811; color: #f8fafc; }
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 10px; }
+        .glass-card { background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(12px); border: 1px solid rgba(30, 41, 59, 0.9); }
+        #toast-container { position: fixed; top: 20px; right: 20px; z-index: 9999; display: flex; flex-direction: column; gap: 10px; }
+        .toast {
+            background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(12px); border-left: 4px solid #3b82f6;
+            color: #fff; padding: 12px 20px; border-radius: 12px; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
+            font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 10px;
+            animation: slideIn 0.3s ease, fadeOut 0.3s ease 2.7s forwards;
+        }
+        .toast.error { border-left-color: #ef4444; }
+        @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+        @keyframes fadeOut { from { opacity: 1; } to { opacity: 0; transform: translateY(-10px); } }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col pb-28 overflow-x-hidden">
+
+    <div id="toast-container"></div>
+
+    <div id="app-loader" class="fixed inset-0 z-50 flex flex-col items-center justify-center bg-[#050811] space-y-4">
+        <div class="w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
+        <p class="text-xs tracking-widest text-slate-400 font-semibold uppercase">লোড হচ্ছে...</p>
+    </div>
+
+    <!-- Top Header -->
+    <header class="bg-[#0b0f1a]/90 backdrop-blur-md px-4 py-3 sticky top-0 z-30 flex justify-between items-center border-b border-slate-900 shadow-md">
+        <div class="flex items-center space-x-2">
+            <a href="profile.html" class="bg-slate-800 text-slate-300 hover:text-white px-2.5 py-1.5 rounded-xl text-xs font-bold transition mr-1">
+                <i class="fa-solid fa-arrow-left"></i>
+            </a>
+            <div class="text-xs font-black tracking-wider text-blue-400 uppercase">My Matches History</div>
+        </div>
+        <div onclick="window.location.href='wallet.html'" class="cursor-pointer bg-[#131b2e] border border-slate-800 text-blue-400 px-2.5 py-1.5 rounded-xl text-xs font-semibold flex items-center space-x-1 shadow">
+            <i class="fa-solid fa-wallet text-[10px]"></i>
+            <span>৳ <span id="wallet-balance">0</span></span>
+        </div>
+    </header>
+
+    <main class="max-w-md mx-auto px-4 py-4 flex-grow w-full space-y-4">
+        <div class="flex space-x-1.5 bg-[#0d1322] p-1.5 rounded-2xl border border-slate-800/80">
+            <button onclick="filterMatches('joined')" id="tab-joined" class="flex-1 py-2 text-[11px] font-bold rounded-xl bg-blue-600 text-white shadow transition">Joined</button>
+            <button onclick="filterMatches('completed')" id="tab-completed" class="flex-1 py-2 text-[11px] font-bold rounded-xl text-slate-400 hover:text-white transition">Completed</button>
+        </div>
+
+        <div id="matches-grid" class="space-y-3"></div>
+    </main>
+
+    <!-- Bottom Navigation Bar -->
+    <nav class="fixed bottom-0 left-0 right-0 max-w-md mx-auto bg-[#0b0f1a]/95 backdrop-blur-md border-t border-slate-900 px-6 py-2.5 flex justify-around items-center z-40 shadow-2xl">
+        <a href="index_3.html" class="flex flex-col items-center text-slate-400 hover:text-blue-400 transition space-y-1">
+            <i class="fa-solid fa-house text-base"></i>
+            <span class="text-[10px] font-semibold">Home</span>
+        </a>
+        <a href="wallet.html" class="flex flex-col items-center text-slate-400 hover:text-blue-400 transition space-y-1">
+            <i class="fa-solid fa-wallet text-base"></i>
+            <span class="text-[10px] font-semibold">Wallet</span>
+        </a>
+        <a href="profile.html" class="flex flex-col items-center text-slate-400 hover:text-blue-400 transition space-y-1">
+            <i class="fa-solid fa-user text-base"></i>
+            <span class="text-[10px] font-semibold">Profile</span>
+        </a>
+    </nav>
+
+    <script type="module">
+        import { auth, db } from "./firebase.js";
+        import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { doc, getDoc, collection, getDocs, query, where, onSnapshot, setDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        let currentUserUid = null;
+        let allJoinedMatches = [];
+        let currentFilter = 'joined';
+
+        window.showToast = function(message, type = 'success') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            let icon = type === 'error' ? '<i class="fa-solid fa-circle-exclamation text-rose-400"></i>' : '<i class="fa-solid fa-circle-check text-blue-400"></i>';
+            toast.innerHTML = `${icon} <span>${message}</span>`;
+            container.appendChild(toast);
+            setTimeout(() => { toast.remove(); }, 3500);
+        }
+
+        onAuthStateChanged(auth, async (user) => {
+            if (!user) { window.location.replace('login.html'); return; }
+            currentUserUid = user.uid;
+
+            try {
+                await fetchUserData(user.uid);
+                await fetchMyMatches(user.uid);
+                startMyMatchesRealtime(user.uid);
+            } catch (err) {
+                console.error(err);
+            } finally {
+                document.getElementById('app-loader').style.display = 'none';
+            }
+        });
+
+        async function fetchUserData(uid) {
+            try {
+                const snap = await getDoc(doc(db, "users", uid));
+                if (snap.exists()) {
+                    document.getElementById('wallet-balance').innerText = Number(snap.data().balance || 0);
+                }
+            } catch (e) { console.error(e); }
+        }
+
+        async function archiveCompletedMatch(tournamentId, data, userEntry) {
+            try {
+                const historyId = `${tournamentId}_${currentUserUid}`;
+                const historyRef = doc(db, "matchHistory", historyId);
+                const historySnap = await getDoc(historyRef);
+
+                // Never overwrite an existing permanent result.
+                if (historySnap.exists()) return;
+
+                const results = Array.isArray(data.results) ? data.results : [];
+                const userResult = results.find(r =>
+                    r && (r.userId === currentUserUid || r.uid === currentUserUid)
+                ) || {};
+
+                const outcome = String(
+                    userResult.result ??
+                    userResult.outcome ??
+                    userResult.matchResult ??
+                    userEntry.result ??
+                    userEntry.outcome ??
+                    ''
+                ).trim().toLowerCase();
+
+                let wonAmount = Number(
+                    userResult.amount ??
+                    userResult.prize ??
+                    userEntry.wonAmount ??
+                    userEntry.winnings ??
+                    userEntry.prizeWon ??
+                    userEntry.winAmount ??
+                    0
+                );
+
+                const kills = Number(userResult.kills || 0);
+                const perKill = Number(data.perKill || 0);
+
+                if (wonAmount <= 0 && kills > 0 && perKill > 0 &&
+                    (userResult.killOnly === true || data.killOnly === true)) {
+                    wonAmount = kills * perKill;
+                }
+
+                const isWinner =
+                    userResult.winner === true ||
+                    userEntry.isWinner === true ||
+                    userEntry.winner === true ||
+                    data.winnerUid === currentUserUid ||
+                    (Array.isArray(data.winnerUids) && data.winnerUids.includes(currentUserUid)) ||
+                    ['win', 'won', 'winner', 'victory'].includes(outcome) ||
+                    wonAmount > 0;
+
+                const isLoss =
+                    userResult.winner === false ||
+                    userEntry.isWinner === false ||
+                    userEntry.winner === false ||
+                    ['loss', 'lost', 'lose', 'defeat'].includes(outcome);
+
+                await setDoc(historyRef, {
+                    tournamentId: tournamentId,
+                    userId: currentUserUid,
+                    uid: currentUserUid,
+                    name: data.name || 'Tournament',
+                    time: data.time || '',
+                    startTime: Number(data.startTime || 0),
+                    completedAt: Number(data.completedAt || Date.now()),
+                    status: 'completed',
+
+                    userPlayers: Array.isArray(userEntry.players) ? userEntry.players : [],
+                    registeredAt: userEntry.registeredAt || 0,
+
+                    entryFee: Number(data.entryFee || 0),
+                    entryFeePaid: Number(
+                        userEntry.entryFeePaid ??
+                        userEntry.paidEntryFee ??
+                        userEntry.amountPaid ??
+                        data.entryFee ??
+                        0
+                    ),
+
+                    prize: data.prize || 0,
+                    map: data.map || 'Bermuda',
+
+                    result: isWinner ? 'WIN' : (isLoss ? 'LOSS' : 'RESULT PENDING'),
+                    matchResult: isWinner ? 'WIN' : (isLoss ? 'LOSS' : 'RESULT PENDING'),
+                    isWinner: isWinner,
+                    winner: isWinner,
+
+                    wonAmount: isWinner ? wonAmount : 0,
+                    winnings: isWinner ? wonAmount : 0,
+                    prizeWon: isWinner ? wonAmount : 0,
+
+                    kills: kills,
+                    position: userResult.position ?? null,
+                    roomId: data.roomId || '',
+                    roomPass: data.roomPass || ''
+                });
+            } catch (e) {
+                console.error('Permanent match history archive failed:', e);
+            }
+        }
+
+        function getResultInfo(m) {
+            const entry = m.userEntry || {};
+            const results = Array.isArray(m.results) ? m.results : [];
+
+            const userResult = results.find(r =>
+                r && (r.userId === currentUserUid || r.uid === currentUserUid)
+            ) || {};
+
+            const outcome = String(
+                m.result ??
+                m.matchResult ??
+                m.outcome ??
+                entry.result ??
+                entry.matchResult ??
+                entry.outcome ??
+                userResult.result ??
+                userResult.outcome ??
+                ''
+            ).trim().toLowerCase();
+
+            let wonAmount = Number(
+                m.wonAmount ??
+                m.winnings ??
+                m.prizeWon ??
+                m.winAmount ??
+                entry.wonAmount ??
+                entry.winnings ??
+                entry.prizeWon ??
+                entry.winAmount ??
+                userResult.amount ??
+                userResult.prize ??
+                0
+            );
+
+            const kills = Number(userResult.kills ?? m.kills ?? 0);
+            const perKill = Number(m.perKill || 0);
+
+            if (wonAmount <= 0 && kills > 0 && perKill > 0 &&
+                (userResult.killOnly === true || m.killOnly === true)) {
+                wonAmount = kills * perKill;
+            }
+
+            const isWinner =
+                m.isWinner === true ||
+                m.winner === true ||
+                entry.isWinner === true ||
+                entry.winner === true ||
+                userResult.winner === true ||
+                m.winnerUid === currentUserUid ||
+                (Array.isArray(m.winnerUids) && m.winnerUids.includes(currentUserUid)) ||
+                ['win', 'won', 'winner', 'victory'].includes(outcome) ||
+                wonAmount > 0;
+
+            const isLoss =
+                m.isWinner === false ||
+                m.winner === false ||
+                entry.isWinner === false ||
+                entry.winner === false ||
+                userResult.winner === false ||
+                ['loss', 'lost', 'lose', 'defeat'].includes(outcome);
+
+            return {
+                isWinner,
+                isLoss,
+                result: isWinner ? 'WIN' : (isLoss ? 'LOSS' : 'RESULT PENDING'),
+                wonAmount: Number.isFinite(wonAmount) ? wonAmount : 0,
+                kills
+            };
+        }
+
+        async function fetchMyMatches(uid) {
+            try {
+                const [historySnap, tourSnap] = await Promise.all([
+                    getDocs(query(collection(db, 'matchHistory'), where('userId', '==', uid))).catch(() => null),
+                    getDocs(collection(db, "tournaments"))
+                ]);
+
+                const byId = new Map();
+
+                // Permanent history always comes first.
+                if (historySnap) {
+                    historySnap.forEach(d => {
+                        const data = d.data() || {};
+                        byId.set(String(data.tournamentId || d.id), {
+                            id: String(data.tournamentId || d.id),
+                            ...data,
+                            status: 'completed',
+                            userEntry: {
+                                uid: uid,
+                                players: data.userPlayers || [],
+                                isWinner: data.isWinner === true,
+                                winner: data.winner === true,
+                                wonAmount: data.wonAmount
+                            },
+                            userPlayers: Array.isArray(data.userPlayers) ? data.userPlayers : []
+                        });
+                    });
+                }
+
+                // Add live/upcoming tournaments and update a permanent result
+                // only when the tournament document still exists.
+                for (const d of tourSnap.docs) {
+                    const data = d.data() || {};
+                    const participants = Array.isArray(data.participants) ? data.participants : [];
+                    const userEntry = participants.find(p => p && p.uid === uid);
+                    if (!userEntry) continue;
+
+                    const rawStatus = String(data.status || 'upcoming').toLowerCase();
+                    const isCompleted =
+                        ['complete', 'completed', 'finished', 'finish', 'result'].includes(rawStatus) ||
+                        data.completed === true ||
+                        data.isCompleted === true;
+
+                    if (isCompleted) {
+                        await archiveCompletedMatch(d.id, data, userEntry);
+                    }
+
+                    const existing = byId.get(d.id);
+
+                    if (existing && existing.status === 'completed') {
+                        // Keep permanent result values; only refresh harmless tournament details.
+                        byId.set(d.id, {
+                            ...existing,
+                            name: data.name || existing.name,
+                            time: data.time || existing.time,
+                            startTime: data.startTime ?? existing.startTime,
+                            roomId: data.roomId ?? existing.roomId,
+                            roomPass: data.roomPass ?? existing.roomPass
+                        });
+                    } else {
+                        byId.set(d.id, {
+                            id: d.id,
+                            ...data,
+                            userPlayers: Array.isArray(userEntry.players) ? userEntry.players : [],
+                            userEntry,
+                            registeredAt: userEntry.registeredAt || 0,
+                            status: data.status || 'upcoming'
+                        });
+                    }
+                }
+
+                allJoinedMatches = Array.from(byId.values())
+                    .sort((a, b) =>
+                        Number(b.completedAt || b.startTime || b.registeredAt || 0) -
+                        Number(a.completedAt || a.startTime || a.registeredAt || 0)
+                    );
+
+                renderMatches();
+            } catch (e) {
+                console.error(e);
+                showToast("ম্যাচ হিস্ট্রি লোড করতে সমস্যা হয়েছে!", "error");
+            }
+        }
+
+        function startMyMatchesRealtime(uid) {
+            onSnapshot(
+                collection(db, 'tournaments'),
+                async () => {
+                    await fetchMyMatches(uid);
+                },
+                e => console.warn('Tournament realtime failed:', e)
+            );
+
+            onSnapshot(
+                query(collection(db, 'matchHistory'), where('userId', '==', uid)),
+                snapshot => {
+                    snapshot.docChanges().forEach(change => {
+                        if (change.type === 'removed') return;
+
+                        const data = change.doc.data() || {};
+                        const tournamentId = String(data.tournamentId || change.doc.id);
+                        const item = {
+                            id: tournamentId,
+                            ...data,
+                            status: 'completed',
+                            userPlayers: Array.isArray(data.userPlayers) ? data.userPlayers : [],
+                            userEntry: {
+                                uid,
+                                players: Array.isArray(data.userPlayers) ? data.userPlayers : [],
+                                isWinner: data.isWinner === true,
+                                winner: data.winner === true,
+                                wonAmount: data.wonAmount
+                            }
+                        };
+
+                        const idx = allJoinedMatches.findIndex(
+                            m => String(m.id) === tournamentId
+                        );
+
+                        if (idx >= 0) {
+                            allJoinedMatches[idx] = {
+                                ...allJoinedMatches[idx],
+                                ...item
+                            };
+                        } else {
+                            allJoinedMatches.unshift(item);
+                        }
+                    });
+
+                    allJoinedMatches.sort((a, b) =>
+                        Number(b.completedAt || b.startTime || b.registeredAt || 0) -
+                        Number(a.completedAt || a.startTime || a.registeredAt || 0)
+                    );
+
+                    renderMatches();
+                },
+                e => console.warn('My Matches history realtime failed:', e)
+            );
+        }
+
+        window.filterMatches = function(type) {
+            currentFilter = type;
+            document.getElementById('tab-joined').className = type === 'joined' ? "flex-1 py-2 text-[11px] font-bold rounded-xl bg-blue-600 text-white shadow transition" : "flex-1 py-2 text-[11px] font-bold rounded-xl text-slate-400 hover:text-white transition";
+            document.getElementById('tab-completed').className = type === 'completed' ? "flex-1 py-2 text-[11px] font-bold rounded-xl bg-blue-600 text-white shadow transition" : "flex-1 py-2 text-[11px] font-bold rounded-xl text-slate-400 hover:text-white transition";
+            renderMatches();
+        }
+
+        function renderMatches() {
+            const grid = document.getElementById('matches-grid');
+            grid.innerHTML = "";
+
+            let filtered = allJoinedMatches;
+            if (currentFilter === 'completed') {
+                filtered = allJoinedMatches.filter(m => String(m.status || '').toLowerCase() === 'completed');
+            } else {
+                filtered = allJoinedMatches.filter(m => String(m.status || '').toLowerCase() !== 'completed');
+            }
+
+            if (filtered.length === 0) {
+                grid.innerHTML = `<div class="text-center py-16 text-slate-500 text-xs">কোনো ম্যাচ হিস্ট্রি পাওয়া যায়নি</div>`;
+                return;
+            }
+
+            filtered.forEach(m => {
+                const ignList = Array.isArray(m.userPlayers) ? m.userPlayers.join(', ') : 'N/A';
+                const statusBadge = String(m.status || 'upcoming').toUpperCase();
+                const entry = m.userEntry || {};
+                const paidRaw = m.entryFeePaid ?? entry.entryFeePaid ?? entry.paidEntryFee ?? entry.amountPaid ?? m.entryFee ?? 0;
+                const paidAmount = Number(paidRaw);
+
+                const resultInfo = getResultInfo(m);
+                const resultLabel = resultInfo.result;
+                const totalAmountWon = resultInfo.wonAmount;
+                const resultClass = resultLabel === 'WIN'
+                    ? 'text-emerald-400 border-emerald-500/30 bg-emerald-600/15'
+                    : resultLabel === 'LOSS'
+                        ? 'text-rose-400 border-rose-500/30 bg-rose-600/15'
+                        : 'text-amber-400 border-amber-500/30 bg-amber-600/15';
+
+                grid.innerHTML += `
+                    <div class="glass-card rounded-2xl p-4 space-y-3 shadow-lg border border-slate-800">
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <h4 class="text-xs font-bold text-white">${m.name || 'Tournament'}</h4>
+                                <span class="text-[10px] text-slate-400 block">${m.time || 'Scheduled'}</span>
+                            </div>
+                            <span class="px-2 py-0.5 rounded-md border text-[10px] font-bold ${resultLabel === 'WIN' ? 'text-emerald-400 border-emerald-500/30 bg-emerald-600/15' : resultLabel === 'LOSS' ? 'text-rose-400 border-rose-500/30 bg-rose-600/15' : 'text-amber-400 border-amber-500/30 bg-amber-600/15'}">
+                                ${String(m.status || '').toLowerCase() === 'completed'
+                                    ? (resultLabel === 'WIN' ? `WIN • ৳${totalAmountWon}` : resultLabel)
+                                    : statusBadge}
+                            </span>
+                        </div>
+                        <div class="bg-[#0b0f1a] p-2.5 rounded-xl border border-slate-800/80 text-[11px] space-y-1">
+                            <div class="flex justify-between"><span class="text-slate-400">Entry Fee Paid:</span> <span class="text-white font-semibold">৳${Number.isFinite(paidAmount) ? paidAmount : 0}</span></div>
+                            <div class="flex justify-between"><span class="text-slate-400">Result:</span> <span class="px-2 py-0.5 rounded-md border text-[10px] font-bold ${resultClass}">${resultLabel}</span></div>
+                            <div class="flex justify-between"><span class="text-slate-400">Won Amount:</span> <span class="${resultLabel === 'WIN' ? 'text-emerald-400' : 'text-slate-400'} font-bold">৳${totalAmountWon}</span></div>
+                            ${resultInfo.kills > 0 ? `<div class="flex justify-between"><span class="text-slate-400">Kills:</span> <span class="text-blue-300 font-bold">${resultInfo.kills}</span></div>` : ''}
+                            <div class="flex justify-between"><span class="text-slate-400">Prize Pool:</span> <span class="text-amber-400 font-semibold">${m.prize || '0 TK'}</span></div>
+                            <div class="flex justify-between"><span class="text-slate-400">Map:</span> <span class="text-emerald-400 font-semibold">${m.map || 'Bermuda'}</span></div>
+                            <div class="pt-1 border-t border-slate-800"><span class="text-slate-400 block mb-0.5">Your IGNs:</span> <span class="text-blue-300 font-bold select-all">${ignList}</span></div>
+                        </div>
+                        ${m.roomId && m.roomPass ? `
+                            <div class="bg-emerald-950/30 border border-emerald-500/30 p-2.5 rounded-xl flex justify-between items-center text-xs">
+                                <div><span class="text-slate-400 text-[10px] block">Room ID: <strong class="text-white select-all">${m.roomId}</strong></span></div>
+                                <div><span class="text-slate-400 text-[10px] block">Password: <strong class="text-amber-400 select-all">${m.roomPass}</strong></span></div>
+                            </div>
+                        ` : ''}
+                    </div>
+                `;
+            });
+        }
+    </script>
+</body>
+</html>
