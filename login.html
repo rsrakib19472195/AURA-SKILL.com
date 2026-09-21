@@ -1,2898 +1,3037 @@
 <!DOCTYPE html>
 <html lang="bn">
-
 <head>
-
-<link rel="preconnect" href="https://www.gstatic.com" crossorigin>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
-
-<meta charset="UTF-8">
-
-<meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0"
->
-
-<title>Welcome Back</title>
-
-<script src="https://cdn.tailwindcss.com"></script>
-
-<link
-    rel="stylesheet"
-    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
->
-
-<style>
-
-body{
-    background:#0b0f19;
-    font-family:
-        Segoe UI,
-        Tahoma,
-        Geneva,
-        Verdana,
-        sans-serif
-}
-
-.custom-input{
-    background:#131b2e;
-    border:1px solid #1e293b
-}
-
-.custom-input:focus{
-    border-color:#3b82f6;
-    outline:none;
-    box-shadow:
-        0 0 0 3px rgba(59,130,246,.08)
-}
-
-@keyframes slideIn{
-
-    from{
-        transform:translateX(100%);
-        opacity:0
-    }
-
-    to{
-        transform:translateX(0);
-        opacity:1
-    }
-
-}
-
-.toast{
-    animation:slideIn .25s ease
-}
-
-#startupLoader{
-
-    position:fixed;
-    inset:0;
-    z-index:999999;
-
-    display:flex;
-    align-items:center;
-    justify-content:center;
-
-    background:#0b0b10;
-
-    opacity:1;
-    visibility:visible;
-
-    transition:
-        opacity .35s ease,
-        visibility .35s ease
-
-}
-
-#startupLoader.hide{
-
-    opacity:0;
-    visibility:hidden;
-    pointer-events:none
-
-}
-
-.startup-inner{
-
-    width:100%;
-
-    display:flex;
-    flex-direction:column;
-
-    align-items:center;
-    justify-content:center;
-
-    text-align:center
-
-}
-
-.startup-logo-box{
-
-    width:108px;
-    height:108px;
-
-    border-radius:50%;
-
-    overflow:hidden;
-
-    display:flex;
-    align-items:center;
-    justify-content:center;
-
-    box-shadow:
-        0 0 18px rgba(20,230,194,.18),
-        0 0 55px rgba(20,230,194,.14);
-
-    animation:
-        startupPulse 1.35s ease-in-out infinite
-
-}
-
-.startup-logo{
-
-    width:100%;
-    height:100%;
-    object-fit:cover;
-    display:block
-
-}
-
-.startup-title{
-
-    margin:22px 0 0;
-
-    color:#fff;
-
-    font-size:32px;
-
-    line-height:1;
-
-    font-weight:700;
-
-    letter-spacing:.4px
-
-}
-
-.startup-subtitle{
-
-    margin-top:9px;
-
-    color:#a7a7b0;
-
-    font-size:15px;
-
-    letter-spacing:4px
-
-}
-
-.startup-spinner{
-
-    width:42px;
-    height:42px;
-
-    margin-top:42px;
-
-    border-radius:50%;
-
-    border:
-        4px solid rgba(255,255,255,.10);
-
-    border-top-color:#16e6c2;
-    border-right-color:#16e6c2;
-
-    animation:
-        startupSpin .8s linear infinite
-
-}
-
-@keyframes startupSpin{
-
-    to{
-        transform:rotate(360deg)
-    }
-
-}
-
-@keyframes startupPulse{
-
-    0%,100%{
-        transform:scale(1);
-        filter:brightness(1)
-    }
-
-    50%{
-        transform:scale(1.035);
-        filter:brightness(1.08)
-    }
-
-}
-
-#forgotPasswordModal{
-
-    position:fixed;
-    inset:0;
-
-    z-index:1000000;
-
-    display:none;
-
-    align-items:center;
-    justify-content:center;
-
-    padding:18px;
-
-    background:rgba(0,0,0,.78);
-
-    backdrop-filter:blur(12px)
-
-}
-
-#forgotPasswordModal.show{
-    display:flex
-}
-
-.forgot-card{
-
-    width:100%;
-    max-width:390px;
-
-    border:
-        1px solid rgba(59,130,246,.35);
-
-    background:
-        linear-gradient(
-            145deg,
-            #111827,
-            #0b1220
-        );
-
-    border-radius:28px;
-
-    padding:25px;
-
-    color:#fff;
-
-    box-shadow:
-        0 25px 80px rgba(0,0,0,.65),
-        0 0 35px rgba(37,99,235,.12)
-
-}
-
-.forgot-icon{
-
-    width:58px;
-    height:58px;
-
-    border-radius:18px;
-
-    display:flex;
-    align-items:center;
-    justify-content:center;
-
-    margin:0 auto 15px;
-
-    background:
-        rgba(59,130,246,.12);
-
-    color:#60a5fa;
-
-    font-size:23px;
-
-    border:
-        1px solid rgba(96,165,250,.2)
-
-}
-
-.forgot-input{
-
-    width:100%;
-
-    box-sizing:border-box;
-
-    background:#0b1220;
-
-    border:1px solid #26344d;
-
-    color:#fff;
-
-    border-radius:15px;
-
-    padding:13px 14px;
-
-    outline:none
-
-}
-
-.forgot-input:focus{
-
-    border-color:#3b82f6;
-
-    box-shadow:
-        0 0 0 3px rgba(59,130,246,.1)
-
-}
-
-#maintenanceScreen{
-
-    display:none;
-
-    position:fixed;
-
-    inset:0;
-
-    z-index:10000000;
-
-    background:#050811;
-
-    color:#fff;
-
-    align-items:center;
-    justify-content:center;
-
-    padding:20px;
-
-    text-align:center
-
-}
-
-#updateScreen{
-
-    display:none;
-
-    position:fixed;
-
-    inset:0;
-
-    z-index:10000000;
-
-    background:#050811;
-
-    color:#fff;
-
-    align-items:center;
-    justify-content:center;
-
-    padding:20px;
-
-    text-align:center
-
-}
-
-#customNotifBanner{
-
-    position:fixed;
-
-    bottom:20px;
-
-    left:50%;
-
-    transform:
-        translateX(-50%)
-        translateY(150px);
-
-    width:90%;
-
-    max-width:420px;
-
-    background:
-        linear-gradient(
-            145deg,
-            #111827,
-            #0f172a
-        );
-
-    border:
-        1px solid rgba(59,130,246,.3);
-
-    box-shadow:
-        0 20px 40px rgba(0,0,0,.6);
-
-    border-radius:20px;
-
-    padding:16px 20px;
-
-    z-index:99999;
-
-    display:flex;
-
-    align-items:center;
-
-    gap:15px;
-
-    color:#fff;
-
-    transition:
-        transform .4s
-        cubic-bezier(
-            .175,
-            .885,
-            .32,
-            1.275
-        )
-
-}
-
-#customNotifBanner.show{
-
-    transform:
-        translateX(-50%)
-        translateY(0)
-
-}
-
-#allowNotifBtn:disabled{
-
-    opacity:.7;
-    cursor:not-allowed
-
-}
-
-</style>
-
-</head>
-
-
-<body
-    class="flex items-center justify-center min-h-screen px-4"
->
-
-
-<!-- ============================================================
-     NOTIFICATION BANNER
-============================================================ -->
-
-<div id="customNotifBanner">
-
-    <div
-        class="
-            w-12 h-12
-            rounded-2xl
-            bg-blue-500/10
-            border
-            border-blue-500/30
-            flex
-            items-center
-            justify-center
-            shrink-0
-            text-blue-400
-            text-xl
-        "
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
     >
 
-        <i class="fa-solid fa-bell"></i>
+    <meta name="theme-color" content="#050816">
 
-    </div>
+    <title>AURA ARMAN TOUR - Login</title>
 
+    <!-- =====================================================
+         TAILWIND
+    ====================================================== -->
+    <script src="https://cdn.tailwindcss.com"></script>
 
-    <div class="flex-1">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        aura: {
+                            bg: "#050816",
+                            card: "#0b1224",
+                            primary: "#7c3aed",
+                            secondary: "#06b6d4",
+                            pink: "#ec4899"
+                        }
+                    }
+                }
+            }
+        };
+    </script>
 
-        <h4 class="text-sm font-bold text-white">
-
-            নোটিফিকেশন চালু করুন
-
-        </h4>
-
-        <p
-            class="
-                text-xs
-                text-slate-400
-                mt-0.5
-            "
-        >
-
-            সর্বশেষ আপডেট ও সতর্কতা পেতে
-            নোটিফিকেশন চালু করুন।
-
-        </p>
-
-    </div>
-
-
-    <div
-        class="
-            flex
-            flex-col
-            gap-1.5
-            shrink-0
-        "
+    <!-- =====================================================
+         FONT AWESOME
+    ====================================================== -->
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
     >
 
-        <button
-            type="button"
-            id="allowNotifBtn"
-            class="
-                px-3.5
-                py-1.5
-                bg-blue-600
-                hover:bg-blue-700
-                text-white
-                text-xs
-                font-bold
-                rounded-xl
-                transition
-            "
-        >
-
-            চালু করুন
-
-        </button>
-
-
-        <button
-            type="button"
-            id="closeNotifBtn"
-            class="
-                px-3.5
-                py-1.5
-                bg-slate-800
-                hover:bg-slate-700
-                text-slate-300
-                text-xs
-                rounded-xl
-            "
-        >
-
-            পরে
-
-        </button>
-
-    </div>
-
-</div>
-
-
-<!-- ============================================================
-     MAINTENANCE
-============================================================ -->
-
-<div id="maintenanceScreen">
-
-    <div class="w-full max-w-md">
-
-        <div
-            class="
-                w-20 h-20
-                mx-auto
-                rounded-full
-                bg-amber-500/10
-                border
-                border-amber-500/30
-                flex
-                items-center
-                justify-center
-                mb-5
-            "
-        >
-
-            <i
-                class="
-                    fa-solid
-                    fa-screwdriver-wrench
-                    text-amber-400
-                    text-3xl
-                "
-            ></i>
-
-        </div>
-
-
-        <h1
-            class="
-                text-2xl
-                font-bold
-                mb-3
-            "
-        >
-
-            সাইট রক্ষণাবেক্ষণ চলছে
-
-        </h1>
-
-
-        <p
-            class="
-                text-slate-400
-                text-sm
-                leading-relaxed
-            "
-        >
-
-            আমাদের সাইট বর্তমানে
-            রক্ষণাবেক্ষণের মধ্যে আছে।
-            কিছুক্ষণ পরে আবার চেষ্টা করুন।
-
-        </p>
-
-
-        <div
-            id="maintenanceReason"
-            class="
-                mt-5
-                bg-[#0f172a]
-                border
-                border-slate-800
-                rounded-2xl
-                px-4
-                py-3
-                text-sm
-                text-amber-300
-            "
-        ></div>
-
-
-        <div
-            class="
-                mt-5
-                text-xs
-                text-slate-500
-            "
-        >
-
-            অনুগ্রহ করে পরে আবার চেষ্টা করুন।
-
-        </div>
-
-    </div>
-
-</div>
-
-
-<!-- ============================================================
-     UPDATE
-============================================================ -->
-
-<div id="updateScreen">
-
-    <div class="w-full max-w-md">
-
-        <div
-            class="
-                w-20 h-20
-                mx-auto
-                rounded-full
-                bg-blue-500/10
-                border
-                border-blue-500/30
-                flex
-                items-center
-                justify-center
-                mb-5
-            "
-        >
-
-            <i
-                class="
-                    fa-solid
-                    fa-rocket
-                    text-blue-400
-                    text-3xl
-                "
-            ></i>
-
-        </div>
-
-
-        <h1
-            class="
-                text-2xl
-                font-bold
-                mb-3
-            "
-        >
-
-            নতুন আপডেট উপলব্ধ!
-
-        </h1>
-
-
-        <p
-            id="updateMessage"
-            class="
-                text-slate-400
-                text-sm
-                leading-relaxed
-            "
-        >
-
-            আপনার অ্যাপটি আপডেট করা প্রয়োজন।
-            দয়া করে আপডেট করে নিন।
-
-        </p>
-
-
-        <a
-            id="updateLinkBtn"
-            href="#"
-            class="
-                mt-6
-                inline-block
-                w-full
-                py-3
-                bg-blue-600
-                hover:bg-blue-700
-                text-white
-                font-bold
-                rounded-xl
-                text-sm
-                transition
-                text-center
-            "
-        >
-
-            এখনই আপডেট করুন
-
-        </a>
-
-    </div>
-
-</div>
-
-
-<!-- ============================================================
-     STARTUP LOADER
-============================================================ -->
-
-<div id="startupLoader">
-
-    <div class="startup-inner">
-
-        <div class="startup-logo-box">
-
-            <img
-                class="startup-logo"
-                src="https://videotourl.com/images/1789792991627-2a906ffa-fbc0-4f79-9d9b-8dddb80ca667.jpg"
-                alt="Aura Skill"
-            >
-
-        </div>
-
-
-        <h1 class="startup-title">
-
-            Aura Skill
-
-        </h1>
-
-
-        <div class="startup-subtitle">
-
-            Play &amp; Earn
-
-        </div>
-
-
-        <div
-            class="startup-spinner"
-            aria-hidden="true"
-        ></div>
-
-    </div>
-
-</div>
-
-
-<!-- ============================================================
-     FORGOT PASSWORD
-============================================================ -->
-
-<div
-    id="forgotPasswordModal"
-    aria-hidden="true"
->
-
-    <div class="forgot-card">
-
-        <div class="forgot-icon">
-
-            <i class="fa-solid fa-key"></i>
-
-        </div>
-
-
-        <h3
-            id="forgotModalTitle"
-            class="
-                text-xl
-                font-bold
-                text-center
-            "
-        >
-
-            পাসওয়ার্ড রিসেট
-
-        </h3>
-
-
-        <p
-            id="forgotModalText"
-            class="
-                text-sm
-                text-slate-400
-                text-center
-                mt-2
-                mb-5
-            "
-        >
-
-            আপনার নিবন্ধিত Gmail দিন।
-            আমরা পাসওয়ার্ড রিসেট লিংক পাঠাব।
-
-        </p>
-
-
-        <input
-            id="forgotEmailInput"
-            type="email"
-            class="forgot-input"
-            placeholder="আপনার Gmail লিখুন"
-            autocomplete="email"
-        >
-
-
-        <div class="flex gap-2 mt-4">
-
-            <button
-                type="button"
-                id="forgotCancelBtn"
-                class="
-                    flex-1
-                    py-3
-                    rounded-xl
-                    bg-slate-800
-                    text-slate-300
-                    font-semibold
-                "
-            >
-
-                বাতিল
-
-            </button>
-
-
-            <button
-                type="button"
-                id="forgotSendBtn"
-                class="
-                    flex-1
-                    py-3
-                    rounded-xl
-                    bg-blue-600
-                    text-white
-                    font-bold
-                "
-            >
-
-                লিংক পাঠান
-
-            </button>
-
-        </div>
-
-    </div>
-
-</div>
-
-
-<!-- ============================================================
-     TOAST
-============================================================ -->
-
-<div
-    id="toastContainer"
-    class="
-        fixed
-        top-5
-        right-5
-        z-50
-        flex
-        flex-col
-        gap-3
-    "
-></div>
-
-
-<!-- ============================================================
-     LOGIN CARD
-============================================================ -->
-
-<div
-    id="loginCard"
-    class="
-        w-full
-        max-w-md
-        bg-[#0f172a]
-        p-8
-        rounded-3xl
-        shadow-2xl
-        border
-        border-[#1e293b]
-    "
->
-
-    <div
-        class="
-            flex
-            flex-col
-            items-center
-            mb-6
-        "
+    <!-- =====================================================
+         GOOGLE FONT
+    ====================================================== -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet"
     >
 
-        <div
-            class="
-                w-20 h-20
-                rounded-full
-                overflow-hidden
-                mb-3
-            "
-        >
-
-            <img
-                src="https://videotourl.com/images/1789792991627-2a906ffa-fbc0-4f79-9d9b-8dddb80ca667.jpg"
-                class="
-                    w-full
-                    h-full
-                    object-cover
-                "
-                alt="Logo"
-                decoding="async"
-            >
-
-        </div>
-
-
-        <h2
-            class="
-                text-2xl
-                font-bold
-                text-white
-            "
-        >
-
-            Welcome Back
-
-        </h2>
-
-
-        <p
-            class="
-                text-slate-400
-                text-sm
-                mt-1
-            "
-        >
-
-            চালিয়ে যেতে লগইন করুন
-
-        </p>
-
-    </div>
-
-
-    <form
-        id="loginForm"
-        class="space-y-4"
-    >
-
-        <div>
-
-            <label
-                class="
-                    block
-                    text-xs
-                    font-semibold
-                    text-slate-300
-                    uppercase
-                    mb-1
-                "
-            >
-
-                Username অথবা Gmail
-
-            </label>
-
-
-            <input
-                type="text"
-                id="identifier"
-                placeholder="Username অথবা Gmail লিখুন"
-                autocomplete="username"
-                class="
-                    w-full
-                    px-4
-                    py-3
-                    rounded-xl
-                    text-sm
-                    text-white
-                    custom-input
-                "
-            >
-
-        </div>
-
-
-        <div>
-
-            <label
-                class="
-                    block
-                    text-xs
-                    font-semibold
-                    text-slate-300
-                    uppercase
-                    mb-1
-                "
-            >
-
-                Password
-
-            </label>
-
-
-            <div class="relative">
-
-                <input
-                    type="password"
-                    id="password"
-                    placeholder="Password লিখুন"
-                    autocomplete="current-password"
-                    class="
-                        w-full
-                        px-4
-                        py-3
-                        pr-12
-                        rounded-xl
-                        text-sm
-                        text-white
-                        custom-input
-                    "
-                >
-
-
-                <button
-                    type="button"
-                    id="togglePasswordBtn"
-                    class="
-                        absolute
-                        right-4
-                        top-3
-                        text-slate-400
-                    "
-                >
-
-                    <i
-                        id="eyeIcon"
-                        class="
-                            fa-regular
-                            fa-eye-slash
-                        "
-                    ></i>
-
-                </button>
-
-            </div>
-
-
-            <div
-                class="
-                    flex
-                    justify-between
-                    mt-2
-                "
-            >
-
-                <label
-                    class="
-                        text-xs
-                        text-slate-400
-                        flex
-                        items-center
-                        gap-2
-                    "
-                >
-
-                    <input
-                        type="checkbox"
-                        id="remember"
-                    >
-
-                    আমাকে মনে রাখুন
-
-                </label>
-
-
-                <button
-                    type="button"
-                    id="forgotBtn"
-                    class="
-                        text-xs
-                        text-blue-400
-                    "
-                >
-
-                    পাসওয়ার্ড ভুলে গেছেন?
-
-                </button>
-
-            </div>
-
-        </div>
-
-
-        <button
-            type="submit"
-            id="loginBtn"
-            class="
-                w-full
-                py-3.5
-                bg-blue-600
-                hover:bg-blue-700
-                text-white
-                font-semibold
-                rounded-xl
-            "
-        >
-
-            লগইন
-
-        </button>
-
-    </form>
-
-
-    <p
-        class="
-            text-center
-            text-xs
-            text-slate-400
-            mt-6
-        "
-    >
-
-        আপনার কি কোনো account নেই?
-
-        <a
-            href="register.html"
-            class="
-                text-blue-400
-                font-semibold
-            "
-        >
-
-            রেজিস্টার করুন
-
-        </a>
-
-    </p>
-
-</div>
-
-
-<!-- ============================================================
-     JAVASCRIPT
-============================================================ -->
-
-<script type="module">
-
-import {
-
-    auth,
-    db,
-    registerOneSignal,
-    linkOneSignalUser,
-    getOneSignalDebugInfo
-
-} from './firebase.js';
-
-
-import {
-
-    onAuthStateChanged,
-    signInWithEmailAndPassword,
-    sendPasswordResetEmail,
-    setPersistence,
-    browserLocalPersistence,
-    browserSessionPersistence
-
-} from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js';
-
-
-import {
-
-    collection,
-    query,
-    where,
-    getDocs,
-    limit,
-    doc,
-    getDoc,
-    onSnapshot
-
-} from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js';
-
-
-// ============================================================
-// ELEMENTS
-// ============================================================
-
-const startupLoader =
-    document.getElementById(
-        'startupLoader'
-    );
-
-const maintenanceScreen =
-    document.getElementById(
-        'maintenanceScreen'
-    );
-
-const maintenanceReason =
-    document.getElementById(
-        'maintenanceReason'
-    );
-
-const updateScreen =
-    document.getElementById(
-        'updateScreen'
-    );
-
-const updateMessage =
-    document.getElementById(
-        'updateMessage'
-    );
-
-const updateLinkBtn =
-    document.getElementById(
-        'updateLinkBtn'
-    );
-
-const loginCard =
-    document.getElementById(
-        'loginCard'
-    );
-
-const loginForm =
-    document.getElementById(
-        'loginForm'
-    );
-
-const identifierInput =
-    document.getElementById(
-        'identifier'
-    );
-
-const passwordInput =
-    document.getElementById(
-        'password'
-    );
-
-const rememberInput =
-    document.getElementById(
-        'remember'
-    );
-
-const loginBtn =
-    document.getElementById(
-        'loginBtn'
-    );
-
-const forgotModal =
-    document.getElementById(
-        'forgotPasswordModal'
-    );
-
-const forgotEmailInput =
-    document.getElementById(
-        'forgotEmailInput'
-    );
-
-const forgotSendBtn =
-    document.getElementById(
-        'forgotSendBtn'
-    );
-
-const forgotCancelBtn =
-    document.getElementById(
-        'forgotCancelBtn'
-    );
-
-const forgotBtn =
-    document.getElementById(
-        'forgotBtn'
-    );
-
-const allowNotifBtn =
-    document.getElementById(
-        'allowNotifBtn'
-    );
-
-const closeNotifBtn =
-    document.getElementById(
-        'closeNotifBtn'
-    );
-
-const customNotifBanner =
-    document.getElementById(
-        'customNotifBanner'
-    );
-
-
-// ============================================================
-// STATE
-// ============================================================
-
-let maintenanceActive = false;
-
-let updateActive = false;
-
-let loginRedirecting = false;
-
-
-// ============================================================
-// TIMEOUT
-// ============================================================
-
-function withTimeout(
-    promise,
-    milliseconds
-) {
-
-    return Promise.race([
-
-        promise,
-
-        new Promise(
-            (_, reject) => {
-
-                setTimeout(
-                    () => {
-
-                        reject(
-                            new Error(
-                                'REQUEST_TIMEOUT'
-                            )
-                        );
-
-                    },
-                    milliseconds
+    <!-- =====================================================
+         CUSTOM CSS
+    ====================================================== -->
+    <style>
+
+        * {
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            min-height: 100%;
+            background: #050816;
+            color: #fff;
+            font-family: "Inter", sans-serif;
+        }
+
+        body {
+            overflow-x: hidden;
+        }
+
+        button,
+        input {
+            font-family: inherit;
+        }
+
+        /* =================================================
+           BACKGROUND
+        ================================================= */
+
+        .aura-bg {
+            position: fixed;
+            inset: 0;
+            overflow: hidden;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .aura-orb {
+            position: absolute;
+            border-radius: 9999px;
+            filter: blur(80px);
+            opacity: .25;
+        }
+
+        .aura-orb-1 {
+            width: 260px;
+            height: 260px;
+            background: #7c3aed;
+            top: -90px;
+            left: -80px;
+        }
+
+        .aura-orb-2 {
+            width: 250px;
+            height: 250px;
+            background: #06b6d4;
+            right: -100px;
+            top: 35%;
+        }
+
+        .aura-orb-3 {
+            width: 220px;
+            height: 220px;
+            background: #ec4899;
+            bottom: -100px;
+            left: 25%;
+        }
+
+        /* =================================================
+           MAIN
+        ================================================= */
+
+        .page-wrapper {
+            position: relative;
+            z-index: 2;
+            min-height: 100vh;
+            min-height: 100dvh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px 16px;
+        }
+
+        /* =================================================
+           LOGIN CARD
+        ================================================= */
+
+        .login-card {
+            width: 100%;
+            max-width: 430px;
+            background:
+                linear-gradient(
+                    145deg,
+                    rgba(15, 23, 42, .96),
+                    rgba(7, 12, 28, .96)
                 );
 
+            border: 1px solid rgba(255, 255, 255, .08);
+
+            border-radius: 28px;
+
+            padding: 28px 22px;
+
+            box-shadow:
+                0 25px 80px rgba(0, 0, 0, .45),
+                0 0 50px rgba(124, 58, 237, .10);
+
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+
+            animation: cardIn .55s ease;
+        }
+
+        @keyframes cardIn {
+            from {
+                opacity: 0;
+                transform: translateY(18px) scale(.98);
             }
-        )
 
-    ]);
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
 
-}
+        /* =================================================
+           LOGO
+        ================================================= */
+
+        .logo-box {
+            width: 92px;
+            height: 92px;
+            margin: 0 auto 18px;
+
+            padding: 4px;
+
+            border-radius: 26px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #7c3aed,
+                    #06b6d4,
+                    #ec4899
+                );
+
+            box-shadow:
+                0 0 35px rgba(124, 58, 237, .30);
+        }
+
+        .logo-box img {
+            width: 100%;
+            height: 100%;
+            display: block;
+            object-fit: cover;
+            border-radius: 22px;
+            background: #050816;
+        }
+
+        /* =================================================
+           INPUT
+        ================================================= */
+
+        .input-group {
+            position: relative;
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #8b9bb7;
+            pointer-events: none;
+            z-index: 2;
+        }
+
+        .aura-input {
+            width: 100%;
+            height: 54px;
+
+            padding: 0 46px;
+
+            color: #fff;
+
+            background: rgba(15, 23, 42, .75);
+
+            border: 1px solid rgba(148, 163, 184, .14);
+
+            border-radius: 15px;
+
+            outline: none;
+
+            transition:
+                border-color .2s ease,
+                box-shadow .2s ease,
+                background .2s ease;
+        }
+
+        .aura-input::placeholder {
+            color: #64748b;
+        }
+
+        .aura-input:focus {
+            border-color: rgba(124, 58, 237, .8);
+
+            background: rgba(15, 23, 42, .95);
+
+            box-shadow:
+                0 0 0 3px rgba(124, 58, 237, .12),
+                0 0 25px rgba(124, 58, 237, .08);
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+
+            border: 0;
+            background: transparent;
+
+            color: #718096;
+
+            cursor: pointer;
+
+            width: 32px;
+            height: 32px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .password-toggle:hover {
+            color: #fff;
+        }
+
+        /* =================================================
+           LOGIN BUTTON
+        ================================================= */
+
+        .login-btn {
+            width: 100%;
+            min-height: 54px;
+
+            border: 0;
+            border-radius: 15px;
+
+            color: #fff;
+
+            font-size: 15px;
+            font-weight: 700;
+
+            cursor: pointer;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #7c3aed,
+                    #5b21b6
+                );
+
+            box-shadow:
+                0 12px 30px rgba(124, 58, 237, .24);
+
+            transition:
+                transform .15s ease,
+                box-shadow .2s ease,
+                opacity .2s ease;
+        }
+
+        .login-btn:hover {
+            box-shadow:
+                0 15px 35px rgba(124, 58, 237, .35);
+        }
+
+        .login-btn:active {
+            transform: scale(.98);
+        }
+
+        .login-btn:disabled {
+            opacity: .65;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* =================================================
+           CHECKBOX
+        ================================================= */
+
+        .remember-box {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+
+            color: #94a3b8;
+            font-size: 13px;
+        }
+
+        .remember-box input {
+            width: 16px;
+            height: 16px;
+            accent-color: #7c3aed;
+        }
+
+        /* =================================================
+           LINKS
+        ================================================= */
+
+        .aura-link {
+            color: #a78bfa;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .aura-link:hover {
+            color: #c4b5fd;
+        }
+
+        /* =================================================
+           NOTIFICATION BANNER
+        ================================================= */
+
+        #customNotifBanner {
+            position: fixed;
+
+            left: 50%;
+            bottom: 18px;
+
+            transform:
+                translateX(-50%)
+                translateY(20px);
+
+            width: calc(100% - 24px);
+            max-width: 460px;
+
+            z-index: 9998;
+
+            opacity: 0;
+            display: none;
+
+            transition:
+                opacity .25s ease,
+                transform .25s ease;
+        }
+
+        .notif-inner {
+            background:
+                linear-gradient(
+                    135deg,
+                    rgba(15, 23, 42, .98),
+                    rgba(30, 27, 75, .98)
+                );
+
+            border:
+                1px solid rgba(124, 58, 237, .35);
+
+            border-radius: 20px;
+
+            padding: 15px;
+
+            box-shadow:
+                0 20px 60px rgba(0, 0, 0, .50),
+                0 0 35px rgba(124, 58, 237, .12);
+
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+        }
+
+        .notif-icon {
+            width: 44px;
+            height: 44px;
+
+            flex-shrink: 0;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 14px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #7c3aed,
+                    #ec4899
+                );
+
+            box-shadow:
+                0 8px 22px rgba(124, 58, 237, .25);
+        }
+
+        .notif-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        .notif-subtitle {
+            margin-top: 3px;
+            color: #94a3b8;
+            font-size: 11px;
+            line-height: 1.5;
+        }
+
+        .notif-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        .notif-allow {
+            flex: 1;
+
+            height: 40px;
+
+            border: 0;
+            border-radius: 11px;
+
+            color: #fff;
+
+            font-size: 12px;
+            font-weight: 700;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #7c3aed,
+                    #6d28d9
+                );
+
+            cursor: pointer;
+        }
+
+        .notif-close {
+            width: 42px;
+            height: 40px;
+
+            border: 1px solid rgba(255, 255, 255, .08);
+
+            border-radius: 11px;
+
+            color: #94a3b8;
+            background: rgba(255, 255, 255, .04);
+
+            cursor: pointer;
+        }
+
+        .notif-close:hover {
+            color: #fff;
+        }
+
+        /* =================================================
+           TOAST
+        ================================================= */
+
+        #toastContainer {
+            position: fixed;
+
+            top: 18px;
+            right: 15px;
+
+            width: calc(100% - 30px);
+            max-width: 380px;
+
+            z-index: 10000;
+
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+
+            pointer-events: none;
+        }
+
+        .aura-toast {
+            pointer-events: auto;
+
+            display: flex;
+            align-items: flex-start;
+            gap: 11px;
+
+            padding: 13px 14px;
+
+            background: rgba(15, 23, 42, .97);
+
+            border:
+                1px solid rgba(255, 255, 255, .08);
+
+            border-radius: 15px;
+
+            box-shadow:
+                0 15px 45px rgba(0, 0, 0, .4);
+
+            animation:
+                toastIn .25s ease;
+        }
+
+        @keyframes toastIn {
+            from {
+                opacity: 0;
+                transform: translateY(-8px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .toast-icon {
+            width: 28px;
+            height: 28px;
+
+            flex-shrink: 0;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 9px;
+
+            background: rgba(124, 58, 237, .15);
+
+            color: #a78bfa;
+        }
+
+        .toast-text {
+            flex: 1;
+
+            color: #e2e8f0;
+
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        /* =================================================
+           OVERLAY SCREENS
+        ================================================= */
+
+        .full-screen-overlay {
+            position: fixed;
+            inset: 0;
+
+            z-index: 9000;
+
+            display: none;
+
+            align-items: center;
+            justify-content: center;
+
+            padding: 20px;
+
+            background:
+                radial-gradient(
+                    circle at top,
+                    rgba(124, 58, 237, .16),
+                    transparent 40%
+                ),
+                #050816;
+        }
+
+        .overlay-card {
+            width: 100%;
+            max-width: 430px;
+
+            padding: 28px 22px;
+
+            text-align: center;
+
+            background:
+                rgba(15, 23, 42, .92);
+
+            border:
+                1px solid rgba(255, 255, 255, .08);
+
+            border-radius: 26px;
+
+            box-shadow:
+                0 30px 90px rgba(0, 0, 0, .5);
+        }
+
+        /* =================================================
+           STARTUP LOADER
+        ================================================= */
+
+        #startupLoader {
+            position: fixed;
+            inset: 0;
+
+            z-index: 20000;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            background: #050816;
+
+            transition:
+                opacity .4s ease,
+                visibility .4s ease;
+        }
+
+        #startupLoader.hide {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .loader-logo {
+            width: 88px;
+            height: 88px;
+
+            padding: 3px;
+
+            border-radius: 25px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #7c3aed,
+                    #06b6d4,
+                    #ec4899
+                );
+
+            margin: 0 auto 20px;
+
+            animation:
+                loaderPulse 1.5s infinite;
+        }
+
+        .loader-logo img {
+            width: 100%;
+            height: 100%;
+
+            object-fit: cover;
+
+            border-radius: 22px;
+        }
+
+        @keyframes loaderPulse {
+            0%,
+            100% {
+                transform: scale(1);
+                box-shadow:
+                    0 0 0 rgba(124, 58, 237, 0);
+            }
+
+            50% {
+                transform: scale(1.05);
+                box-shadow:
+                    0 0 35px rgba(124, 58, 237, .25);
+            }
+        }
+
+        .loader-spinner {
+            width: 24px;
+            height: 24px;
+
+            border-radius: 50%;
+
+            border:
+                2px solid rgba(255, 255, 255, .10);
+
+            border-top-color: #8b5cf6;
+
+            animation:
+                spin .8s linear infinite;
+
+            margin: 18px auto 0;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* =================================================
+           FORGOT MODAL
+        ================================================= */
+
+        #forgotModal {
+            position: fixed;
+            inset: 0;
+
+            z-index: 15000;
+
+            display: none;
+
+            align-items: center;
+            justify-content: center;
+
+            padding: 18px;
+
+            background:
+                rgba(2, 6, 23, .78);
+
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+        }
+
+        .forgot-card {
+            width: 100%;
+            max-width: 400px;
+
+            padding: 24px;
+
+            background:
+                linear-gradient(
+                    145deg,
+                    #0f172a,
+                    #080d1d
+                );
+
+            border:
+                1px solid rgba(255, 255, 255, .08);
+
+            border-radius: 24px;
+
+            box-shadow:
+                0 30px 90px rgba(0, 0, 0, .55);
+
+            animation: cardIn .25s ease;
+        }
+
+        /* =================================================
+           MOBILE
+        ================================================= */
+
+        @media (max-width: 420px) {
+
+            .page-wrapper {
+                padding: 18px 12px;
+            }
+
+            .login-card {
+                padding: 24px 17px;
+                border-radius: 24px;
+            }
+
+            .logo-box {
+                width: 82px;
+                height: 82px;
+            }
+        }
+
+    </style>
+</head>
+
+<body>
+
+    <!-- =====================================================
+         BACKGROUND
+    ====================================================== -->
+
+    <div class="aura-bg">
+
+        <div class="aura-orb aura-orb-1"></div>
+        <div class="aura-orb aura-orb-2"></div>
+        <div class="aura-orb aura-orb-3"></div>
+
+    </div>
 
 
-// ============================================================
-// TOAST
-// ============================================================
+    <!-- =====================================================
+         STARTUP LOADER
+    ====================================================== -->
 
-function showToast(
-    message,
-    type = 'success'
-) {
+    <div id="startupLoader">
 
-    const container =
-        document.getElementById(
-            'toastContainer'
-        );
+        <div class="text-center">
 
+            <div class="loader-logo">
 
-    if (!container) {
-        return;
-    }
+                <img
+                    src="https://videotourl.com/images/1789792991627-2a906ffa-fbc0-4f79-9d9b-8dddb80ca667.jpg"
+                    alt="AURA"
+                >
 
+            </div>
 
-    const toast =
-        document.createElement(
-            'div'
-        );
+            <h1 class="text-xl font-bold text-white">
+                AURA SKILL
+            </h1>
 
+            <p class="text-sm text-slate-400 mt-1">
+                Play & Earn
+            </p>
 
-    let icon =
-        'fa-circle-check';
+            <div class="loader-spinner"></div>
 
-    let bg =
-        'bg-emerald-600';
+        </div>
 
-
-    if (type === 'error') {
-
-        icon =
-            'fa-circle-exclamation';
-
-        bg =
-            'bg-rose-600';
-
-    }
+    </div>
 
 
-    if (type === 'warning') {
+    <!-- =====================================================
+         MAINTENANCE SCREEN
+    ====================================================== -->
 
-        icon =
-            'fa-triangle-exclamation';
+    <div
+        id="maintenanceScreen"
+        class="full-screen-overlay"
+    >
 
-        bg =
-            'bg-amber-600';
+        <div class="overlay-card">
 
-    }
+            <div
+                class="w-16 h-16 mx-auto rounded-2xl
+                       bg-violet-500/10
+                       flex items-center justify-center
+                       text-violet-400 text-2xl"
+            >
 
+                <i class="fa-solid fa-screwdriver-wrench"></i>
 
-    toast.className =
-        `${bg}
-         text-white
-         px-5
-         py-3
-         rounded-xl
-         text-sm
-         shadow-xl
-         flex
-         items-center
-         gap-2
-         toast`;
+            </div>
 
+            <h2 class="text-xl font-bold mt-5">
+                সাইট মেইনটেন্যান্সে আছে
+            </h2>
 
-    toast.innerHTML = `
-        <i class="fa-solid ${icon}"></i>
-        <span>${message}</span>
-    `;
+            <p
+                id="maintenanceReason"
+                class="text-sm text-slate-400 mt-3 leading-6"
+            >
+                কিছু সময়ের জন্য সাইটটি বন্ধ রাখা হয়েছে।
+            </p>
 
+            <div
+                class="mt-5 text-xs text-slate-500"
+            >
+                অনুগ্রহ করে কিছুক্ষণ পরে আবার চেষ্টা করুন।
+            </div>
 
-    container.appendChild(
-        toast
-    );
+        </div>
 
-
-    setTimeout(
-        () => {
-
-            toast.remove();
-
-        },
-        3500
-    );
-
-}
+    </div>
 
 
-// ============================================================
-// NOTIFICATION REGISTER
-// ============================================================
+    <!-- =====================================================
+         UPDATE SCREEN
+    ====================================================== -->
 
-allowNotifBtn.addEventListener(
-    'click',
-    async () => {
+    <div
+        id="updateScreen"
+        class="full-screen-overlay"
+    >
 
-        if (
-            allowNotifBtn.disabled
+        <div class="overlay-card">
+
+            <div
+                class="w-16 h-16 mx-auto rounded-2xl
+                       bg-cyan-500/10
+                       flex items-center justify-center
+                       text-cyan-400 text-2xl"
+            >
+
+                <i class="fa-solid fa-cloud-arrow-down"></i>
+
+            </div>
+
+            <h2 class="text-xl font-bold mt-5">
+                নতুন আপডেট এসেছে
+            </h2>
+
+            <p
+                class="text-sm text-slate-400 mt-3 leading-6"
+            >
+                অ্যাপটি ব্যবহার করতে নতুন ভার্সনে আপডেট করুন।
+            </p>
+
+            <a
+                id="updateLink"
+                href="#"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="block w-full mt-6"
+            >
+
+                <button
+                    type="button"
+                    class="login-btn"
+                >
+
+                    <i class="fa-solid fa-download mr-2"></i>
+
+                    আপডেট করুন
+
+                </button>
+
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         NOTIFICATION BANNER
+    ====================================================== -->
+
+    <div id="customNotifBanner">
+
+        <div class="notif-inner">
+
+            <div class="flex items-center gap-3">
+
+                <div class="notif-icon">
+
+                    <i
+                        class="fa-solid fa-bell text-white"
+                    ></i>
+
+                </div>
+
+                <div class="flex-1">
+
+                    <div class="notif-title">
+                        নোটিফিকেশন চালু করুন
+                    </div>
+
+                    <div class="notif-subtitle">
+                        নতুন আপডেট ও গুরুত্বপূর্ণ খবর সবার আগে পেতে নোটিফিকেশন চালু রাখুন।
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="notif-actions">
+
+                <button
+                    type="button"
+                    id="allowNotifBtn"
+                    class="notif-allow"
+                >
+
+                    <i class="fa-solid fa-bell mr-1"></i>
+
+                    চালু করুন
+
+                </button>
+
+                <button
+                    type="button"
+                    id="closeNotifBtn"
+                    class="notif-close"
+                    aria-label="Close"
+                >
+
+                    <i class="fa-solid fa-xmark"></i>
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         TOAST CONTAINER
+    ====================================================== -->
+
+    <div id="toastContainer"></div>
+
+
+    <!-- =====================================================
+         LOGIN PAGE
+    ====================================================== -->
+
+    <main class="page-wrapper">
+
+        <section class="login-card">
+
+            <!-- LOGO -->
+
+            <div class="logo-box">
+
+                <img
+                    src="https://videotourl.com/images/1789792991627-2a906ffa-fbc0-4f79-9d9b-8dddb80ca667.jpg"
+                    alt="AURA ARMAN TOUR"
+                >
+
+            </div>
+
+
+            <!-- TITLE -->
+
+            <div class="text-center">
+
+                <h1
+                    class="text-2xl font-extrabold
+                           tracking-tight text-white"
+                >
+                    Welcome Back
+                </h1>
+
+                <p
+                    class="text-sm text-slate-400
+                           mt-2"
+                >
+                    চালিয়ে যেতে লগইন করুন
+                </p>
+
+            </div>
+
+
+            <!-- =================================================
+                 LOGIN FORM
+            ================================================== -->
+
+            <form
+                id="loginForm"
+                class="mt-7 space-y-4"
+                autocomplete="on"
+            >
+
+                <!-- USERNAME / EMAIL -->
+
+                <div>
+
+                    <label
+                        for="loginIdentifier"
+                        class="block text-xs
+                               font-semibold text-slate-400
+                               mb-2"
+                    >
+                        Username অথবা Gmail
+                    </label>
+
+                    <div class="input-group">
+
+                        <i
+                            class="fa-solid fa-user input-icon"
+                        ></i>
+
+                        <input
+                            id="loginIdentifier"
+                            name="username"
+                            type="text"
+                            class="aura-input"
+                            placeholder="Username অথবা Gmail লিখুন"
+                            autocomplete="username"
+                            required
+                            spellcheck="false"
+                            autocapitalize="none"
+                        >
+
+                    </div>
+
+                </div>
+
+
+                <!-- PASSWORD -->
+
+                <div>
+
+                    <label
+                        for="loginPassword"
+                        class="block text-xs
+                               font-semibold text-slate-400
+                               mb-2"
+                    >
+                        Password
+                    </label>
+
+                    <div class="input-group">
+
+                        <i
+                            class="fa-solid fa-lock input-icon"
+                        ></i>
+
+                        <input
+                            id="loginPassword"
+                            name="password"
+                            type="password"
+                            class="aura-input"
+                            placeholder="Password লিখুন"
+                            autocomplete="current-password"
+                            required
+                        >
+
+                        <button
+                            type="button"
+                            id="togglePassword"
+                            class="password-toggle"
+                            aria-label="Show password"
+                        >
+
+                            <i
+                                id="passwordEye"
+                                class="fa-solid fa-eye"
+                            ></i>
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <!-- OPTIONS -->
+
+                <div
+                    class="flex items-center
+                           justify-between
+                           gap-3 pt-1"
+                >
+
+                    <label class="remember-box">
+
+                        <input
+                            type="checkbox"
+                            id="rememberMe"
+                        >
+
+                        <span>
+                            মনে রাখুন
+                        </span>
+
+                    </label>
+
+
+                    <button
+                        type="button"
+                        id="forgotPasswordBtn"
+                        class="text-xs font-semibold
+                               text-violet-400
+                               hover:text-violet-300"
+                    >
+                        Password ভুলে গেছেন?
+                    </button>
+
+                </div>
+
+
+                <!-- LOGIN BUTTON -->
+
+                <button
+                    type="submit"
+                    id="loginBtn"
+                    class="login-btn mt-2"
+                >
+
+                    <span id="loginBtnText">
+
+                        <i
+                            class="fa-solid fa-right-to-bracket mr-2"
+                        ></i>
+
+                        লগইন করুন
+
+                    </span>
+
+                </button>
+
+
+                <!-- REGISTER -->
+
+                <div
+                    class="text-center
+                           text-sm text-slate-500
+                           pt-2"
+                >
+
+                    অ্যাকাউন্ট নেই?
+
+                    <a
+                        href="register.html"
+                        class="aura-link ml-1"
+                    >
+                        রেজিস্টার করুন
+                    </a>
+
+                </div>
+
+            </form>
+
+
+            <!-- FOOTER -->
+
+            <div
+                class="text-center
+                       text-[10px]
+                       text-slate-600
+                       mt-7"
+            >
+
+                © 2026 AURA ARMAN TOUR
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <!-- =====================================================
+         FORGOT PASSWORD MODAL
+    ====================================================== -->
+
+    <div id="forgotModal">
+
+        <div class="forgot-card">
+
+            <div
+                class="w-12 h-12 rounded-xl
+                       bg-violet-500/10
+                       text-violet-400
+                       flex items-center justify-center
+                       text-lg"
+            >
+
+                <i class="fa-solid fa-key"></i>
+
+            </div>
+
+
+            <h2
+                class="text-xl font-bold mt-4"
+            >
+                Password Reset
+            </h2>
+
+            <p
+                class="text-sm text-slate-400
+                       mt-2 leading-6"
+            >
+                আপনার Gmail দিন। আমরা password reset করার জন্য একটি link পাঠাবো।
+            </p>
+
+
+            <form
+                id="forgotForm"
+                class="mt-5"
+            >
+
+                <div class="input-group">
+
+                    <i
+                        class="fa-solid fa-envelope input-icon"
+                    ></i>
+
+                    <input
+                        id="forgotEmail"
+                        type="email"
+                        class="aura-input"
+                        placeholder="আপনার Gmail"
+                        autocomplete="email"
+                        required
+                    >
+
+                </div>
+
+
+                <button
+                    type="submit"
+                    id="resetPasswordBtn"
+                    class="login-btn mt-4"
+                >
+
+                    <span id="resetBtnText">
+
+                        <i
+                            class="fa-solid fa-paper-plane mr-2"
+                        ></i>
+
+                        Reset Link পাঠান
+
+                    </span>
+
+                </button>
+
+
+                <button
+                    type="button"
+                    id="closeForgotModal"
+                    class="w-full mt-3 h-11
+                           rounded-xl
+                           border border-white/5
+                           bg-white/[.03]
+                           text-slate-400
+                           text-sm
+                           font-semibold
+                           hover:text-white"
+                >
+
+                    বন্ধ করুন
+
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         FIREBASE + APPLICATION SCRIPT
+    ====================================================== -->
+
+    <script type="module">
+
+        // =====================================================
+        // FIREBASE IMPORTS
+        // =====================================================
+
+        import {
+            auth,
+            db,
+            isMedianApp,
+            getOneSignalInfo,
+            linkOneSignalUser
+        } from "./firebase.js";
+
+
+        import {
+            onAuthStateChanged,
+            signInWithEmailAndPassword,
+            sendPasswordResetEmail
+        } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+
+
+        import {
+            collection,
+            query,
+            where,
+            getDocs,
+            doc,
+            onSnapshot
+        } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+
+        // =====================================================
+        // ELEMENTS
+        // =====================================================
+
+        const startupLoader =
+            document.getElementById("startupLoader");
+
+        const maintenanceScreen =
+            document.getElementById("maintenanceScreen");
+
+        const maintenanceReason =
+            document.getElementById("maintenanceReason");
+
+        const updateScreen =
+            document.getElementById("updateScreen");
+
+        const updateLink =
+            document.getElementById("updateLink");
+
+        const loginForm =
+            document.getElementById("loginForm");
+
+        const loginIdentifier =
+            document.getElementById("loginIdentifier");
+
+        const loginPassword =
+            document.getElementById("loginPassword");
+
+        const loginBtn =
+            document.getElementById("loginBtn");
+
+        const loginBtnText =
+            document.getElementById("loginBtnText");
+
+        const rememberMe =
+            document.getElementById("rememberMe");
+
+        const togglePassword =
+            document.getElementById("togglePassword");
+
+        const passwordEye =
+            document.getElementById("passwordEye");
+
+        const forgotPasswordBtn =
+            document.getElementById("forgotPasswordBtn");
+
+        const forgotModal =
+            document.getElementById("forgotModal");
+
+        const forgotForm =
+            document.getElementById("forgotForm");
+
+        const forgotEmail =
+            document.getElementById("forgotEmail");
+
+        const closeForgotModal =
+            document.getElementById("closeForgotModal");
+
+        const resetPasswordBtn =
+            document.getElementById("resetPasswordBtn");
+
+        const resetBtnText =
+            document.getElementById("resetBtnText");
+
+        const toastContainer =
+            document.getElementById("toastContainer");
+
+        const notifBanner =
+            document.getElementById("customNotifBanner");
+
+        const allowNotifBtn =
+            document.getElementById("allowNotifBtn");
+
+        const closeNotifBtn =
+            document.getElementById("closeNotifBtn");
+
+
+        // =====================================================
+        // TIMEOUT HELPER
+        // =====================================================
+
+        function withTimeout(
+            promise,
+            milliseconds = 10000
         ) {
-            return;
+
+            return Promise.race([
+
+                promise,
+
+                new Promise((_, reject) => {
+
+                    setTimeout(() => {
+
+                        reject(
+                            new Error("REQUEST_TIMEOUT")
+                        );
+
+                    }, milliseconds);
+
+                })
+
+            ]);
+
         }
 
 
-        allowNotifBtn.disabled =
-            true;
+        // =====================================================
+        // TOAST SYSTEM
+        // =====================================================
+
+        function showToast(
+            message,
+            type = "info"
+        ) {
+
+            if (!toastContainer) return;
 
 
-        const oldText =
-            allowNotifBtn.textContent;
+            const toast =
+                document.createElement("div");
+
+            toast.className =
+                "aura-toast";
 
 
-        allowNotifBtn.innerHTML =
-            '<i class="fa-solid fa-spinner fa-spin mr-1"></i>চালু হচ্ছে...';
+            let icon =
+                "fa-circle-info";
 
 
-        try {
+            if (type === "success") {
+                icon = "fa-circle-check";
+            }
 
-            customNotifBanner.classList.remove(
-                'show'
-            );
+            if (type === "error") {
+                icon = "fa-circle-exclamation";
+            }
 
-
-            /*
-             * Median native OneSignal
-             *
-             * এটি Browser Notification API নয়।
-             *
-             * APK-এর native notification
-             * permission/register trigger করবে।
-             */
-
-            const result =
-                await registerOneSignal();
-
-
-            console.log(
-                'OneSignal register:',
-                result
-            );
-
-
-            /*
-             * Login করা থাকলে Firebase UID
-             * আবার OneSignal-এর সঙ্গে link করে দিই।
-             */
-
-            if (
-                auth.currentUser &&
-                auth.currentUser.uid
-            ) {
-
-                await linkOneSignalUser(
-                    auth.currentUser
-                );
-
+            if (type === "warning") {
+                icon = "fa-triangle-exclamation";
             }
 
 
-            showToast(
-                'নোটিফিকেশন সফলভাবে চালু হয়েছে! 🎉',
-                'success'
+            toast.innerHTML = `
+
+                <div class="toast-icon">
+
+                    <i class="fa-solid ${icon}"></i>
+
+                </div>
+
+                <div class="toast-text">
+
+                    ${escapeHTML(message)}
+
+                </div>
+
+            `;
+
+
+            toastContainer.appendChild(toast);
+
+
+            setTimeout(() => {
+
+                toast.style.opacity = "0";
+                toast.style.transform =
+                    "translateY(-6px)";
+
+                toast.style.transition =
+                    "opacity .25s ease, transform .25s ease";
+
+
+                setTimeout(() => {
+
+                    toast.remove();
+
+                }, 250);
+
+            }, 3500);
+
+        }
+
+
+        // =====================================================
+        // ESCAPE HTML
+        // =====================================================
+
+        function escapeHTML(value) {
+
+            return String(value)
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+
+
+        // =====================================================
+        // STARTUP LOADER
+        // =====================================================
+
+        function hideStartupLoader() {
+
+            if (!startupLoader) return;
+
+            startupLoader.classList.add("hide");
+
+            setTimeout(() => {
+
+                startupLoader.style.display =
+                    "none";
+
+            }, 450);
+        }
+
+
+        window.addEventListener(
+            "load",
+            () => {
+
+                setTimeout(
+                    hideStartupLoader,
+                    700
+                );
+
+            }
+        );
+
+
+        // Failsafe
+        setTimeout(
+            hideStartupLoader,
+            5000
+        );
+
+
+        // =====================================================
+        // PASSWORD SHOW / HIDE
+        // =====================================================
+
+        if (togglePassword) {
+
+            togglePassword.addEventListener(
+                "click",
+                () => {
+
+                    const isPassword =
+                        loginPassword.type === "password";
+
+
+                    loginPassword.type =
+                        isPassword
+                            ? "text"
+                            : "password";
+
+
+                    passwordEye.className =
+                        isPassword
+                            ? "fa-solid fa-eye-slash"
+                            : "fa-solid fa-eye";
+
+
+                    togglePassword.setAttribute(
+                        "aria-label",
+                        isPassword
+                            ? "Hide password"
+                            : "Show password"
+                    );
+
+                }
             );
+        }
 
 
-            /*
-             * Small success delay
-             */
+        // =====================================================
+        // REMEMBER ME
+        // =====================================================
 
-            setTimeout(
-                async () => {
+        try {
 
-                    try {
+            const savedIdentifier =
+                localStorage.getItem(
+                    "auraSavedLogin"
+                );
 
-                        const info =
-                            await getOneSignalDebugInfo();
 
-                        console.log(
-                            'OneSignal Info:',
-                            info
-                        );
+            if (savedIdentifier) {
 
-                    } catch (error) {
+                loginIdentifier.value =
+                    savedIdentifier;
 
-                        console.warn(
-                            error
-                        );
-
-                    }
-
-                },
-                800
-            );
-
+                rememberMe.checked = true;
+            }
 
         } catch (error) {
 
             console.warn(
-                'Notification registration warning:',
+                "Remember me unavailable:",
                 error
             );
-
-
-            /*
-             * Native permission method unavailable
-             * হলেও login/app যেন নষ্ট না হয়।
-             */
-
-            showToast(
-                'নোটিফিকেশন সেটআপ সম্পন্ন হয়েছে।',
-                'success'
-            );
-
-        } finally {
-
-            allowNotifBtn.disabled =
-                false;
-
-            allowNotifBtn.textContent =
-                oldText;
-
         }
 
-    }
-);
+
+        // =====================================================
+        // FIREBASE USERNAME → EMAIL
+        // =====================================================
+
+        async function getEmailFromUsername(
+            username
+        ) {
+
+            const usernameLower =
+                username.toLowerCase().trim();
 
 
-// ============================================================
-// CLOSE NOTIFICATION BANNER
-// ============================================================
+            // First try usernameLower
+            try {
 
-closeNotifBtn.addEventListener(
-    'click',
-    () => {
+                const q1 = query(
+                    collection(db, "users"),
+                    where(
+                        "usernameLower",
+                        "==",
+                        usernameLower
+                    )
+                );
 
-        customNotifBanner.classList.remove(
-            'show'
+
+                const snap1 =
+                    await getDocs(q1);
+
+
+                if (!snap1.empty) {
+
+                    const data =
+                        snap1.docs[0].data();
+
+
+                    if (data.email) {
+
+                        return data.email.trim();
+                    }
+                }
+
+            } catch (error) {
+
+                console.warn(
+                    "usernameLower lookup failed:",
+                    error
+                );
+            }
+
+
+            // Fallback username
+            try {
+
+                const q2 = query(
+                    collection(db, "users"),
+                    where(
+                        "username",
+                        "==",
+                        username.trim()
+                    )
+                );
+
+
+                const snap2 =
+                    await getDocs(q2);
+
+
+                if (!snap2.empty) {
+
+                    const data =
+                        snap2.docs[0].data();
+
+
+                    if (data.email) {
+
+                        return data.email.trim();
+                    }
+                }
+
+            } catch (error) {
+
+                console.warn(
+                    "username lookup failed:",
+                    error
+                );
+            }
+
+
+            return null;
+        }
+
+
+        // =====================================================
+        // LOGIN
+        // =====================================================
+
+        loginForm.addEventListener(
+            "submit",
+            async (event) => {
+
+                event.preventDefault();
+
+
+                if (loginBtn.disabled) {
+                    return;
+                }
+
+
+                const identifier =
+                    loginIdentifier.value.trim();
+
+
+                const password =
+                    loginPassword.value;
+
+
+                if (!identifier) {
+
+                    showToast(
+                        "Username অথবা Gmail দিন।",
+                        "warning"
+                    );
+
+                    loginIdentifier.focus();
+
+                    return;
+                }
+
+
+                if (!password) {
+
+                    showToast(
+                        "Password দিন।",
+                        "warning"
+                    );
+
+                    loginPassword.focus();
+
+                    return;
+                }
+
+
+                // ------------------------------------------------
+                // BUTTON LOADING
+                // ------------------------------------------------
+
+                loginBtn.disabled = true;
+
+
+                loginBtnText.innerHTML = `
+
+                    <i
+                        class="fa-solid
+                               fa-spinner
+                               fa-spin
+                               mr-2"
+                    ></i>
+
+                    লগইন হচ্ছে...
+
+                `;
+
+
+                try {
+
+                    let email =
+                        identifier;
+
+
+                    // ------------------------------------------------
+                    // Username হলে email খুঁজবে
+                    // ------------------------------------------------
+
+                    if (
+                        !identifier
+                            .toLowerCase()
+                            .includes("@")
+                    ) {
+
+                        showToast(
+                            "Username যাচাই করা হচ্ছে...",
+                            "info"
+                        );
+
+
+                        email =
+                            await withTimeout(
+                                getEmailFromUsername(
+                                    identifier
+                                ),
+                                10000
+                            );
+
+
+                        if (!email) {
+
+                            throw new Error(
+                                "USERNAME_NOT_FOUND"
+                            );
+                        }
+                    }
+
+
+                    // ------------------------------------------------
+                    // Firebase Login
+                    // ------------------------------------------------
+
+                    const credential =
+                        await withTimeout(
+                            signInWithEmailAndPassword(
+                                auth,
+                                email,
+                                password
+                            ),
+                            15000
+                        );
+
+
+                    // ------------------------------------------------
+                    // REMEMBER ME
+                    // ------------------------------------------------
+
+                    try {
+
+                        if (rememberMe.checked) {
+
+                            localStorage.setItem(
+                                "auraSavedLogin",
+                                identifier
+                            );
+
+                        } else {
+
+                            localStorage.removeItem(
+                                "auraSavedLogin"
+                            );
+                        }
+
+                    } catch (error) {
+
+                        console.warn(
+                            "Could not save login:",
+                            error
+                        );
+                    }
+
+
+                    // ------------------------------------------------
+                    // ONESIGNAL LINK
+                    // Non-blocking
+                    // ------------------------------------------------
+
+                    linkOneSignalUser(
+                        credential.user
+                    )
+                    .then((result) => {
+
+                        console.log(
+                            "AURA OneSignal linked:",
+                            result
+                        );
+
+                    })
+                    .catch((error) => {
+
+                        console.warn(
+                            "OneSignal linking skipped:",
+                            error
+                        );
+
+                    });
+
+
+                    // ------------------------------------------------
+                    // SUCCESS
+                    // ------------------------------------------------
+
+                    showToast(
+                        "লগইন সফল হয়েছে! স্বাগতম ❤️",
+                        "success"
+                    );
+
+
+                    loginBtnText.innerHTML = `
+
+                        <i
+                            class="fa-solid
+                                   fa-circle-check
+                                   mr-2"
+                        ></i>
+
+                        সফল হয়েছে
+
+                    `;
+
+
+                    // ------------------------------------------------
+                    // REDIRECT
+                    // ------------------------------------------------
+
+                    setTimeout(() => {
+
+                        window.location.href =
+                            "index.html";
+
+                    }, 700);
+
+
+                } catch (error) {
+
+                    console.error(
+                        "Login error:",
+                        error
+                    );
+
+
+                    let message =
+                        "লগইন করা যায়নি। আবার চেষ্টা করুন।";
+
+
+                    if (
+                        error?.message ===
+                        "USERNAME_NOT_FOUND"
+                    ) {
+
+                        message =
+                            "এই Username পাওয়া যায়নি।";
+
+                    } else if (
+                        error?.code ===
+                        "auth/invalid-credential"
+                    ) {
+
+                        message =
+                            "Username/Gmail অথবা Password ভুল।";
+
+                    } else if (
+                        error?.code ===
+                        "auth/user-not-found"
+                    ) {
+
+                        message =
+                            "এই Gmail দিয়ে কোনো account পাওয়া যায়নি।";
+
+                    } else if (
+                        error?.code ===
+                        "auth/wrong-password"
+                    ) {
+
+                        message =
+                            "Password ভুল।";
+
+                    } else if (
+                        error?.code ===
+                        "auth/too-many-requests"
+                    ) {
+
+                        message =
+                            "অনেকবার চেষ্টা করা হয়েছে। কিছুক্ষণ পরে আবার চেষ্টা করুন।";
+
+                    } else if (
+                        error?.code ===
+                        "auth/network-request-failed"
+                    ) {
+
+                        message =
+                            "Internet connection check করুন।";
+                    }
+
+
+                    showToast(
+                        message,
+                        "error"
+                    );
+
+
+                    loginBtnText.innerHTML = `
+
+                        <i
+                            class="fa-solid
+                                   fa-right-to-bracket
+                                   mr-2"
+                        ></i>
+
+                        লগইন করুন
+
+                    `;
+
+
+                } finally {
+
+                    setTimeout(() => {
+
+                        loginBtn.disabled = false;
+
+                    }, 400);
+
+                }
+
+            }
         );
 
-    }
-);
 
+        // =====================================================
+        // FORGOT PASSWORD OPEN
+        // =====================================================
 
-// ============================================================
-// SHOW NOTIFICATION BANNER
-// ============================================================
-
-window.addEventListener(
-    'load',
-    () => {
-
-        setTimeout(
+        forgotPasswordBtn.addEventListener(
+            "click",
             () => {
 
-                customNotifBanner.classList.add(
-                    'show'
-                );
+                const currentValue =
+                    loginIdentifier.value.trim();
 
-            },
-            2200
-        );
 
-    }
-);
+                if (
+                    currentValue &&
+                    currentValue.includes("@")
+                ) {
 
+                    forgotEmail.value =
+                        currentValue;
+                }
 
-// ============================================================
-// MAINTENANCE
-// ============================================================
 
-function applyMaintenance(
-    data = {}
-) {
+                forgotModal.style.display =
+                    "flex";
 
-    maintenanceActive =
-        data.enabled === true;
 
+                setTimeout(() => {
 
-    if (
-        maintenanceActive
-    ) {
+                    forgotEmail.focus();
 
-        maintenanceReason.textContent =
-            data.reason ||
-            'সাইট বর্তমানে রক্ষণাবেক্ষণের মধ্যে আছে।';
-
-
-        maintenanceScreen.style.display =
-            'flex';
-
-        loginCard.style.display =
-            'none';
-
-    } else {
-
-        maintenanceScreen.style.display =
-            'none';
-
-
-        if (!updateActive) {
-
-            loginCard.style.display =
-                '';
-
-        }
-
-    }
-
-}
-
-
-// ============================================================
-// UPDATE
-// ============================================================
-
-function applyUpdate(
-    data = {}
-) {
-
-    updateActive =
-        data.enabled === true ||
-        data.forceUpdate === true;
-
-
-    if (
-        updateActive
-    ) {
-
-        updateMessage.textContent =
-            data.message ||
-            'আপনার অ্যাপটি আপডেট করা প্রয়োজন। দয়া করে আপডেট করে নিন।';
-
-
-        updateLinkBtn.href =
-            data.link ||
-            data.updateUrl ||
-            '#';
-
-
-        updateScreen.style.display =
-            'flex';
-
-        loginCard.style.display =
-            'none';
-
-    } else {
-
-        updateScreen.style.display =
-            'none';
-
-
-        if (
-            !maintenanceActive
-        ) {
-
-            loginCard.style.display =
-                '';
-
-        }
-
-    }
-
-}
-
-
-// ============================================================
-// STARTUP DATA
-// ============================================================
-
-async function checkStartupData() {
-
-    try {
-
-        const result =
-            await withTimeout(
-
-                Promise.all([
-
-                    getDoc(
-                        doc(
-                            db,
-                            'settings',
-                            'siteMaintenance'
-                        )
-                    ),
-
-                    getDoc(
-                        doc(
-                            db,
-                            'settings',
-                            'appUpdate'
-                        )
-                    )
-
-                ]),
-
-                5000
-            );
-
-
-        const [
-            maintenanceSnap,
-            updateSnap
-        ] = result;
-
-
-        applyMaintenance(
-            maintenanceSnap.exists()
-                ? maintenanceSnap.data()
-                : {}
-        );
-
-
-        applyUpdate(
-            updateSnap.exists()
-                ? updateSnap.data()
-                : {}
-        );
-
-
-    } catch (error) {
-
-        console.warn(
-            'Startup data skipped:',
-            error
-        );
-
-    }
-
-}
-
-
-checkStartupData();
-
-
-// ============================================================
-// REALTIME MAINTENANCE
-// ============================================================
-
-try {
-
-    onSnapshot(
-
-        doc(
-            db,
-            'settings',
-            'siteMaintenance'
-        ),
-
-        snapshot => {
-
-            applyMaintenance(
-                snapshot.exists()
-                    ? snapshot.data()
-                    : {}
-            );
-
-        },
-
-        error => {
-
-            console.warn(
-                'Maintenance listener:',
-                error
-            );
-
-        }
-
-    );
-
-} catch (error) {
-
-    console.warn(
-        error
-    );
-
-}
-
-
-// ============================================================
-// REALTIME UPDATE
-// ============================================================
-
-try {
-
-    onSnapshot(
-
-        doc(
-            db,
-            'settings',
-            'appUpdate'
-        ),
-
-        snapshot => {
-
-            applyUpdate(
-                snapshot.exists()
-                    ? snapshot.data()
-                    : {}
-            );
-
-        },
-
-        error => {
-
-            console.warn(
-                'Update listener:',
-                error
-            );
-
-        }
-
-    );
-
-} catch (error) {
-
-    console.warn(
-        error
-    );
-
-}
-
-
-// ============================================================
-// PASSWORD TOGGLE
-// ============================================================
-
-document
-    .getElementById(
-        'togglePasswordBtn'
-    )
-    .addEventListener(
-        'click',
-        () => {
-
-            const eye =
-                document.getElementById(
-                    'eyeIcon'
-                );
-
-
-            if (
-                passwordInput.type ===
-                'password'
-            ) {
-
-                passwordInput.type =
-                    'text';
-
-                eye.className =
-                    'fa-regular fa-eye';
-
-            } else {
-
-                passwordInput.type =
-                    'password';
-
-                eye.className =
-                    'fa-regular fa-eye-slash';
+                }, 100);
 
             }
-
-        }
-    );
-
-
-// ============================================================
-// FIND USER EMAIL
-// ============================================================
-
-async function findEmailByUsername(
-    username
-) {
-
-    const clean =
-        username.trim();
-
-    const lower =
-        clean.toLowerCase();
-
-
-    try {
-
-        const snapshot =
-            await withTimeout(
-
-                getDocs(
-
-                    query(
-
-                        collection(
-                            db,
-                            'users'
-                        ),
-
-                        where(
-                            'usernameLower',
-                            '==',
-                            lower
-                        ),
-
-                        limit(1)
-
-                    )
-
-                ),
-
-                7000
-            );
-
-
-        if (
-            !snapshot.empty
-        ) {
-
-            const data =
-                snapshot.docs[0].data();
-
-
-            if (
-                data.email
-            ) {
-
-                return String(
-                    data.email
-                ).trim();
-
-            }
-
-        }
-
-    } catch (error) {
-
-        console.warn(
-            'Username lower search:',
-            error
         );
 
-    }
 
+        // =====================================================
+        // FORGOT PASSWORD CLOSE
+        // =====================================================
 
-    try {
+        closeForgotModal.addEventListener(
+            "click",
+            () => {
 
-        const snapshot =
-            await withTimeout(
-
-                getDocs(
-
-                    query(
-
-                        collection(
-                            db,
-                            'users'
-                        ),
-
-                        where(
-                            'username',
-                            '==',
-                            clean
-                        ),
-
-                        limit(1)
-
-                    )
-
-                ),
-
-                7000
-            );
-
-
-        if (
-            !snapshot.empty
-        ) {
-
-            const data =
-                snapshot.docs[0].data();
-
-
-            if (
-                data.email
-            ) {
-
-                return String(
-                    data.email
-                ).trim();
+                forgotModal.style.display =
+                    "none";
 
             }
-
-        }
-
-    } catch (error) {
-
-        console.warn(
-            'Username search:',
-            error
         );
 
-    }
+
+        // Click outside modal
+        forgotModal.addEventListener(
+            "click",
+            (event) => {
+
+                if (
+                    event.target ===
+                    forgotModal
+                ) {
+
+                    forgotModal.style.display =
+                        "none";
+                }
+
+            }
+        );
 
 
-    return null;
+        // =====================================================
+        // PASSWORD RESET
+        // =====================================================
 
-}
+        forgotForm.addEventListener(
+            "submit",
+            async (event) => {
 
-
-// ============================================================
-// LOGIN
-// ============================================================
-
-loginForm.addEventListener(
-    'submit',
-    async event => {
-
-        event.preventDefault();
+                event.preventDefault();
 
 
-        if (
-            loginRedirecting
-        ) {
-            return;
-        }
+                const email =
+                    forgotEmail.value.trim();
 
 
-        if (
-            maintenanceActive
-        ) {
+                if (!email) {
 
-            showToast(
-                'সাইট বর্তমানে রক্ষণাবেক্ষণের মধ্যে আছে।',
-                'warning'
-            );
+                    showToast(
+                        "Gmail দিন।",
+                        "warning"
+                    );
 
-            return;
+                    forgotEmail.focus();
 
-        }
-
-
-        if (
-            updateActive
-        ) {
-
-            showToast(
-                'অ্যাপ আপডেট করা প্রয়োজন।',
-                'warning'
-            );
-
-            return;
-
-        }
+                    return;
+                }
 
 
-        const identifier =
-            identifierInput.value.trim();
-
-        const password =
-            passwordInput.value;
+                resetPasswordBtn.disabled =
+                    true;
 
 
-        if (!identifier) {
+                resetBtnText.innerHTML = `
 
-            showToast(
-                'Username অথবা Gmail দিন।',
-                'warning'
-            );
+                    <i
+                        class="fa-solid
+                               fa-spinner
+                               fa-spin
+                               mr-2"
+                    ></i>
 
-            identifierInput.focus();
+                    পাঠানো হচ্ছে...
 
-            return;
-
-        }
-
-
-        if (!password) {
-
-            showToast(
-                'Password দিন।',
-                'warning'
-            );
-
-            passwordInput.focus();
-
-            return;
-
-        }
+                `;
 
 
-        loginBtn.disabled =
-            true;
+                try {
+
+                    await withTimeout(
+                        sendPasswordResetEmail(
+                            auth,
+                            email
+                        ),
+                        15000
+                    );
 
 
-        loginBtn.innerHTML =
-            '<i class="fa-solid fa-spinner fa-spin mr-2"></i>লগইন হচ্ছে...';
+                    showToast(
+                        "Password reset link আপনার Gmail-এ পাঠানো হয়েছে।",
+                        "success"
+                    );
 
 
-        try {
+                    forgotForm.reset();
 
-            // =================================================
-            // PERSISTENCE
-            // =================================================
+
+                    setTimeout(() => {
+
+                        forgotModal.style.display =
+                            "none";
+
+                    }, 800);
+
+
+                } catch (error) {
+
+                    console.error(
+                        "Password reset error:",
+                        error
+                    );
+
+
+                    let message =
+                        "Reset link পাঠানো যায়নি।";
+
+
+                    if (
+                        error?.code ===
+                        "auth/user-not-found"
+                    ) {
+
+                        message =
+                            "এই Gmail দিয়ে কোনো account পাওয়া যায়নি।";
+
+                    } else if (
+                        error?.code ===
+                        "auth/invalid-email"
+                    ) {
+
+                        message =
+                            "সঠিক Gmail দিন।";
+
+                    } else if (
+                        error?.code ===
+                        "auth/too-many-requests"
+                    ) {
+
+                        message =
+                            "অনেকবার চেষ্টা করা হয়েছে। পরে আবার চেষ্টা করুন।";
+                    }
+
+
+                    showToast(
+                        message,
+                        "error"
+                    );
+
+
+                } finally {
+
+                    resetPasswordBtn.disabled =
+                        false;
+
+
+                    resetBtnText.innerHTML = `
+
+                        <i
+                            class="fa-solid
+                                   fa-paper-plane
+                                   mr-2"
+                        ></i>
+
+                        Reset Link পাঠান
+
+                    `;
+
+                }
+
+            }
+        );
+
+
+        // =====================================================
+        // MAINTENANCE
+        // Firestore:
+        // settings/siteMaintenance
+        // =====================================================
+
+        function setupMaintenanceListener() {
 
             try {
 
-                await withTimeout(
+                const maintenanceRef =
+                    doc(
+                        db,
+                        "settings",
+                        "siteMaintenance"
+                    );
 
-                    setPersistence(
 
-                        auth,
+                onSnapshot(
+                    maintenanceRef,
+                    (snapshot) => {
 
-                        rememberInput.checked
-                            ? browserLocalPersistence
-                            : browserSessionPersistence
+                        if (!snapshot.exists()) {
 
-                    ),
+                            maintenanceScreen.style.display =
+                                "none";
 
-                    5000
+                            return;
+                        }
 
+
+                        const data =
+                            snapshot.data();
+
+
+                        const enabled =
+                            data.enabled === true;
+
+
+                        if (enabled) {
+
+                            maintenanceReason.textContent =
+                                data.reason ||
+                                "কিছু সময়ের জন্য সাইটটি বন্ধ রাখা হয়েছে।";
+
+
+                            maintenanceScreen.style.display =
+                                "flex";
+
+                        } else {
+
+                            maintenanceScreen.style.display =
+                                "none";
+                        }
+
+                    },
+                    (error) => {
+
+                        console.warn(
+                            "Maintenance listener error:",
+                            error
+                        );
+
+                    }
                 );
 
             } catch (error) {
 
                 console.warn(
-                    'Persistence skipped:',
+                    "Maintenance setup failed:",
                     error
                 );
-
             }
+        }
 
 
-            // =================================================
-            // GET EMAIL
-            // =================================================
+        // =====================================================
+        // UPDATE
+        // Firestore:
+        // settings/appUpdate
+        // =====================================================
 
-            let email;
+        function setupUpdateListener() {
 
+            try {
 
-            if (
-                identifier.includes('@')
-            ) {
-
-                email =
-                    identifier.toLowerCase();
-
-            } else {
-
-                email =
-                    await findEmailByUsername(
-                        identifier
+                const updateRef =
+                    doc(
+                        db,
+                        "settings",
+                        "appUpdate"
                     );
 
-            }
+
+                onSnapshot(
+                    updateRef,
+                    (snapshot) => {
+
+                        if (!snapshot.exists()) {
+
+                            updateScreen.style.display =
+                                "none";
+
+                            return;
+                        }
 
 
-            if (!email) {
-
-                showToast(
-                    'এই username দিয়ে কোনো account পাওয়া যায়নি।',
-                    'error'
-                );
-
-                resetLoginButton();
-
-                return;
-
-            }
+                        const data =
+                            snapshot.data();
 
 
-            // =================================================
-            // FIREBASE LOGIN
-            // =================================================
-
-            const credential =
-                await withTimeout(
-
-                    signInWithEmailAndPassword(
-                        auth,
-                        email,
-                        password
-                    ),
-
-                    12000
-
-                );
+                        const enabled =
+                            data.enabled === true;
 
 
-            if (
-                !credential ||
-                !credential.user
-            ) {
-
-                throw new Error(
-                    'LOGIN_FAILED'
-                );
-
-            }
+                        const url =
+                            data.url ||
+                            data.link ||
+                            "";
 
 
-            console.log(
-                'Firebase login successful:',
-                credential.user.uid
-            );
+                        if (
+                            enabled &&
+                            isValidURL(url)
+                        ) {
+
+                            updateLink.href =
+                                url;
 
 
-            // =================================================
-            // ONESIGNAL LINK
-            // =================================================
+                            updateScreen.style.display =
+                                "flex";
 
-            /*
-             * IMPORTANT:
-             *
-             * এটা await করা হচ্ছে না।
-             *
-             * তাই OneSignal সমস্যা হলেও
-             * Firebase login আটকে যাবে না।
-             */
+                        } else {
 
-            Promise.resolve()
-                .then(
-                    () =>
-                        linkOneSignalUser(
-                            credential.user
-                        )
-                )
-                .then(
-                    result => {
+                            updateScreen.style.display =
+                                "none";
+                        }
 
-                        console.log(
-                            'OneSignal linked:',
-                            result
-                        );
-
-                    }
-                )
-                .catch(
-                    error => {
+                    },
+                    (error) => {
 
                         console.warn(
-                            'OneSignal link warning:',
+                            "Update listener error:",
                             error
                         );
 
                     }
                 );
 
+            } catch (error) {
 
-            // =================================================
-            // SUCCESS
-            // =================================================
-
-            loginRedirecting =
-                true;
-
-
-            showToast(
-                'লগইন সফল হয়েছে! আবার স্বাগতম 🎉💚',
-                'success'
-            );
-
-
-            loginBtn.innerHTML =
-                '<i class="fa-solid fa-circle-check mr-2"></i>সফল হয়েছে';
-
-
-            setTimeout(
-                () => {
-
-                    window.location.replace(
-                        './index.html'
-                    );
-
-                },
-                900
-            );
-
-
-        } catch (error) {
-
-            console.error(
-                'LOGIN ERROR:',
-                error
-            );
-
-
-            let message =
-                'লগইন করতে সমস্যা হয়েছে।';
-
-
-            if (
-                error.message ===
-                'REQUEST_TIMEOUT'
-            ) {
-
-                message =
-                    'সার্ভার থেকে উত্তর পেতে বেশি সময় লাগছে। আবার চেষ্টা করুন।';
-
+                console.warn(
+                    "Update setup failed:",
+                    error
+                );
             }
+        }
 
-            else if (
-                error.code ===
-                'auth/invalid-credential'
-            ) {
 
-                message =
-                    'Username/Gmail অথবা Password ভুল।';
+        // =====================================================
+        // URL VALIDATION
+        // =====================================================
 
+        function isValidURL(url) {
+
+            try {
+
+                const parsed =
+                    new URL(url);
+
+
+                return (
+                    parsed.protocol === "http:" ||
+                    parsed.protocol === "https:"
+                );
+
+            } catch (error) {
+
+                return false;
             }
-
-            else if (
-                error.code ===
-                'auth/wrong-password'
-            ) {
-
-                message =
-                    'Password ভুল হয়েছে।';
-
-            }
-
-            else if (
-                error.code ===
-                'auth/user-not-found'
-            ) {
-
-                message =
-                    'এই account পাওয়া যায়নি।';
-
-            }
-
-            else if (
-                error.code ===
-                'auth/invalid-email'
-            ) {
-
-                message =
-                    'Gmail address সঠিক নয়।';
-
-            }
-
-            else if (
-                error.code ===
-                'auth/too-many-requests'
-            ) {
-
-                message =
-                    'অনেকবার চেষ্টা করা হয়েছে। কিছুক্ষণ পরে আবার চেষ্টা করুন।';
-
-            }
-
-            else if (
-                error.code ===
-                'auth/network-request-failed'
-            ) {
-
-                message =
-                    'Internet connection-এ সমস্যা হয়েছে।';
-
-            }
-
-            else if (
-                error.code ===
-                'auth/user-disabled'
-            ) {
-
-                message =
-                    'এই account বন্ধ করে দেওয়া হয়েছে।';
-
-            }
+        }
 
 
-            showToast(
-                message,
-                'error'
-            );
+        // =====================================================
+        // NOTIFICATION BANNER
+        // Auto-register ON
+        // =====================================================
+
+        let notificationBusy = false;
 
 
-            resetLoginButton();
+        function hideNotificationBanner() {
+
+            if (!notifBanner) return;
+
+
+            notifBanner.style.opacity =
+                "0";
+
+
+            notifBanner.style.transform =
+                "translateX(-50%) translateY(20px)";
+
+
+            setTimeout(() => {
+
+                notifBanner.style.display =
+                    "none";
+
+            }, 250);
 
         }
 
-    }
-);
+
+        function showNotificationBanner() {
+
+            if (!notifBanner) return;
 
 
-// ============================================================
-// RESET LOGIN
-// ============================================================
-
-function resetLoginButton() {
-
-    loginBtn.disabled =
-        false;
-
-    loginBtn.innerHTML =
-        'লগইন';
-
-}
+            notifBanner.style.display =
+                "block";
 
 
-// ============================================================
-// AUTH STATE
-// ============================================================
+            requestAnimationFrame(() => {
 
-onAuthStateChanged(
-    auth,
-    user => {
-
-        if (user) {
-
-            console.log(
-                'Firebase user:',
-                user.uid
-            );
+                notifBanner.style.opacity =
+                    "1";
 
 
-            /*
-             * Session already exists হলে
-             * OneSignal আবার link করার চেষ্টা।
-             */
+                notifBanner.style.transform =
+                    "translateX(-50%) translateY(0)";
 
-            linkOneSignalUser(
-                user
-            )
-            .then(
-                result => {
+            });
+
+        }
+
+
+        async function checkNotificationStatus() {
+
+            // Browser
+            if (!isMedianApp()) {
+
+                hideNotificationBanner();
+
+                return;
+            }
+
+
+            try {
+
+                const info =
+                    await getOneSignalInfo();
+
+
+                const enabled =
+                    info?.subscription?.optedIn === true;
+
+
+                if (enabled) {
+
+                    hideNotificationBanner();
 
                     console.log(
-                        'Existing session OneSignal:',
-                        result
+                        "AURA: OneSignal notification enabled."
                     );
 
+                    return;
                 }
-            )
-            .catch(
-                error => {
 
-                    console.warn(
-                        'Existing session OneSignal warning:',
-                        error
+
+                setTimeout(
+                    showNotificationBanner,
+                    2000
+                );
+
+
+            } catch (error) {
+
+                console.warn(
+                    "AURA notification status:",
+                    error
+                );
+
+
+                setTimeout(
+                    showNotificationBanner,
+                    2000
+                );
+            }
+
+        }
+
+
+        // =====================================================
+        // NOTIFICATION ALLOW BUTTON
+        // =====================================================
+
+        if (allowNotifBtn) {
+
+            allowNotifBtn.addEventListener(
+                "click",
+                async () => {
+
+                    if (notificationBusy) {
+                        return;
+                    }
+
+
+                    notificationBusy = true;
+
+
+                    const oldHTML =
+                        allowNotifBtn.innerHTML;
+
+
+                    allowNotifBtn.disabled =
+                        true;
+
+
+                    allowNotifBtn.innerHTML = `
+
+                        <i
+                            class="fa-solid
+                                   fa-spinner
+                                   fa-spin
+                                   mr-1"
+                        ></i>
+
+                        চালু হচ্ছে...
+
+                    `;
+
+
+                    try {
+
+                        // -----------------------------------------
+                        // Browser
+                        // -----------------------------------------
+
+                        if (!isMedianApp()) {
+
+                            hideNotificationBanner();
+
+                            showToast(
+                                "Notification feature APK-তে ব্যবহার করুন।",
+                                "info"
+                            );
+
+                            return;
+                        }
+
+
+                        // -----------------------------------------
+                        // Check current status
+                        // -----------------------------------------
+
+                        let info = null;
+
+
+                        try {
+
+                            info =
+                                await getOneSignalInfo();
+
+                        } catch (error) {
+
+                            console.warn(
+                                "Notification info error:",
+                                error
+                            );
+                        }
+
+
+                        // Already enabled
+                        if (
+                            info?.subscription?.optedIn === true
+                        ) {
+
+                            hideNotificationBanner();
+
+
+                            if (auth.currentUser) {
+
+                                linkOneSignalUser(
+                                    auth.currentUser
+                                ).catch(() => {});
+                            }
+
+
+                            showToast(
+                                "নোটিফিকেশন ইতোমধ্যে চালু আছে ✅",
+                                "success"
+                            );
+
+                            return;
+                        }
+
+
+                        /*
+                         * Auto-register ON:
+                         *
+                         * Median/OneSignal app launch-এর সময়
+                         * native permission prompt দেখাতে পারে।
+                         *
+                         * এখানে কিছুক্ষণ wait করে আবার status
+                         * check করছি।
+                         */
+
+
+                        await new Promise(
+                            resolve =>
+                                setTimeout(
+                                    resolve,
+                                    1000
+                                )
+                        );
+
+
+                        try {
+
+                            info =
+                                await getOneSignalInfo();
+
+                        } catch (error) {
+
+                            console.warn(
+                                "Notification status recheck failed:",
+                                error
+                            );
+                        }
+
+
+                        if (
+                            info?.subscription?.optedIn === true
+                        ) {
+
+                            hideNotificationBanner();
+
+
+                            if (auth.currentUser) {
+
+                                linkOneSignalUser(
+                                    auth.currentUser
+                                ).catch(
+                                    console.warn
+                                );
+                            }
+
+
+                            showToast(
+                                "নোটিফিকেশন সফলভাবে চালু হয়েছে 🔔",
+                                "success"
+                            );
+
+                        } else {
+
+                            showToast(
+                                "Permission এখনো চালু হয়নি। ফোনের notification permission থেকে Allow করুন।",
+                                "warning"
+                            );
+
+                        }
+
+
+                    } catch (error) {
+
+                        console.error(
+                            "Notification error:",
+                            error
+                        );
+
+
+                        showToast(
+                            "Notification চালু করা যায়নি।",
+                            "error"
+                        );
+
+
+                    } finally {
+
+                        notificationBusy =
+                            false;
+
+
+                        allowNotifBtn.disabled =
+                            false;
+
+
+                        allowNotifBtn.innerHTML =
+                            oldHTML;
+                    }
+
+                }
+            );
+        }
+
+
+        // =====================================================
+        // CLOSE NOTIFICATION
+        // =====================================================
+
+        if (closeNotifBtn) {
+
+            closeNotifBtn.addEventListener(
+                "click",
+                () => {
+
+                    hideNotificationBanner();
+
+
+                    try {
+
+                        sessionStorage.setItem(
+                            "auraNotifBannerClosed",
+                            "1"
+                        );
+
+                    } catch (error) {}
+
+                }
+            );
+        }
+
+
+        // =====================================================
+        // INITIALIZE NOTIFICATION UI
+        // =====================================================
+
+        async function initNotificationUI() {
+
+            if (!isMedianApp()) {
+
+                hideNotificationBanner();
+
+                return;
+            }
+
+
+            try {
+
+                const closed =
+                    sessionStorage.getItem(
+                        "auraNotifBannerClosed"
                     );
 
+
+                if (closed === "1") {
+
+                    hideNotificationBanner();
+
+                    return;
                 }
-            );
 
-        }
-
-    },
-
-    error => {
-
-        console.warn(
-            'Auth state error:',
-            error
-        );
-
-    }
-
-);
+            } catch (error) {}
 
 
-// ============================================================
-// FORGOT PASSWORD OPEN
-// ============================================================
-
-forgotBtn.addEventListener(
-    'click',
-    () => {
-
-        if (
-            maintenanceActive ||
-            updateActive
-        ) {
-            return;
-        }
-
-
-        forgotModal.classList.add(
-            'show'
-        );
-
-
-        forgotModal.setAttribute(
-            'aria-hidden',
-            'false'
-        );
-
-
-        forgotEmailInput.value =
-            '';
-
-
-        setTimeout(
-            () => {
-
-                forgotEmailInput.focus();
-
-            },
-            100
-        );
-
-    }
-);
-
-
-// ============================================================
-// FORGOT PASSWORD CLOSE
-// ============================================================
-
-forgotCancelBtn.addEventListener(
-    'click',
-    () => {
-
-        forgotModal.classList.remove(
-            'show'
-        );
-
-
-        forgotModal.setAttribute(
-            'aria-hidden',
-            'true'
-        );
-
-    }
-);
-
-
-forgotModal.addEventListener(
-    'click',
-    event => {
-
-        if (
-            event.target ===
-            forgotModal
-        ) {
-
-            forgotModal.classList.remove(
-                'show'
-            );
-
-
-            forgotModal.setAttribute(
-                'aria-hidden',
-                'true'
-            );
-
-        }
-
-    }
-);
-
-
-// ============================================================
-// PASSWORD RESET
-// ============================================================
-
-forgotSendBtn.addEventListener(
-    'click',
-    async () => {
-
-        const email =
-            forgotEmailInput.value
-                .trim()
-                .toLowerCase();
-
-
-        if (
-            !email ||
-            !email.includes('@')
-        ) {
-
-            document.getElementById(
-                'forgotModalText'
-            ).textContent =
-                'দয়া করে একটি সঠিক Gmail ঠিকানা দিন।';
-
-            return;
+            await checkNotificationStatus();
 
         }
 
 
-        forgotSendBtn.disabled =
-            true;
+        // =====================================================
+        // AUTH STATE
+        // =====================================================
+
+        onAuthStateChanged(
+            auth,
+            async (user) => {
+
+                if (!user) {
+                    return;
+                }
 
 
-        forgotSendBtn.textContent =
-            'পাঠানো হচ্ছে...';
+                console.log(
+                    "AURA logged-in user:",
+                    user.uid
+                );
 
 
-        try {
+                // If already logged in,
+                // make sure OneSignal is linked.
+                if (isMedianApp()) {
 
-            await withTimeout(
+                    linkOneSignalUser(user)
+                        .then((result) => {
 
-                sendPasswordResetEmail(
-                    auth,
-                    email
-                ),
+                            console.log(
+                                "AURA OneSignal session linked:",
+                                result
+                            );
 
-                10000
+                        })
+                        .catch((error) => {
 
-            );
+                            console.warn(
+                                "Existing session OneSignal link skipped:",
+                                error
+                            );
 
+                        });
 
-            document.getElementById(
-                'forgotModalTitle'
-            ).textContent =
-                'রিসেট লিংক পাঠানো হয়েছে ✓';
-
-
-            document.getElementById(
-                'forgotModalText'
-            ).innerHTML =
-                'আপনার Gmail-এ পাসওয়ার্ড রিসেট লিংক পাঠানো হয়েছে।<br><br><b class="text-amber-300">Spam / Junk folder-টিও পরীক্ষা করুন।</b>';
-
-
-            forgotEmailInput.style.display =
-                'none';
-
-
-            forgotCancelBtn.textContent =
-                'বন্ধ করুন';
-
-
-            forgotSendBtn.style.display =
-                'none';
-
-
-            showToast(
-                'পাসওয়ার্ড রিসেট লিংক Gmail-এ পাঠানো হয়েছে।',
-                'success'
-            );
-
-
-        } catch (error) {
-
-            console.error(
-                'Password reset error:',
-                error
-            );
-
-
-            let message =
-                'পাসওয়ার্ড রিসেট করা যায়নি।';
-
-
-            if (
-                error.code ===
-                'auth/user-not-found'
-            ) {
-
-                message =
-                    'এই Gmail দিয়ে কোনো account পাওয়া যায়নি।';
+                }
 
             }
-
-            else if (
-                error.code ===
-                'auth/invalid-email'
-            ) {
-
-                message =
-                    'Gmail address সঠিক নয়।';
-
-            }
-
-            else if (
-                error.message ===
-                'REQUEST_TIMEOUT'
-            ) {
-
-                message =
-                    'অনুরোধের সময় শেষ হয়ে গেছে। আবার চেষ্টা করুন।';
-
-            }
-
-            else if (
-                error.code ===
-                'auth/network-request-failed'
-            ) {
-
-                message =
-                    'Internet connection-এ সমস্যা হয়েছে।';
-
-            }
-
-
-            document.getElementById(
-                'forgotModalText'
-            ).textContent =
-                message;
-
-
-            forgotSendBtn.disabled =
-                false;
-
-
-            forgotSendBtn.textContent =
-                'আবার পাঠান';
-
-        }
-
-    }
-);
-
-
-// ============================================================
-// UPDATE BUTTON
-// ============================================================
-
-updateLinkBtn.addEventListener(
-    'click',
-    event => {
-
-        const rawUrl =
-            (
-                updateLinkBtn.getAttribute(
-                    'href'
-                ) || ''
-            ).trim();
-
-
-        if (
-            !rawUrl ||
-            rawUrl === '#'
-        ) {
-
-            event.preventDefault();
-
-
-            showToast(
-                'আপডেট লিংক সেট করা হয়নি।',
-                'error'
-            );
-
-        }
-
-    }
-);
-
-
-// ============================================================
-// STARTUP LOADER
-// ============================================================
-
-function hideStartupLoader() {
-
-    if (!startupLoader) {
-        return;
-    }
-
-
-    startupLoader.classList.add(
-        'hide'
-    );
-
-}
-
-
-window.addEventListener(
-    'load',
-    () => {
-
-        setTimeout(
-            hideStartupLoader,
-            800
         );
 
-    }
-);
+
+        // =====================================================
+        // VISIBILITY CHANGE
+        // Useful after returning from Android permission screen
+        // =====================================================
+
+        document.addEventListener(
+            "visibilitychange",
+            async () => {
+
+                if (
+                    document.visibilityState !==
+                    "visible"
+                ) {
+                    return;
+                }
 
 
-// ============================================================
-// HARD FAILSAFE
-// ============================================================
-
-setTimeout(
-    hideStartupLoader,
-    5000
-);
+                if (!isMedianApp()) {
+                    return;
+                }
 
 
-// ============================================================
-// DEBUG
-// ============================================================
+                // Permission screen থেকে ফিরে এলে
+                // status আবার check করবে।
+                setTimeout(
+                    async () => {
 
-console.log(
-    '✅ AURA SKILL Login loaded'
-);
+                        try {
 
-console.log(
-    '✅ Firebase login enabled'
-);
+                            const info =
+                                await getOneSignalInfo();
 
-console.log(
-    '✅ Username/Gmail login enabled'
-);
 
-console.log(
-    '✅ Password reset enabled'
-);
+                            if (
+                                info?.subscription?.optedIn === true
+                            ) {
 
-console.log(
-    '✅ Maintenance realtime enabled'
-);
+                                hideNotificationBanner();
 
-console.log(
-    '✅ App update realtime enabled'
-);
 
-console.log(
-    '✅ Median Native OneSignal enabled'
-);
+                                if (auth.currentUser) {
 
-console.log(
-    '✅ Firebase UID → OneSignal External ID enabled'
-);
+                                    linkOneSignalUser(
+                                        auth.currentUser
+                                    ).catch(() => {});
+                                }
 
-console.log(
-    '✅ OneSignal linking is non-blocking'
-);
+                            }
 
-console.log(
-    '✅ Browser OneSignal SDK not required'
-);
+                        } catch (error) {
 
-</script>
+                            console.warn(
+                                "Visibility OneSignal check:",
+                                error
+                            );
+
+                        }
+
+                    },
+                    500
+                );
+
+            }
+        );
+
+
+        // =====================================================
+        // START FIRESTORE LISTENERS
+        // =====================================================
+
+        setupMaintenanceListener();
+
+        setupUpdateListener();
+
+
+        // =====================================================
+        // START NOTIFICATION SYSTEM
+        // =====================================================
+
+        initNotificationUI();
+
+
+        // =====================================================
+        // PREVENT DOUBLE SUBMIT / BASIC ENTER SUPPORT
+        // =====================================================
+
+        loginIdentifier.addEventListener(
+            "keydown",
+            (event) => {
+
+                if (event.key === "Enter") {
+
+                    event.preventDefault();
+
+                    loginPassword.focus();
+
+                }
+
+            }
+        );
+
+
+        // =====================================================
+        // FINAL
+        // =====================================================
+
+        console.log(
+            "AURA ARMAN TOUR login system loaded successfully."
+        );
+
+    </script>
 
 </body>
 </html>
