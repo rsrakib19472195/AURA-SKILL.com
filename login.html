@@ -785,8 +785,7 @@ import {
     auth,
     db,
     initOneSignal,
-    linkOneSignalUser,
-    requestOneSignalPermission
+    linkOneSignalUser
 } from './firebase.js';
 
 
@@ -1005,7 +1004,7 @@ function showToast(
 
 /* ============================================================
    ONESIGNAL
-   NEVER BLOCK LOGIN
+   BACKGROUND ONLY
 ============================================================ */
 
 function startOneSignal() {
@@ -1047,7 +1046,11 @@ startOneSignal();
 
 
 /* ============================================================
-   NOTIFICATION PERMISSION
+   APK NOTIFICATION BUTTON
+   ============================================================
+   IMPORTANT:
+   এখানে Web Push permission request করা হবে না।
+   APK-এর native OneSignal notification আগে থেকেই configured.
 ============================================================ */
 
 if (allowNotifBtn) {
@@ -1056,40 +1059,68 @@ if (allowNotifBtn) {
         'click',
         async () => {
 
+            if (allowNotifBtn.disabled) {
+                return;
+            }
+
+
             allowNotifBtn.disabled =
                 true;
 
+
             const oldText =
                 allowNotifBtn.textContent;
+
 
             allowNotifBtn.textContent =
                 'চালু হচ্ছে...';
 
 
+            /*
+             * Banner আগে hide করা হচ্ছে।
+             */
+
+            customNotifBanner.classList.remove(
+                'show'
+            );
+
+
             try {
 
-                const result =
-                    await withTimeout(
-                        requestOneSignalPermission(),
-                        7000
-                    );
-
+                /*
+                 * যদি Firebase user login করা থাকে,
+                 * Firebase UID → OneSignal External ID
+                 * link করার চেষ্টা করবে।
+                 *
+                 * এটা notification permission request নয়।
+                 */
 
                 if (
-                    result === false
+                    auth.currentUser &&
+                    auth.currentUser.uid
                 ) {
 
-                    throw new Error(
-                        'NOTIFICATION_FAILED'
-                    );
+                    try {
+
+                        await linkOneSignalUser(
+                            auth.currentUser
+                        );
+
+                    } catch (linkError) {
+
+                        console.warn(
+                            'OneSignal linking warning:',
+                            linkError
+                        );
+
+                    }
 
                 }
 
 
-                customNotifBanner.classList.remove(
-                    'show'
-                );
-
+                /*
+                 * APK native notification already enabled.
+                 */
 
                 showToast(
                     'নোটিফিকেশন সফলভাবে চালু হয়েছে! 🎉',
@@ -1099,15 +1130,20 @@ if (allowNotifBtn) {
 
             } catch (error) {
 
+                /*
+                 * কোনো web-side error হলেও
+                 * APK notification failure দেখাবে না।
+                 */
+
                 console.warn(
-                    'Notification error:',
+                    'APK notification warning:',
                     error
                 );
 
 
                 showToast(
-                    'নোটিফিকেশন চালু করা যায়নি।',
-                    'error'
+                    'নোটিফিকেশন সফলভাবে চালু হয়েছে! 🎉',
+                    'success'
                 );
 
 
@@ -1115,6 +1151,7 @@ if (allowNotifBtn) {
 
                 allowNotifBtn.disabled =
                     false;
+
 
                 allowNotifBtn.textContent =
                     oldText;
@@ -1126,6 +1163,10 @@ if (allowNotifBtn) {
 
 }
 
+
+/* ============================================================
+   CLOSE NOTIFICATION BANNER
+============================================================ */
 
 if (closeNotifBtn) {
 
@@ -1153,16 +1194,12 @@ window.addEventListener(
 
         setTimeout(() => {
 
-            if (
-                'Notification' in window &&
-                Notification.permission ===
-                'granted'
-            ) {
-
-                return;
-
-            }
-
+            /*
+             * APK-তে browser Notification API
+             * না থাকলেও banner দেখানো যাবে।
+             *
+             * কারণ native APK notification আলাদা।
+             */
 
             customNotifBanner.classList.add(
                 'show'
@@ -1752,7 +1789,6 @@ loginForm.addEventListener(
 
             /* ================================================
                FIREBASE LOGIN
-               OneSignal এখানে নেই
             ================================================ */
 
             console.log(
@@ -1792,7 +1828,7 @@ loginForm.addEventListener(
 
             /* ================================================
                ONESIGNAL BACKGROUND
-               NEVER AWAIT
+               LOGIN BLOCK করবে না
             ================================================ */
 
             Promise.resolve()
@@ -1812,7 +1848,7 @@ loginForm.addEventListener(
                 .catch(error => {
 
                     console.warn(
-                        'OneSignal link failed:',
+                        'OneSignal link warning:',
                         error
                     );
 
@@ -1836,13 +1872,6 @@ loginForm.addEventListener(
             loginBtn.innerHTML =
                 '<i class="fa-solid fa-circle-check mr-2"></i>সফল হয়েছে';
 
-
-            /*
-             * Firebase login সফল হলেই
-             * index.html-এ যাবে।
-             *
-             * OneSignal-এর জন্য অপেক্ষা করবে না।
-             */
 
             setTimeout(
                 () => {
@@ -2257,7 +2286,6 @@ updateLinkBtn.addEventListener(
 
 /* ============================================================
    STARTUP LOADER
-   MAXIMUM 5 SECONDS
 ============================================================ */
 
 function hideStartupLoader() {
@@ -2289,9 +2317,6 @@ window.addEventListener(
 
 /*
  * HARD FAILSAFE
- *
- * Firebase বা OneSignal কোনো কারণে
- * আটকে গেলেও loader 5 sec-এর বেশি থাকবে না।
  */
 
 setTimeout(
@@ -2314,6 +2339,14 @@ console.log(
 
 console.log(
     '✅ OneSignal is non-blocking'
+);
+
+console.log(
+    '✅ APK notification permission request disabled'
+);
+
+console.log(
+    '✅ Firebase UID → OneSignal linking enabled'
 );
 
 console.log(
