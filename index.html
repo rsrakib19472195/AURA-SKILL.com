@@ -549,9 +549,9 @@
 
                         if(tStatus === 'completed') {
                             const completedAt = Number(data.completedAt || startTime || 0);
-                            const deleteAfter = Number(data.deleteAfter || (completedAt + 60 * 60 * 1000));
-                            // Complete section e 1 hour por tournament আর দেখাবে না; My Matches history আলাদা archive থেকে থাকবে।
-                            if(completedAt > 0 && now >= deleteAfter) return;
+                            if(completedAt > 0 && now >= (completedAt + 60 * 60 * 1000 + 10 * 60 * 1000)) {
+                                return; 
+                            }
                         }
 
                         globalTournaments.push({ id: d.id, ...data, status: tStatus });
@@ -684,6 +684,12 @@
             if(countdownInterval) clearInterval(countdownInterval);
             countdownInterval = setInterval(() => {
                 document.querySelectorAll('.match-countdown').forEach(el => {
+                    const status = String(el.getAttribute('data-status') || '').toLowerCase();
+                    if (['completed', 'complete', 'finished', 'finish', 'result'].includes(status)) {
+                        el.innerText = "COMPLETED";
+                        el.className = "text-[11px] text-slate-400 font-bold block mt-0.5";
+                        return;
+                    }
                     const startTime = Number(el.getAttribute('data-starttime'));
                     if(!startTime) return;
                     const diff = startTime - Date.now();
@@ -772,7 +778,7 @@
                             <div>
                                 <h4 class="text-xs font-bold text-white leading-tight">${t.name}</h4>
                                 <span class="text-[10px] text-slate-300 font-semibold block">${t.time || 'Scheduled'}</span>
-                                <span class="text-[11px] text-amber-400 font-bold match-countdown block mt-0.5" data-starttime="${startTimeAttr}">Calculating...</span>
+                                <span class="text-[11px] text-amber-400 font-bold match-countdown block mt-0.5" data-starttime="${startTimeAttr}" data-status="${String(t.status || 'upcoming').toLowerCase()}">${String(t.status || '').toLowerCase() === 'completed' ? 'COMPLETED' : 'Calculating...'}</span>
                             </div>
                             <span class="bg-blue-600/20 text-blue-400 border border-blue-500/30 px-2.5 py-1 rounded-lg text-[10px] font-bold">${matchTypeLabel} (${maxTeamSize}P)</span>
                         </div>
