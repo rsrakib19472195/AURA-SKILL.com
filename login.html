@@ -118,16 +118,6 @@
             }
         }
 
-        @keyframes startupPulse {
-            0%, 100% {
-                opacity: .6;
-            }
-
-            50% {
-                opacity: 1;
-            }
-        }
-
         /* =====================================================
            FORGOT PASSWORD MODAL
         ===================================================== */
@@ -226,28 +216,37 @@
         }
 
         /* =====================================================
-           DEBUG BOX
+           ONESIGNAL DEBUG BOX
         ===================================================== */
 
         #oneSignalDebugBox {
             position: fixed;
-            top: 12px;
-            left: 12px;
-            right: 12px;
-            z-index: 100000;
+            top: 10px;
+            left: 10px;
+            right: 10px;
+
+            z-index: 2147483647;
+
             display: none;
+
             background: #080d16;
-            border: 1px solid #334155;
-            border-radius: 16px;
+            border: 2px solid #3b82f6;
+
+            border-radius: 18px;
+
             padding: 15px;
+
             color: white;
-            box-shadow: 0 15px 50px rgba(0, 0, 0, .55);
-            max-height: 80vh;
+
+            box-shadow:
+                0 20px 70px rgba(0, 0, 0, .85);
+
+            max-height: calc(100vh - 20px);
             overflow-y: auto;
         }
 
         #oneSignalDebugBox.show {
-            display: block;
+            display: block !important;
         }
 
         .debug-title {
@@ -260,7 +259,7 @@
 
         .debug-row {
             background: #111827;
-            border: 1px solid #1e293b;
+            border: 1px solid #263244;
             border-radius: 10px;
             padding: 9px 10px;
             margin-top: 8px;
@@ -299,7 +298,7 @@
 <body class="min-h-screen text-white">
 
     <!-- =====================================================
-         DEBUG BOX
+         ONESIGNAL DEBUG BOX
     ====================================================== -->
 
     <div id="oneSignalDebugBox">
@@ -313,7 +312,7 @@
                 </div>
 
                 <div class="text-xs text-slate-500 mt-1">
-                    Testing information
+                    Firebase → OneSignal connection test
                 </div>
             </div>
 
@@ -328,73 +327,123 @@
         </div>
 
         <div class="debug-row">
-            <span class="debug-label">Firebase UID</span>
+
+            <span class="debug-label">
+                Firebase UID
+            </span>
+
             <span
                 id="debugFirebaseUID"
                 class="debug-value"
             >
                 Checking...
             </span>
+
         </div>
 
         <div class="debug-row">
-            <span class="debug-label">OneSignal External ID</span>
+
+            <span class="debug-label">
+                OneSignal External ID
+            </span>
+
             <span
                 id="debugExternalID"
                 class="debug-value"
             >
                 Checking...
             </span>
+
         </div>
 
         <div class="debug-row">
-            <span class="debug-label">OneSignal User ID</span>
+
+            <span class="debug-label">
+                OneSignal User ID
+            </span>
+
             <span
                 id="debugOneSignalID"
                 class="debug-value"
             >
                 Checking...
             </span>
+
         </div>
 
         <div class="debug-row">
-            <span class="debug-label">Subscription ID</span>
+
+            <span class="debug-label">
+                Subscription ID
+            </span>
+
             <span
                 id="debugSubscriptionID"
                 class="debug-value"
             >
                 Checking...
             </span>
+
         </div>
 
         <div class="debug-row">
-            <span class="debug-label">Subscribed / Opted In</span>
+
+            <span class="debug-label">
+                Subscribed / Opted In
+            </span>
+
             <span
                 id="debugOptedIn"
                 class="debug-value"
             >
                 Checking...
             </span>
+
         </div>
 
         <div class="debug-row">
-            <span class="debug-label">Permission</span>
+
+            <span class="debug-label">
+                Notification Permission
+            </span>
+
             <span
                 id="debugPermission"
                 class="debug-value"
             >
                 Checking...
             </span>
+
         </div>
 
         <div class="debug-row">
-            <span class="debug-label">Push Supported</span>
+
+            <span class="debug-label">
+                Push Supported
+            </span>
+
             <span
                 id="debugPushSupported"
                 class="debug-value"
             >
                 Checking...
             </span>
+
+        </div>
+
+        <div class="debug-row">
+
+            <span class="debug-label">
+                SDK Status
+            </span>
+
+            <span
+                id="debugSDKStatus"
+                class="debug-value"
+            >
+                Checking...
+            </span>
+
         </div>
 
         <div class="mt-3 flex gap-2">
@@ -402,7 +451,7 @@
             <button
                 type="button"
                 id="refreshDebugBtn"
-                class="flex-1 bg-blue-600 hover:bg-blue-700 rounded-xl py-2 text-sm font-semibold"
+                class="flex-1 bg-blue-600 hover:bg-blue-700 rounded-xl py-2.5 text-sm font-semibold"
             >
                 <i class="fa-solid fa-rotate mr-1"></i>
                 Refresh
@@ -411,7 +460,7 @@
             <button
                 type="button"
                 id="copyDebugBtn"
-                class="flex-1 bg-slate-700 hover:bg-slate-600 rounded-xl py-2 text-sm font-semibold"
+                class="flex-1 bg-slate-700 hover:bg-slate-600 rounded-xl py-2.5 text-sm font-semibold"
             >
                 <i class="fa-solid fa-copy mr-1"></i>
                 Copy
@@ -420,6 +469,7 @@
         </div>
 
     </div>
+
 
     <!-- =====================================================
          CUSTOM NOTIFICATION BANNER
@@ -467,6 +517,7 @@
 
     </div>
 
+
     <!-- =====================================================
          MAINTENANCE SCREEN
     ====================================================== -->
@@ -495,6 +546,7 @@
         </div>
 
     </div>
+
 
     <!-- =====================================================
          UPDATE SCREEN
@@ -535,6 +587,7 @@
 
     </div>
 
+
     <!-- =====================================================
          STARTUP LOADER
     ====================================================== -->
@@ -566,6 +619,7 @@
         </div>
 
     </div>
+
 
     <!-- =====================================================
          FORGOT PASSWORD MODAL
@@ -619,6 +673,7 @@
 
     </div>
 
+
     <!-- =====================================================
          TOAST
     ====================================================== -->
@@ -628,8 +683,9 @@
         class="fixed top-5 left-1/2 -translate-x-1/2 z-[100001] w-[92%] max-w-md"
     ></div>
 
+
     <!-- =====================================================
-         LOGIN CARD
+         LOGIN
     ====================================================== -->
 
     <main class="min-h-screen flex items-center justify-center px-5 py-10">
@@ -663,11 +719,12 @@
 
             </div>
 
+
             <div
                 class="bg-[#101827] border border-slate-800 rounded-3xl p-6 shadow-2xl"
             >
 
-                <!-- USERNAME / EMAIL -->
+                <!-- USERNAME -->
 
                 <div>
 
@@ -692,6 +749,7 @@
                     </div>
 
                 </div>
+
 
                 <!-- PASSWORD -->
 
@@ -727,6 +785,7 @@
 
                 </div>
 
+
                 <!-- OPTIONS -->
 
                 <div class="flex items-center justify-between mt-4">
@@ -755,16 +814,21 @@
 
                 </div>
 
-                <!-- LOGIN BUTTON -->
+
+                <!-- LOGIN -->
 
                 <button
                     type="button"
                     id="loginBtn"
                     class="w-full mt-6 bg-blue-600 hover:bg-blue-700 transition rounded-xl py-3.5 font-semibold"
                 >
+
                     <i class="fa-solid fa-right-to-bracket mr-2"></i>
+
                     Login
+
                 </button>
+
 
                 <!-- REGISTER -->
 
@@ -787,19 +851,24 @@
 
     </main>
 
+
+    <!-- =====================================================
+         JAVASCRIPT
+    ====================================================== -->
+
     <script type="module">
 
         // =====================================================
-        // FIREBASE IMPORT
+        // FIREBASE
         // =====================================================
 
         import {
             auth,
             db,
             initOneSignal,
-            linkOneSignalUser,
-            getOneSignalDebugInfo
+            linkOneSignalUser
         } from "./firebase.js";
+
 
         import {
             onAuthStateChanged,
@@ -810,15 +879,13 @@
             browserSessionPersistence
         } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
+
         import {
             collection,
             query,
             where,
             getDocs,
-            limit,
-            doc,
-            getDoc,
-            onSnapshot
+            limit
         } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
 
@@ -871,7 +938,11 @@
         const startupLoader =
             document.getElementById("startupLoader");
 
-        // DEBUG
+
+        // =====================================================
+        // DEBUG ELEMENTS
+        // =====================================================
+
         const debugBox =
             document.getElementById("oneSignalDebugBox");
 
@@ -905,6 +976,9 @@
         const debugPushSupported =
             document.getElementById("debugPushSupported");
 
+        const debugSDKStatus =
+            document.getElementById("debugSDKStatus");
+
 
         // =====================================================
         // TIMEOUT
@@ -934,6 +1008,7 @@
                 })
 
             ]);
+
         }
 
 
@@ -949,45 +1024,70 @@
             const toast =
                 document.createElement("div");
 
-            let bg = "bg-slate-800";
-            let icon = "fa-circle-info";
+            let bg =
+                "bg-slate-800";
+
+            let icon =
+                "fa-circle-info";
+
 
             if (type === "success") {
 
-                bg = "bg-emerald-600";
-                icon = "fa-circle-check";
+                bg =
+                    "bg-emerald-600";
+
+                icon =
+                    "fa-circle-check";
 
             } else if (type === "error") {
 
-                bg = "bg-red-600";
-                icon = "fa-circle-xmark";
+                bg =
+                    "bg-red-600";
+
+                icon =
+                    "fa-circle-xmark";
 
             } else if (type === "warning") {
 
-                bg = "bg-yellow-600";
-                icon = "fa-triangle-exclamation";
+                bg =
+                    "bg-yellow-600";
+
+                icon =
+                    "fa-triangle-exclamation";
             }
+
 
             toast.className =
                 `toast ${bg} text-white px-4 py-3 rounded-xl shadow-xl mb-3 text-sm flex items-center gap-3`;
 
+
             toast.innerHTML = `
+
                 <i class="fa-solid ${icon}"></i>
-                <span>${message}</span>
+
+                <span>
+                    ${message}
+                </span>
+
             `;
 
-            toastContainer.appendChild(toast);
+
+            toastContainer.appendChild(
+                toast
+            );
+
 
             setTimeout(() => {
 
                 toast.remove();
 
             }, 3500);
+
         }
 
 
         // =====================================================
-        // DEBUG VALUE HELPER
+        // DEBUG VALUE
         // =====================================================
 
         function setDebugValue(
@@ -996,18 +1096,28 @@
             state = ""
         ) {
 
-            element.textContent =
+            if (
                 value === null ||
                 value === undefined ||
                 value === ""
-                    ? "null"
-                    : String(value);
+            ) {
+
+                element.textContent =
+                    "null";
+
+            } else {
+
+                element.textContent =
+                    String(value);
+            }
+
 
             element.classList.remove(
                 "debug-success",
                 "debug-danger",
                 "debug-warning"
             );
+
 
             if (state === "success") {
 
@@ -1026,12 +1136,61 @@
                 element.classList.add(
                     "debug-warning"
                 );
+
             }
+
         }
 
 
         // =====================================================
-        // LOAD DEBUG INFORMATION
+        // GET ONESIGNAL OBJECT
+        // =====================================================
+
+        async function getOneSignalObject() {
+
+            /*
+             * Existing OneSignal object
+             */
+
+            if (
+                window.OneSignal &&
+                typeof window.OneSignal === "object"
+            ) {
+
+                return window.OneSignal;
+
+            }
+
+
+            /*
+             * Firebase.js init
+             */
+
+            try {
+
+                const result =
+                    await withTimeout(
+                        initOneSignal(),
+                        8000
+                    );
+
+                return result || null;
+
+            } catch (error) {
+
+                console.warn(
+                    "OneSignal initialization failed:",
+                    error
+                );
+
+                return null;
+            }
+
+        }
+
+
+        // =====================================================
+        // DEBUG
         // =====================================================
 
         async function loadOneSignalDebug(
@@ -1039,58 +1198,110 @@
         ) {
 
             if (showBox) {
-                debugBox.classList.add("show");
+
+                debugBox.classList.add(
+                    "show"
+                );
+
             }
+
+
+            /*
+             * Reset
+             */
 
             setDebugValue(
                 debugFirebaseUID,
-                "Checking..."
+                auth.currentUser?.uid || "Not logged in",
+                auth.currentUser
+                    ? "success"
+                    : "danger"
             );
 
             setDebugValue(
                 debugExternalID,
-                "Checking..."
+                "Checking...",
+                "warning"
             );
 
             setDebugValue(
                 debugOneSignalID,
-                "Checking..."
+                "Checking...",
+                "warning"
             );
 
             setDebugValue(
                 debugSubscriptionID,
-                "Checking..."
+                "Checking...",
+                "warning"
             );
 
             setDebugValue(
                 debugOptedIn,
-                "Checking..."
+                "Checking...",
+                "warning"
             );
 
             setDebugValue(
                 debugPermission,
-                "Checking..."
+                "Checking...",
+                "warning"
             );
 
             setDebugValue(
                 debugPushSupported,
-                "Checking..."
+                "Checking...",
+                "warning"
             );
+
+            setDebugValue(
+                debugSDKStatus,
+                "Loading...",
+                "warning"
+            );
+
 
             try {
 
-                const info =
-                    await getOneSignalDebugInfo();
+                const OneSignal =
+                    await getOneSignalObject();
 
-                console.log(
-                    "🔎 OneSignal Debug Info:",
-                    info
+
+                /*
+                 * SDK unavailable
+                 */
+
+                if (!OneSignal) {
+
+                    setDebugValue(
+                        debugSDKStatus,
+                        "NOT AVAILABLE",
+                        "danger"
+                    );
+
+                    console.warn(
+                        "OneSignal SDK unavailable."
+                    );
+
+                    return null;
+                }
+
+
+                setDebugValue(
+                    debugSDKStatus,
+                    "CONNECTED",
+                    "success"
                 );
+
+
+                /*
+                 * Firebase UID
+                 */
 
                 const firebaseUID =
                     auth.currentUser?.uid ||
-                    info?.firebaseUID ||
                     null;
+
 
                 setDebugValue(
                     debugFirebaseUID,
@@ -1100,109 +1311,311 @@
                         : "danger"
                 );
 
+
+                /*
+                 * External ID
+                 */
+
+                let externalId =
+                    null;
+
+
+                try {
+
+                    externalId =
+                        OneSignal.User?.externalId ||
+                        OneSignal.User?.external_id ||
+                        null;
+
+                } catch (error) {
+
+                    console.warn(
+                        "External ID error:",
+                        error
+                    );
+                }
+
+
+                /*
+                 * OneSignal User ID
+                 */
+
+                let oneSignalId =
+                    null;
+
+
+                try {
+
+                    oneSignalId =
+                        OneSignal.User?.onesignalId ||
+                        OneSignal.User?.onesignal_id ||
+                        null;
+
+                } catch (error) {
+
+                    console.warn(
+                        "OneSignal User ID error:",
+                        error
+                    );
+                }
+
+
+                /*
+                 * Subscription
+                 */
+
+                let subscriptionId =
+                    null;
+
+
+                try {
+
+                    subscriptionId =
+                        OneSignal.User
+                            ?.PushSubscription
+                            ?.id ||
+                        null;
+
+                } catch (error) {
+
+                    console.warn(
+                        "Subscription ID error:",
+                        error
+                    );
+                }
+
+
+                /*
+                 * Opted In
+                 */
+
+                let optedIn =
+                    null;
+
+
+                try {
+
+                    optedIn =
+                        OneSignal.User
+                            ?.PushSubscription
+                            ?.optedIn;
+
+                    if (
+                        typeof optedIn ===
+                        "undefined"
+                    ) {
+
+                        optedIn = null;
+                    }
+
+                } catch (error) {
+
+                    optedIn = null;
+                }
+
+
+                /*
+                 * Permission
+                 */
+
+                let permission =
+                    null;
+
+
+                try {
+
+                    permission =
+                        OneSignal.Notifications
+                            ?.permission;
+
+                } catch (error) {
+
+                    permission = null;
+                }
+
+
+                /*
+                 * Push Supported
+                 */
+
+                let pushSupported =
+                    null;
+
+
+                try {
+
+                    if (
+                        typeof OneSignal
+                            .Notifications
+                            ?.isPushSupported ===
+                        "function"
+                    ) {
+
+                        pushSupported =
+                            await OneSignal
+                                .Notifications
+                                .isPushSupported();
+
+                    } else {
+
+                        pushSupported =
+                            "Unknown";
+                    }
+
+                } catch (error) {
+
+                    pushSupported =
+                        null;
+                }
+
+
+                /*
+                 * Display
+                 */
+
                 setDebugValue(
                     debugExternalID,
-                    info?.externalId,
-                    info?.externalId
+                    externalId,
+                    externalId
                         ? "success"
                         : "danger"
                 );
+
 
                 setDebugValue(
                     debugOneSignalID,
-                    info?.oneSignalId,
-                    info?.oneSignalId
+                    oneSignalId,
+                    oneSignalId
                         ? "success"
                         : "warning"
                 );
 
+
                 setDebugValue(
                     debugSubscriptionID,
-                    info?.subscriptionId,
-                    info?.subscriptionId
+                    subscriptionId,
+                    subscriptionId
                         ? "success"
                         : "danger"
                 );
 
+
                 setDebugValue(
                     debugOptedIn,
-                    info?.optedIn,
-                    info?.optedIn === true
+                    optedIn,
+                    optedIn === true
                         ? "success"
                         : "warning"
                 );
+
 
                 setDebugValue(
                     debugPermission,
-                    info?.permission,
-                    info?.permission === true
+                    permission,
+                    permission === true
                         ? "success"
                         : "warning"
                 );
+
 
                 setDebugValue(
                     debugPushSupported,
-                    info?.pushSupported,
-                    info?.pushSupported === true
+                    pushSupported,
+                    pushSupported === true
                         ? "success"
                         : "warning"
                 );
 
-                return info;
+
+                /*
+                 * Console
+                 */
+
+                console.log(
+                    "======================================"
+                );
+
+                console.log(
+                    "🔎 AURA ONESIGNAL DEBUG"
+                );
+
+                console.log(
+                    "Firebase UID:",
+                    firebaseUID
+                );
+
+                console.log(
+                    "External ID:",
+                    externalId
+                );
+
+                console.log(
+                    "OneSignal User ID:",
+                    oneSignalId
+                );
+
+                console.log(
+                    "Subscription ID:",
+                    subscriptionId
+                );
+
+                console.log(
+                    "Subscribed:",
+                    optedIn
+                );
+
+                console.log(
+                    "Permission:",
+                    permission
+                );
+
+                console.log(
+                    "Push Supported:",
+                    pushSupported
+                );
+
+                console.log(
+                    "======================================"
+                );
+
+
+                return {
+
+                    firebaseUID,
+
+                    externalId,
+
+                    oneSignalId,
+
+                    subscriptionId,
+
+                    optedIn,
+
+                    permission,
+
+                    pushSupported
+
+                };
+
 
             } catch (error) {
 
                 console.error(
-                    "Debug information failed:",
+                    "❌ OneSignal Debug Error:",
                     error
                 );
 
-                setDebugValue(
-                    debugFirebaseUID,
-                    auth.currentUser?.uid || null,
-                    auth.currentUser
-                        ? "success"
-                        : "danger"
-                );
 
                 setDebugValue(
-                    debugExternalID,
-                    null,
+                    debugSDKStatus,
+                    "ERROR",
                     "danger"
                 );
 
-                setDebugValue(
-                    debugOneSignalID,
-                    null,
-                    "danger"
-                );
-
-                setDebugValue(
-                    debugSubscriptionID,
-                    null,
-                    "danger"
-                );
-
-                setDebugValue(
-                    debugOptedIn,
-                    null,
-                    "warning"
-                );
-
-                setDebugValue(
-                    debugPermission,
-                    null,
-                    "warning"
-                );
-
-                setDebugValue(
-                    debugPushSupported,
-                    null,
-                    "warning"
-                );
 
                 return null;
             }
+
         }
 
 
@@ -1230,19 +1643,24 @@
             "click",
             async () => {
 
-                refreshDebugBtn.disabled = true;
+                refreshDebugBtn.disabled =
+                    true;
 
                 refreshDebugBtn.innerHTML =
                     '<i class="fa-solid fa-spinner fa-spin mr-1"></i>Checking...';
+
 
                 await loadOneSignalDebug(
                     true
                 );
 
-                refreshDebugBtn.disabled = false;
+
+                refreshDebugBtn.disabled =
+                    false;
 
                 refreshDebugBtn.innerHTML =
                     '<i class="fa-solid fa-rotate mr-1"></i>Refresh';
+
             }
         );
 
@@ -1255,32 +1673,36 @@
             "click",
             async () => {
 
-                const text = [
+                const text = `
 
-                    "AURA OneSignal Debug",
+AURA ONESIGNAL DEBUG
 
-                    "Firebase UID: " +
-                    debugFirebaseUID.textContent,
+Firebase UID:
+${debugFirebaseUID.textContent}
 
-                    "External ID: " +
-                    debugExternalID.textContent,
+External ID:
+${debugExternalID.textContent}
 
-                    "OneSignal User ID: " +
-                    debugOneSignalID.textContent,
+OneSignal User ID:
+${debugOneSignalID.textContent}
 
-                    "Subscription ID: " +
-                    debugSubscriptionID.textContent,
+Subscription ID:
+${debugSubscriptionID.textContent}
 
-                    "Subscribed: " +
-                    debugOptedIn.textContent,
+Subscribed:
+${debugOptedIn.textContent}
 
-                    "Permission: " +
-                    debugPermission.textContent,
+Permission:
+${debugPermission.textContent}
 
-                    "Push Supported: " +
-                    debugPushSupported.textContent
+Push Supported:
+${debugPushSupported.textContent}
 
-                ].join("\n");
+SDK:
+${debugSDKStatus.textContent}
+
+                `.trim();
+
 
                 try {
 
@@ -1293,108 +1715,15 @@
                         "success"
                     );
 
-                } catch {
+                } catch (error) {
 
                     showToast(
                         "Copy করা যায়নি। Screenshot পাঠাও।",
                         "warning"
                     );
+
                 }
 
-            }
-        );
-
-
-        // =====================================================
-        // START ONESIGNAL
-        // =====================================================
-
-        async function startOneSignal() {
-
-            try {
-
-                await withTimeout(
-                    initOneSignal(),
-                    8000
-                );
-
-                if (auth.currentUser) {
-
-                    await linkOneSignalUser(
-                        auth.currentUser
-                    );
-                }
-
-            } catch (error) {
-
-                console.warn(
-                    "OneSignal startup warning:",
-                    error
-                );
-            }
-        }
-
-
-        // =====================================================
-        // NOTIFICATION BUTTON
-        // =====================================================
-
-        allowNotifBtn.addEventListener(
-            "click",
-            async () => {
-
-                allowNotifBtn.disabled = true;
-
-                allowNotifBtn.innerHTML =
-                    '<i class="fa-solid fa-spinner fa-spin mr-1"></i>Checking...';
-
-                try {
-
-                    if (auth.currentUser) {
-
-                        await linkOneSignalUser(
-                            auth.currentUser
-                        );
-                    }
-
-                    customNotifBanner.classList.remove(
-                        "show"
-                    );
-
-                    await loadOneSignalDebug(
-                        true
-                    );
-
-                } catch (error) {
-
-                    console.warn(
-                        "Notification linking:",
-                        error
-                    );
-
-                } finally {
-
-                    allowNotifBtn.disabled = false;
-
-                    allowNotifBtn.innerHTML =
-                        "চালু করুন";
-                }
-
-            }
-        );
-
-
-        // =====================================================
-        // CLOSE NOTIFICATION
-        // =====================================================
-
-        closeNotifBtn.addEventListener(
-            "click",
-            () => {
-
-                customNotifBanner.classList.remove(
-                    "show"
-                );
             }
         );
 
@@ -1425,6 +1754,7 @@
 
                     togglePassword.innerHTML =
                         '<i class="fa-solid fa-eye"></i>';
+
                 }
 
             }
@@ -1445,6 +1775,7 @@
                     "users"
                 );
 
+
             const q =
                 query(
                     usersRef,
@@ -1456,8 +1787,10 @@
                     limit(1)
                 );
 
+
             const snapshot =
                 await getDocs(q);
+
 
             if (
                 snapshot.empty
@@ -1466,13 +1799,16 @@
                 return null;
             }
 
+
             const data =
                 snapshot.docs[0].data();
+
 
             return (
                 data.email ||
                 null
             );
+
         }
 
 
@@ -1480,21 +1816,29 @@
         // LOGIN
         // =====================================================
 
-        let loginRedirecting = false;
+        let loginRedirecting =
+            false;
+
 
         loginBtn.addEventListener(
             "click",
             async () => {
 
-                if (loginRedirecting) {
+                if (
+                    loginRedirecting
+                ) {
+
                     return;
                 }
+
 
                 const username =
                     usernameInput.value.trim();
 
+
                 const password =
                     passwordInput.value;
+
 
                 if (!username) {
 
@@ -1508,6 +1852,7 @@
                     return;
                 }
 
+
                 if (!password) {
 
                     showToast(
@@ -1520,19 +1865,25 @@
                     return;
                 }
 
-                loginBtn.disabled = true;
+
+                loginBtn.disabled =
+                    true;
+
 
                 loginBtn.innerHTML =
                     '<i class="fa-solid fa-spinner fa-spin mr-2"></i>Login হচ্ছে...';
+
 
                 try {
 
                     let email =
                         username;
 
+
                     /*
-                     * Gmail না হলে username থেকে
-                     * email খোঁজা হবে।
+                     * Username হলে Firebase
+                     * users collection থেকে email
+                     * খুঁজবে।
                      */
 
                     if (
@@ -1547,16 +1898,19 @@
                                 10000
                             );
 
+
                         if (!email) {
 
                             throw new Error(
                                 "এই username পাওয়া যায়নি।"
                             );
                         }
+
                     }
 
+
                     // =================================================
-                    // FIREBASE PERSISTENCE
+                    // PERSISTENCE
                     // =================================================
 
                     await setPersistence(
@@ -1565,6 +1919,7 @@
                             ? browserLocalPersistence
                             : browserSessionPersistence
                     );
+
 
                     // =================================================
                     // FIREBASE LOGIN
@@ -1580,34 +1935,23 @@
                             12000
                         );
 
+
                     const firebaseUser =
                         credential.user;
 
-                    const firebaseUID =
-                        String(
-                            firebaseUser.uid
-                        );
 
                     console.log(
-                        "================================"
-                    );
-
-                    console.log(
-                        "✅ Firebase Login Successful"
+                        "Firebase Login Successful"
                     );
 
                     console.log(
                         "Firebase UID:",
-                        firebaseUID
-                    );
-
-                    console.log(
-                        "================================"
+                        firebaseUser.uid
                     );
 
 
                     // =================================================
-                    // ONESIGNAL LINK
+                    // ONESIGNAL LOGIN / LINK
                     // =================================================
 
                     try {
@@ -1618,26 +1962,31 @@
                                 firebaseUser
                             ),
 
-                            new Promise(resolve =>
-                                setTimeout(
-                                    () => resolve(false),
-                                    7000
-                                )
+                            new Promise(
+                                resolve => {
+
+                                    setTimeout(
+                                        () => resolve(false),
+                                        8000
+                                    );
+
+                                }
                             )
 
                         ]);
 
-                    } catch (oneSignalError) {
+                    } catch (error) {
 
                         console.warn(
-                            "OneSignal linking warning:",
-                            oneSignalError
+                            "OneSignal link warning:",
+                            error
                         );
+
                     }
 
 
                     // =================================================
-                    // SHOW DEBUG BEFORE REDIRECT
+                    // DEBUG BOX SHOW
                     // =================================================
 
                     await loadOneSignalDebug(
@@ -1646,26 +1995,26 @@
 
 
                     // =================================================
-                    // LOGIN SUCCESS
+                    // SUCCESS
                     // =================================================
 
-                    loginRedirecting = true;
+                    loginRedirecting =
+                        true;
+
 
                     showToast(
                         "লগইন সফল হয়েছে! 🎉",
                         "success"
                     );
 
+
                     loginBtn.innerHTML =
-                        '<i class="fa-solid fa-circle-check mr-2"></i>সফল হয়েছে';
+                        '<i class="fa-solid fa-circle-check mr-2"></i>Login Successful';
 
 
                     /*
-                     * DEBUG box দেখার জন্য redirect
-                     * কিছুটা delay করা হয়েছে।
-                     *
-                     * চাইলে debug box থেকে manually
-                     * screenshot নিতে পারবে।
+                     * Debug দেখার জন্য 20 seconds
+                     * সময় দেওয়া হচ্ছে।
                      */
 
                     setTimeout(
@@ -1676,8 +2025,9 @@
                             );
 
                         },
-                        10000
+                        20000
                     );
+
 
                 } catch (error) {
 
@@ -1686,8 +2036,10 @@
                         error
                     );
 
+
                     let message =
                         "Login করা যায়নি।";
+
 
                     if (
                         error?.message
@@ -1697,6 +2049,7 @@
                             error.message;
                     }
 
+
                     if (
                         error?.code ===
                         "auth/invalid-credential"
@@ -1704,7 +2057,9 @@
 
                         message =
                             "Username/Gmail অথবা password ভুল।";
+
                     }
+
 
                     if (
                         error?.code ===
@@ -1713,7 +2068,9 @@
 
                         message =
                             "সঠিক Gmail address দিন।";
+
                     }
+
 
                     if (
                         error?.code ===
@@ -1724,15 +2081,20 @@
                             "অনেকবার চেষ্টা হয়েছে। কিছুক্ষণ পরে আবার চেষ্টা করুন।";
                     }
 
+
                     showToast(
                         message,
                         "error"
                     );
 
-                    loginBtn.disabled = false;
+
+                    loginBtn.disabled =
+                        false;
+
 
                     loginBtn.innerHTML =
                         '<i class="fa-solid fa-right-to-bracket mr-2"></i>Login';
+
                 }
 
             }
@@ -1740,60 +2102,77 @@
 
 
         // =====================================================
-        // RESET LOGIN BUTTON
+        // NOTIFICATION BUTTON
         // =====================================================
 
-        function resetLoginButton() {
+        allowNotifBtn.addEventListener(
+            "click",
+            async () => {
 
-            if (loginRedirecting) {
-                return;
-            }
-
-            loginBtn.disabled = false;
-
-            loginBtn.innerHTML =
-                '<i class="fa-solid fa-right-to-bracket mr-2"></i>Login';
-        }
+                allowNotifBtn.disabled =
+                    true;
 
 
-        // =====================================================
-        // AUTH STATE
-        // =====================================================
+                allowNotifBtn.innerHTML =
+                    '<i class="fa-solid fa-spinner fa-spin mr-1"></i>Checking...';
 
-        onAuthStateChanged(
-            auth,
-            async (user) => {
-
-                if (!user) {
-
-                    resetLoginButton();
-
-                    return;
-                }
-
-                console.log(
-                    "🔐 Firebase user:",
-                    user.uid
-                );
-
-                /*
-                 * Existing login/session থাকলে
-                 * OneSignal link করার চেষ্টা।
-                 */
 
                 try {
 
-                    await linkOneSignalUser(
-                        user
+                    if (
+                        auth.currentUser
+                    ) {
+
+                        await linkOneSignalUser(
+                            auth.currentUser
+                        );
+
+                    }
+
+
+                    customNotifBanner.classList.remove(
+                        "show"
                     );
+
+
+                    await loadOneSignalDebug(
+                        true
+                    );
+
 
                 } catch (error) {
 
                     console.warn(
-                        "Auth OneSignal link warning:",
+                        "Notification error:",
                         error
                     );
+
+                } finally {
+
+                    allowNotifBtn.disabled =
+                        false;
+
+
+                    allowNotifBtn.innerHTML =
+                        "চালু করুন";
+
                 }
+
+            }
+        );
+
+
+        // =====================================================
+        // CLOSE NOTIFICATION
+        // =====================================================
+
+        closeNotifBtn.addEventListener(
+            "click",
+            () => {
+
+                customNotifBanner.classList.remove(
+                    "show"
+                );
 
             }
         );
@@ -1811,14 +2190,18 @@
                     "show"
                 );
 
+
                 forgotEmail.value =
                     usernameInput.value.includes("@")
                         ? usernameInput.value.trim()
                         : "";
 
+
                 setTimeout(
                     () => {
+
                         forgotEmail.focus();
+
                     },
                     100
                 );
@@ -1844,7 +2227,7 @@
 
 
         // =====================================================
-        // RESET PASSWORD
+        // PASSWORD RESET
         // =====================================================
 
         resetPasswordBtn.addEventListener(
@@ -1853,6 +2236,7 @@
 
                 const email =
                     forgotEmail.value.trim();
+
 
                 if (!email) {
 
@@ -1864,11 +2248,14 @@
                     return;
                 }
 
+
                 resetPasswordBtn.disabled =
                     true;
 
+
                 resetPasswordBtn.innerHTML =
                     '<i class="fa-solid fa-spinner fa-spin mr-1"></i>Sending...';
+
 
                 try {
 
@@ -1880,14 +2267,17 @@
                         12000
                     );
 
+
                     showToast(
                         "Password reset email পাঠানো হয়েছে।",
                         "success"
                     );
 
+
                     forgotPasswordModal.classList.remove(
                         "show"
                     );
+
 
                 } catch (error) {
 
@@ -1896,18 +2286,22 @@
                         error
                     );
 
+
                     showToast(
                         "Password reset email পাঠানো যায়নি।",
                         "error"
                     );
+
 
                 } finally {
 
                     resetPasswordBtn.disabled =
                         false;
 
+
                     resetPasswordBtn.innerHTML =
                         "Send";
+
                 }
 
             }
@@ -1915,12 +2309,12 @@
 
 
         // =====================================================
-        // CLOSE MODAL ON OUTSIDE CLICK
+        // CLOSE MODAL OUTSIDE
         // =====================================================
 
         forgotPasswordModal.addEventListener(
             "click",
-            (event) => {
+            event => {
 
                 if (
                     event.target ===
@@ -1930,6 +2324,7 @@
                     forgotPasswordModal.classList.remove(
                         "show"
                     );
+
                 }
 
             }
@@ -1937,70 +2332,114 @@
 
 
         // =====================================================
-        // ENTER KEY LOGIN
+        // ENTER KEY
         // =====================================================
 
-        [usernameInput, passwordInput].forEach(
-            input => {
+        usernameInput.addEventListener(
+            "keydown",
+            event => {
 
-                input.addEventListener(
-                    "keydown",
-                    event => {
+                if (
+                    event.key ===
+                    "Enter"
+                ) {
 
-                        if (
-                            event.key ===
-                            "Enter"
-                        ) {
+                    passwordInput.focus();
 
-                            loginBtn.click();
-                        }
+                }
 
-                    }
-                );
+            }
+        );
+
+
+        passwordInput.addEventListener(
+            "keydown",
+            event => {
+
+                if (
+                    event.key ===
+                    "Enter"
+                ) {
+
+                    loginBtn.click();
+
+                }
 
             }
         );
 
 
         // =====================================================
-        // STARTUP
+        // AUTH STATE
+        // =====================================================
+
+        onAuthStateChanged(
+            auth,
+            async user => {
+
+                if (!user) {
+
+                    return;
+                }
+
+
+                console.log(
+                    "Current Firebase User:",
+                    user.uid
+                );
+
+
+                /*
+                 * Existing session থাকলে
+                 * OneSignal link করবে।
+                 */
+
+                try {
+
+                    await linkOneSignalUser(
+                        user
+                    );
+
+                } catch (error) {
+
+                    console.warn(
+                        "Auth OneSignal link:",
+                        error
+                    );
+
+                }
+
+            }
+        );
+
+
+        // =====================================================
+        // START APP
         // =====================================================
 
         async function startApp() {
 
             /*
-             * OneSignal background initialization
+             * OneSignal initialize
              */
 
-            startOneSignal()
-                .catch(error => {
-
-                    console.warn(
-                        "OneSignal startup:",
-                        error
-                    );
-
-                });
-
+            startOneSignal();
 
             /*
-             * একটু পরে debug information
-             * load করা হবে।
+             * Debug box 2.5 sec পরে দেখাবে।
+             *
+             * Login করা থাকলে Firebase UID-ও দেখাবে।
              */
 
             setTimeout(
                 () => {
 
-                    if (auth.currentUser) {
-
-                        loadOneSignalDebug(
-                            true
-                        );
-
-                    }
+                    loadOneSignalDebug(
+                        true
+                    );
 
                 },
-                3500
+                2500
             );
 
 
@@ -2013,6 +2452,7 @@
 
                     startupLoader.style.opacity =
                         "0";
+
 
                     setTimeout(
                         () => {
@@ -2027,6 +2467,42 @@
                 },
                 1000
             );
+
+        }
+
+
+        // =====================================================
+        // START ONESIGNAL
+        // =====================================================
+
+        async function startOneSignal() {
+
+            try {
+
+                await withTimeout(
+                    initOneSignal(),
+                    8000
+                );
+
+
+                if (
+                    auth.currentUser
+                ) {
+
+                    await linkOneSignalUser(
+                        auth.currentUser
+                    );
+
+                }
+
+            } catch (error) {
+
+                console.warn(
+                    "OneSignal startup:",
+                    error
+                );
+
+            }
 
         }
 
