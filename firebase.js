@@ -2,15 +2,12 @@
 // ============================================================
 // AURA SKILL / AURA ARMAN TOUR
 // Firebase + Median Native OneSignal
+// Auto-register mode supported
 // ============================================================
 
-import {
-    initializeApp
-} from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
 
-import {
-    getAuth
-} from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+import { getAuth } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
 import {
     getFirestore,
@@ -46,7 +43,7 @@ export const db = getFirestore(app);
 
 
 // ============================================================
-// AURA SETTINGS
+// APP CONSTANTS
 // ============================================================
 
 export const DEFAULT_PROFILE_PHOTO =
@@ -66,41 +63,37 @@ export const ONESIGNAL_APP_ID =
 export function isMedianApp() {
     return (
         typeof window !== "undefined" &&
-        !!window.median
+        typeof window.median !== "undefined"
     );
 }
 
 
 // ============================================================
-// WAIT FOR MEDIAN JAVASCRIPT BRIDGE
+// WAIT FOR MEDIAN BRIDGE
 // ============================================================
 
 export function waitForMedian(timeout = 10000) {
 
     return new Promise((resolve, reject) => {
 
-        if (
-            typeof window !== "undefined" &&
-            window.median
-        ) {
+        if (isMedianApp()) {
             resolve(window.median);
             return;
         }
 
-        const startedAt = Date.now();
+        const started = Date.now();
 
         const timer = setInterval(() => {
 
-            if (
-                typeof window !== "undefined" &&
-                window.median
-            ) {
+            if (isMedianApp()) {
+
                 clearInterval(timer);
                 resolve(window.median);
                 return;
             }
 
-            if (Date.now() - startedAt >= timeout) {
+            if (Date.now() - started >= timeout) {
+
                 clearInterval(timer);
                 reject(
                     new Error("MEDIAN_BRIDGE_TIMEOUT")
@@ -110,7 +103,6 @@ export function waitForMedian(timeout = 10000) {
         }, 100);
 
     });
-
 }
 
 
@@ -122,35 +114,78 @@ export async function getOneSignalInfo() {
 
     const median = await waitForMedian();
 
-    if (!median.onesignal) {
+    if (
+        !median.onesignal
+    ) {
         throw new Error(
             "ONESIGNAL_BRIDGE_UNAVAILABLE"
         );
     }
 
-    // Current Median bridge
+
+    // Modern Median method
     if (
         typeof median.onesignal.info === "function"
     ) {
+
         return await median.onesignal.info();
     }
 
-    // Legacy compatibility
+
+    // Compatibility fallback
     if (
         typeof median.onesignal.onesignalInfo === "function"
     ) {
+
         return await median.onesignal.onesignalInfo();
     }
+
 
     throw new Error(
         "ONESIGNAL_INFO_UNAVAILABLE"
     );
-
 }
 
 
 // ============================================================
-// LINK FIREBASE USER WITH ONESIGNAL
+// REGISTER / NATIVE PERMISSION
+//
+// Auto-register ON থাকলে সাধারণত Median নিজেই permission prompt
+// দেখাবে। এই function শুধু available থাকলে manually trigger করবে.
+// ============================================================
+
+export async function registerOneSignal() {
+
+    const median = await waitForMedian();
+
+    if (
+        !median.onesignal
+    ) {
+        throw new Error(
+            "ONESIGNAL_BRIDGE_UNAVAILABLE"
+        );
+    }
+
+
+    if (
+        typeof median.onesignal.register === "function"
+    ) {
+
+        return await median.onesignal.register();
+    }
+
+
+    // Auto-register mode-এ register method unavailable হলেও
+    // app নিজে permission handle করতে পারে।
+    return {
+        success: true,
+        automatic: true
+    };
+}
+
+
+// ============================================================
+// LINK FIREBASE USER → ONESIGNAL USER
 // ============================================================
 
 export async function linkOneSignalUser(userOrUid) {
@@ -160,18 +195,34 @@ export async function linkOneSignalUser(userOrUid) {
             ? userOrUid
             : userOrUid?.uid;
 
+
     if (!uid) {
+
         throw new Error(
             "FIREBASE_UID_REQUIRED"
         );
     }
 
+
+    // Browser হলে native OneSignal call করব না
+    if (!isMedianApp()) {
+
+        return {
+            success: false,
+            skipped: true,
+            reason: "NOT_MEDIAN_APP"
+        };
+    }
+
+
     const median = await waitForMedian();
+
 
     if (
         !median.onesignal ||
         typeof median.onesignal.login !== "function"
     ) {
+
         throw new Error(
             "ONESIGNAL_LOGIN_UNAVAILABLE"
         );
@@ -179,7 +230,7 @@ export async function linkOneSignalUser(userOrUid) {
 
 
     // --------------------------------------------------------
-    // Firebase UID -> OneSignal External ID
+    // Firebase UID → OneSignal External ID
     // --------------------------------------------------------
 
     const loginResult =
@@ -187,14 +238,17 @@ export async function linkOneSignalUser(userOrUid) {
 
 
     // --------------------------------------------------------
-    // Read current OneSignal information
+    // Get current OneSignal information
     // --------------------------------------------------------
 
     let info = null;
 
     try {
+
         info = await getOneSignalInfo();
+
     } catch (error) {
+
         console.warn(
             "OneSignal info unavailable:",
             error
@@ -203,78 +257,117 @@ export async function linkOneSignalUser(userOrUid) {
 
 
     // --------------------------------------------------------
-    // Save useful OneSignal information to Firestore
+    // Save useful OneSignal data to Firestore
     // --------------------------------------------------------
 
-    try {
+    if (info) {
 
-        const oneSignalData = {
+        try {
 
-            appId: ONESIGNAL_APP_ID,
+            await setDoc(
+                doc(db, "users", uid),
+                {
+                    oneSignal: {
 
-            oneSignalId:
-                info?.oneSignalId || null,
+                        appId: ONESIGNAL_APP_ID,
 
-            externalId:
-                info?.externalId || uid,
+                        oneSignalId:
+                            info.oneSignalId || null,
 
-            subscriptionId:
-                info?.subscription?.id || null,
+                        externalId:
+                            info.externalId || uid,
 
-            optedIn:
-                info?.subscription?.optedIn === true,
+                        subscriptionId:
+                            info.subscription?.id || null,
 
-            updatedAt:
-                serverTimestamp()
+                        optedIn:
+                            info.subscription?.optedIn === true,
 
-        };
+                        updatedAt:
+                            serverTimestamp()
+                    }
+                },
+                {
+                    merge: true
+                }
+            );
 
+        } catch (firestoreError) {
 
-        await setDoc(
-            doc(db, "users", uid),
-            {
-                oneSignal: oneSignalData
-            },
-            {
-                merge: true
-            }
-        );
+            // Firestore save fail হলেও login বন্ধ হবে না
+            console.warn(
+                "OneSignal Firestore save failed:",
+                firestoreError
+            );
+        }
 
+    } else {
 
-    } catch (firestoreError) {
+        try {
 
-        // OneSignal linking should never stop Firebase login.
-        console.warn(
-            "OneSignal Firestore sync failed:",
-            firestoreError
-        );
+            await setDoc(
+                doc(db, "users", uid),
+                {
+                    oneSignal: {
 
+                        appId: ONESIGNAL_APP_ID,
+
+                        externalId: uid,
+
+                        updatedAt:
+                            serverTimestamp()
+                    }
+                },
+                {
+                    merge: true
+                }
+            );
+
+        } catch (firestoreError) {
+
+            console.warn(
+                "OneSignal basic Firestore save failed:",
+                firestoreError
+            );
+        }
     }
 
 
     return {
-        loginResult,
+        success:
+            loginResult?.success !== false,
+
+        result:
+            loginResult,
+
         info
     };
-
 }
 
 
 // ============================================================
-// LOGOUT ONESIGNAL USER
+// LOGOUT FROM ONESIGNAL
+// অন্য page-এর logout-এর সময় চাইলে এটা call করবে
 // ============================================================
 
 export async function logoutOneSignalUser() {
+
+    if (!isMedianApp()) {
+        return null;
+    }
+
 
     try {
 
         const median =
             await waitForMedian(5000);
 
+
         if (
             median.onesignal &&
             typeof median.onesignal.logout === "function"
         ) {
+
             return await median.onesignal.logout();
         }
 
@@ -284,16 +377,15 @@ export async function logoutOneSignalUser() {
             "OneSignal logout skipped:",
             error
         );
-
     }
 
-    return null;
 
+    return null;
 }
 
 
 // ============================================================
-// DEBUG INFORMATION
+// DEBUG INFO
 // ============================================================
 
 export async function getOneSignalDebugInfo() {
@@ -301,10 +393,12 @@ export async function getOneSignalDebugInfo() {
     if (!isMedianApp()) {
 
         return {
-            inMedian: false,
-            message: "Running in normal browser"
-        };
 
+            inMedian: false,
+
+            message:
+                "This page is running in a normal browser."
+        };
     }
 
 
@@ -313,12 +407,10 @@ export async function getOneSignalDebugInfo() {
         const info =
             await getOneSignalInfo();
 
+
         return {
 
             inMedian: true,
-
-            sdk:
-                "Median Native OneSignal",
 
             appId:
                 ONESIGNAL_APP_ID,
@@ -334,7 +426,6 @@ export async function getOneSignalDebugInfo() {
 
             optedIn:
                 info?.subscription?.optedIn === true
-
         };
 
     } catch (error) {
@@ -343,44 +434,33 @@ export async function getOneSignalDebugInfo() {
 
             inMedian: true,
 
-            sdk:
-                "Median Native OneSignal",
-
-            appId:
-                ONESIGNAL_APP_ID,
-
             error:
-                error?.message || String(error)
-
+                error?.message || "Unknown error"
         };
-
     }
-
 }
 
 
 // ============================================================
-// GLOBAL AURA ONESIGNAL HELPER
+// GLOBAL DEBUG HELPER
+// Browser console থেকেও check করা যাবে:
+//
+// AURA_ONESIGNAL.info()
+// AURA_ONESIGNAL.debug()
 // ============================================================
 
 if (typeof window !== "undefined") {
 
     window.AURA_ONESIGNAL = {
 
-        isMedianApp,
+        info: getOneSignalInfo,
 
-        getInfo:
-            getOneSignalInfo,
+        debug: getOneSignalDebugInfo,
 
-        linkUser:
-            linkOneSignalUser,
+        register: registerOneSignal,
 
-        logout:
-            logoutOneSignalUser,
+        link: linkOneSignalUser,
 
-        debug:
-            getOneSignalDebugInfo
-
+        logout: logoutOneSignalUser
     };
-
 }
