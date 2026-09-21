@@ -1,18 +1,13 @@
 <!DOCTYPE html>
 <html lang="bn">
 <head>
-
     <link rel="preconnect" href="https://www.gstatic.com" crossorigin>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
 
     <meta charset="UTF-8">
-
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>Welcome Back</title>
 
@@ -24,7 +19,6 @@
     >
 
     <style>
-
         body{
             background:#0b0f19;
             font-family:Segoe UI,Tahoma,Geneva,Verdana,sans-serif
@@ -273,12 +267,12 @@
                 translateX(-50%)
                 translateY(0)
         }
-
     </style>
 </head>
 
 <body class="flex items-center justify-center min-h-screen px-4">
 
+<!-- NOTIFICATION BANNER -->
 
 <div id="customNotifBanner">
 
@@ -341,6 +335,8 @@
 </div>
 
 
+<!-- MAINTENANCE -->
+
 <div id="maintenanceScreen">
 
     <div class="w-full max-w-md">
@@ -384,6 +380,8 @@
 
 </div>
 
+
+<!-- UPDATE -->
 
 <div id="updateScreen">
 
@@ -440,6 +438,8 @@
 </div>
 
 
+<!-- STARTUP -->
+
 <div id="startupLoader">
 
     <div class="startup-inner">
@@ -472,6 +472,8 @@
 </div>
 
 
+<!-- FORGOT PASSWORD -->
+
 <div
     id="forgotPasswordModal"
     aria-hidden="true">
@@ -479,7 +481,9 @@
     <div class="forgot-card">
 
         <div class="forgot-icon">
+
             <i class="fa-solid fa-key"></i>
+
         </div>
 
         <h3
@@ -548,6 +552,8 @@
 </div>
 
 
+<!-- TOAST -->
+
 <div
     id="toastContainer"
     class="fixed
@@ -559,6 +565,8 @@
            gap-3">
 </div>
 
+
+<!-- LOGIN CARD -->
 
 <div
     id="loginCard"
@@ -755,6 +763,10 @@
 
 <script type="module">
 
+/* ============================================================
+   FIREBASE + ONESIGNAL
+============================================================ */
+
 import {
     auth,
     db,
@@ -784,6 +796,10 @@ import {
     onSnapshot
 } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js';
 
+
+/* ============================================================
+   ELEMENTS
+============================================================ */
 
 const startupLoader =
     document.getElementById('startupLoader');
@@ -846,10 +862,18 @@ const customNotifBanner =
     document.getElementById('customNotifBanner');
 
 
+/* ============================================================
+   STATE
+============================================================ */
+
 let maintenanceActive = false;
 let updateActive = false;
 let loginRedirecting = false;
 
+
+/* ============================================================
+   TIMEOUT
+============================================================ */
 
 function withTimeout(
     promise,
@@ -878,6 +902,10 @@ function withTimeout(
 
 }
 
+
+/* ============================================================
+   TOAST
+============================================================ */
 
 function showToast(
     message,
@@ -961,7 +989,7 @@ function showToast(
 
 
 /* ============================================================
-   ONESIGNAL BACKGROUND
+   ONESIGNAL BACKGROUND INITIALIZATION
 ============================================================ */
 
 function startOneSignal() {
@@ -990,7 +1018,7 @@ function startOneSignal() {
     .catch(error => {
 
         console.warn(
-            'OneSignal background warning:',
+            'OneSignal background error:',
             error
         );
 
@@ -1000,6 +1028,191 @@ function startOneSignal() {
 
 
 startOneSignal();
+
+
+/* ============================================================
+   IMPORTANT:
+   FIREBASE UID → ONESIGNAL EXTERNAL ID
+============================================================ */
+
+async function connectFirebaseUserToOneSignal(
+    firebaseUser
+) {
+
+    if (
+        !firebaseUser ||
+        !firebaseUser.uid
+    ) {
+
+        console.warn(
+            'No Firebase user available for OneSignal linking.'
+        );
+
+        return false;
+
+    }
+
+
+    const uid =
+        String(firebaseUser.uid).trim();
+
+
+    if (!uid) {
+        return false;
+    }
+
+
+    try {
+
+        /*
+         * OneSignal SDK ready হওয়ার জন্য অপেক্ষা।
+         *
+         * এখানে notification permission request করা হচ্ছে না।
+         */
+
+        const OneSignal =
+            await withTimeout(
+                initOneSignal(),
+                7000
+            );
+
+
+        console.log(
+            '🔗 Firebase UID:',
+            uid
+        );
+
+
+        console.log(
+            '🔗 Linking Firebase UID to OneSignal...'
+        );
+
+
+        /*
+         * OneSignal External ID
+         */
+
+        if (
+            typeof OneSignal.login ===
+            'function'
+        ) {
+
+            await withTimeout(
+                OneSignal.login(uid),
+                7000
+            );
+
+        } else {
+
+            throw new Error(
+                'OneSignal login API unavailable'
+            );
+
+        }
+
+
+        /*
+         * একটু সময় দিয়ে subscription identity
+         * update হওয়ার সুযোগ দেওয়া হচ্ছে।
+         */
+
+        await new Promise(resolve => {
+
+            setTimeout(
+                resolve,
+                500
+            );
+
+        });
+
+
+        let externalId =
+            null;
+
+
+        let oneSignalId =
+            null;
+
+
+        try {
+
+            externalId =
+                OneSignal.User?.externalId ||
+                null;
+
+        } catch (_) {}
+
+
+        try {
+
+            oneSignalId =
+                OneSignal.User?.onesignalId ||
+                null;
+
+        } catch (_) {}
+
+
+        console.log(
+            '✅ OneSignal External ID:',
+            externalId
+        );
+
+
+        console.log(
+            '✅ OneSignal User ID:',
+            oneSignalId
+        );
+
+
+        /*
+         * External ID পাওয়া গেলে success.
+         */
+
+        if (
+            externalId &&
+            String(externalId) === uid
+        ) {
+
+            console.log(
+                '✅ Firebase UID successfully linked to OneSignal'
+            );
+
+            return true;
+
+        }
+
+
+        /*
+         * login() সফল হলেও SDK-এর identity update
+         * সঙ্গে সঙ্গে reflect না করতে পারে।
+         */
+
+        console.log(
+            'ℹ️ OneSignal login completed for UID:',
+            uid
+        );
+
+
+        return true;
+
+    } catch (error) {
+
+        console.warn(
+            '⚠️ Firebase → OneSignal linking failed:',
+            error
+        );
+
+
+        /*
+         * OneSignal error-এর জন্য Firebase login
+         * কখনোই fail হবে না।
+         */
+
+        return false;
+
+    }
+
+}
 
 
 /* ============================================================
@@ -1037,9 +1250,9 @@ if (allowNotifBtn) {
             try {
 
                 /*
-                 * Web permission popup force করা হচ্ছে না।
+                 * Firebase user থাকলে UID link করার চেষ্টা।
                  *
-                 * Login করা user থাকলে UID link করা হবে।
+                 * এখানে browser permission request করা হবে না।
                  */
 
                 if (
@@ -1047,22 +1260,9 @@ if (allowNotifBtn) {
                     auth.currentUser.uid
                 ) {
 
-                    await Promise.race([
-
-                        linkOneSignalUser(
-                            auth.currentUser
-                        ),
-
-                        new Promise(resolve => {
-
-                            setTimeout(
-                                resolve,
-                                4000
-                            );
-
-                        })
-
-                    ]);
+                    await connectFirebaseUserToOneSignal(
+                        auth.currentUser
+                    );
 
                 }
 
@@ -1076,14 +1276,14 @@ if (allowNotifBtn) {
             } catch (error) {
 
                 console.warn(
-                    'Notification link warning:',
+                    'Notification setup warning:',
                     error
                 );
 
 
                 /*
-                 * Native APK notification-এর জন্য
-                 * web-side error দেখানো হবে না।
+                 * Native APK notification configured থাকলে
+                 * web-side error user-কে দেখানো হবে না।
                  */
 
                 showToast(
@@ -1096,6 +1296,7 @@ if (allowNotifBtn) {
                 allowNotifBtn.disabled =
                     false;
 
+
                 allowNotifBtn.textContent =
                     oldText;
 
@@ -1106,6 +1307,10 @@ if (allowNotifBtn) {
 
 }
 
+
+/* ============================================================
+   CLOSE NOTIFICATION BANNER
+============================================================ */
 
 if (closeNotifBtn) {
 
@@ -1122,6 +1327,10 @@ if (closeNotifBtn) {
 
 }
 
+
+/* ============================================================
+   SHOW NOTIFICATION BANNER
+============================================================ */
 
 window.addEventListener(
     'load',
@@ -1302,6 +1511,10 @@ async function checkStartupData() {
 checkStartupData();
 
 
+/* ============================================================
+   REALTIME MAINTENANCE
+============================================================ */
+
 try {
 
     onSnapshot(
@@ -1339,6 +1552,10 @@ try {
 
 }
 
+
+/* ============================================================
+   REALTIME UPDATE
+============================================================ */
 
 try {
 
@@ -1464,10 +1681,13 @@ async function findEmailByUsername(
             );
 
 
-        if (!snapshot.empty) {
+        if (
+            !snapshot.empty
+        ) {
 
             const data =
-                snapshot.docs[0].data();
+                snapshot.docs[0]
+                    .data();
 
 
             if (data.email) {
@@ -1518,10 +1738,13 @@ async function findEmailByUsername(
             );
 
 
-        if (!snapshot.empty) {
+        if (
+            !snapshot.empty
+        ) {
 
             const data =
-                snapshot.docs[0].data();
+                snapshot.docs[0]
+                    .data();
 
 
             if (data.email) {
@@ -1634,6 +1857,8 @@ loginForm.addEventListener(
 
         try {
 
+            /* PERSISTENCE */
+
             try {
 
                 await withTimeout(
@@ -1658,6 +1883,8 @@ loginForm.addEventListener(
 
             }
 
+
+            /* GET EMAIL */
 
             let email;
 
@@ -1693,6 +1920,8 @@ loginForm.addEventListener(
             }
 
 
+            /* FIREBASE LOGIN */
+
             console.log(
                 'Firebase login started'
             );
@@ -1724,42 +1953,52 @@ loginForm.addEventListener(
 
 
             console.log(
-                'Firebase login successful:',
-                credential.user.uid
+                'Firebase login successful'
             );
 
 
-            /* ==================================================
-               IMPORTANT
-               Firebase UID → OneSignal External ID
-               Login BLOCK করবে না
-            ================================================== */
+            /*
+             * ==================================================
+             * IMPORTANT ONESIGNAL FIX
+             * ==================================================
+             *
+             * Firebase login successful হওয়ার পরে
+             * Firebase UID → OneSignal External ID.
+             *
+             * এটা login block করবে না।
+             */
 
-            Promise.resolve()
-                .then(() => {
+            connectFirebaseUserToOneSignal(
+                credential.user
+            )
+            .then(result => {
 
-                    return linkOneSignalUser(
-                        credential.user
-                    );
-
-                })
-                .then(() => {
+                if (result) {
 
                     console.log(
-                        '✅ OneSignal UID link completed:',
-                        credential.user.uid
+                        '✅ Firebase UID → OneSignal link completed'
                     );
 
-                })
-                .catch(error => {
+                } else {
 
                     console.warn(
-                        '⚠️ OneSignal link warning:',
-                        error
+                        '⚠️ OneSignal UID linking was not completed'
                     );
 
-                });
+                }
 
+            })
+            .catch(error => {
+
+                console.warn(
+                    'OneSignal link warning:',
+                    error
+                );
+
+            });
+
+
+            /* SUCCESS */
 
             loginRedirecting =
                 true;
@@ -1881,7 +2120,7 @@ loginForm.addEventListener(
 
 
 /* ============================================================
-   RESET LOGIN
+   RESET LOGIN BUTTON
 ============================================================ */
 
 function resetLoginButton() {
@@ -1911,26 +2150,29 @@ onAuthStateChanged(
             );
 
             /*
-             * Auth state পাওয়া গেলে আবার link করার চেষ্টা।
-             * এটা non-blocking.
+             * যদি page reload হয় এবং user already logged in থাকে,
+             * তখনও UID → OneSignal link করার চেষ্টা।
              */
 
-            Promise.resolve()
-                .then(() => {
+            connectFirebaseUserToOneSignal(
+                user
+            )
+            .then(result => {
 
-                    return linkOneSignalUser(
-                        user
-                    );
+                console.log(
+                    'Auth-state OneSignal linking:',
+                    result
+                );
 
-                })
-                .catch(error => {
+            })
+            .catch(error => {
 
-                    console.warn(
-                        'Auth-state OneSignal warning:',
-                        error
-                    );
+                console.warn(
+                    'Auth-state OneSignal warning:',
+                    error
+                );
 
-                });
+            });
 
         }
 
@@ -2027,7 +2269,7 @@ forgotModal.addEventListener(
 
 
 /* ============================================================
-   PASSWORD RESET
+   SEND PASSWORD RESET
 ============================================================ */
 
 forgotSendBtn.addEventListener(
@@ -2239,11 +2481,17 @@ window.addEventListener(
 );
 
 
+/* HARD FAILSAFE */
+
 setTimeout(
     hideStartupLoader,
     5000
 );
 
+
+/* ============================================================
+   FINAL LOG
+============================================================ */
 
 console.log(
     '✅ AURA SKILL Login loaded'
@@ -2258,15 +2506,19 @@ console.log(
 );
 
 console.log(
-    '✅ Firebase UID → OneSignal linking enabled'
+    '✅ Native APK notification permission request disabled'
 );
 
 console.log(
-    '✅ APK notification permission request disabled'
+    '✅ Firebase UID → OneSignal External ID linking enabled'
 );
 
 console.log(
-    '✅ Specific-user notification support enabled'
+    '✅ OneSignal linking also runs after auth-state restore'
+);
+
+console.log(
+    '✅ বাংলা notification/text enabled'
 );
 
 </script>
