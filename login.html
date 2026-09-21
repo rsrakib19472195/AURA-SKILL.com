@@ -1,13 +1,18 @@
 <!DOCTYPE html>
 <html lang="bn">
 <head>
+
     <link rel="preconnect" href="https://www.gstatic.com" crossorigin>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
 
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
     <title>Welcome Back</title>
 
@@ -19,6 +24,7 @@
     >
 
     <style>
+
         body{
             background:#0b0f19;
             font-family:Segoe UI,Tahoma,Geneva,Verdana,sans-serif
@@ -267,14 +273,12 @@
                 translateX(-50%)
                 translateY(0)
         }
+
     </style>
 </head>
 
 <body class="flex items-center justify-center min-h-screen px-4">
 
-<!-- ============================================================
-     NOTIFICATION BANNER
-============================================================ -->
 
 <div id="customNotifBanner">
 
@@ -337,10 +341,6 @@
 </div>
 
 
-<!-- ============================================================
-     MAINTENANCE
-============================================================ -->
-
 <div id="maintenanceScreen">
 
     <div class="w-full max-w-md">
@@ -384,10 +384,6 @@
 
 </div>
 
-
-<!-- ============================================================
-     UPDATE SCREEN
-============================================================ -->
 
 <div id="updateScreen">
 
@@ -444,10 +440,6 @@
 </div>
 
 
-<!-- ============================================================
-     STARTUP LOADER
-============================================================ -->
-
 <div id="startupLoader">
 
     <div class="startup-inner">
@@ -480,10 +472,6 @@
 </div>
 
 
-<!-- ============================================================
-     FORGOT PASSWORD
-============================================================ -->
-
 <div
     id="forgotPasswordModal"
     aria-hidden="true">
@@ -491,9 +479,7 @@
     <div class="forgot-card">
 
         <div class="forgot-icon">
-
             <i class="fa-solid fa-key"></i>
-
         </div>
 
         <h3
@@ -562,10 +548,6 @@
 </div>
 
 
-<!-- ============================================================
-     TOAST
-============================================================ -->
-
 <div
     id="toastContainer"
     class="fixed
@@ -577,10 +559,6 @@
            gap-3">
 </div>
 
-
-<!-- ============================================================
-     LOGIN CARD
-============================================================ -->
 
 <div
     id="loginCard"
@@ -775,10 +753,6 @@
 </div>
 
 
-<!-- ============================================================
-     JAVASCRIPT
-============================================================ -->
-
 <script type="module">
 
 import {
@@ -810,10 +784,6 @@ import {
     onSnapshot
 } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js';
 
-
-/* ============================================================
-   ELEMENTS
-============================================================ */
 
 const startupLoader =
     document.getElementById('startupLoader');
@@ -876,18 +846,10 @@ const customNotifBanner =
     document.getElementById('customNotifBanner');
 
 
-/* ============================================================
-   STATE
-============================================================ */
-
 let maintenanceActive = false;
 let updateActive = false;
 let loginRedirecting = false;
 
-
-/* ============================================================
-   TIMEOUT HELPER
-============================================================ */
 
 function withTimeout(
     promise,
@@ -916,10 +878,6 @@ function withTimeout(
 
 }
 
-
-/* ============================================================
-   TOAST
-============================================================ */
 
 function showToast(
     message,
@@ -1003,8 +961,7 @@ function showToast(
 
 
 /* ============================================================
-   ONESIGNAL
-   BACKGROUND ONLY
+   ONESIGNAL BACKGROUND
 ============================================================ */
 
 function startOneSignal() {
@@ -1026,14 +983,14 @@ function startOneSignal() {
     .then(() => {
 
         console.log(
-            'OneSignal background ready'
+            '✅ OneSignal background ready'
         );
 
     })
     .catch(error => {
 
         console.warn(
-            'OneSignal error:',
+            'OneSignal background warning:',
             error
         );
 
@@ -1046,11 +1003,7 @@ startOneSignal();
 
 
 /* ============================================================
-   APK NOTIFICATION BUTTON
-   ============================================================
-   IMPORTANT:
-   এখানে Web Push permission request করা হবে না।
-   APK-এর native OneSignal notification আগে থেকেই configured.
+   NOTIFICATION BUTTON
 ============================================================ */
 
 if (allowNotifBtn) {
@@ -1076,10 +1029,6 @@ if (allowNotifBtn) {
                 'চালু হচ্ছে...';
 
 
-            /*
-             * Banner আগে hide করা হচ্ছে।
-             */
-
             customNotifBanner.classList.remove(
                 'show'
             );
@@ -1088,11 +1037,9 @@ if (allowNotifBtn) {
             try {
 
                 /*
-                 * যদি Firebase user login করা থাকে,
-                 * Firebase UID → OneSignal External ID
-                 * link করার চেষ্টা করবে।
+                 * Web permission popup force করা হচ্ছে না।
                  *
-                 * এটা notification permission request নয়।
+                 * Login করা user থাকলে UID link করা হবে।
                  */
 
                 if (
@@ -1100,27 +1047,25 @@ if (allowNotifBtn) {
                     auth.currentUser.uid
                 ) {
 
-                    try {
+                    await Promise.race([
 
-                        await linkOneSignalUser(
+                        linkOneSignalUser(
                             auth.currentUser
-                        );
+                        ),
 
-                    } catch (linkError) {
+                        new Promise(resolve => {
 
-                        console.warn(
-                            'OneSignal linking warning:',
-                            linkError
-                        );
+                            setTimeout(
+                                resolve,
+                                4000
+                            );
 
-                    }
+                        })
+
+                    ]);
 
                 }
 
-
-                /*
-                 * APK native notification already enabled.
-                 */
 
                 showToast(
                     'নোটিফিকেশন সফলভাবে চালু হয়েছে! 🎉',
@@ -1130,28 +1075,26 @@ if (allowNotifBtn) {
 
             } catch (error) {
 
-                /*
-                 * কোনো web-side error হলেও
-                 * APK notification failure দেখাবে না।
-                 */
-
                 console.warn(
-                    'APK notification warning:',
+                    'Notification link warning:',
                     error
                 );
 
+
+                /*
+                 * Native APK notification-এর জন্য
+                 * web-side error দেখানো হবে না।
+                 */
 
                 showToast(
                     'নোটিফিকেশন সফলভাবে চালু হয়েছে! 🎉',
                     'success'
                 );
 
-
             } finally {
 
                 allowNotifBtn.disabled =
                     false;
-
 
                 allowNotifBtn.textContent =
                     oldText;
@@ -1163,10 +1106,6 @@ if (allowNotifBtn) {
 
 }
 
-
-/* ============================================================
-   CLOSE NOTIFICATION BANNER
-============================================================ */
 
 if (closeNotifBtn) {
 
@@ -1184,22 +1123,11 @@ if (closeNotifBtn) {
 }
 
 
-/* ============================================================
-   SHOW NOTIFICATION BANNER
-============================================================ */
-
 window.addEventListener(
     'load',
     () => {
 
         setTimeout(() => {
-
-            /*
-             * APK-তে browser Notification API
-             * না থাকলেও banner দেখানো যাবে।
-             *
-             * কারণ native APK notification আলাদা।
-             */
 
             customNotifBanner.classList.add(
                 'show'
@@ -1374,10 +1302,6 @@ async function checkStartupData() {
 checkStartupData();
 
 
-/* ============================================================
-   REALTIME MAINTENANCE
-============================================================ */
-
 try {
 
     onSnapshot(
@@ -1415,10 +1339,6 @@ try {
 
 }
 
-
-/* ============================================================
-   REALTIME UPDATE
-============================================================ */
 
 try {
 
@@ -1544,13 +1464,10 @@ async function findEmailByUsername(
             );
 
 
-        if (
-            !snapshot.empty
-        ) {
+        if (!snapshot.empty) {
 
             const data =
-                snapshot.docs[0]
-                    .data();
+                snapshot.docs[0].data();
 
 
             if (data.email) {
@@ -1601,13 +1518,10 @@ async function findEmailByUsername(
             );
 
 
-        if (
-            !snapshot.empty
-        ) {
+        if (!snapshot.empty) {
 
             const data =
-                snapshot.docs[0]
-                    .data();
+                snapshot.docs[0].data();
 
 
             if (data.email) {
@@ -1720,10 +1634,6 @@ loginForm.addEventListener(
 
         try {
 
-            /* ================================================
-               PERSISTENCE
-            ================================================ */
-
             try {
 
                 await withTimeout(
@@ -1748,10 +1658,6 @@ loginForm.addEventListener(
 
             }
 
-
-            /* ================================================
-               GET EMAIL
-            ================================================ */
 
             let email;
 
@@ -1787,10 +1693,6 @@ loginForm.addEventListener(
             }
 
 
-            /* ================================================
-               FIREBASE LOGIN
-            ================================================ */
-
             console.log(
                 'Firebase login started'
             );
@@ -1822,42 +1724,42 @@ loginForm.addEventListener(
 
 
             console.log(
-                'Firebase login successful'
+                'Firebase login successful:',
+                credential.user.uid
             );
 
 
-            /* ================================================
-               ONESIGNAL BACKGROUND
-               LOGIN BLOCK করবে না
-            ================================================ */
+            /* ==================================================
+               IMPORTANT
+               Firebase UID → OneSignal External ID
+               Login BLOCK করবে না
+            ================================================== */
 
             Promise.resolve()
-                .then(
-                    () =>
-                        linkOneSignalUser(
-                            credential.user
-                        )
-                )
+                .then(() => {
+
+                    return linkOneSignalUser(
+                        credential.user
+                    );
+
+                })
                 .then(() => {
 
                     console.log(
-                        'OneSignal user linked'
+                        '✅ OneSignal UID link completed:',
+                        credential.user.uid
                     );
 
                 })
                 .catch(error => {
 
                     console.warn(
-                        'OneSignal link warning:',
+                        '⚠️ OneSignal link warning:',
                         error
                     );
 
                 });
 
-
-            /* ================================================
-               SUCCESS
-            ================================================ */
 
             loginRedirecting =
                 true;
@@ -1979,7 +1881,7 @@ loginForm.addEventListener(
 
 
 /* ============================================================
-   RESET LOGIN BUTTON
+   RESET LOGIN
 ============================================================ */
 
 function resetLoginButton() {
@@ -2007,6 +1909,28 @@ onAuthStateChanged(
                 'Firebase user:',
                 user.uid
             );
+
+            /*
+             * Auth state পাওয়া গেলে আবার link করার চেষ্টা।
+             * এটা non-blocking.
+             */
+
+            Promise.resolve()
+                .then(() => {
+
+                    return linkOneSignalUser(
+                        user
+                    );
+
+                })
+                .catch(error => {
+
+                    console.warn(
+                        'Auth-state OneSignal warning:',
+                        error
+                    );
+
+                });
 
         }
 
@@ -2103,7 +2027,7 @@ forgotModal.addEventListener(
 
 
 /* ============================================================
-   SEND PASSWORD RESET
+   PASSWORD RESET
 ============================================================ */
 
 forgotSendBtn.addEventListener(
@@ -2315,19 +2239,11 @@ window.addEventListener(
 );
 
 
-/*
- * HARD FAILSAFE
- */
-
 setTimeout(
     hideStartupLoader,
     5000
 );
 
-
-/* ============================================================
-   FINAL
-============================================================ */
 
 console.log(
     '✅ AURA SKILL Login loaded'
@@ -2342,15 +2258,15 @@ console.log(
 );
 
 console.log(
-    '✅ APK notification permission request disabled'
-);
-
-console.log(
     '✅ Firebase UID → OneSignal linking enabled'
 );
 
 console.log(
-    '✅ বাংলা notification/text enabled'
+    '✅ APK notification permission request disabled'
+);
+
+console.log(
+    '✅ Specific-user notification support enabled'
 );
 
 </script>
