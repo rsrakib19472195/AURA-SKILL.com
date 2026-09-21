@@ -1,9 +1,3 @@
-// firebase.js
-// ============================================================
-// AURA / AURA SKILL
-// FIREBASE + ONESIGNAL
-// ============================================================
-
 import {
     initializeApp
 } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
@@ -17,32 +11,35 @@ import {
 } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
 
-// ============================================================
-// FIREBASE CONFIG
-// ============================================================
-
 const firebaseConfig = {
-    apiKey: "AIzaSyA2wYMZAMx6p2GRC21KGgsHgiCoVz--81A",
-    authDomain: "aura-arman-tour.firebaseapp.com",
-    databaseURL: "https://aura-arman-tour-default-rtdb.firebaseio.com",
-    projectId: "aura-arman-tour",
-    storageBucket: "aura-arman-tour.firebasestorage.app",
-    messagingSenderId: "502326798792",
-    appId: "1:502326798792:web:2afd27cb9cd44da48cb8fd"
+
+    apiKey:
+        "AIzaSyA2wYMZAMx6p2GRC21KGgsHgiCoVz--81A",
+
+    authDomain:
+        "aura-arman-tour.firebaseapp.com",
+
+    databaseURL:
+        "https://aura-arman-tour-default-rtdb.firebaseio.com",
+
+    projectId:
+        "aura-arman-tour",
+
+    storageBucket:
+        "aura-arman-tour.firebasestorage.app",
+
+    messagingSenderId:
+        "502326798792",
+
+    appId:
+        "1:502326798792:web:2afd27cb9cd44da48cb8fd"
+
 };
 
-
-// ============================================================
-// ONESIGNAL APP ID
-// ============================================================
 
 export const ONESIGNAL_APP_ID =
     "b4420740-b9f6-4de7-8792-f6302ad38e4d";
 
-
-// ============================================================
-// INITIALIZE FIREBASE
-// ============================================================
 
 const app =
     initializeApp(firebaseConfig);
@@ -56,28 +53,20 @@ export const db =
     getFirestore(app);
 
 
-// ============================================================
-// DEFAULT PROFILE
-// ============================================================
-
 export const DEFAULT_PROFILE_PHOTO =
     "https://videotourl.com/images/1789800604014-b96e1edf-d789-4513-8557-9fb63a327a13.jpg";
 
-
-// ============================================================
-// ADMIN EMAIL
-// ============================================================
 
 export const ADMIN_EMAIL =
     "teamgamechangerofficial@gmail.com";
 
 
-// ============================================================
-// ONESIGNAL READY
-// ============================================================
-
 let oneSignalReadyPromise = null;
 
+
+// ============================================================
+// INITIALIZE ONESIGNAL
+// ============================================================
 
 export function initOneSignal() {
 
@@ -89,136 +78,119 @@ export function initOneSignal() {
 
 
     oneSignalReadyPromise =
-        new Promise((resolve, reject) => {
+        new Promise(
+            (resolve, reject) => {
 
-            try {
+                try {
 
-                window.OneSignalDeferred =
-                    window.OneSignalDeferred || [];
-
-
-                const initialize =
-                    async (OneSignal) => {
-
-                        try {
-
-                            await OneSignal.init({
-
-                                appId:
-                                    ONESIGNAL_APP_ID
-
-                            });
+                    window.OneSignalDeferred =
+                        window.OneSignalDeferred || [];
 
 
-                            console.log(
-                                "✅ OneSignal initialized"
-                            );
+                    const initialize =
+                        async (OneSignal) => {
+
+                            try {
+
+                                await OneSignal.init({
+
+                                    appId:
+                                        ONESIGNAL_APP_ID
+
+                                });
 
 
-                            resolve(
-                                OneSignal
-                            );
+                                console.log(
+                                    "✅ OneSignal initialized"
+                                );
 
 
-                        } catch (error) {
+                                resolve(
+                                    OneSignal
+                                );
 
-                            console.error(
-                                "❌ OneSignal initialization failed:",
-                                error
-                            );
+                            } catch (error) {
 
+                                console.error(
+                                    "❌ OneSignal initialization failed:",
+                                    error
+                                );
 
-                            reject(error);
+                                reject(error);
 
-                        }
+                            }
 
-                    };
-
-
-                const existingScript =
-                    document.querySelector(
-                        'script[src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js"]'
-                    );
+                        };
 
 
-                if (existingScript) {
-
-                    window.OneSignalDeferred.push(
-                        initialize
-                    );
-
-                    return;
-
-                }
-
-
-                const script =
-                    document.createElement(
-                        "script"
-                    );
-
-
-                script.src =
-                    "https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js";
-
-
-                script.defer =
-                    true;
-
-
-                script.onload =
-                    () => {
-
-                        console.log(
-                            "✅ OneSignal SDK loaded"
+                    const existingScript =
+                        document.querySelector(
+                            'script[src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js"]'
                         );
 
+
+                    if (existingScript) {
 
                         window.OneSignalDeferred.push(
                             initialize
                         );
 
-                    };
+                        return;
+
+                    }
 
 
-                script.onerror =
-                    () => {
-
-                        const error =
-                            new Error(
-                                "OneSignal SDK could not be loaded."
-                            );
-
-
-                        console.error(
-                            "❌ OneSignal SDK load failed:",
-                            error
+                    const script =
+                        document.createElement(
+                            "script"
                         );
 
 
-                        reject(error);
+                    script.src =
+                        "https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js";
 
-                    };
-
-
-                document.head.appendChild(
-                    script
-                );
+                    script.defer =
+                        true;
 
 
-            } catch (error) {
+                    script.onload =
+                        () => {
 
-                console.error(
-                    "❌ OneSignal setup error:",
-                    error
-                );
+                            console.log(
+                                "✅ OneSignal SDK loaded"
+                            );
+
+                            window.OneSignalDeferred.push(
+                                initialize
+                            );
+
+                        };
 
 
-                reject(error);
+                    script.onerror =
+                        () => {
+
+                            reject(
+                                new Error(
+                                    "OneSignal SDK could not be loaded."
+                                )
+                            );
+
+                        };
+
+
+                    document.head.appendChild(
+                        script
+                    );
+
+                } catch (error) {
+
+                    reject(error);
+
+                }
 
             }
-
-        });
+        );
 
 
     return oneSignalReadyPromise;
@@ -227,174 +199,10 @@ export function initOneSignal() {
 
 
 // ============================================================
-// PUSH SUPPORT
+// LINK FIREBASE UID → ONESIGNAL
 // ============================================================
 
-export async function isOneSignalPushSupported() {
-
-    try {
-
-        const OneSignal =
-            await initOneSignal();
-
-
-        const supported =
-            OneSignal.Notifications
-                .isPushSupported();
-
-
-        console.log(
-            "Push supported:",
-            supported
-        );
-
-
-        return supported;
-
-    } catch (error) {
-
-        console.error(
-            "❌ Push support check failed:",
-            error
-        );
-
-
-        return false;
-
-    }
-
-}
-
-
-// ============================================================
-// PERMISSION STATUS
-// ============================================================
-
-export async function getOneSignalPermissionStatus() {
-
-    try {
-
-        const OneSignal =
-            await initOneSignal();
-
-
-        return (
-            OneSignal.Notifications.permission
-        );
-
-    } catch (error) {
-
-        console.error(
-            "❌ Notification status error:",
-            error
-        );
-
-
-        return false;
-
-    }
-
-}
-
-
-// ============================================================
-// REQUEST PERMISSION
-//
-// NOTE:
-// APK native notification permission should be handled
-// by the native OneSignal SDK.
-//
-// This function remains for browser compatibility.
-// ============================================================
-
-export async function requestOneSignalPermission() {
-
-    try {
-
-        const OneSignal =
-            await initOneSignal();
-
-
-        if (
-            !OneSignal.Notifications
-                .isPushSupported()
-        ) {
-
-            console.warn(
-                "Push notification is not supported."
-            );
-
-
-            return false;
-
-        }
-
-
-        if (
-            OneSignal.Notifications.permission ===
-            true
-        ) {
-
-            return true;
-
-        }
-
-
-        if (
-            OneSignal.Notifications.permissionNative ===
-            "granted"
-        ) {
-
-            return true;
-
-        }
-
-
-        if (
-            OneSignal.Notifications.permissionNative ===
-            "denied"
-        ) {
-
-            return false;
-
-        }
-
-
-        const result =
-            await OneSignal.Notifications
-                .requestPermission();
-
-
-        return (
-            result === true ||
-            OneSignal.Notifications.permission === true ||
-            OneSignal.Notifications.permissionNative ===
-                "granted"
-        );
-
-
-    } catch (error) {
-
-        console.error(
-            "❌ Notification permission error:",
-            error
-        );
-
-
-        return false;
-
-    }
-
-}
-
-
-// ============================================================
-// LINK FIREBASE USER → ONESIGNAL EXTERNAL ID
-// ============================================================
-
-export async function linkOneSignalUser(
-    user
-) {
+export async function linkOneSignalUser(user) {
 
     if (
         !user ||
@@ -405,7 +213,6 @@ export async function linkOneSignalUser(
             "⚠️ Firebase user not available."
         );
 
-
         return false;
 
     }
@@ -417,62 +224,47 @@ export async function linkOneSignalUser(
             await initOneSignal();
 
 
-        const externalId =
-            String(
-                user.uid
-            );
+        const uid =
+            String(user.uid);
 
 
         console.log(
-            "🔗 Linking Firebase UID to OneSignal..."
+            "🔗 Linking Firebase UID:",
+            uid
         );
 
-
-        console.log(
-            "Firebase UID:",
-            externalId
-        );
-
-
-        /*
-         * IMPORTANT
-         *
-         * This creates/updates the OneSignal
-         * External ID association.
-         */
 
         await OneSignal.login(
-            externalId
+            uid
         );
 
 
         console.log(
-            "✅ OneSignal login successful"
+            "✅ OneSignal external ID linked:",
+            uid
         );
 
 
         console.log(
             "OneSignal External ID:",
-            OneSignal.User.externalId
+            OneSignal.User?.externalId
         );
 
 
         console.log(
-            "OneSignal ID:",
-            OneSignal.User.onesignalId
+            "OneSignal User ID:",
+            OneSignal.User?.onesignalId
         );
 
 
         return true;
 
-
     } catch (error) {
 
         console.error(
-            "❌ OneSignal user linking failed:",
+            "❌ OneSignal linking failed:",
             error
         );
-
 
         return false;
 
@@ -482,7 +274,35 @@ export async function linkOneSignalUser(
 
 
 // ============================================================
-// GET EXTERNAL ID
+// SUBSCRIPTION ID
+// ============================================================
+
+export async function getOneSignalSubscriptionId() {
+
+    try {
+
+        const OneSignal =
+            await initOneSignal();
+
+
+        return (
+            OneSignal.User
+                ?.PushSubscription
+                ?.id ||
+            null
+        );
+
+    } catch {
+
+        return null;
+
+    }
+
+}
+
+
+// ============================================================
+// EXTERNAL ID
 // ============================================================
 
 export async function getOneSignalExternalId() {
@@ -494,17 +314,12 @@ export async function getOneSignalExternalId() {
 
 
         return (
-            OneSignal.User.externalId ||
+            OneSignal.User
+                ?.externalId ||
             null
         );
 
-    } catch (error) {
-
-        console.error(
-            "❌ External ID error:",
-            error
-        );
-
+    } catch {
 
         return null;
 
@@ -514,7 +329,7 @@ export async function getOneSignalExternalId() {
 
 
 // ============================================================
-// GET ONESIGNAL USER ID
+// ONESIGNAL USER ID
 // ============================================================
 
 export async function getOneSignalUserId() {
@@ -526,17 +341,12 @@ export async function getOneSignalUserId() {
 
 
         return (
-            OneSignal.User.onesignalId ||
+            OneSignal.User
+                ?.onesignalId ||
             null
         );
 
-    } catch (error) {
-
-        console.error(
-            "❌ OneSignal User ID error:",
-            error
-        );
-
+    } catch {
 
         return null;
 
@@ -546,75 +356,7 @@ export async function getOneSignalUserId() {
 
 
 // ============================================================
-// GET PUSH SUBSCRIPTION ID
-// ============================================================
-
-export async function getOneSignalSubscriptionId() {
-
-    try {
-
-        const OneSignal =
-            await initOneSignal();
-
-
-        /*
-         * OneSignal v16
-         */
-
-        if (
-            OneSignal.User &&
-            OneSignal.User.PushSubscription
-        ) {
-
-            return (
-                OneSignal.User
-                    .PushSubscription
-                    .id ||
-                null
-            );
-
-        }
-
-
-        /*
-         * Older compatible access
-         */
-
-        if (
-            OneSignal.User &&
-            OneSignal.User.pushSubscription
-        ) {
-
-            return (
-                OneSignal.User
-                    .pushSubscription
-                    .id ||
-                null
-            );
-
-        }
-
-
-        return null;
-
-
-    } catch (error) {
-
-        console.error(
-            "❌ Subscription ID error:",
-            error
-        );
-
-
-        return null;
-
-    }
-
-}
-
-
-// ============================================================
-// DEBUG INFO
+// DEBUG
 // ============================================================
 
 export async function getOneSignalDebugInfo() {
@@ -629,48 +371,42 @@ export async function getOneSignalDebugInfo() {
 
             permission:
                 OneSignal.Notifications
-                    .permission,
+                    ?.permission,
 
             permissionNative:
                 OneSignal.Notifications
-                    .permissionNative,
+                    ?.permissionNative,
 
             pushSupported:
                 OneSignal.Notifications
-                    .isPushSupported(),
+                    ?.isPushSupported(),
 
             externalId:
                 OneSignal.User
-                    .externalId ||
+                    ?.externalId ||
                 null,
 
             oneSignalId:
                 OneSignal.User
-                    .onesignalId ||
+                    ?.onesignalId ||
                 null,
 
             subscriptionId:
-                (
-                    OneSignal.User
-                        .PushSubscription
-                        ?.id
-                ) ||
+                OneSignal.User
+                    ?.PushSubscription
+                    ?.id ||
                 null
 
         };
 
-
     } catch (error) {
 
-        console.error(
-            "❌ OneSignal debug error:",
-            error
-        );
-
-
         return {
+
             error:
-                error.message
+                error?.message ||
+                "OneSignal debug failed."
+
         };
 
     }
@@ -694,12 +430,11 @@ export async function logoutOneSignalUser() {
 
 
         console.log(
-            "✅ OneSignal user logged out"
+            "✅ OneSignal logout successful"
         );
 
 
         return true;
-
 
     } catch (error) {
 
