@@ -554,7 +554,11 @@ import {
     doc,
     getDoc,
     setDoc,
-    serverTimestamp
+    serverTimestamp,
+    collection,
+    getDocs,
+    query,
+    where
 } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
 import { processReferralReward } from "./referral.js";
@@ -573,6 +577,58 @@ function safe(value,fallback=0){
     return value;
 }
 
+
+/* Calculate profile statistics from actual match records. */
+async function getRealMatchStats(uid) {
+    const byTournament = new Map();
+    try {
+        const [historySnap, tournamentsSnap] = await Promise.all([
+            getDocs(query(collection(db, "matchHistory"), where("userId", "==", uid))).catch(() => null),
+            getDocs(collection(db, "tournaments"))
+        ]);
+
+        if (historySnap) historySnap.forEach(d => {
+            const h = d.data() || {};
+            const id = String(h.tournamentId || d.id);
+            byTournament.set(id, {
+                result: String(h.result || "").toLowerCase(),
+                wonAmount: Number(h.wonAmount ?? h.winnings ?? h.prizeWon ?? 0) || 0,
+                completed: true
+            });
+        });
+
+        tournamentsSnap.forEach(d => {
+            const t = d.data() || {};
+            const participants = Array.isArray(t.participants) ? t.participants : [];
+            const entry = participants.find(p => String(p?.uid || p?.userId || p?.firebaseId || "") === uid);
+            if (!entry || byTournament.has(d.id)) return;
+            const status = String(t.status || "").toLowerCase();
+            const completed = ["complete", "completed", "finished", "finish", "result"].includes(status) || t.completed === true || t.isCompleted === true || t.resultPublished === true;
+            const results = Array.isArray(t.results) ? t.results : [];
+            const result = results.find(r => String(r?.userId || r?.uid || "") === uid) || {};
+            const perSlot = Math.max(1, Number(entry.count || entry.slotCount || 1));
+            const amount = result.winner === true
+                ? Number(result.prize ?? t.prize ?? 0) * perSlot + Number(result.kills || 0) * Number(t.perKill || 0)
+                : result.killOnly === true ? Number(result.kills || 0) * Number(t.perKill || 0)
+                : Number(result.wonAmount ?? result.winnings ?? 0);
+            byTournament.set(d.id, {
+                result: result.winner === true || amount > 0 ? "win" : (Object.keys(result).length ? "loss" : "pending"),
+                wonAmount: Number.isFinite(amount) ? amount : 0,
+                completed
+            });
+        });
+
+        const entries = [...byTournament.values()];
+        return {
+            matches: byTournament.size,
+            wins: entries.filter(x => x.result === "win" || x.result === "won" || x.wonAmount > 0).length,
+            earnings: entries.reduce((sum, x) => sum + Math.max(0, x.wonAmount), 0)
+        };
+    } catch (e) {
+        console.warn("Match statistics unavailable; using saved profile totals:", e);
+        return null;
+    }
+}
 
 /* =========================================================
    LOAD PROFILE
@@ -665,10 +721,8 @@ async function loadProfile(user){
             );
 
 
-            applyProfile(
-                user,
-                basicData
-            );
+            const realStats = await getRealMatchStats(user.uid);
+            applyProfile(user, realStats ? {...basicData, matchesPlayed:realStats.matches, matchesWon:realStats.wins, totalEarnings:realStats.earnings} : basicData);
 
             return;
         }
@@ -702,10 +756,8 @@ async function loadProfile(user){
             data = {...data,referCode:generatedReferCode};
         }
 
-        applyProfile(
-            user,
-            data
-        );
+        const realStats = await getRealMatchStats(user.uid);
+        applyProfile(user, realStats ? {...data, matchesPlayed:realStats.matches, matchesWon:realStats.wins, totalEarnings:realStats.earnings} : data);
 
 
     }catch(error){
