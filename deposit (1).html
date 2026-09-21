@@ -1,0 +1,1146 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Payment Gateway</title>
+
+<script src="https://cdn.tailwindcss.com"></script>
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&display=swap" rel="stylesheet">
+
+<style>
+body{
+    background:#0b0f19;
+    color:#fff;
+    font-family:'Hind Siliguri', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.method-card.selected{
+    border-color:#00b4d8;
+    box-shadow:0 0 0 2px rgba(0,180,216,.15)
+}
+
+.method-card.disabled{
+    opacity:.55;
+    cursor:not-allowed
+}
+
+#toast-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.toast {
+    background: rgba(15, 23, 42, 0.95);
+    backdrop-filter: blur(12px);
+    border-left: 4px solid #3b82f6;
+    color: #fff;
+    padding: 12px 20px;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
+    font-size: 13px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    animation: slideIn 0.3s ease, fadeOut 0.3s ease 2.7s forwards;
+}
+
+.toast.success { border-left-color: #10b981; }
+.toast.error { border-left-color: #ef4444; }
+.toast.warning { border-left-color: #f59e0b; }
+
+@keyframes slideIn {
+    from { transform: translateX(100%); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes fadeOut {
+    from { opacity: 1; }
+    to { opacity: 0; transform: translateY(-10px); }
+}
+</style>
+</head>
+
+<body class="min-h-screen flex flex-col justify-between p-4">
+
+<div id="toast-container"></div>
+
+<div class="max-w-md w-full mx-auto flex items-center justify-between py-2 mb-4">
+
+    <div class="flex items-center space-x-4">
+
+        <button
+            onclick="history.back()"
+            class="text-white text-lg focus:outline-none">
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+
+        <span class="text-lg font-medium">
+            Payment Gateway
+        </span>
+
+    </div>
+
+    <button
+        onclick="location.reload()"
+        class="focus:outline-none text-white text-lg">
+        <i class="fa-solid fa-rotate-right"></i>
+    </button>
+
+</div>
+
+
+<div class="max-w-md w-full mx-auto bg-[#121826] rounded-2xl p-5 shadow-xl border border-gray-800">
+
+    <div class="bg-white text-gray-900 rounded-xl p-4 mb-6 shadow-sm relative">
+
+        <div
+            id="usernameDisplay"
+            class="text-gray-500 text-sm font-medium">
+            Loading...
+        </div>
+
+        <div
+            id="amountDisplay"
+            class="text-2xl font-bold text-[#00b4d8] mt-1">
+            0.00 BDT
+        </div>
+
+        <div
+            id="invoiceDisplay"
+            class="text-xs text-gray-400 mt-1">
+        </div>
+
+    </div>
+
+
+    <div
+        id="loadingView"
+        class="text-center py-8 text-gray-400">
+
+        <i class="fa-solid fa-spinner fa-spin text-[#00b4d8] text-2xl"></i>
+
+        <p class="mt-3 text-sm">
+            Payment methods loading...
+        </p>
+
+    </div>
+
+
+    <div
+        id="methodSelectionView"
+        class="hidden">
+
+        <div
+            class="text-[#00b4d8] font-medium border-b-2 border-[#00b4d8] pb-2 mb-4 inline-block">
+
+            Mobile Banking
+
+        </div>
+
+
+        <div
+            id="gatewayGrid"
+            class="grid grid-cols-2 gap-3 mb-6">
+        </div>
+
+
+        <div
+            id="noGateway"
+            class="hidden text-center rounded-xl border border-red-900/50 bg-red-950/20 p-4 text-sm text-red-300">
+
+            Ei muhurte kono payment method available nei.
+
+        </div>
+
+
+        <div
+            class="text-center text-xs text-gray-400 flex items-center justify-center space-x-1 mt-4">
+
+            <i class="fa-solid fa-lock text-yellow-500"></i>
+
+            <span>
+                Your payment is secured with 256-bit encryption
+            </span>
+
+        </div>
+
+    </div>
+
+
+    <div
+        id="instructionView"
+        class="hidden">
+
+        <button
+            onclick="goBackToMethods()"
+            class="w-8 h-8 rounded-full bg-[#1e293b] flex items-center justify-center text-white mb-4">
+
+            <i class="fa-solid fa-arrow-left"></i>
+
+        </button>
+
+
+        <div
+            class="bg-white text-gray-800 rounded-xl p-4 mb-4 text-xs space-y-3 shadow-inner">
+
+
+            <div class="flex items-start space-x-2">
+
+                <span
+                    class="bg-[#e0f2fe] text-[#0284c7] font-bold rounded-full w-5 h-5 flex items-center justify-center shrink-0">
+                    1
+                </span>
+
+                <span>
+
+                    Dial
+                    <strong id="dialCode">
+                        *247#
+                    </strong>
+
+                    or open the
+
+                    <span
+                        id="methodNameText"
+                        class="font-semibold">
+                        bKash
+                    </span>
+
+                    app.
+
+                </span>
+
+            </div>
+
+
+            <div class="flex items-start space-x-2">
+
+                <span
+                    class="bg-[#e0f2fe] text-[#0284c7] font-bold rounded-full w-5 h-5 flex items-center justify-center shrink-0">
+                    2
+                </span>
+
+                <span>
+
+                    Choose:
+
+                    <strong class="text-[#00b4d8]">
+                        Send Money
+                    </strong>
+
+                </span>
+
+            </div>
+
+
+            <div
+                class="flex items-start space-x-2 justify-between items-center">
+
+                <div class="flex items-start space-x-2">
+
+                    <span
+                        class="bg-[#e0f2fe] text-[#0284c7] font-bold rounded-full w-5 h-5 flex items-center justify-center shrink-0">
+                        3
+                    </span>
+
+                    <span>
+
+                        Enter the Number:
+
+                        <strong id="agentNumber">
+                            Not configured
+                        </strong>
+
+                    </span>
+
+                </div>
+
+
+                <button
+                    onclick="copyText(document.getElementById('agentNumber').innerText)"
+                    class="bg-[#e0f2fe] text-[#0284c7] px-2 py-0.5 rounded text-[10px] font-semibold">
+
+                    Copy
+
+                </button>
+
+            </div>
+
+
+            <div
+                class="flex items-start space-x-2 justify-between items-center">
+
+                <div class="flex items-start space-x-2">
+
+                    <span
+                        class="bg-[#e0f2fe] text-[#0284c7] font-bold rounded-full w-5 h-5 flex items-center justify-center shrink-0">
+                        4
+                    </span>
+
+                    <span>
+
+                        Enter the Amount:
+
+                        <strong id="instructionAmount">
+                            0.00 BDT
+                        </strong>
+
+                    </span>
+
+                </div>
+
+
+                <button
+                    onclick="copyText(currentAmount.toFixed(2))"
+                    class="bg-[#e0f2fe] text-[#0284c7] px-2 py-0.5 rounded text-[10px] font-semibold">
+
+                    Copy
+
+                </button>
+
+            </div>
+
+
+            <div class="flex items-start space-x-2">
+
+                <span
+                    class="bg-[#e0f2fe] text-[#0284c7] font-bold rounded-full w-5 h-5 flex items-center justify-center shrink-0">
+                    5
+                </span>
+
+                <span>
+
+                    Now enter your
+
+                    <span
+                        id="methodNamePin"
+                        class="font-semibold">
+                        bKash
+                    </span>
+
+                    PIN to confirm.
+
+                </span>
+
+            </div>
+
+
+            <div class="flex items-start space-x-2">
+
+                <span
+                    class="bg-[#e0f2fe] text-[#0284c7] font-bold rounded-full w-5 h-5 flex items-center justify-center shrink-0">
+                    6
+                </span>
+
+                <span>
+
+                    Put the Transaction ID in the box below and press Verify
+
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <div class="mb-4">
+
+            <label
+                class="block text-xs font-medium text-gray-300 mb-1">
+
+                Transaction ID
+
+            </label>
+
+            <input
+                type="text"
+                id="trxIdInput"
+                placeholder="e.g. 9G78H6..."
+                class="w-full bg-[#1e293b] border border-gray-700 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-[#00b4d8] uppercase">
+
+        </div>
+
+
+        <button
+            onclick="verifyTransaction()"
+            id="verifyBtn"
+            class="w-full bg-[#00b4d8] hover:bg-[#0096c7] text-white font-medium py-3 rounded-xl transition shadow-lg">
+
+            Verify
+
+        </button>
+
+    </div>
+
+</div>
+
+
+<div
+    class="max-w-md w-full mx-auto text-center py-4">
+
+    <div
+        class="inline-flex items-center space-x-1 text-xs text-gray-500 bg-[#121826] px-3 py-1.5 rounded-lg border border-gray-800">
+
+        <span>
+            Powered by
+        </span>
+
+        <i class="fa-solid fa-mobile-screen-button text-gray-400"></i>
+
+    </div>
+
+</div>
+
+
+<script type="module">
+
+import {
+    auth,
+    db
+} from './firebase.js';
+
+
+import {
+    onAuthStateChanged
+} from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js';
+
+
+import {
+    collection,
+    addDoc,
+    doc,
+    getDoc,
+    getDocs,
+    query,
+    where,
+    serverTimestamp
+} from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js';
+
+
+let currentUser = null;
+
+let selectedGateway = '';
+
+let currentAmount = 0;
+
+let paymentSettings = {};
+
+window.showToast = function(message, type = 'success') {
+    const container = document.getElementById('toast-container');
+    if (!container) return;
+    const toast = document.createElement('div');
+    toast.className = `toast ${type}`;
+    
+    let iconClass = "fa-solid fa-circle-check text-emerald-400";
+    if (type === 'error') iconClass = "fa-solid fa-circle-xmark text-red-400";
+    if (type === 'warning') iconClass = "fa-solid fa-triangle-exclamation text-amber-400";
+
+    toast.innerHTML = `<i class="${iconClass}"></i> <span>${message}</span>`;
+    container.appendChild(toast);
+    setTimeout(() => toast.remove(), 3000);
+}
+
+
+const params =
+    new URLSearchParams(location.search);
+
+
+const rawAmount =
+    parseFloat(params.get('amount') || '0');
+
+
+if(
+    !Number.isFinite(rawAmount) ||
+    rawAmount < 10
+){
+
+    showToast('Minimum Deposit Amount ৳10.', 'warning');
+
+    setTimeout(() => {
+        history.back();
+    }, 1000);
+
+    throw new Error('Invalid deposit amount');
+
+}
+
+
+currentAmount =
+    Math.round(rawAmount * 100) / 100;
+
+
+const invoiceNo =
+    'INV' +
+    Math.floor(
+        10000000000 +
+        Math.random() * 90000000000
+    );
+
+
+document.getElementById('amountDisplay').innerText =
+    currentAmount.toFixed(2) + ' BDT';
+
+
+document.getElementById('instructionAmount').innerText =
+    currentAmount.toFixed(2) + ' BDT';
+
+
+document.getElementById('invoiceDisplay').innerText =
+    'Invoice: ' + invoiceNo;
+
+
+
+/*
+    ONLY BKASH + NAGAD
+*/
+
+const configs = {
+
+    Bkash: {
+        label: 'bKash',
+        bn: 'বিকাশ',
+        color: '#e2136e',
+        code: '*247#'
+    },
+
+    Nagad: {
+        label: 'Nagad',
+        bn: 'নগদ',
+        color: '#f7931e',
+        code: '*167#'
+    }
+
+};
+
+
+
+/*
+    Check whether payment number exists
+*/
+
+function enabled(name, d){
+
+    const key = name.toLowerCase();
+
+    const en =
+        d[key + 'Enabled'];
+
+    const obj =
+        d[key];
+
+    if(
+        typeof obj === 'object' &&
+        obj
+    ){
+
+        return (
+            obj.enabled !== false &&
+            !!(
+                obj.number ||
+                d[key + 'Number']
+            )
+        );
+
+    }
+
+
+    if(en !== undefined){
+
+        return (
+            !!en &&
+            !!(
+                d[key + 'Number'] ||
+                d[key]
+            )
+        );
+
+    }
+
+
+    return !!(
+        d[key + 'Number'] ||
+        d[key]
+    );
+
+}
+
+
+
+/*
+    Get payment number
+*/
+
+function numberOf(name, d){
+
+    const k =
+        name.toLowerCase();
+
+    return String(
+        d[k + 'Number'] ||
+        d[k] ||
+        ''
+    ).trim();
+
+}
+
+
+
+/*
+    Load Admin Panel payment numbers
+*/
+
+async function loadSettings(){
+
+    try{
+
+        const s =
+            await getDoc(
+                doc(
+                    db,
+                    'settings',
+                    'payment'
+                )
+            );
+
+
+        paymentSettings =
+            s.exists()
+            ? s.data()
+            : {};
+
+    }catch(e){
+
+        console.warn(
+            'Payment settings load error:',
+            e
+        );
+
+        paymentSettings = {};
+
+    }
+
+
+    renderGateways();
+
+}
+
+
+
+/*
+    Render ONLY BKASH + NAGAD
+*/
+
+function renderGateways(){
+
+    const grid =
+        document.getElementById(
+            'gatewayGrid'
+        );
+
+
+    grid.innerHTML = '';
+
+
+    let count = 0;
+
+
+    Object.keys(configs).forEach(
+        name => {
+
+            const c =
+                configs[name];
+
+
+            if(
+                name !== 'Bkash' &&
+                name !== 'Nagad'
+            ){
+
+                return;
+
+            }
+
+
+            if(
+                !enabled(
+                    name,
+                    paymentSettings
+                )
+            ){
+
+                return;
+
+            }
+
+
+            const n =
+                numberOf(
+                    name,
+                    paymentSettings
+                );
+
+
+            if(!n){
+
+                return;
+
+            }
+
+
+            count++;
+
+
+            const el =
+                document.createElement(
+                    'button'
+                );
+
+
+            el.type = 'button';
+
+
+            el.className =
+                'method-card bg-white rounded-xl p-3 flex flex-col items-center justify-center cursor-pointer border-2 border-transparent transition shadow';
+
+
+            el.innerHTML = `
+
+                <span
+                    style="color:${c.color}"
+                    class="font-bold text-lg">
+
+                    ${c.label}
+
+                </span>
+
+                <span
+                    class="text-xs text-gray-600 font-medium mt-1">
+
+                    ${c.bn}
+
+                </span>
+
+            `;
+
+
+            el.onclick =
+                () => selectMethod(name);
+
+
+            grid.appendChild(el);
+
+        }
+    );
+
+
+    document
+        .getElementById('noGateway')
+        .classList
+        .toggle(
+            'hidden',
+            count > 0
+        );
+
+
+    document
+        .getElementById('loadingView')
+        .classList
+        .add('hidden');
+
+
+    document
+        .getElementById('methodSelectionView')
+        .classList
+        .remove('hidden');
+
+}
+
+
+
+/*
+    Select Payment Method
+*/
+
+window.selectMethod =
+function(method){
+
+    if(
+        method !== 'Bkash' &&
+        method !== 'Nagad'
+    ){
+
+        return;
+
+    }
+
+
+    const n =
+        numberOf(
+            method,
+            paymentSettings
+        );
+
+
+    if(!n){
+
+        return showToast(
+            'Ei payment method-er number admin panel theke configure kora hoyni.',
+            'error'
+        );
+
+    }
+
+
+    selectedGateway =
+        method;
+
+
+    const c =
+        configs[method];
+
+
+    document
+        .getElementById(
+            'methodSelectionView'
+        )
+        .classList
+        .add('hidden');
+
+
+    document
+        .getElementById(
+            'instructionView'
+        )
+        .classList
+        .remove('hidden');
+
+
+    document.getElementById(
+        'methodNameText'
+    ).innerText =
+        c.label;
+
+
+    document.getElementById(
+        'methodNamePin'
+    ).innerText =
+        c.label;
+
+
+    document.getElementById(
+        'dialCode'
+    ).innerText =
+        c.code;
+
+
+    document.getElementById(
+        'agentNumber'
+    ).innerText =
+        n;
+
+};
+
+
+
+/*
+    Back to Methods
+*/
+
+window.goBackToMethods =
+function(){
+
+    document
+        .getElementById(
+            'instructionView'
+        )
+        .classList
+        .add('hidden');
+
+
+    document
+        .getElementById(
+            'methodSelectionView'
+        )
+        .classList
+        .remove('hidden');
+
+
+    document.getElementById(
+        'trxIdInput'
+    ).value = '';
+
+};
+
+
+
+/*
+    Copy
+*/
+
+window.copyText =
+async function(t){
+
+    if(
+        !t ||
+        t === 'Not configured'
+    ){
+
+        return;
+
+    }
+
+
+    try{
+
+        await navigator
+            .clipboard
+            .writeText(t);
+
+        showToast(
+            'Copied: ' + t,
+            'success'
+        );
+
+    }catch(_){
+
+        showToast(t, 'success');
+
+    }
+
+};
+
+
+
+/*
+    Auth
+*/
+
+onAuthStateChanged(
+    auth,
+    u => {
+
+        currentUser = u;
+
+
+        if(u){
+
+            document.getElementById(
+                'usernameDisplay'
+            ).innerText =
+                u.displayName ||
+                u.email?.split('@')[0] ||
+                'User';
+
+        }else{
+
+            document.getElementById(
+                'usernameDisplay'
+            ).innerText =
+                'Guest User';
+
+        }
+
+    }
+);
+
+
+
+/*
+    Verify Transaction
+*/
+
+window.verifyTransaction =
+async function(){
+
+    const trx =
+        document
+            .getElementById(
+                'trxIdInput'
+            )
+            .value
+            .trim()
+            .toUpperCase();
+
+
+    if(!selectedGateway){
+
+        return showToast(
+            'Age ekti payment method select korun.',
+            'warning'
+        );
+
+    }
+
+
+    if(!trx){
+
+        return showToast(
+            'Doya kore transaction ID (TrxID) din!',
+            'warning'
+        );
+
+    }
+
+
+    const btn =
+        document.getElementById(
+            'verifyBtn'
+        );
+
+
+    btn.disabled = true;
+
+    btn.innerText =
+        'Verifying...';
+
+
+    try{
+
+        /*
+            Check duplicate Transaction ID
+        */
+
+        const qTrx =
+            query(
+                collection(
+                    db,
+                    'transactions'
+                ),
+                where(
+                    'trxId',
+                    '==',
+                    trx
+                )
+            );
+
+
+        const snapTrx =
+            await getDocs(qTrx);
+
+
+        if(!snapTrx.empty){
+
+            showToast(
+                'Ei Transaction ID diye ইতিমধ্যে ekti ডিপোজিট রিকোয়েস্ট পাঠানো হয়েছে. Ekbarer beshi babohar kora jay na!',
+                'error'
+            );
+
+
+            btn.disabled = false;
+
+            btn.innerText =
+                'Verify';
+
+            return;
+
+        }
+
+
+        /*
+            Save Deposit Request
+        */
+
+        await addDoc(
+            collection(
+                db,
+                'transactions'
+            ),
+            {
+
+                userId:
+                    currentUser?.uid ||
+                    'anonymous',
+
+                userEmail:
+                    currentUser?.email ||
+                    'guest',
+
+                userName:
+                    currentUser
+                    ? (
+                        currentUser.displayName ||
+                        currentUser.email?.split('@')[0] ||
+                        'User'
+                    )
+                    : 'Guest',
+
+                amount:
+                    currentAmount,
+
+                gateway:
+                    selectedGateway,
+
+                method:
+                    selectedGateway,
+
+                trxId:
+                    trx,
+
+                transactionId:
+                    trx,
+
+                invoice:
+                    invoiceNo,
+
+                status:
+                    'pending',
+
+                createdAt:
+                    serverTimestamp()
+
+            }
+        );
+
+
+        showToast(
+            'Deposit request safolvabe joma hoyeche! Admin check kore verify korben.',
+            'success'
+        );
+
+        setTimeout(() => {
+            location.href = 'index.html';
+        }, 1500);
+
+
+    }catch(e){
+
+        console.error(e);
+
+
+        showToast(
+            'Truti hoyeche: ' + e.message,
+            'error'
+        );
+
+
+        btn.disabled = false;
+
+        btn.innerText =
+            'Verify';
+
+    }
+
+};
+
+
+
+/*
+    Start
+*/
+
+loadSettings();
+
+</script>
+
+</body>
+</html>
