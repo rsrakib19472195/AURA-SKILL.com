@@ -526,13 +526,25 @@
                         if(tStatus === 'complete') tStatus = 'completed';
                         const startTime = Number(data.startTime || 0);
 
-                        if(startTime > 0) {
-                            if(tStatus === 'upcoming' && now >= startTime) {
-                                tStatus = 'live';
-                            }
-                            if(tStatus === 'live' && now >= (startTime + 10 * 60 * 1000)) {
-                                tStatus = 'completed';
-                            }
+                        // Room Details update NEVER changes lifecycle.
+                        // Result/status marks a match completed; otherwise startTime controls Upcoming -> Live.
+                        const hasResult =
+                            data.result != null ||
+                            data.matchResult != null ||
+                            data.outcome != null ||
+                            data.resultStatus != null ||
+                            data.completed === true ||
+                            data.isCompleted === true ||
+                            data.winnerUid != null ||
+                            (Array.isArray(data.winnerUids) && data.winnerUids.length > 0);
+
+                        if (['complete','completed','finished','finish','result'].includes(tStatus) ||
+                            data.completed === true || data.isCompleted === true || hasResult) {
+                            tStatus = 'completed';
+                        } else if (startTime > 0 && now >= startTime) {
+                            tStatus = 'live';
+                        } else {
+                            tStatus = 'upcoming';
                         }
 
                         if(tStatus === 'completed') {
@@ -682,7 +694,10 @@
                         const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
                         const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
                         const seconds = Math.floor((diff % (1000 * 60)) / 1000);
-                        el.innerText = `Starts in: ${hours > 0 ? hours + 'h ' : ''}${minutes}m ${seconds}s`;
+                        const d = new Date(startTime);
+                        const dateText = d.toLocaleDateString('bn-BD', {day:'2-digit', month:'short', year:'numeric'});
+                        const timeText = d.toLocaleTimeString('bn-BD', {hour:'2-digit', minute:'2-digit'});
+                        el.innerHTML = `Starts in: ${hours > 0 ? hours + 'h ' : ''}${minutes}m ${seconds}s<br><span class="text-slate-500">${dateText} • ${timeText}</span>`;
                     }
                 });
             }, 1000);

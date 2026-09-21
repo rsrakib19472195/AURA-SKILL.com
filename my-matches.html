@@ -75,11 +75,13 @@
     <script type="module">
         import { auth, db } from "./firebase.js";
         import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-        import { doc, getDoc, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { doc, getDoc, collection, getDocs, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         let currentUserUid = null;
         let allJoinedMatches = [];
         let currentFilter = 'joined';
+        let unsubscribeTournaments = null;
+        let statusTimer = null;
 
         window.showToast = function(message, type = 'success') {
             const container = document.getElementById('toast-container');
@@ -98,6 +100,7 @@
             try {
                 await fetchUserData(user.uid);
                 await fetchMyMatches(user.uid);
+                startTournamentRealtime(user.uid);
             } catch (err) {
                 console.error(err);
             } finally {
@@ -114,32 +117,69 @@
             } catch (e) { console.error(e); }
         }
 
+        function normalizeTournamentStatus(data) {
+            const raw = String(data.status || 'upcoming').toLowerCase();
+            const startTime = Number(data.startTime || 0);
+            const hasResult =
+                data.result != null ||
+                data.matchResult != null ||
+                data.outcome != null ||
+                data.resultStatus != null ||
+                data.completed === true ||
+                data.isCompleted === true ||
+                data.winnerUid != null ||
+                (Array.isArray(data.winnerUids) && data.winnerUids.length > 0);
+
+            if (['complete','completed','finished','finish','result'].includes(raw) ||
+                data.completed === true || data.isCompleted === true || hasResult) return 'completed';
+            if (startTime > 0 && Date.now() >= startTime) return 'live';
+            return 'upcoming';
+        }
+
+        function buildMyMatches(snapshot) {
+            allJoinedMatches = [];
+            snapshot.forEach(d => {
+                const data = d.data() || {};
+                const participants = Array.isArray(data.participants) ? data.participants : [];
+                const userEntry = participants.find(p => p && p.uid === currentUserUid);
+                if (userEntry) {
+                    allJoinedMatches.push({
+                        id: d.id,
+                        ...data,
+                        status: normalizeTournamentStatus(data),
+                        userPlayers: Array.isArray(userEntry.players) ? userEntry.players : [],
+                        userEntry,
+                        registeredAt: userEntry.registeredAt || 0
+                    });
+                }
+            });
+            allJoinedMatches.sort((a,b) => Number(b.startTime||0) - Number(a.startTime||0));
+            renderMatches();
+        }
+
         async function fetchMyMatches(uid) {
             try {
                 const tourSnap = await getDocs(collection(db, "tournaments"));
-                allJoinedMatches = [];
-
-                tourSnap.forEach(d => {
-                    const data = d.data() || {};
-                    const participants = Array.isArray(data.participants) ? data.participants : [];
-                    const userEntry = participants.find(p => p.uid === uid);
-
-                    if (userEntry) {
-                        allJoinedMatches.push({
-                            id: d.id,
-                            ...data,
-                            userPlayers: userEntry.players || [],
-                            userEntry: userEntry,
-                            registeredAt: userEntry.registeredAt || 0
-                        });
-                    }
-                });
-
-                renderMatches();
+                buildMyMatches(tourSnap);
             } catch (e) {
                 console.error(e);
                 showToast("ম্যাচ হিস্ট্রি লোড করতে সমস্যা হয়েছে!", "error");
             }
+        }
+
+        function startTournamentRealtime(uid) {
+            if (unsubscribeTournaments) unsubscribeTournaments();
+            unsubscribeTournaments = onSnapshot(collection(db, "tournaments"), (snapshot) => {
+                buildMyMatches(snapshot);
+            }, (error) => {
+                console.error("Tournament realtime error:", error);
+            });
+
+            if (statusTimer) clearInterval(statusTimer);
+            statusTimer = setInterval(() => {
+                allJoinedMatches = allJoinedMatches.map(m => ({...m, status: normalizeTournamentStatus(m)}));
+                renderMatches();
+            }, 1000);
         }
 
         window.filterMatches = function(type) {
@@ -188,6 +228,7 @@
                             <div>
                                 <h4 class="text-xs font-bold text-white">${m.name}</h4>
                                 <span class="text-[10px] text-slate-400 block">${m.time || 'Scheduled'}</span>
+                                ${m.startTime ? `<span class="text-[10px] text-blue-300 block">${new Date(Number(m.startTime)).toLocaleDateString('bn-BD')} • ${new Date(Number(m.startTime)).toLocaleTimeString('bn-BD',{hour:'2-digit',minute:'2-digit'})}</span>` : ''}
                             </div>
                             <span class="bg-blue-600/20 text-blue-400 border border-blue-500/30 px-2 py-0.5 rounded-md text-[10px] font-bold">${statusBadge}</span>
                         </div>
@@ -199,10 +240,10 @@
                             <div class="flex justify-between"><span class="text-slate-400">Map:</span> <span class="text-emerald-400 font-semibold">${m.map || 'Bermuda'}</span></div>
                             <div class="pt-1 border-t border-slate-800"><span class="text-slate-400 block mb-0.5">Your IGNs:</span> <span class="text-blue-300 font-bold select-all">${ignList}</span></div>
                         </div>
-                        ${m.roomId && m.roomPass ? `
+                        ${m.roomId || m.roomPass ? `
                             <div class="bg-emerald-950/30 border border-emerald-500/30 p-2.5 rounded-xl flex justify-between items-center text-xs">
-                                <div><span class="text-slate-400 text-[10px] block">Room ID: <strong class="text-white select-all">${m.roomId}</strong></span></div>
-                                <div><span class="text-slate-400 text-[10px] block">Password: <strong class="text-amber-400 select-all">${m.roomPass}</strong></span></div>
+                                <div><span class="text-slate-400 text-[10px] block">Room ID: <strong class="text-white select-all">${m.roomId || 'N/A'}</strong></span></div>
+                                <div><span class="text-slate-400 text-[10px] block">Password: <strong class="text-amber-400 select-all">${m.roomPass || 'N/A'}</strong></span></div>
                             </div>
                         ` : ''}
                     </div>
