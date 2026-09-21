@@ -2,7 +2,6 @@
 // ============================================================
 // AURA / AURA SKILL
 // FIREBASE + ONESIGNAL
-// APK SAFE VERSION
 // ============================================================
 
 import {
@@ -16,6 +15,7 @@ import {
 import {
     getFirestore
 } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
 
 // ============================================================
 // FIREBASE CONFIG
@@ -31,6 +31,7 @@ const firebaseConfig = {
     appId: "1:502326798792:web:2afd27cb9cd44da48cb8fd"
 };
 
+
 // ============================================================
 // ONESIGNAL APP ID
 // ============================================================
@@ -38,22 +39,30 @@ const firebaseConfig = {
 export const ONESIGNAL_APP_ID =
     "b4420740-b9f6-4de7-8792-f6302ad38e4d";
 
-// ============================================================
-// FIREBASE
-// ============================================================
-
-const app = initializeApp(firebaseConfig);
-
-export const auth = getAuth(app);
-
-export const db = getFirestore(app);
 
 // ============================================================
-// DEFAULT PROFILE PHOTO
+// INITIALIZE FIREBASE
+// ============================================================
+
+const app =
+    initializeApp(firebaseConfig);
+
+
+export const auth =
+    getAuth(app);
+
+
+export const db =
+    getFirestore(app);
+
+
+// ============================================================
+// DEFAULT PROFILE
 // ============================================================
 
 export const DEFAULT_PROFILE_PHOTO =
     "https://videotourl.com/images/1789800604014-b96e1edf-d789-4513-8557-9fb63a327a13.jpg";
+
 
 // ============================================================
 // ADMIN EMAIL
@@ -62,109 +71,160 @@ export const DEFAULT_PROFILE_PHOTO =
 export const ADMIN_EMAIL =
     "teamgamechangerofficial@gmail.com";
 
+
 // ============================================================
-// ONESIGNAL WEB SDK
+// ONESIGNAL READY
 // ============================================================
 
 let oneSignalReadyPromise = null;
 
+
 export function initOneSignal() {
 
     if (oneSignalReadyPromise) {
+
         return oneSignalReadyPromise;
+
     }
 
-    oneSignalReadyPromise = new Promise((resolve) => {
 
-        try {
+    oneSignalReadyPromise =
+        new Promise((resolve, reject) => {
 
-            window.OneSignalDeferred =
-                window.OneSignalDeferred || [];
+            try {
 
-            const initialize = async (OneSignal) => {
+                window.OneSignalDeferred =
+                    window.OneSignalDeferred || [];
 
-                try {
 
-                    await OneSignal.init({
-                        appId: ONESIGNAL_APP_ID
-                    });
+                const initialize =
+                    async (OneSignal) => {
 
-                    console.log(
-                        "✅ OneSignal initialized"
+                        try {
+
+                            await OneSignal.init({
+
+                                appId:
+                                    ONESIGNAL_APP_ID
+
+                            });
+
+
+                            console.log(
+                                "✅ OneSignal initialized"
+                            );
+
+
+                            resolve(
+                                OneSignal
+                            );
+
+
+                        } catch (error) {
+
+                            console.error(
+                                "❌ OneSignal initialization failed:",
+                                error
+                            );
+
+
+                            reject(error);
+
+                        }
+
+                    };
+
+
+                const existingScript =
+                    document.querySelector(
+                        'script[src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js"]'
                     );
 
-                    resolve(OneSignal);
 
-                } catch (error) {
+                if (existingScript) {
 
-                    console.warn(
-                        "⚠️ OneSignal Web init failed:",
-                        error
+                    window.OneSignalDeferred.push(
+                        initialize
                     );
 
-                    // APK native OneSignal থাকলে
-                    // এই error login আটকাবে না।
-                    resolve(null);
+                    return;
+
                 }
-            };
 
-            const existingScript =
-                document.querySelector(
-                    'script[src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js"]'
+
+                const script =
+                    document.createElement(
+                        "script"
+                    );
+
+
+                script.src =
+                    "https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js";
+
+
+                script.defer =
+                    true;
+
+
+                script.onload =
+                    () => {
+
+                        console.log(
+                            "✅ OneSignal SDK loaded"
+                        );
+
+
+                        window.OneSignalDeferred.push(
+                            initialize
+                        );
+
+                    };
+
+
+                script.onerror =
+                    () => {
+
+                        const error =
+                            new Error(
+                                "OneSignal SDK could not be loaded."
+                            );
+
+
+                        console.error(
+                            "❌ OneSignal SDK load failed:",
+                            error
+                        );
+
+
+                        reject(error);
+
+                    };
+
+
+                document.head.appendChild(
+                    script
                 );
 
-            if (existingScript) {
 
-                window.OneSignalDeferred.push(
-                    initialize
+            } catch (error) {
+
+                console.error(
+                    "❌ OneSignal setup error:",
+                    error
                 );
 
-                return;
+
+                reject(error);
+
             }
 
-            const script =
-                document.createElement("script");
+        });
 
-            script.src =
-                "https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js";
-
-            script.defer = true;
-
-            script.onload = () => {
-
-                console.log(
-                    "✅ OneSignal SDK loaded"
-                );
-
-                window.OneSignalDeferred.push(
-                    initialize
-                );
-            };
-
-            script.onerror = () => {
-
-                console.warn(
-                    "⚠️ OneSignal Web SDK unavailable."
-                );
-
-                resolve(null);
-            };
-
-            document.head.appendChild(script);
-
-        } catch (error) {
-
-            console.warn(
-                "⚠️ OneSignal setup skipped:",
-                error
-            );
-
-            resolve(null);
-        }
-    });
 
     return oneSignalReadyPromise;
+
 }
+
 
 // ============================================================
 // PUSH SUPPORT
@@ -177,38 +237,37 @@ export async function isOneSignalPushSupported() {
         const OneSignal =
             await initOneSignal();
 
-        // APK native notification
-        if (!OneSignal) {
-            return true;
-        }
 
-        if (
-            OneSignal.Notifications &&
-            typeof OneSignal.Notifications
-                .isPushSupported === "function"
-        ) {
-
-            return OneSignal.Notifications
+        const supported =
+            OneSignal.Notifications
                 .isPushSupported();
-        }
 
-        return true;
+
+        console.log(
+            "Push supported:",
+            supported
+        );
+
+
+        return supported;
 
     } catch (error) {
 
-        console.warn(
-            "Push support check:",
+        console.error(
+            "❌ Push support check failed:",
             error
         );
 
-        return true;
+
+        return false;
+
     }
+
 }
+
 
 // ============================================================
 // PERMISSION STATUS
-// IMPORTANT:
-// এখানে native APK permission request হবে না.
 // ============================================================
 
 export async function getOneSignalPermissionStatus() {
@@ -218,183 +277,209 @@ export async function getOneSignalPermissionStatus() {
         const OneSignal =
             await initOneSignal();
 
-        if (!OneSignal) {
 
-            // Native APK notification
-            return true;
-        }
-
-        if (
-            OneSignal.Notifications &&
-            typeof OneSignal.Notifications
-                .permission === "boolean"
-        ) {
-
-            return OneSignal.Notifications.permission;
-        }
-
-        return true;
+        return (
+            OneSignal.Notifications.permission
+        );
 
     } catch (error) {
 
-        console.warn(
-            "Permission status check:",
+        console.error(
+            "❌ Notification status error:",
             error
         );
 
-        return true;
+
+        return false;
+
     }
+
 }
 
+
 // ============================================================
-// REQUEST NOTIFICATION PERMISSION
+// REQUEST PERMISSION
+//
+// NOTE:
+// APK native notification permission should be handled
+// by the native OneSignal SDK.
+//
+// This function remains for browser compatibility.
 // ============================================================
 
 export async function requestOneSignalPermission() {
 
     try {
 
-        console.log(
-            "🔔 APK notification setup..."
-        );
+        const OneSignal =
+            await initOneSignal();
 
-        /*
-         * IMPORTANT
-         *
-         * এখানে আর:
-         *
-         * OneSignal.Notifications.requestPermission()
-         *
-         * call করা হচ্ছে না।
-         *
-         * কারণ APK-এর native notification
-         * permission already configured.
-         */
 
         if (
-            auth.currentUser &&
-            auth.currentUser.uid
+            !OneSignal.Notifications
+                .isPushSupported()
         ) {
 
-            await linkOneSignalUser(
-                auth.currentUser
+            console.warn(
+                "Push notification is not supported."
             );
+
+
+            return false;
+
         }
 
-        console.log(
-            "✅ APK notification ready"
+
+        if (
+            OneSignal.Notifications.permission ===
+            true
+        ) {
+
+            return true;
+
+        }
+
+
+        if (
+            OneSignal.Notifications.permissionNative ===
+            "granted"
+        ) {
+
+            return true;
+
+        }
+
+
+        if (
+            OneSignal.Notifications.permissionNative ===
+            "denied"
+        ) {
+
+            return false;
+
+        }
+
+
+        const result =
+            await OneSignal.Notifications
+                .requestPermission();
+
+
+        return (
+            result === true ||
+            OneSignal.Notifications.permission === true ||
+            OneSignal.Notifications.permissionNative ===
+                "granted"
         );
 
-        // সবসময় success
-        return true;
 
     } catch (error) {
 
-        console.warn(
-            "⚠️ Notification setup warning:",
+        console.error(
+            "❌ Notification permission error:",
             error
         );
 
-        /*
-         * APK native notification setup
-         * website error-এর কারণে বন্ধ হবে না।
-         */
 
-        return true;
+        return false;
+
     }
+
 }
 
+
 // ============================================================
-// FIREBASE UID → ONESIGNAL EXTERNAL ID
+// LINK FIREBASE USER → ONESIGNAL EXTERNAL ID
 // ============================================================
 
-export async function linkOneSignalUser(user) {
+export async function linkOneSignalUser(
+    user
+) {
 
-    if (!user || !user.uid) {
+    if (
+        !user ||
+        !user.uid
+    ) {
 
         console.warn(
             "⚠️ Firebase user not available."
         );
 
+
         return false;
+
     }
 
-    const externalId =
-        String(user.uid);
-
-    console.log(
-        "🔗 Firebase UID → OneSignal External ID"
-    );
-
-    console.log(
-        "Firebase UID:",
-        externalId
-    );
 
     try {
 
         const OneSignal =
             await initOneSignal();
 
+
+        const externalId =
+            String(
+                user.uid
+            );
+
+
+        console.log(
+            "🔗 Linking Firebase UID to OneSignal..."
+        );
+
+
+        console.log(
+            "Firebase UID:",
+            externalId
+        );
+
+
         /*
-         * Web OneSignal available থাকলে
-         * Firebase UID link করবে।
+         * IMPORTANT
+         *
+         * This creates/updates the OneSignal
+         * External ID association.
          */
 
-        if (
-            OneSignal &&
-            typeof OneSignal.login === "function"
-        ) {
+        await OneSignal.login(
+            externalId
+        );
 
-            await OneSignal.login(
-                externalId
-            );
 
-            console.log(
-                "✅ OneSignal login successful"
-            );
+        console.log(
+            "✅ OneSignal login successful"
+        );
 
-            try {
 
-                console.log(
-                    "External ID:",
-                    OneSignal.User
-                        ? OneSignal.User.externalId
-                        : null
-                );
+        console.log(
+            "OneSignal External ID:",
+            OneSignal.User.externalId
+        );
 
-                console.log(
-                    "OneSignal ID:",
-                    OneSignal.User
-                        ? OneSignal.User.onesignalId
-                        : null
-                );
 
-            } catch (_) {}
+        console.log(
+            "OneSignal ID:",
+            OneSignal.User.onesignalId
+        );
 
-        } else {
-
-            console.log(
-                "ℹ️ Native APK OneSignal is active."
-            );
-        }
 
         return true;
+
 
     } catch (error) {
 
-        console.warn(
-            "⚠️ OneSignal linking warning:",
+        console.error(
+            "❌ OneSignal user linking failed:",
             error
         );
 
-        /*
-         * Login block করবে না।
-         */
 
-        return true;
+        return false;
+
     }
+
 }
+
 
 // ============================================================
 // GET EXTERNAL ID
@@ -407,44 +492,26 @@ export async function getOneSignalExternalId() {
         const OneSignal =
             await initOneSignal();
 
-        if (
-            OneSignal &&
-            OneSignal.User
-        ) {
 
-            return (
-                OneSignal.User.externalId ||
-                null
-            );
-        }
-
-        /*
-         * Native APK-এর ক্ষেত্রে Firebase UID
-         * external ID হিসেবে ব্যবহার করা হবে।
-         */
-
-        if (
-            auth.currentUser &&
-            auth.currentUser.uid
-        ) {
-
-            return String(
-                auth.currentUser.uid
-            );
-        }
-
-        return null;
+        return (
+            OneSignal.User.externalId ||
+            null
+        );
 
     } catch (error) {
 
-        console.warn(
-            "External ID error:",
+        console.error(
+            "❌ External ID error:",
             error
         );
 
+
         return null;
+
     }
+
 }
+
 
 // ============================================================
 // GET ONESIGNAL USER ID
@@ -457,29 +524,94 @@ export async function getOneSignalUserId() {
         const OneSignal =
             await initOneSignal();
 
-        if (
-            OneSignal &&
-            OneSignal.User
-        ) {
 
-            return (
-                OneSignal.User.onesignalId ||
-                null
-            );
-        }
-
-        return null;
+        return (
+            OneSignal.User.onesignalId ||
+            null
+        );
 
     } catch (error) {
 
-        console.warn(
-            "OneSignal User ID error:",
+        console.error(
+            "❌ OneSignal User ID error:",
             error
         );
 
+
         return null;
+
     }
+
 }
+
+
+// ============================================================
+// GET PUSH SUBSCRIPTION ID
+// ============================================================
+
+export async function getOneSignalSubscriptionId() {
+
+    try {
+
+        const OneSignal =
+            await initOneSignal();
+
+
+        /*
+         * OneSignal v16
+         */
+
+        if (
+            OneSignal.User &&
+            OneSignal.User.PushSubscription
+        ) {
+
+            return (
+                OneSignal.User
+                    .PushSubscription
+                    .id ||
+                null
+            );
+
+        }
+
+
+        /*
+         * Older compatible access
+         */
+
+        if (
+            OneSignal.User &&
+            OneSignal.User.pushSubscription
+        ) {
+
+            return (
+                OneSignal.User
+                    .pushSubscription
+                    .id ||
+                null
+            );
+
+        }
+
+
+        return null;
+
+
+    } catch (error) {
+
+        console.error(
+            "❌ Subscription ID error:",
+            error
+        );
+
+
+        return null;
+
+    }
+
+}
+
 
 // ============================================================
 // DEBUG INFO
@@ -492,87 +624,59 @@ export async function getOneSignalDebugInfo() {
         const OneSignal =
             await initOneSignal();
 
-        if (!OneSignal) {
-
-            return {
-                apk: true,
-                nativeNotification: true,
-                permission: true,
-                permissionNative: "granted",
-                pushSupported: true,
-                externalId:
-                    auth.currentUser
-                        ? String(
-                            auth.currentUser.uid
-                        )
-                        : null,
-                oneSignalId: null
-            };
-        }
 
         return {
-
-            apk: true,
 
             permission:
                 OneSignal.Notifications
-                    ? OneSignal.Notifications.permission
-                    : true,
+                    .permission,
 
             permissionNative:
                 OneSignal.Notifications
-                    ? OneSignal.Notifications
-                        .permissionNative
-                    : "granted",
+                    .permissionNative,
 
             pushSupported:
-                OneSignal.Notifications &&
-                typeof OneSignal.Notifications
-                    .isPushSupported === "function"
-                    ? OneSignal.Notifications
-                        .isPushSupported()
-                    : true,
+                OneSignal.Notifications
+                    .isPushSupported(),
 
             externalId:
                 OneSignal.User
-                    ? OneSignal.User.externalId ||
-                      null
-                    : null,
+                    .externalId ||
+                null,
 
             oneSignalId:
                 OneSignal.User
-                    ? OneSignal.User.onesignalId ||
-                      null
-                    : null
+                    .onesignalId ||
+                null,
+
+            subscriptionId:
+                (
+                    OneSignal.User
+                        .PushSubscription
+                        ?.id
+                ) ||
+                null
+
         };
+
 
     } catch (error) {
 
+        console.error(
+            "❌ OneSignal debug error:",
+            error
+        );
+
+
         return {
-
-            apk: true,
-
-            nativeNotification: true,
-
-            permission: true,
-
-            permissionNative: "granted",
-
-            pushSupported: true,
-
-            externalId:
-                auth.currentUser
-                    ? String(
-                        auth.currentUser.uid
-                    )
-                    : null,
-
-            oneSignalId: null,
-
-            error: error.message
+            error:
+                error.message
         };
+
     }
+
 }
+
 
 // ============================================================
 // LOGOUT
@@ -585,27 +689,28 @@ export async function logoutOneSignalUser() {
         const OneSignal =
             await initOneSignal();
 
-        if (
-            OneSignal &&
-            typeof OneSignal.logout === "function"
-        ) {
 
-            await OneSignal.logout();
+        await OneSignal.logout();
 
-            console.log(
-                "✅ OneSignal logout successful"
-            );
-        }
+
+        console.log(
+            "✅ OneSignal user logged out"
+        );
+
 
         return true;
+
 
     } catch (error) {
 
-        console.warn(
-            "⚠️ OneSignal logout warning:",
+        console.error(
+            "❌ OneSignal logout failed:",
             error
         );
 
-        return true;
+
+        return false;
+
     }
+
 }
