@@ -13,245 +13,117 @@
         ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 10px; }
         .glass-card { background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(12px); border: 1px solid rgba(30, 41, 59, 0.9); }
         #toast-container { position: fixed; top: 20px; right: 20px; z-index: 9999; display: flex; flex-direction: column; gap: 10px; }
-        .toast {
-            background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(12px); border-left: 4px solid #3b82f6;
-            color: #fff; padding: 12px 20px; border-radius: 12px; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
-            font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 10px;
-            animation: slideIn 0.3s ease, fadeOut 0.3s ease 2.7s forwards;
-        }
+        .toast { background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(12px); border-left: 4px solid #3b82f6; color: #fff; padding: 12px 20px; border-radius: 12px; box-shadow: 0 10px 25px -5px rgba(0,0,0,.5); font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 10px; animation: slideIn .3s ease, fadeOut .3s ease 2.7s forwards; }
         .toast.error { border-left-color: #ef4444; }
         @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
         @keyframes fadeOut { from { opacity: 1; } to { opacity: 0; transform: translateY(-10px); } }
     </style>
 </head>
 <body class="min-h-screen flex flex-col pb-28 overflow-x-hidden">
-
-    <div id="toast-container"></div>
-
-    <div id="app-loader" class="fixed inset-0 z-50 flex flex-col items-center justify-center bg-[#050811] space-y-4">
-        <div class="w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
-        <p class="text-xs tracking-widest text-slate-400 font-semibold uppercase">Loading...</p>
+<div id="toast-container"></div>
+<div id="app-loader" class="fixed inset-0 z-50 flex flex-col items-center justify-center bg-[#050811] space-y-4">
+    <div class="w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
+    <p class="text-xs tracking-widest text-slate-400 font-semibold uppercase">Loading...</p>
+</div>
+<header class="bg-[#0b0f1a]/90 backdrop-blur-md px-4 py-3 sticky top-0 z-30 flex justify-between items-center border-b border-slate-900 shadow-md">
+    <div class="flex items-center space-x-2">
+        <a href="profile.html" class="bg-slate-800 text-slate-300 hover:text-white px-2.5 py-1.5 rounded-xl text-xs font-bold transition mr-1"><i class="fa-solid fa-arrow-left"></i></a>
+        <div class="text-xs font-black tracking-wider text-blue-400 uppercase">Top Players</div>
     </div>
-
-    <!-- Top Header -->
-    <header class="bg-[#0b0f1a]/90 backdrop-blur-md px-4 py-3 sticky top-0 z-30 flex justify-between items-center border-b border-slate-900 shadow-md">
-        <div class="flex items-center space-x-2">
-            <a href="profile.html" class="bg-slate-800 text-slate-300 hover:text-white px-2.5 py-1.5 rounded-xl text-xs font-bold transition mr-1">
-                <i class="fa-solid fa-arrow-left"></i>
-            </a>
-            <div class="text-xs font-black tracking-wider text-blue-400 uppercase">Top Players</div>
+    <div onclick="window.location.href='wallet.html'" class="cursor-pointer bg-[#131b2e] border border-slate-800 text-blue-400 px-2.5 py-1.5 rounded-xl text-xs font-semibold flex items-center space-x-1 shadow">
+        <i class="fa-solid fa-wallet text-[10px]"></i><span> <span id="wallet-balance">0</span></span>
+    </div>
+</header>
+<main class="max-w-md mx-auto px-4 py-4 flex-grow w-full space-y-4">
+    <div class="glass-card rounded-2xl p-4 flex items-center justify-between border border-blue-500/30 bg-gradient-to-r from-blue-950/40 to-indigo-950/40 shadow-lg">
+        <div class="flex items-center space-x-3">
+            <div id="my-rank-badge" class="w-12 h-12 rounded-xl bg-blue-600/20 border border-blue-500/40 flex items-center justify-center text-blue-400 font-black text-sm">#-</div>
+            <div><span class="text-[10px] text-slate-400 block font-semibold uppercase tracking-wider">Your Position</span><h4 id="my-name-display" class="text-xs font-bold text-white">Loading...</h4></div>
         </div>
-        <div onclick="window.location.href='wallet.html'" class="cursor-pointer bg-[#131b2e] border border-slate-800 text-blue-400 px-2.5 py-1.5 rounded-xl text-xs font-semibold flex items-center space-x-1 shadow">
-            <i class="fa-solid fa-wallet text-[10px]"></i>
-            <span> <span id="wallet-balance">0</span></span>
+        <div class="text-right">
+            <span class="text-[10px] text-slate-400 block font-semibold uppercase tracking-wider">Tournament & Refer Win</span>
+            <span class="text-xs font-extrabold text-amber-400">Won balance <span id="my-earnings-display">0</span></span>
         </div>
-    </header>
-
-    <main class="max-w-md mx-auto px-4 py-4 flex-grow w-full space-y-4">
-        
-        <!-- Current User Rank Card -->
-        <div class="glass-card rounded-2xl p-4 flex items-center justify-between border border-blue-500/30 bg-gradient-to-r from-blue-950/40 to-indigo-950/40 shadow-lg">
-            <div class="flex items-center space-x-3">
-                <div id="my-rank-badge" class="w-12 h-12 rounded-xl bg-blue-600/20 border border-blue-500/40 flex items-center justify-center text-blue-400 font-black text-sm">
-                    #-
-                </div>
-                <div>
-                    <span class="text-[10px] text-slate-400 block font-semibold uppercase tracking-wider">Your Position</span>
-                    <h4 id="my-name-display" class="text-xs font-bold text-white">Loading...</h4>
-                </div>
-            </div>
-            <div class="text-right">
-                <span class="text-[10px] text-slate-400 block font-semibold uppercase tracking-wider">Tournament & Refer Win</span>
-                <span class="text-xs font-extrabold text-amber-400">Won balance <span id="my-earnings-display">0</span></span>
-            </div>
+    </div>
+    <div id="podium-section" class="grid grid-cols-3 gap-2 pt-2 text-center" style="display:none;">
+        <div id="podium-2" class="glass-card rounded-2xl p-3 flex flex-col items-center justify-end space-y-1 border border-slate-800 mt-4">
+            <div class="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center text-slate-300 font-bold text-xs"><i class="fa-solid fa-medal text-slate-400"></i></div>
+            <h5 id="p2-name" class="text-[11px] font-bold text-white truncate w-full">-</h5>
+            <span class="text-[10px] text-amber-400 font-extrabold">Won balance <span id="p2-earnings">0</span></span>
+            <span class="text-[9px] text-slate-500 font-bold bg-slate-900 px-2 py-0.5 rounded">#2</span>
         </div>
-
-        <!-- Top 3 Podium Section -->
-        <div id="podium-section" class="grid grid-cols-3 gap-2 pt-2 text-center" style="display: none;">
-            <!-- Rank 2 -->
-            <div id="podium-2" class="glass-card rounded-2xl p-3 flex flex-col items-center justify-end space-y-1 border border-slate-800 mt-4">
-                <div class="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center text-slate-300 font-bold text-xs"><i class="fa-solid fa-medal text-slate-400"></i></div>
-                <h5 id="p2-name" class="text-[11px] font-bold text-white truncate w-full">-</h5>
-                <span class="text-[10px] text-amber-400 font-extrabold">Won balance <span id="p2-earnings">0</span></span>
-                <span class="text-[9px] text-slate-500 font-bold bg-slate-900 px-2 py-0.5 rounded">#2</span>
-            </div>
-            <!-- Rank 1 -->
-            <div id="podium-1" class="glass-card rounded-2xl p-3 flex flex-col items-center justify-end space-y-1 border border-amber-500/40 bg-amber-500/5 shadow-amber-500/10 shadow-lg">
-                <div class="w-10 h-10 rounded-full bg-amber-500/20 flex items-center justify-center text-amber-400 font-bold text-sm"><i class="fa-solid fa-crown"></i></div>
-                <h5 id="p1-name" class="text-xs font-extrabold text-amber-300 truncate w-full">-</h5>
-                <span class="text-[11px] text-amber-400 font-extrabold">Won balance <span id="p1-earnings">0</span></span>
-                <span class="text-[10px] text-amber-300 font-black bg-amber-500/20 px-2.5 py-0.5 rounded-full">#1</span>
-            </div>
-            <!-- Rank 3 -->
-            <div id="podium-3" class="glass-card rounded-2xl p-3 flex flex-col items-center justify-end space-y-1 border border-slate-800 mt-6">
-                <div class="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center text-amber-600 font-bold text-xs"><i class="fa-solid fa-medal text-amber-600"></i></div>
-                <h5 id="p3-name" class="text-[11px] font-bold text-white truncate w-full">-</h5>
-                <span class="text-[10px] text-amber-400 font-extrabold">Won balance <span id="p3-earnings">0</span></span>
-                <span class="text-[9px] text-slate-500 font-bold bg-slate-900 px-2 py-0.5 rounded">#3</span>
-            </div>
+        <div id="podium-1" class="glass-card rounded-2xl p-3 flex flex-col items-center justify-end space-y-1 border border-amber-500/40 bg-amber-500/5 shadow-amber-500/10 shadow-lg">
+            <div class="w-10 h-10 rounded-full bg-amber-500/20 flex items-center justify-center text-amber-400 font-bold text-sm"><i class="fa-solid fa-crown"></i></div>
+            <h5 id="p1-name" class="text-xs font-extrabold text-amber-300 truncate w-full">-</h5>
+            <span class="text-[11px] text-amber-400 font-extrabold">Won balance <span id="p1-earnings">0</span></span>
+            <span class="text-[10px] text-amber-300 font-black bg-amber-500/20 px-2.5 py-0.5 rounded-full">#1</span>
         </div>
-
-        <!-- All Players List -->
-        <div class="space-y-2 pt-2">
-            <h3 class="text-xs font-extrabold tracking-widest text-slate-400 uppercase px-1">All Players</h3>
-            <div id="leaderboard-list" class="space-y-2.5"></div>
+        <div id="podium-3" class="glass-card rounded-2xl p-3 flex flex-col items-center justify-end space-y-1 border border-slate-800 mt-6">
+            <div class="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center text-amber-600 font-bold text-xs"><i class="fa-solid fa-medal text-amber-600"></i></div>
+            <h5 id="p3-name" class="text-[11px] font-bold text-white truncate w-full">-</h5>
+            <span class="text-[10px] text-amber-400 font-extrabold">Won balance <span id="p3-earnings">0</span></span>
+            <span class="text-[9px] text-slate-500 font-bold bg-slate-900 px-2 py-0.5 rounded">#3</span>
         </div>
+    </div>
+    <div class="space-y-2 pt-2">
+        <h3 class="text-xs font-extrabold tracking-widest text-slate-400 uppercase px-1">All Players</h3>
+        <div id="leaderboard-list" class="space-y-2.5"></div>
+    </div>
+</main>
+<nav class="fixed bottom-0 left-0 right-0 max-w-md mx-auto bg-[#0b0f1a]/95 backdrop-blur-md border-t border-slate-900 px-6 py-2.5 flex justify-around items-center z-40 shadow-2xl">
+    <a href="index.html" class="flex flex-col items-center text-slate-400 hover:text-blue-400 transition space-y-1"><i class="fa-solid fa-house text-base"></i><span class="text-[10px] font-semibold">Home</span></a>
+    <a href="wallet.html" class="flex flex-col items-center text-slate-400 hover:text-blue-400 transition space-y-1"><i class="fa-solid fa-wallet text-base"></i><span class="text-[10px] font-semibold">Wallet</span></a>
+    <a href="profile.html" class="flex flex-col items-center text-slate-400 hover:text-blue-400 transition space-y-1"><i class="fa-solid fa-user text-base"></i><span class="text-[10px] font-semibold">Profile</span></a>
+</nav>
+<script type="module">
+import { auth, db } from "./firebase.js";
+import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+import { doc, getDoc, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-    </main>
+window.showToast=function(message,type='success'){const c=document.getElementById('toast-container'),t=document.createElement('div');t.className=`toast ${type}`;t.innerHTML=`${type==='error'?'<i class="fa-solid fa-circle-exclamation text-rose-400"></i>':'<i class="fa-solid fa-circle-check text-blue-400"></i>'}<span>${message}</span>`;c.appendChild(t);setTimeout(()=>t.remove(),3500);}
+onAuthStateChanged(auth,async user=>{if(!user){window.location.replace('login.html');return;}try{await fetchLeaderboardData(user.uid);}catch(e){console.error(e);}finally{document.getElementById('app-loader').style.display='none';}});
 
-    <!-- Bottom Navigation Bar -->
-    <nav class="fixed bottom-0 left-0 right-0 max-w-md mx-auto bg-[#0b0f1a]/95 backdrop-blur-md border-t border-slate-900 px-6 py-2.5 flex justify-around items-center z-40 shadow-2xl">
-        <a href="index.html" class="flex flex-col items-center text-slate-400 hover:text-blue-400 transition space-y-1">
-            <i class="fa-solid fa-house text-base"></i>
-            <span class="text-[10px] font-semibold">Home</span>
-        </a>
-        <a href="wallet.html" class="flex flex-col items-center text-slate-400 hover:text-blue-400 transition space-y-1">
-            <i class="fa-solid fa-wallet text-base"></i>
-            <span class="text-[10px] font-semibold">Wallet</span>
-        </a>
-        <a href="profile.html" class="flex flex-col items-center text-slate-400 hover:text-blue-400 transition space-y-1">
-            <i class="fa-solid fa-user text-base"></i>
-            <span class="text-[10px] font-semibold">Profile</span>
-        </a>
-    </nav>
-
-    <script type="module">
-        import { auth, db } from "./firebase.js";
-        import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-        import { doc, getDoc, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-
-        let currentUserUid = null;
-
-        window.showToast = function(message, type = 'success') {
-            const container = document.getElementById('toast-container');
-            const toast = document.createElement('div');
-            toast.className = `toast ${type}`;
-            let icon = type === 'error' ? '<i class="fa-solid fa-circle-exclamation text-rose-400"></i>' : '<i class="fa-solid fa-circle-check text-blue-400"></i>';
-            toast.innerHTML = `${icon} <span>${message}</span>`;
-            container.appendChild(toast);
-            setTimeout(() => { toast.remove(); }, 3500);
-        }
-
-        onAuthStateChanged(auth, async (user) => {
-            if (!user) { window.location.replace('login.html'); return; }
-            currentUserUid = user.uid;
-
-            try {
-                await fetchLeaderboardData(user.uid);
-            } catch (err) {
-                console.error(err);
-            } finally {
-                document.getElementById('app-loader').style.display = 'none';
-            }
+async function fetchLeaderboardData(uid){
+    try{
+        const [usersSnap,payoutSnap,userDocSnap]=await Promise.all([
+            getDocs(collection(db,"users")),
+            getDocs(collection(db,"tournamentPayouts")),
+            getDoc(doc(db,"users",uid))
+        ]);
+        const payoutTotals={};
+        payoutSnap.forEach(d=>{const x=d.data()||{},id=x.userId||x.uid||'';if(id)payoutTotals[id]=(payoutTotals[id]||0)+Number(x.amount||0);});
+        const usersList=[];
+        usersSnap.forEach(d=>{
+            const data=d.data()||{};
+            const referral=Number(data.referralBonusTotal||data.referBonus||0);
+            const storedTournament=Number(data.totalEarnings||data.earnings||data.winnings||0);
+            const paidTournament=payoutTotals[d.id]||0;
+            const totalEarned=paidTournament>0?paidTournament+referral:storedTournament+referral;
+            usersList.push({uid:d.id,name:data.name||data.fullName||data.username||'User',earnings:totalEarned});
         });
-
-        async function fetchLeaderboardData(uid) {
-            try {
-                const usersSnap = await getDocs(collection(db, "users"));
-                let usersList = [];
-
-                usersSnap.forEach(d => {
-                    const data = d.data() || {};
-                    const tournamentWin = Number(data.totalEarnings || data.earnings || data.winnings || 0);
-                    const referBonus = Number(data.referralBonusTotal || data.referBonus || 0);
-
-                    const totalEarned = tournamentWin + referBonus;
-                    const name = data.name || data.fullName || data.username || 'User';
-                    
-                    usersList.push({
-                        uid: d.id,
-                        name: name,
-                        earnings: totalEarned
-                    });
-                });
-
-                usersList.sort((a, b) => b.earnings - a.earnings);
-
-                let myRank = "-";
-                let myEarnings = 0;
-                let myName = "User";
-
-                usersList.forEach((u, index) => {
-                    if (u.uid === uid) {
-                        myRank = `#${index + 1}`;
-                        myEarnings = u.earnings;
-                        myName = u.name;
-                    }
-                });
-
-                document.getElementById('my-rank-badge').innerText = myRank;
-                document.getElementById('my-name-display').innerText = myName;
-                document.getElementById('my-earnings-display').innerText = myEarnings;
-
-                const userDocSnap = await getDoc(doc(db, "users", uid));
-                if (userDocSnap.exists()) {
-                    document.getElementById('wallet-balance').innerText = Number(userDocSnap.data().balance || 0);
-                }
-
-                renderPodiumAndList(usersList, uid);
-
-            } catch (e) {
-                console.error(e);
-                showToast("Leaderboard load korte somoshya hoyese!", "error");
-            }
-        }
-
-        function renderPodiumAndList(users, currentUid) {
-            const listEl = document.getElementById('leaderboard-list');
-            const podiumEl = document.getElementById('podium-section');
-            listEl.innerHTML = "";
-
-            if (users.length === 0) {
-                listEl.innerHTML = `<div class="text-center py-12 text-slate-500 text-xs">Kono player pawa jayni</div>`;
-                return;
-            }
-
-            if (users.length >= 1) {
-                podiumEl.style.display = 'grid';
-                document.getElementById('p1-name').innerText = users[0].name;
-                document.getElementById('p1-earnings').innerText = users[0].earnings;
-            }
-            if (users.length >= 2) {
-                document.getElementById('p2-name').innerText = users[1].name;
-                document.getElementById('p2-earnings').innerText = users[1].earnings;
-            } else {
-                document.getElementById('podium-2').style.display = 'none';
-            }
-            if (users.length >= 3) {
-                document.getElementById('p3-name').innerText = users[2].name;
-                document.getElementById('p3-earnings').innerText = users[2].earnings;
-            } else {
-                document.getElementById('podium-3').style.display = 'none';
-            }
-
-            users.forEach((u, index) => {
-                const rank = index + 1;
-                const isMe = u.uid === currentUid;
-                const cardBg = isMe ? 'bg-blue-600/10 border-blue-500/50' : 'glass-card border-slate-800';
-
-                let rankIconOrText = `<span class="text-xs font-bold text-slate-400">#${rank}</span>`;
-                if (rank === 1) rankIconOrText = `<i class="fa-solid fa-crown text-amber-400 text-xs"></i>`;
-                else if (rank === 2) rankIconOrText = `<i class="fa-solid fa-medal text-slate-300 text-xs"></i>`;
-                else if (rank === 3) rankIconOrText = `<i class="fa-solid fa-medal text-amber-600 text-xs"></i>`;
-
-                listEl.innerHTML += `
-                    <div class="${cardBg} rounded-2xl p-3.5 flex items-center justify-between shadow-md border transition">
-                        <div class="flex items-center space-x-3.5">
-                            <div class="w-8 h-8 rounded-xl bg-slate-900 border border-slate-800 flex items-center justify-center font-bold">
-                                ${rankIconOrText}
-                            </div>
-                            <div>
-                                <h4 class="text-xs font-bold text-white">${u.name} ${isMe ? '<span class="text-[9px] text-blue-400 font-normal">(You)</span>' : ''}</h4>
-                                <span class="text-[10px] text-slate-500 font-semibold">Rank #${rank}</span>
-                            </div>
-                        </div>
-                        <div class="text-right">
-                            <span class="text-xs font-extrabold text-amber-400">Won balance ${u.earnings}</span>
-                        </div>
-                    </div>
-                `;
-            });
-        }
-    </script>
+        usersList.sort((a,b)=>b.earnings-a.earnings);
+        let myRank="-",myEarnings=0,myName="User";
+        usersList.forEach((u,i)=>{if(u.uid===uid){myRank=`#${i+1}`;myEarnings=u.earnings;myName=u.name;}});
+        document.getElementById('my-rank-badge').innerText=myRank;
+        document.getElementById('my-name-display').innerText=myName;
+        document.getElementById('my-earnings-display').innerText=myEarnings;
+        if(userDocSnap.exists())document.getElementById('wallet-balance').innerText=Number(userDocSnap.data().balance||0);
+        renderPodiumAndList(usersList,uid);
+    }catch(e){console.error(e);showToast("Leaderboard load korte somoshya hoyese!","error");}
+}
+function renderPodiumAndList(users,currentUid){
+    const listEl=document.getElementById('leaderboard-list'),podiumEl=document.getElementById('podium-section');listEl.innerHTML="";
+    if(!users.length){listEl.innerHTML=`<div class="text-center py-12 text-slate-500 text-xs">Kono player pawa jayni</div>`;return;}
+    podiumEl.style.display='grid';
+    document.getElementById('p1-name').innerText=users[0].name;document.getElementById('p1-earnings').innerText=users[0].earnings;
+    if(users.length>=2){document.getElementById('podium-2').style.display='flex';document.getElementById('p2-name').innerText=users[1].name;document.getElementById('p2-earnings').innerText=users[1].earnings;}else document.getElementById('podium-2').style.display='none';
+    if(users.length>=3){document.getElementById('podium-3').style.display='flex';document.getElementById('p3-name').innerText=users[2].name;document.getElementById('p3-earnings').innerText=users[2].earnings;}else document.getElementById('podium-3').style.display='none';
+    users.forEach((u,index)=>{
+        const rank=index+1,isMe=u.uid===currentUid,cardBg=isMe?'bg-blue-600/10 border-blue-500/50':'glass-card border-slate-800';
+        let icon=`<span class="text-xs font-bold text-slate-400">#${rank}</span>`;if(rank===1)icon='<i class="fa-solid fa-crown text-amber-400 text-xs"></i>';else if(rank===2)icon='<i class="fa-solid fa-medal text-slate-300 text-xs"></i>';else if(rank===3)icon='<i class="fa-solid fa-medal text-amber-600 text-xs"></i>';
+        listEl.innerHTML+=`<div class="${cardBg} rounded-2xl p-3.5 flex items-center justify-between shadow-md border transition"><div class="flex items-center space-x-3.5"><div class="w-8 h-8 rounded-xl bg-slate-900 border border-slate-800 flex items-center justify-center font-bold">${icon}</div><div><h4 class="text-xs font-bold text-white">${u.name} ${isMe?'<span class="text-[9px] text-blue-400 font-normal">(You)</span>':''}</h4><span class="text-[10px] text-slate-500 font-semibold">Rank #${rank}</span></div></div><div class="text-right"><span class="text-xs font-extrabold text-amber-400">Won balance ${u.earnings}</span></div></div>`;
+    });
+}
+</script>
 </body>
 </html>
