@@ -14,16 +14,23 @@ export async function processReferralReward(uid) {
   if (!user.referredByUid) return { rewarded:false, reason:'no-referrer' };
   if (user.referralRewardPaid === true) return { rewarded:false, reason:'already-paid' };
 
-  // Only an explicitly successful/approved deposit unlocks the reward.
-  // A plain balance value is not enough because it could come from another source.
+  // Only an approved deposit unlocks the reward. Admin uses status "approved".
+  // Support both deposits and transactions collections, and both common UID fields.
   try {
-    const depositQ = query(
-      collection(db, 'transactions'),
-      where('userId', '==', uid),
-      where('status', '==', 'Success')
-    );
-    const depositSnap = await getDocs(depositQ);
-    if (depositSnap.empty) return { rewarded:false, reason:'no-successful-deposit-yet' };
+    let hasApprovedDeposit = false;
+    for (const collectionName of ['deposits', 'transactions']) {
+      for (const uidField of ['userId', 'uid']) {
+        const depositQ = query(
+          collection(db, collectionName),
+          where(uidField, '==', uid),
+          where('status', 'in', ['approved', 'Success', 'success'])
+        );
+        const depositSnap = await getDocs(depositQ);
+        if (!depositSnap.empty) { hasApprovedDeposit = true; break; }
+      }
+      if (hasApprovedDeposit) break;
+    }
+    if (!hasApprovedDeposit) return { rewarded:false, reason:'no-approved-deposit-yet' };
   } catch (e) {
     console.error('Approved deposit check failed:', e);
     return { rewarded:false, reason:'deposit-check-failed' };
