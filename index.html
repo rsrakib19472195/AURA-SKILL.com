@@ -1,9 +1,15 @@
 <!DOCTYPE html>
 <html lang="bn">
 <head>
+    <!-- Performance: establish connections to critical third-party origins early. -->
+    <link rel="preconnect" href="https://www.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Game Changer - Admin Control Panel</title>
+    <title>Aura Skill Official - Tournaments</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&display=swap" rel="stylesheet">
@@ -11,7 +17,14 @@
         body { font-family: 'Hind Siliguri', sans-serif; background-color: #050811; color: #f8fafc; }
         ::-webkit-scrollbar { width: 5px; }
         ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 10px; }
-        .glass-card { background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(12px); border: 1px solid rgba(30, 41, 59, 0.9); }
+        .glass-card { background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(12px); border: 1px solid rgba(30, 41, 59, 0.9); }
+        .glow-effect:hover { box-shadow: 0 0 25px rgba(59, 130, 246, 0.2); border-color: rgba(59, 130, 246, 0.5); transform: translateY(-2px); transition: all 0.25s ease-in-out; }
+        @keyframes pulseLive {
+            0% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.4; transform: scale(1.05); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+        .animate-live-pulse { animation: pulseLive 1.5s infinite; }
         
         #toast-container {
             position: fixed; top: 20px; right: 20px; z-index: 9999; display: flex; flex-direction: column; gap: 10px;
@@ -24,1987 +37,1102 @@
         }
         .toast.success { border-left-color: #10b981; }
         .toast.error { border-left-color: #ef4444; }
+        .toast.warning { border-left-color: #f59e0b; }
         @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
         @keyframes fadeOut { from { opacity: 1; } to { opacity: 0; transform: translateY(-10px); } }
-    </style>
+    
+#cornerSupportBtn{position:fixed;right:14px;bottom:76px;width:46px;height:46px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:#16a34a;color:#fff;text-decoration:none;font-size:21px;box-shadow:0 8px 24px rgba(0,0,0,.38);border:2px solid rgba(255,255,255,.12);z-index:60;transition:transform .2s ease,background .2s ease}
+#cornerSupportBtn:hover{transform:scale(1.06);background:#22c55e}
+</style>
 </head>
-<body class="min-h-screen flex flex-col pb-20">
+<body class="min-h-screen flex flex-col pb-28 overflow-x-hidden">
 
     <div id="toast-container"></div>
 
-    <header class="bg-[#0b0f1a] px-6 py-4 border-b border-slate-900 flex justify-between items-center sticky top-0 z-30 shadow-md">
-        <div class="flex items-center space-x-3">
-            <div class="bg-blue-600/30 border border-blue-500/40 text-blue-400 px-3 py-1.5 rounded-xl text-xs font-black tracking-wider">
-                <i class="fa-solid fa-shield-halved mr-1"></i> ADMIN DASHBOARD
+    <div id="maintenance-screen" class="fixed inset-0 z-[9999999] bg-[#050811] text-white flex items-center justify-center px-5" style="display:none;">
+        <div class="w-full max-w-md text-center">
+            <div class="w-20 h-20 mx-auto rounded-full bg-amber-500/10 border border-amber-500/30 flex items-center justify-center mb-5">
+                <i class="fa-solid fa-screwdriver-wrench text-amber-400 text-3xl"></i>
+            </div>
+            <h1 class="text-2xl font-bold mb-3">Site Maintenance</h1>
+            <p class="text-slate-400 text-sm leading-relaxed">আমাদের সাইট বর্তমানে maintenance-এর মধ্যে আছে। কিছুক্ষণ পরে আবার চেষ্টা করুন।</p>
+            <div id="maintenance-reason" class="mt-5 bg-[#0f172a] border border-slate-800 rounded-2xl px-4 py-3 text-sm text-amber-300"></div>
+            <div class="mt-5 text-xs text-slate-500">Please আবার চেষ্টা করুন later.</div>
+        </div>
+    </div>
+
+    <!-- App Update Screen -->
+    <div id="update-screen" class="fixed inset-0 z-[9999999] bg-[#050811] text-white flex items-center justify-center px-5" style="display:none;">
+        <div class="w-full max-w-md text-center">
+            <div class="w-20 h-20 mx-auto rounded-full bg-blue-500/10 border border-blue-500/30 flex items-center justify-center mb-5">
+                <i class="fa-solid fa-rocket text-blue-400 text-3xl"></i>
+            </div>
+            <h1 class="text-2xl font-bold mb-3">New Update Available!</h1>
+            <p id="update-message" class="text-slate-400 text-sm leading-relaxed">আপনার অ্যাপ-টি আপডেট করা প্রয়োজন। দয়া করে আপডেট করে নিন।</p>
+            <a id="update-link-btn" href="#" target="_blank" class="mt-6 inline-block w-full py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl text-sm transition text-center shadow-lg shadow-blue-600/30">Update Now</a>
+        </div>
+    </div>
+
+    <!-- Fixed App Loader Safety Handling -->
+    <div id="app-loader" class="fixed inset-0 z-50 flex flex-col items-center justify-center bg-[#050811] space-y-4">
+        <div class="w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
+        <p class="text-xs tracking-widest text-slate-400 font-semibold uppercase">লোড হচ্ছে...</p>
+    </div>
+
+    <div id="logoutModal" class="fixed inset-0 z-[99999] flex items-center justify-center bg-black/80 backdrop-blur-md px-4" style="display: none;">
+        <div class="bg-[#0f172a] border border-red-500/40 rounded-3xl p-6 max-w-sm w-full shadow-2xl text-center space-y-4 transform transition-all scale-100">
+            <div class="w-16 h-16 bg-red-500/10 border border-red-500/30 rounded-full flex items-center justify-center mx-auto text-red-500 text-2xl shadow-lg shadow-red-500/10">
+                <i class="fa-solid fa-right-from-bracket"></i>
+            </div>
+            <div>
+                <h3 class="text-lg font-bold text-white tracking-wide">লগআউট করতে চান?</h3>
+                <p class="text-xs text-slate-400 mt-1">আপনি কি নিশ্চিতভাবে আপনার অ্যাকাউন্ট থেকে বের হয়ে যেতে চান?</p>
+            </div>
+            <div class="grid grid-cols-2 gap-3 pt-2">
+                <button onclick="closeLogoutModal()" class="py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold text-xs transition border border-slate-700">বাতিল</button>
+                <button onclick="confirmLogout()" class="py-2.5 rounded-xl bg-red-600 hover:bg-red-500 text-white font-bold text-xs transition shadow-lg shadow-red-600/30">লগআউট</button>
             </div>
         </div>
-        <div class="flex items-center gap-2 flex-wrap justify-end">
-            <button id="openNotificationBtn" type="button" class="bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-3.5 py-2 rounded-xl text-xs font-bold transition">
-                <i class="fa-solid fa-bell mr-1"></i> Notifications
+    </div>
+
+    <div id="custom-action-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm px-4" style="display: none;">
+        <div class="bg-[#0f172a] border border-blue-500/40 rounded-2xl p-6 max-w-sm w-full shadow-2xl relative max-h-[90vh] overflow-y-auto">
+            <div class="flex justify-between items-center mb-4">
+                <h3 id="custom-modal-title" class="text-sm font-bold text-white uppercase tracking-wider">Join Match</h3>
+                <button onclick="closeCustomModal()" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
+            </div>
+            <div id="custom-modal-body" class="space-y-3 text-xs"></div>
+        </div>
+    </div>
+
+    <header class="bg-[#0b0f1a]/90 backdrop-blur-md px-4 py-3 sticky top-0 z-30 flex justify-between items-center border-b border-slate-900 shadow-md">
+        <div class="flex items-center space-x-2">
+            <button id="back-btn" onclick="goBackToHome()" style="display: none;" class="bg-slate-800 text-slate-300 hover:text-white px-2.5 py-1.5 rounded-xl text-xs font-bold transition mr-1">
+                <i class="fa-solid fa-arrow-left"></i>
             </button>
-            <button id="openAppUpdateBtn" type="button" class="bg-blue-500/10 hover:bg-blue-500/20 text-blue-400 border border-blue-500/30 px-3.5 py-2 rounded-xl text-xs font-bold transition">
-                <i class="fa-solid fa-mobile-screen-button mr-1"></i> App Update
+            <div class="bg-blue-600/30 border border-blue-500/40 text-blue-400 px-3 py-1 rounded-lg text-xs font-black tracking-wider">AURA SKILL</div>
+        </div>
+        <div class="flex items-center space-x-2">
+            <div onclick="window.location.href='wallet.html'" class="cursor-pointer bg-[#131b2e] border border-slate-800 text-blue-400 px-2.5 py-1.5 rounded-xl text-xs font-semibold flex items-center space-x-1 shadow">
+                <i class="fa-solid fa-wallet text-[10px]"></i>
+                <span>৳ <span id="wallet-balance">0</span></span>
+            </div>
+            <button onclick="handleLogout()" class="bg-red-600/20 border border-red-500/40 hover:bg-red-600/30 text-red-400 px-2.5 py-1.5 rounded-xl text-xs font-bold shadow flex items-center space-x-1 transition">
+                <i class="fa-solid fa-right-from-bracket text-[10px]"></i>
+                <span id="user-display-name">Account</span>
             </button>
-            <button id="openMaintenanceBtn" type="button" class="bg-amber-500/10 hover:bg-amber-500/20 text-amber-400 border border-amber-500/30 px-3.5 py-2 rounded-xl text-xs font-bold transition">
-                <i class="fa-solid fa-screwdriver-wrench mr-1"></i> Maintenance
-            </button>
-            <a href="index.html" class="bg-slate-800 hover:bg-slate-700 text-slate-300 px-3.5 py-2 rounded-xl text-xs font-bold transition">
-                <i class="fa-solid fa-house mr-1"></i> Home View
-            </a>
         </div>
     </header>
 
-    <main class="max-w-4xl mx-auto px-4 py-6 w-full space-y-6">
-
-        <!-- Live Counters Dashboard Box -->
-        <div class="grid grid-cols-2 md:grid-cols-2 gap-4">
-            <div class="glass-card p-4 rounded-2xl border border-amber-500/30 flex items-center justify-between">
-                <div>
-                    <p class="text-xs text-slate-400 font-bold uppercase">Pending Deposits</p>
-                    <h3 id="live-pending-deposits" class="text-2xl font-black text-amber-400 mt-1">0</h3>
-                </div>
-                <div class="w-10 h-10 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center text-lg">
-                    <i class="fa-solid fa-clock"></i>
-                </div>
+    <main class="max-w-md mx-auto px-4 py-4 flex-grow w-full space-y-5">
+        <div id="banner-container" class="relative w-full rounded-2xl overflow-hidden shadow-2xl border border-blue-500/20" style="display: none;">
+            <div id="banner-slider" class="flex transition-transform duration-500 ease-out"></div>
+        </div>
+        
+        <div id="view-sections" class="space-y-4">
+            <div class="flex justify-between items-center px-1">
+                <h3 class="text-xs font-extrabold tracking-widest text-slate-400 uppercase">Select Category</h3>
             </div>
-            <div class="glass-card p-4 rounded-2xl border border-rose-500/30 flex items-center justify-between">
-                <div>
-                    <p class="text-xs text-slate-400 font-bold uppercase">Pending Withdraws</p>
-                    <h3 id="live-pending-withdraws" class="text-2xl font-black text-rose-400 mt-1">0</h3>
-                </div>
-                <div class="w-10 h-10 rounded-xl bg-rose-500/20 text-rose-400 flex items-center justify-center text-lg">
-                    <i class="fa-solid fa-wallet"></i>
-                </div>
-            </div>
+            <div id="sections-grid" class="space-y-3"></div>
         </div>
 
-        <div class="grid grid-cols-3 md:grid-cols-7 gap-1.5 bg-[#0d1322] p-1.5 rounded-2xl border border-slate-800">
-            <button onclick="switchTab('sections')" id="tab-btn-sections" class="py-2.5 text-[11px] font-bold rounded-xl bg-blue-600 text-white shadow transition">Categories</button>
-            <button onclick="switchTab('groups')" id="tab-btn-groups" class="py-2.5 text-[11px] font-bold rounded-xl text-slate-400 hover:text-white transition">Groups</button>
-            <button onclick="switchTab('tournaments')" id="tab-btn-tournaments" class="py-2.5 text-[11px] font-bold rounded-xl text-slate-400 hover:text-white transition">Tournaments</button>
-            <button onclick="switchTab('banners')" id="tab-btn-banners" class="py-2.5 text-[11px] font-bold rounded-xl text-slate-400 hover:text-white transition">Banners</button>
-            <button onclick="switchTab('deposits')" id="tab-btn-deposits" class="py-2.5 text-[11px] font-bold rounded-xl text-slate-400 hover:text-white transition">Deposits</button>
-            <button onclick="switchTab('withdraws')" id="tab-btn-withdraws" class="py-2.5 text-[11px] font-bold rounded-xl text-slate-400 hover:text-white transition">Withdraws</button>
-            <button onclick="switchTab('rules')" id="tab-btn-rules" class="py-2.5 text-[11px] font-bold rounded-xl text-slate-400 hover:text-white transition">Rules</button>
+        <div id="view-groups" class="space-y-4" style="display: none;">
+            <div class="flex justify-between items-center px-1">
+                <h3 id="current-section-title" class="text-xs font-extrabold tracking-widest text-blue-400 uppercase">GROUPS</h3>
+            </div>
+            <div id="groups-grid" class="space-y-3"></div>
         </div>
 
-        <div id="tab-sections" class="space-y-4">
-            <div class="flex justify-between items-center">
-                <h3 class="text-sm font-bold text-slate-300 uppercase tracking-wide">Category Management</h3>
-                <button onclick="openSectionModal()" class="bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold px-3 py-2 rounded-xl shadow transition">
-                    <i class="fa-solid fa-plus mr-1"></i> Add Category
-                </button>
+        <div id="view-tournaments" class="space-y-4" style="display: none;">
+            <div class="flex space-x-1.5 bg-[#0d1322] p-1.5 rounded-2xl border border-slate-800/80">
+                <button onclick="filterTournaments('upcoming')" id="t-tab-upcoming" class="flex-1 py-2 text-[11px] font-bold rounded-xl bg-blue-600 text-white shadow transition">upcoming</button>
+                <button onclick="filterTournaments('live')" id="t-tab-live" class="flex-1 py-2 text-[11px] font-bold rounded-xl text-slate-400 hover:text-white transition">live</button>
+                <button onclick="filterTournaments('completed')" id="t-tab-complete" class="flex-1 py-2 text-[11px] font-bold rounded-xl text-slate-400 hover:text-white transition">complete</button>
             </div>
-            <div id="admin-sections-list" class="grid grid-cols-1 md:grid-cols-2 gap-3"></div>
+
+            <div class="flex justify-between items-center px-1">
+                <h3 id="current-group-title" class="text-xs font-extrabold tracking-widest text-slate-400 uppercase">MATCHES</h3>
+                <span id="match-count-badge" class="text-[10px] text-blue-400 font-semibold bg-blue-500/10 px-2 py-0.5 rounded-md border border-blue-500/20">0 Matches Available</span>
+            </div>
+
+            <div id="tournaments-grid" class="space-y-4"></div>
         </div>
-
-        <div id="tab-groups" class="space-y-4" style="display: none;">
-            <div class="flex justify-between items-center">
-                <h3 class="text-sm font-bold text-slate-300 uppercase tracking-wide">Group Management</h3>
-                <button onclick="openGroupModal()" class="bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold px-3 py-2 rounded-xl shadow transition">
-                    <i class="fa-solid fa-plus mr-1"></i> Add Group
-                </button>
-            </div>
-            <div id="admin-groups-list" class="grid grid-cols-1 md:grid-cols-2 gap-3"></div>
-        </div>
-
-        <div id="tab-tournaments" class="space-y-4" style="display: none;">
-            <div class="flex justify-between items-center">
-                <h3 class="text-sm font-bold text-slate-300 uppercase tracking-wide">Tournament Management</h3>
-                <button onclick="openTournamentModal()" class="bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold px-3 py-2 rounded-xl shadow transition">
-                    <i class="fa-solid fa-plus mr-1"></i> Add Tournament
-                </button>
-            </div>
-            <div id="admin-tournaments-list" class="space-y-3"></div>
-        </div>
-
-        <div id="tab-banners" class="space-y-4" style="display: none;">
-            <div class="flex justify-between items-center">
-                <h3 class="text-sm font-bold text-slate-300 uppercase tracking-wide">Home Banner Management</h3>
-                <button onclick="openBannerModal()" class="bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold px-3 py-2 rounded-xl shadow transition">
-                    <i class="fa-solid fa-plus mr-1"></i> Add Banner
-                </button>
-            </div>
-            <div id="admin-banners-list" class="grid grid-cols-1 md:grid-cols-2 gap-3"></div>
-        </div>
-
-        <!-- DEPOSITS TAB -->
-        <div id="tab-deposits" class="space-y-4" style="display: none;">
-            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-3 bg-[#0f172a] p-4 rounded-2xl border border-slate-800">
-                <div>
-                    <h3 class="text-sm font-bold text-slate-300 uppercase tracking-wide">Deposit Management & Gateway Setup</h3>
-                    <p class="text-[10px] text-slate-500 mt-1">bKash ba Nagad select kore request dekhun ebong gateway numbers manage korun.</p>
-                </div>
-                <div class="flex flex-wrap gap-2">
-                    <button onclick="openGatewayModal()" class="bg-slate-800 hover:bg-slate-700 text-blue-400 text-xs font-bold px-3 py-2 rounded-xl border border-blue-500/30"><i class="fa-solid fa-gear mr-1"></i> Edit Deposit Numbers</button>
-                    <button onclick="openReferralHistory()" class="bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold px-3 py-2 rounded-xl"><i class="fa-solid fa-link mr-1"></i> Refer History</button>
-                    <button onclick="openHistoryModal('Deposit')" class="bg-purple-600 hover:bg-purple-500 text-white text-xs font-bold px-3 py-2 rounded-xl"><i class="fa-solid fa-clock-rotate-left mr-1"></i> Deposit & Withdraw History</button>
-                </div>
-            </div>
-
-            <div class="flex gap-2">
-                <button onclick="filterDepositGateway('bkash')" id="dep-filter-bkash" class="flex-1 py-2.5 rounded-xl text-xs font-bold bg-pink-600 text-white transition"><i class="fa-solid fa-wallet mr-1"></i> bKash Requests</button>
-                <button onclick="filterDepositGateway('nagad')" id="dep-filter-nagad" class="flex-1 py-2.5 rounded-xl text-xs font-bold bg-slate-800 text-slate-300 transition"><i class="fa-solid fa-wallet mr-1"></i> Nagad Requests</button>
-            </div>
-
-            <div id="admin-deposits-list" class="space-y-3"></div>
-        </div>
-
-        <!-- WITHDRAWS TAB -->
-        <div id="tab-withdraws" class="space-y-4" style="display: none;">
-            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-3 bg-[#0f172a] p-4 rounded-2xl border border-slate-800">
-                <div>
-                    <h3 class="text-sm font-bold text-slate-300 uppercase tracking-wide">Withdraw Requests Management</h3>
-                    <p class="text-[10px] text-slate-500 mt-1">bKash ba Nagad select kore pending request approve/reject korun.</p>
-                </div>
-                <div class="flex gap-2">
-                    <button onclick="openHistoryModal('Withdraw')" class="bg-purple-600 hover:bg-purple-500 text-white text-xs font-bold px-3 py-2 rounded-xl"><i class="fa-solid fa-clock-rotate-left mr-1"></i> Deposit & Withdraw History</button>
-                    <button onclick="renderWithdrawsList()" class="bg-slate-800 hover:bg-slate-700 text-white text-xs font-bold px-3 py-2 rounded-xl"><i class="fa-solid fa-rotate mr-1"></i>Refresh</button>
-                </div>
-            </div>
-
-            <div class="flex gap-2">
-                <button onclick="filterWithdrawGateway('bkash')" id="wd-filter-bkash" class="flex-1 py-2.5 rounded-xl text-xs font-bold bg-pink-600 text-white transition"><i class="fa-solid fa-wallet mr-1"></i> bKash Withdraws</button>
-                <button onclick="filterWithdrawGateway('nagad')" id="wd-filter-nagad" class="flex-1 py-2.5 rounded-xl text-xs font-bold bg-slate-800 text-slate-300 transition"><i class="fa-solid fa-wallet mr-1"></i> Nagad Withdraws</button>
-            </div>
-
-            <div id="admin-withdraws-list" class="space-y-3"></div>
-        </div>
-
-        <!-- RULES MANAGEMENT TAB -->
-        <div id="tab-rules" class="space-y-4" style="display: none;">
-            <div class="flex justify-between items-center">
-                <h3 class="text-sm font-bold text-slate-300 uppercase tracking-wide">Match Rules Management</h3>
-            </div>
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
-                <button onclick="loadAdminRuleEditor('br_headshot')" id="admin-rule-br_headshot" class="py-2 px-1 rounded-xl text-[11px] font-bold bg-blue-600 text-white truncate">BR HEADSHOT</button>
-                <button onclick="loadAdminRuleEditor('lone_wolf_headshot')" id="admin-rule-lone_wolf_headshot" class="py-2 px-1 rounded-xl text-[11px] font-bold bg-slate-800 text-slate-300 truncate">LONE WOLF HEADSHOT</button>
-                <button onclick="loadAdminRuleEditor('lone_wolf_bodyshot')" id="admin-rule-lone_wolf_bodyshot" class="py-2 px-1 rounded-xl text-[11px] font-bold bg-slate-800 text-slate-300 truncate">LONE WOLF BODYSHOT</button>
-                <button onclick="loadAdminRuleEditor('cs_headshot')" id="admin-rule-cs_headshot" class="py-2 px-1 rounded-xl text-[11px] font-bold bg-slate-800 text-slate-300 truncate">CS HEADSHOT</button>
-            </div>
-            <div class="glass-card p-4 rounded-2xl space-y-3">
-                <label class="text-xs text-slate-400 block font-bold">Edit Rules Text:</label>
-                <textarea id="admin-rule-textarea" rows="10" class="w-full bg-[#050811] border border-slate-800 rounded-xl p-3 text-xs text-white leading-relaxed" placeholder="নিয়মাবলী লিখুন..."></textarea>
-                <button onclick="saveMatchRules()" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-2.5 rounded-xl text-xs">Update Rules</button>
-            </div>
-        </div>
-
-        <div class="mt-3 flex justify-end">
-            <button onclick="openAuraLegacyFeatures()" class="bg-slate-800 hover:bg-slate-700 border border-blue-500/30 text-blue-300 text-[11px] font-bold px-3 py-2 rounded-xl transition">
-                <i class="fa-solid fa-shield-halved mr-1"></i> AURA ARMAN FEATURES
-            </button>
-        </div>
-
     </main>
 
-    <div id="maintenanceModal" class="fixed inset-0 z-[99999] items-center justify-center bg-black/80 backdrop-blur-sm px-4" style="display:none;">
-      <div class="bg-[#0f172a] border border-amber-500/30 rounded-2xl p-5 max-w-md w-full shadow-2xl">
-        <div class="flex justify-between items-center mb-4"><h3 class="font-bold text-white">Maintenance Mode</h3><button id="closeMaintenanceBtn" class="text-slate-400 text-xl">×</button></div>
-        <textarea id="maintenanceMessageInput" class="w-full bg-[#050811] border border-slate-800 rounded-xl p-3 text-xs text-white" rows="4" placeholder="Maintenance message..."></textarea>
-        <div id="maintenanceStatus" class="mt-3 text-xs text-slate-400">Status checking...</div>
-        <div class="flex gap-2 mt-3"><button id="maintenanceOnBtn" class="flex-1 bg-amber-500 text-black font-bold py-2.5 rounded-xl">MAINTENANCE ON</button><button id="maintenanceOffBtn" class="flex-1 bg-red-600 text-white font-bold py-2.5 rounded-xl">OFF</button></div>
-      </div>
-    </div>
+    <a id="cornerSupportBtn" href="https://chat.whatsapp.com/DCxfqldDvbl8wOtk7PzCP9?s=cl&p=a&mlu=4&ilr=4" target="_blank" rel="noopener noreferrer" aria-label="Support" title="Support">
+        <i class="fa-brands fa-whatsapp"></i>
+    </a>
 
-    <div id="appUpdateModal" class="fixed inset-0 z-[99999] items-center justify-center bg-black/80 backdrop-blur-sm px-4" style="display:none;">
-      <div class="bg-[#0f172a] border border-blue-500/30 rounded-2xl p-5 max-w-md w-full shadow-2xl">
-        <div class="flex justify-between items-center mb-4"><h3 class="font-bold text-white">App Update</h3><button id="closeAppUpdateBtn" class="text-slate-400 text-xl">×</button></div>
-        <textarea id="appUpdateMessageInput" class="w-full bg-[#050811] border border-slate-800 rounded-xl p-3 text-xs text-white" rows="3" placeholder="Update message..."></textarea>
-        <input id="appUpdateLinkInput" class="w-full mt-2 bg-[#050811] border border-slate-800 rounded-xl p-3 text-xs text-white" placeholder="https://...">
-        <div id="appUpdateStatus" class="mt-3 text-xs text-slate-400">Status checking...</div>
-        <div class="flex gap-2 mt-3"><button id="appUpdateOnBtn" class="flex-1 bg-blue-600 text-white font-bold py-2.5 rounded-xl">UPDATE ON</button><button id="appUpdateOffBtn" class="flex-1 bg-red-600 text-white font-bold py-2.5 rounded-xl">OFF</button></div>
-      </div>
-    </div>
-
-    <div id="generic-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm px-4" style="display: none;">
-        <div class="bg-[#0f172a] border border-blue-500/40 rounded-2xl p-6 max-w-lg w-full shadow-2xl relative max-h-[90vh] overflow-y-auto">
-            <div class="flex justify-between items-center mb-4">
-                <h3 id="modal-title" class="text-sm font-bold text-white uppercase tracking-wider">Form</h3>
-                <button onclick="closeGenericModal()" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
-            </div>
-            <div id="modal-body" class="space-y-3 text-xs"></div>
-        </div>
-    </div>
+    <nav class="fixed bottom-0 left-0 right-0 max-w-md mx-auto bg-[#0b0f1a]/95 backdrop-blur-md border-t border-slate-900 px-6 py-2.5 flex justify-around items-center z-40 shadow-2xl">
+        <a href="index.html" class="flex flex-col items-center text-blue-400 space-y-1">
+            <i class="fa-solid fa-house text-base"></i>
+            <span class="text-[10px] font-bold">Home</span>
+        </a>
+        <a href="wallet.html" class="flex flex-col items-center text-slate-400 hover:text-blue-400 transition space-y-1">
+            <i class="fa-solid fa-wallet text-base"></i>
+            <span class="text-[10px] font-semibold">Wallet</span>
+        </a>
+        <a href="profile.html" class="flex flex-col items-center text-slate-400 hover:text-blue-400 transition space-y-1">
+            <i class="fa-solid fa-user text-base"></i>
+            <span class="text-[10px] font-semibold">Profile</span>
+        </a>
+    </nav>
 
     <script type="module">
-        import { auth, db, ADMIN_EMAIL, linkOneSignalUser } from "./firebase.js";
-        import { processReferralReward } from "./referral.js";
-        import { collection, getDocs, addDoc, updateDoc, deleteDoc, doc, getDoc, setDoc, query, where, orderBy, limit, onSnapshot, runTransaction } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-        import { getStorage, ref as storageRef, uploadBytes, getDownloadURL, listAll, deleteObject } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-storage.js";
-        const auraStorage = getStorage();
-        import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-
-        let __adminAuthReady = false;
-        document.addEventListener('DOMContentLoaded', () => {
-            const notificationBtn = document.getElementById('openNotificationBtn');
-            if (notificationBtn) {
-                notificationBtn.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    window.location.assign('./notification.html');
-                });
-            }
-        });
-
-        onAuthStateChanged(auth, (user) => {
-            __adminAuthReady = true;
-            if (!user) {
-                window.location.replace('./login.html?next=index.html');
-                return;
-            }
-
-            const signedEmail = String(user.email || '').trim().toLowerCase();
-            const adminEmail = String(ADMIN_EMAIL || '').trim().toLowerCase();
-            if (!adminEmail || signedEmail !== adminEmail) {
-                console.warn('Admin access denied for:', signedEmail);
-                alert('Admin access denied. এই account দিয়ে Admin Panel ব্যবহার করা যাবে না।');
-                window.location.replace('./login.html?next=index.html');
-                return;
-            }
-
-            const link = () => linkOneSignalUser(user).catch(err => console.warn('OneSignal admin link failed:', err));
-            link();
-            setTimeout(link, 1500);
-            setTimeout(link, 4000);
-        });
-
-        let allSections = [];
-        let allGroups = [];
-        let allTournaments = [];
-        let allBanners = [];
-        let allDeposits = [];
-        let allWithdraws = [];
-        let currentDepGateway = 'bkash';
-        let currentWdGateway = 'bkash';
-        let activeRuleCategory = 'br_headshot';
-
-        window.closeGenericModal = function() {
-            document.getElementById('generic-modal').style.display = 'none';
-        }
+        import { auth, db } from "./firebase.js";
+        import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { doc, getDoc, collection, getDocs, updateDoc, arrayUnion, runTransaction, onSnapshot, query, where } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        
+        let currentUserUid = null;
+        let currentUserName = "User";
+        let currentUserBalance = 0;
+        let globalSections = [];
+        let globalGroups = [];
+        let globalTournaments = [];
+        let globalBanners = [];
+        
+        let selectedSectionId = null;
+        let selectedGroupId = null;
+        let currentTournamentFilter = 'upcoming';
+        let countdownInterval = null;
+        let unsubNotifications = null;
+        let unsubTransactions = null;
+        let unsubTournamentsRealtime = null;
 
         window.showToast = function(message, type = 'success') {
             const container = document.getElementById('toast-container');
+            if (!container) return;
             const toast = document.createElement('div');
             toast.className = `toast ${type}`;
             
-            let icon = '<i class="fa-solid fa-circle-check text-emerald-400"></i>';
-            if(type === 'error') icon = '<i class="fa-solid fa-circle-exclamation text-rose-400"></i>';
+            let iconClass = "fa-solid fa-circle-check text-emerald-400";
+            if (type === 'error') iconClass = "fa-solid fa-circle-xmark text-red-400";
+            if (type === 'warning') iconClass = "fa-solid fa-triangle-exclamation text-amber-400";
 
-            toast.innerHTML = `${icon} <span>${message}</span>`;
+            toast.innerHTML = `<i class="${iconClass}"></i> <span>${message}</span>`;
             container.appendChild(toast);
-            setTimeout(() => { toast.remove(); }, 3000);
+            setTimeout(() => { toast.remove(); }, 3500);
         }
 
-        window.loadAllAdminData = async function() {
+        // Request Browser Notification Permission
+        function requestNotificationPermission() {
+            if ("Notification" in window) {
+                if (Notification.permission === "default") {
+                    Notification.requestPermission().then(permission => {
+                        if (permission === "granted") {
+                            showToast("নোটিফিকেশন পারমিশন সফলভাবে দেওয়া হয়েছে!", "success");
+                        }
+                    });
+                }
+            }
+        }
+
+        let siteMaintenanceActive = false;
+        let appUpdateActive = false;
+
+        function showSiteMaintenance(data = {}) {
+            siteMaintenanceActive = true;
+            const screen = document.getElementById('maintenance-screen');
+            const reason = document.getElementById('maintenance-reason');
+            if (reason) reason.textContent = data.reason || 'সাইটটি বর্তমানে maintenance-এর মধ্যে আছে।';
+            if (screen) screen.style.display = 'flex';
+            const loader = document.getElementById('app-loader');
+            if (loader) loader.style.display = 'none';
+            document.body.style.overflow = 'hidden';
+        }
+
+        function hideSiteMaintenance() {
+            siteMaintenanceActive = false;
+            const screen = document.getElementById('maintenance-screen');
+            if (screen) screen.style.display = 'none';
+            if (!appUpdateActive) document.body.style.overflow = '';
+        }
+
+        function showAppUpdate(data = {}) {
+            appUpdateActive = data.enabled === true || data.forceUpdate === true;
+            const screen = document.getElementById('update-screen');
+            const msgEl = document.getElementById('update-message');
+            const linkBtn = document.getElementById('update-link-btn');
+            if (msgEl) msgEl.textContent = data.message || 'আপনার অ্যাপ-টি আপডেট করা প্রয়োজন। দয়া করে আপডেট করে নিন।';
+            if (linkBtn) linkBtn.href = data.link || data.updateUrl || '#';
+            if (screen) screen.style.display = appUpdateActive ? 'flex' : 'none';
+            const loader = document.getElementById('app-loader');
+            if (loader) loader.style.display = 'none';
+            if (appUpdateActive) document.body.style.overflow = 'hidden';
+            else if (!siteMaintenanceActive) document.body.style.overflow = '';
+        }
+
+        const updateNowButton = document.getElementById('update-link-btn');
+        if (updateNowButton) {
+            updateNowButton.addEventListener('click', function (event) {
+                event.preventDefault();
+                if (this.dataset.updating === 'true') return;
+                const raw = (this.getAttribute('href') || '').trim();
+                let destination;
+                try {
+                    destination = new URL(raw, window.location.href);
+                    if (!['http:', 'https:'].includes(destination.protocol) || raw === '' || raw === '#') throw new Error('Invalid URL');
+                } catch (_) {
+                    window.showToast?.('Update link set kora nei ba sothik noy.', 'error');
+                    return;
+                }
+                this.dataset.updating = 'true';
+                this.innerHTML = '<span style="display:inline-block;width:16px;height:16px;border:2px solid #fff;border-top-color:transparent;border-radius:50%;animation:updateSpin .7s linear infinite;vertical-align:middle;margin-right:8px"></span> আপডেট হচ্ছে...';
+                this.style.pointerEvents = 'none';
+                this.setAttribute('aria-busy', 'true');
+                setTimeout(() => window.location.assign(destination.href), 300);
+            });
+        }
+        if (!document.getElementById('update-spin-style')) {
+            const spinStyle = document.createElement('style');
+            spinStyle.id = 'update-spin-style';
+            spinStyle.textContent = '@keyframes updateSpin{to{transform:rotate(360deg)}}';
+            document.head.appendChild(spinStyle);
+        }
+
+        async function checkStartupSettings() {
             try {
-                await cleanupExpiredCompletedTournaments();
-                const [secSnap, groupSnap, tourSnap, bannerSnap, depSnap, depositRequestSnap, wdSnap] = await Promise.all([
-                    getDocs(collection(db, "sections")),
-                    getDocs(collection(db, "groups")),
-                    getDocs(collection(db, "tournaments")),
-                    getDocs(collection(db, "banners")),
-                    getDocs(collection(db, "transactions")),
-                    getDocs(collection(db, "deposits")),
-                    getDocs(collection(db, "withdraws"))
+                const [mSnap, uSnap] = await Promise.all([
+                    getDoc(doc(db, 'settings', 'siteMaintenance')).catch(() => ({ exists: () => false })),
+                    getDoc(doc(db, 'settings', 'appUpdate')).catch(() => ({ exists: () => false }))
                 ]);
 
-                allSections = [];
-                secSnap.forEach(d => allSections.push({ id: d.id, ...d.data() }));
+                if (mSnap.exists() && mSnap.data()?.enabled === true) {
+                    showSiteMaintenance(mSnap.data());
+                } else {
+                    hideSiteMaintenance();
+                }
 
-                allGroups = [];
-                groupSnap.forEach(d => allGroups.push({ id: d.id, ...d.data() }));
+                if (uSnap.exists()) {
+                    showAppUpdate(uSnap.data());
+                }
 
-                allTournaments = [];
-                const now = Date.now();
-                
-                tourSnap.forEach(async (d) => {
-                    let tData = { id: d.id, ...d.data() };
-                    const startTime = Number(tData.startTime || 0);
-                    let currentStatus = String(tData.status || 'upcoming').toLowerCase();
+                return siteMaintenanceActive || appUpdateActive;
+            } catch (e) {
+                console.error('Startup settings check failed:', e);
+                return false;
+            }
+        }
 
-                    if(startTime > 0) {
-                        if(currentStatus === 'upcoming' && now >= startTime) {
-                            currentStatus = 'live';
-                            await updateDoc(doc(db, "tournaments", d.id), { status: 'live' });
+        const initialStartupPromise = checkStartupSettings();
+
+        onAuthStateChanged(auth, async (user) => {
+            const blocked = await initialStartupPromise;
+            if (blocked) return;
+            if (!user) { window.location.replace('login.html'); return; }
+            currentUserUid = user.uid;
+
+            // Request notification permission on load
+            requestNotificationPermission();
+
+            const safetyTimer = setTimeout(() => {
+                const loader = document.getElementById('app-loader');
+                if (loader && loader.style.display !== 'none') {
+                    loader.style.display = 'none';
+                }
+            }, 6000);
+
+            try {
+                await Promise.all([fetchUserData(user.uid), loadAllData()]);
+                initRealtimeListeners(user.uid);
+            } catch (err) {
+                console.error("Initialization error:", err);
+            } finally {
+                clearTimeout(safetyTimer);
+                const loader = document.getElementById('app-loader');
+                if(loader) loader.style.display = 'none';
+            }
+        });
+
+        // Realtime Listeners for Deposit/Withdraw, Room Details update, and Admin Push Notifications
+        function initRealtimeListeners(uid) {
+            // 1. Listen to user transactions (Deposit/Withdraw status changes)
+            if (unsubTransactions) unsubTransactions();
+            const txQuery = query(collection(db, "transactions"), where("userId", "==", uid));
+            let initialTxLoad = true;
+            unsubTransactions = onSnapshot(txQuery, (snapshot) => {
+                if (initialTxLoad) {
+                    initialTxLoad = false;
+                    return;
+                }
+                snapshot.docChanges().forEach((change) => {
+                    if (change.type === "modified") {
+                        const data = change.doc.data();
+                        const status = String(data.status || "").toLowerCase();
+                        const txType = data.type || "Transaction";
+                        if (status === "approved" || status === "success") {
+                            showToast(`${txType} request approve করা হয়েছে!`, "success");
+                            if ("Notification" in window && Notification.permission === "granted") {
+                                new Notification("Aura Skill Notification", { body: `${txType} request approved!` });
+                            }
+                        } else if (status === "rejected") {
+                            showToast(`${txType} request reject করা হয়েছে!`, "error");
+                            if ("Notification" in window && Notification.permission === "granted") {
+                                new Notification("Aura Skill Notification", { body: `${txType} request rejected!` });
+                            }
                         }
                     }
-
-                    tData.status = currentStatus;
-                    allTournaments.push(tData);
                 });
-
-                allBanners = [];
-                bannerSnap.forEach(d => allBanners.push({ id: d.id, ...d.data() }));
-
-                allDeposits = [];
-                let pendingDepCount = 0;
-                const depositIds = new Set();
-                depositRequestSnap.forEach(d => {
-                    const data = d.data() || {};
-                    allDeposits.push({ id: d.id, ...data, __source: 'deposits' });
-                    depositIds.add(d.id);
-                    if(String(data.status || 'pending').toLowerCase() === 'pending') pendingDepCount++;
-                });
-                depSnap.forEach(d => {
-                    const data = d.data() || {};
-                    if((data.type === "Deposit" || data.gateway || data.amount) && !depositIds.has(d.id)) {
-                        allDeposits.push({ id: d.id, ...data, __source: 'transactions' });
-                        if(String(data.status || 'pending').toLowerCase() === 'pending') pendingDepCount++;
-                    }
-                });
-
-                allWithdraws = [];
-                let pendingWdCount = 0;
-                wdSnap.forEach(d => {
-                    const data = d.data();
-                    allWithdraws.push({ id: d.id, ...data });
-                    if(String(data.status || 'pending').toLowerCase() === 'pending') {
-                        pendingWdCount++;
-                    }
-                });
-
-                document.getElementById('live-pending-deposits').innerText = pendingDepCount;
-                document.getElementById('live-pending-withdraws').innerText = pendingWdCount;
-
-                renderSectionsList();
-                renderGroupsList();
-                renderTournamentsList();
-                renderBannersList();
-                renderDepositsList();
-                renderWithdrawsList();
-                loadAdminRuleEditor(activeRuleCategory);
-            } catch(e) {
-                console.error("Error loading admin data:", e);
-            }
-        }
-
-        let __adminRealtimeSeen = new Set();
-        function __handleNewAdminRequest(type, change){
-            if(change.type !== 'added') return;
-            const d=change.doc.data()||{};
-            if(String(d.status||'pending').toLowerCase()!=='pending') return;
-            const key=type+'_'+change.doc.id;
-            if(__adminRealtimeSeen.has(key)) return;
-            __adminRealtimeSeen.add(key);
-            const amount=Number(d.amount||0);
-            const user=d.userName||d.username||d.userEmail||d.email||d.userId||d.uid||'User';
-            const method=d.gateway||d.method||'';
-            showToast(`নতুন ${type==='deposit'?'ডিপোজিট':'উইথড্র'} রিকোয়েস্ট: ৳${amount}${method?' ('+method+')':''} — ${user}`,'warning');
-        }
-        onSnapshot(collection(db,'deposits'),snap=>snap.docChanges().forEach(c=>__handleNewAdminRequest('deposit',c)),e=>console.error('Deposits realtime listener failed:',e));
-        onSnapshot(collection(db,'transactions'),snap=>snap.docChanges().forEach(c=>{const d=c.doc.data()||{}; if(d.type==='Deposit'||d.gateway||(d.amount!=null&&!d.method&&!d.withdraw)) __handleNewAdminRequest('deposit',c)}),e=>console.error('Transactions realtime listener failed:',e));
-        onSnapshot(collection(db,'withdraws'),snap=>snap.docChanges().forEach(c=>__handleNewAdminRequest('withdraw',c)),e=>console.error('Withdraw realtime listener failed:',e));
-
-        loadAllAdminData();
-        setInterval(loadAllAdminData, 15000);
-
-        window.switchTab = function(tabName) {
-            ['sections', 'groups', 'tournaments', 'banners', 'deposits', 'withdraws', 'rules'].forEach(t => {
-                document.getElementById(`tab-${t}`).style.display = (t === tabName) ? 'block' : 'none';
-                const btn = document.getElementById(`tab-btn-${t}`);
-                if(btn) {
-                    btn.className = (t === tabName) ? "py-2.5 text-[11px] font-bold rounded-xl bg-blue-600 text-white shadow transition" : "py-2.5 text-[11px] font-bold rounded-xl text-slate-400 hover:text-white transition";
-                }
             });
-        }
 
-        window.loadAdminRuleEditor = async function(cat) {
-            activeRuleCategory = cat;
-            ['br_headshot', 'lone_wolf_headshot', 'lone_wolf_bodyshot', 'cs_headshot'].forEach(m => {
-                const btn = document.getElementById(`admin-rule-${m}`);
-                if(btn) btn.className = (m === cat) ? "py-2 px-1 rounded-xl text-[11px] font-bold bg-blue-600 text-white truncate" : "py-2 px-1 rounded-xl text-[11px] font-bold bg-slate-800 text-slate-300 truncate";
-            });
-            try {
-                const docRef = doc(db, "matchRules", cat);
-                const snap = await getDoc(docRef);
-                document.getElementById('admin-rule-textarea').value = snap.exists() ? (snap.data().text || '') : '';
-            } catch(e) {
-                showToast('নিয়ম লোড করতে সমস্যা হয়েছে', 'error');
-            }
-        };
-
-        window.saveMatchRules = async function() {
-            const text = document.getElementById('admin-rule-textarea').value;
-            try {
-                await setDoc(doc(db, "matchRules", activeRuleCategory), { text, updatedAt: Date.now() }, { merge: true });
-                showToast('রুলস সফলভাবে আপডেট করা হয়েছে!');
-            } catch(e) {
-                showToast('আপডেট করতে সমস্যা হয়েছে', 'error');
-            }
-        };
-
-        function renderSectionsList() {
-            const list = document.getElementById('admin-sections-list');
-            if(!list) return;
-            list.innerHTML = "";
-            if(allSections.length === 0) {
-                list.innerHTML = `<p class="text-slate-500 text-xs">কোনো ক্যাটাগরি নেই।</p>`;
-                return;
-            }
-            allSections.forEach(sec => {
-                list.innerHTML += `
-                    <div class="glass-card p-4 rounded-xl flex justify-between items-center shadow">
-                        <div class="flex items-center space-x-3">
-                            <div class="w-10 h-10 bg-blue-600/20 rounded-lg flex items-center justify-center text-blue-400"><i class="${sec.icon || 'fa-solid fa-gamepad'}"></i></div>
-                            <div>
-                                <h4 class="font-bold text-white text-sm">${sec.name}</h4>
-                            </div>
-                        </div>
-                        <div class="flex space-x-2">
-                            <button onclick="editSection('${sec.id}')" class="bg-slate-800 hover:bg-slate-700 text-blue-400 px-2.5 py-1.5 rounded-lg"><i class="fa-solid fa-pen"></i></button>
-                            <button onclick="deleteDocItem('sections', '${sec.id}')" class="bg-red-600/20 hover:bg-red-600/30 text-red-400 px-2.5 py-1.5 rounded-lg"><i class="fa-solid fa-trash"></i></button>
-                        </div>
-                    </div>
-                `;
-            });
-        }
-
-        window.openSectionModal = function(editData = null) {
-            document.getElementById('modal-title').innerText = editData ? "Edit Category" : "Add New Category";
-            document.getElementById('generic-modal').style.display = 'flex';
-            document.getElementById('modal-body').innerHTML = `
-                <input type="hidden" id="sec-id" value="${editData ? editData.id : ''}">
-                <div>
-                    <label class="text-slate-400 block mb-1">Category Name</label>
-                    <input type="text" id="sec-name" value="${editData ? editData.name : ''}" class="w-full bg-[#050811] border border-slate-800 rounded-xl p-2.5 text-white">
-                </div>
-                <div>
-                    <label class="text-slate-400 block mb-1">FontAwesome Icon Class (e.g. fa-solid fa-gamepad)</label>
-                    <input type="text" id="sec-icon" value="${editData ? (editData.icon || '') : ''}" class="w-full bg-[#050811] border border-slate-800 rounded-xl p-2.5 text-white">
-                </div>
-                <button onclick="saveSection()" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-2.5 rounded-xl mt-2">Save Category</button>
-            `;
-        }
-
-        window.editSection = function(id) {
-            const sec = allSections.find(s => s.id === id);
-            if(sec) openSectionModal(sec);
-        }
-
-        window.saveSection = async function() {
-            const id = document.getElementById('sec-id').value;
-            const name = document.getElementById('sec-name').value;
-            const icon = document.getElementById('sec-icon').value;
-            if(!name) { showToast('ক্যাটাগরির নাম দিন', 'error'); return; }
-
-            try {
-                if(id) {
-                    await updateDoc(doc(db, "sections", id), { name, icon });
-                    showToast('ক্যাটাগরি আপডেট হয়েছে!');
-                } else {
-                    await addDoc(collection(db, "sections"), { name, icon, status: true });
-                    showToast('নতুন ক্যাটাগরি তৈরি হয়েছে!');
-                }
-                closeGenericModal();
-                loadAllAdminData();
-            } catch(e) { showToast('সমস্যা হয়েছে!', 'error'); }
-        }
-
-        function renderGroupsList() {
-            const list = document.getElementById('admin-groups-list');
-            if(!list) return;
-            list.innerHTML = "";
-            if(allGroups.length === 0) {
-                list.innerHTML = `<p class="text-slate-500 text-xs">কোনো গ্রুপ নেই।</p>`;
-                return;
-            }
-            allGroups.forEach(g => {
-                const parentSec = allSections.find(s => s.id === g.sectionId);
-                list.innerHTML += `
-                    <div class="glass-card p-4 rounded-xl flex justify-between items-center shadow">
-                        <div>
-                            <h4 class="font-bold text-white text-sm">${g.name}</h4>
-                            <span class="text-[10px] text-blue-400 font-semibold bg-blue-500/10 px-2 py-0.5 rounded border border-blue-500/20">Category: ${parentSec ? parentSec.name : 'Unknown'}</span>
-                        </div>
-                        <div class="flex space-x-2">
-                            <button onclick="editGroup('${g.id}')" class="bg-slate-800 hover:bg-slate-700 text-blue-400 px-2.5 py-1.5 rounded-lg"><i class="fa-solid fa-pen"></i></button>
-                            <button onclick="deleteDocItem('groups', '${g.id}')" class="bg-red-600/20 hover:bg-red-600/30 text-red-400 px-2.5 py-1.5 rounded-lg"><i class="fa-solid fa-trash"></i></button>
-                        </div>
-                    </div>
-                `;
-            });
-        }
-
-        window.openGroupModal = function(editData = null) {
-            let options = allSections.map(s => `<option value="${s.id}" ${editData && editData.sectionId === s.id ? 'selected' : ''}>${s.name}</option>`).join('');
-            document.getElementById('modal-title').innerText = editData ? "Edit Group" : "Add New Group";
-            document.getElementById('generic-modal').style.display = 'flex';
-            document.getElementById('modal-body').innerHTML = `
-                <input type="hidden" id="group-id" value="${editData ? editData.id : ''}">
-                <div>
-                    <label class="text-slate-400 block mb-1">Select Parent Category</label>
-                    <select id="group-section" class="w-full bg-[#050811] border border-slate-800 rounded-xl p-2.5 text-white">${options}</select>
-                </div>
-                <div>
-                    <label class="text-slate-400 block mb-1">Group Name</label>
-                    <input type="text" id="group-name" value="${editData ? editData.name : ''}" class="w-full bg-[#050811] border border-slate-800 rounded-xl p-2.5 text-white">
-                </div>
-                <button onclick="saveGroup()" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-2.5 rounded-xl mt-2">Save Group</button>
-            `;
-        }
-
-        window.editGroup = function(id) {
-            const g = allGroups.find(item => item.id === id);
-            if(g) openGroupModal(g);
-        }
-
-        window.saveGroup = async function() {
-            const id = document.getElementById('group-id').value;
-            const sectionId = document.getElementById('group-section').value;
-            const name = document.getElementById('group-name').value;
-            if(!name || !sectionId) { showToast('সব ফিল্ড পূরণ করুন', 'error'); return; }
-
-            try {
-                if(id) {
-                    await updateDoc(doc(db, "groups", id), { name, sectionId });
-                    showToast('গ্রুপ আপডেট সফল হয়েছে!');
-                } else {
-                    await addDoc(collection(db, "groups"), { name, sectionId, status: true });
-                    showToast('নতুন গ্রুপ তৈরি সফল হয়েছে!');
-                }
-                closeGenericModal();
-                loadAllAdminData();
-            } catch(e) { showToast('সমস্যা হয়েছে', 'error'); }
-        }
-
-        // --- MY MATCHES ARCHIVE + AUTO DELETE HELPERS ---
-        async function archiveTournamentForMyMatches(tournamentId, t, resultsOverride = null) {
-            const participants = Array.isArray(t?.participants) ? t.participants : [];
-            const results = Array.isArray(resultsOverride) ? resultsOverride : (Array.isArray(t?.results) ? t.results : []);
-            if (!participants.length) return;
-
-            const completedAt = Number(t.completedAt || Date.now());
-            const deleteAfter = Number(t.deleteAfter || (completedAt + 60 * 60 * 1000));
-
-            for (const participant of participants) {
-                const uid = String(participant?.uid || participant?.userId || participant?.firebaseId || '').trim();
-                if (!uid) continue;
-
-                const result = results.find(r => String(r?.userId || r?.uid || '') === uid) || {};
-                const slotCount = Math.max(1, Number(participant?.count || participant?.slotCount || (Array.isArray(participant?.players) ? participant.players.length : 1)));
-                const entryFeePaid = Number(participant?.entryFeePaid ?? participant?.paidEntryFee ?? participant?.amountPaid ?? ((Number(t.entryFee || 0)) * slotCount));
-                const wonAmount = result.winner
-                    ? (Number(result.prize || t.prize || 0) * slotCount) + (Number(result.kills || 0) * Number(t.perKill || 0))
-                    : (result.killOnly ? Number(result.kills || 0) * Number(t.perKill || 0) : 0);
-                const hasResult = results.some(r => String(r?.userId || r?.uid || '') === uid);
-                const outcome = (result.winner === true || wonAmount > 0)
-                    ? 'WIN'
-                    : (hasResult ? 'LOSS' : 'RESULT PENDING');
-
-                await setDoc(doc(db, 'matchHistory', `${tournamentId}_${uid}`), {
-                    tournamentId,
-                    userId: uid,
-                    userName: participant.userName || participant.username || result.userName || 'User',
-                    name: t.name || 'Tournament',
-                    time: t.time || 'Scheduled',
-                    map: t.map || 'Bermuda',
-                    prize: t.prize || 0,
-                    entryFee: Number(t.entryFee || 0),
-                    entryFeePaid,
-                    wonAmount,
-                    result: outcome,
-                    isWinner: result.winner === true,
-                    winner: result.winner === true,
-                    kills: Number(result.kills || 0),
-                    position: Number(result.position || 0),
-                    points: Number(result.points || 0),
-                    roomId: t.roomId || '',
-                    roomPass: t.roomPass || '',
-                    userPlayers: Array.isArray(participant.players) ? participant.players : [],
-                    registeredAt: Number(participant.registeredAt || 0),
-                    completedAt,
-                    deleteAfter,
-                    archivedAt: Date.now()
-                }, { merge: true });
-            }
-        }
-
-        function scheduleTournamentDeletion(tournamentId, deleteAfter) {
-            const delay = Math.max(0, Number(deleteAfter || 0) - Date.now());
-            if (delay === 0) {
-                deleteDoc(doc(db, 'tournaments', tournamentId)).catch(e => console.warn('Tournament auto-delete failed:', e));
-                return;
-            }
-            setTimeout(async () => {
-                try {
-                    const snap = await getDoc(doc(db, 'tournaments', tournamentId));
-                    if (!snap.exists()) return;
-                    const data = snap.data() || {};
-                    if (String(data.status || '').toLowerCase() === 'completed' && Number(data.deleteAfter || 0) <= Date.now()) {
-                        await deleteDoc(doc(db, 'tournaments', tournamentId));
-                        await loadAllAdminData();
-                    }
-                } catch (e) { console.warn('Tournament auto-delete failed:', e); }
-            }, delay + 1000);
-        }
-
-        async function cleanupExpiredCompletedTournaments() {
-            try {
-                const snap = await getDocs(collection(db, 'tournaments'));
-                const now = Date.now();
-                const jobs = [];
-                snap.forEach(d => {
-                    const data = d.data() || {};
-                    const status = String(data.status || '').toLowerCase();
-                    const deleteAfter = Number(data.deleteAfter || 0);
-                    if (deleteAfter > 0 && deleteAfter <= now && (status === 'completed' || data.completedAt)) {
-                        jobs.push(deleteDoc(doc(db, 'tournaments', d.id)));
-                    } else if (status === 'completed' && deleteAfter > now) {
-                        scheduleTournamentDeletion(d.id, deleteAfter);
-                    }
-                });
-                if (jobs.length) await Promise.allSettled(jobs);
-            } catch (e) { console.warn('Expired tournament cleanup failed:', e); }
-        }
-
-        function renderTournamentsList() {
-            const list = document.getElementById('admin-tournaments-list');
-            if(!list) return;
-            list.innerHTML = "";
-            if(allTournaments.length === 0) {
-                list.innerHTML = `<p class="text-slate-500 text-xs text-center py-4">কোনো টুর্নামেন্ট নেই।</p>`;
-                return;
-            }
-            // Completed tournaments are removed from the Admin panel immediately.
-            // The Firestore tournament document is kept until deleteAfter so the user-facing
-            // Complete section can still show it for 1 hour. My Matches history is permanent.
-            const adminVisibleTournaments = allTournaments.filter(t => String(t.status || '').toLowerCase() !== 'completed');
-            if(adminVisibleTournaments.length === 0) {
-                list.innerHTML = `<p class="text-slate-500 text-xs text-center py-4">কোনো active tournament নেই।</p>`;
-                return;
-            }
-            adminVisibleTournaments.forEach(t => {
-                const parentGroup = allGroups.find(g => g.id === t.groupId);
-                list.innerHTML += `
-                    <div class="glass-card p-4 rounded-xl flex justify-between items-center shadow">
-                        <div>
-                            <h4 class="font-bold text-white text-sm">${t.name}</h4>
-                            <span class="text-[10px] text-amber-400 block">Group: ${parentGroup ? parentGroup.name : 'Unknown'} | Status: <b>${t.status || 'upcoming'}</b></span>
-                            <span class="text-[10px] text-blue-400 block">Type: ${t.matchType || t.type || 'Solo'} | Players/Slot Size: <b>${t.slotSize || 1}</b> | Map: ${t.map || 'Bermuda'} | Fee: ৳${t.entryFee || 0}</span>
-                        </div>
-                        <div class="flex space-x-2 items-center flex-wrap gap-y-1">
-                            <button onclick="openRegistrationsModal('${t.id}', '${t.name}')" class="bg-blue-600/20 hover:bg-blue-600/30 text-blue-400 border border-blue-500/30 px-2.5 py-1.5 rounded-lg text-[11px] font-bold" title="View Registrations"><i class="fa-solid fa-users mr-1"></i> Regs</button>
-                            <button onclick="openTournamentResult('${t.id}')" class="bg-amber-500/10 hover:bg-amber-500/20 text-amber-400 border border-amber-500/30 px-2.5 py-1.5 rounded-lg text-[11px] font-bold" title="Tournament Result"><i class="fa-solid fa-trophy mr-1"></i> Result</button>
-                            <button onclick="completeTournamentAction('${t.id}')" class="bg-emerald-600 hover:bg-emerald-500 text-white px-2.5 py-1.5 rounded-lg text-[11px] font-bold" title="Complete Tournament"><i class="fa-solid fa-circle-check mr-1"></i> Complete</button>
-                            <button onclick="openRoomDetailsModal('${t.id}')" class="bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-2.5 py-1.5 rounded-lg text-[11px] font-bold" title="Update Room Details"><i class="fa-solid fa-key mr-1"></i> Room</button>
-                            <button onclick="editTournament('${t.id}')" class="bg-slate-800 hover:bg-slate-700 text-blue-400 px-2.5 py-1.5 rounded-lg" title="Edit"><i class="fa-solid fa-pen"></i></button>
-                            <button onclick="deleteDocItem('tournaments', '${t.id}')" class="bg-red-600/20 hover:bg-red-600/30 text-red-400 px-2.5 py-1.5 rounded-lg" title="Delete"><i class="fa-solid fa-trash"></i></button>
-                        </div>
-                    </div>
-                `;
-            });
-        }
-
-        // --- TOURNAMENT COMPLETE ACTION ---
-        window.completeTournamentAction = async function(tournamentId) {
-            if(!confirm('এই টুর্নামেন্টটি কি কমপ্লিট করে দিতে চান? Complete হলে 1 ঘণ্টা পর tournament document auto delete হবে, কিন্তু My Matches history থেকে যাবে।')) return;
-            try {
-                const tourRef = doc(db, "tournaments", tournamentId);
-                const tourSnap = await getDoc(tourRef);
-                if(!tourSnap.exists()) throw new Error('Tournament পাওয়া যায়নি।');
-                const t = tourSnap.data() || {};
-                const completedAt = Date.now();
-                const deleteAfter = completedAt + 60 * 60 * 1000;
-                await archiveTournamentForMyMatches(tournamentId, t, Array.isArray(t.results) ? t.results : []);
-                await updateDoc(tourRef, {
-                    status: 'completed',
-                    completedAt,
-                    deleteAfter
-                });
-                scheduleTournamentDeletion(tournamentId, deleteAfter);
-                showToast('টুর্নামেন্ট কমপ্লিট হয়েছে। My Matches history সংরক্ষিত থাকবে এবং 1 ঘণ্টা পর tournament auto delete হবে!');
-                await loadAllAdminData();
-            } catch(e) {
-                showToast('কমপ্লিট করতে সমস্যা হয়েছে: ' + (e?.message || e), 'error');
-            }
-        };
-
-        window.openTournamentModal = function(editData = null) {
-            let groupOptions = allGroups.map(g => `<option value="${g.id}" ${editData && editData.groupId === g.id ? 'selected' : ''}>${g.name}</option>`).join('');
-            let defaultDateTime = '';
-            if(editData && editData.startTime) {
-                const dt = new Date(editData.startTime);
-                defaultDateTime = dt.toISOString().slice(0, 16);
-            }
-
-            document.getElementById('modal-title').innerText = editData ? "Edit Tournament" : "Add New Tournament";
-            document.getElementById('generic-modal').style.display = 'flex';
-            document.getElementById('modal-body').innerHTML = `
-                <input type="hidden" id="tour-id" value="${editData ? editData.id : ''}">
-                <div>
-                    <label class="text-slate-400 block mb-1">Select Group</label>
-                    <select id="tour-group" class="w-full bg-[#050811] border border-slate-800 rounded-xl p-2.5 text-white">${groupOptions}</select>
-                </div>
-                <div>
-                    <label class="text-slate-400 block mb-1">Tournament Match Name</label>
-                    <input type="text" id="tour-name" value="${editData ? editData.name : ''}" class="w-full bg-[#050811] border border-slate-800 rounded-xl p-2.5 text-white">
-                </div>
-                <div class="grid grid-cols-3 gap-2">
-                    <div>
-                        <label class="text-slate-400 block mb-1">Prize Pool</label>
-                        <input type="text" id="tour-prize" value="${editData ? (editData.prize || '') : ''}" class="w-full bg-[#050811] border border-slate-800 rounded-xl p-2.5 text-white">
-                    </div>
-                    <div>
-                        <label class="text-slate-400 block mb-1">Per Kill</label>
-                        <input type="text" id="tour-perkill" value="${editData ? (editData.perKill || '') : ''}" class="w-full bg-[#050811] border border-slate-800 rounded-xl p-2.5 text-white">
-                    </div>
-                    <div>
-                        <label class="text-slate-400 block mb-1">Entry Fee</label>
-                        <input type="number" id="tour-fee" value="${editData ? (editData.entryFee || '') : ''}" class="w-full bg-[#050811] border border-slate-800 rounded-xl p-2.5 text-white">
-                    </div>
-                </div>
-                <div class="grid grid-cols-3 gap-2">
-                    <div>
-                        <label class="text-slate-400 block mb-1">Match Type</label>
-                        <select id="tour-type" onchange="syncTeamSizeField()" class="w-full bg-[#050811] border border-slate-800 rounded-xl p-2.5 text-white">
-                            <option value="Solo" ${editData && String(editData.type || editData.matchType || 'Solo').toLowerCase() === 'solo' ? 'selected' : ''}>Solo — 1 Player</option>
-                            <option value="Duo" ${editData && String(editData.type || editData.matchType || '').toLowerCase() === 'duo' ? 'selected' : ''}>Duo — Up to 2 Players</option>
-                            <option value="Squad" ${editData && String(editData.type || editData.matchType || '').toLowerCase() === 'squad' ? 'selected' : ''}>Squad — Up to 4 Players</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="text-blue-400 font-bold block mb-1">Max Players / Team</label>
-                        <input type="number" id="tour-slot-size" value="${editData ? (editData.slotSize || 1) : 1}" min="1" max="4" readonly class="w-full bg-[#050811] border border-blue-500/50 rounded-xl p-2.5 text-white font-bold opacity-80">
-                        <p class="text-[9px] text-slate-500 mt-1">Solo = 1, Duo = 2, Squad = 4</p>
-                    </div>
-                    <div>
-                        <label class="text-slate-400 block mb-1">Map</label>
-                        <input type="text" id="tour-map" value="${editData ? (editData.map || 'Bermuda') : 'Bermuda'}" class="w-full bg-[#050811] border border-slate-800 rounded-xl p-2.5 text-white">
-                    </div>
-                </div>
-                <div class="grid grid-cols-2 gap-2">
-                    <div>
-                        <label class="text-slate-400 block mb-1">Slots Limit (e.g. 12/50)</label>
-                        <input type="text" id="tour-slots" value="${editData ? (editData.slots || '0 / 50') : '0 / 50'}" class="w-full bg-[#050811] border border-slate-800 rounded-xl p-2.5 text-white">
-                    </div>
-                    <div>
-                        <label class="text-slate-400 block mb-1">Status</label>
-                        <select id="tour-status" class="w-full bg-[#050811] border border-slate-800 rounded-xl p-2.5 text-white">
-                            <option value="upcoming" ${editData && editData.status === 'upcoming' ? 'selected' : ''}>upcoming</option>
-                            <option value="live" ${editData && editData.status === 'live' ? 'selected' : ''}>live</option>
-                            <option value="completed" ${editData && editData.status === 'completed' ? 'selected' : ''}>complete</option>
-                        </select>
-                    </div>
-                </div>
-                <div>
-                    <label class="text-slate-400 block mb-1">Start Date & Time</label>
-                    <input type="datetime-local" id="tour-start-time" value="${defaultDateTime}" class="w-full bg-[#050811] border border-slate-800 rounded-xl p-2.5 text-white">
-                </div>
-                <div class="grid grid-cols-2 gap-2 border-t border-slate-800 pt-2 mt-2">
-                    <div>
-                        <label class="text-blue-400 font-bold block mb-1">Room ID</label>
-                        <input type="text" id="tour-room-id" value="${editData ? (editData.roomId || '') : ''}" class="w-full bg-[#050811] border border-slate-800 rounded-xl p-2.5 text-white">
-                    </div>
-                    <div>
-                        <label class="text-blue-400 font-bold block mb-1">Room Password</label>
-                        <input type="text" id="tour-room-pass" value="${editData ? (editData.roomPass || '') : ''}" class="w-full bg-[#050811] border border-slate-800 rounded-xl p-2.5 text-white">
-                    </div>
-                </div>
-                <div>
-                    <label class="text-slate-400 block mb-1">Prizes Breakdown Details</label>
-                    <textarea id="tour-prize-details" rows="2" class="w-full bg-[#050811] border border-slate-800 rounded-xl p-2.5 text-white" placeholder="প্রাইজ বিবরণ লিখুন...">${editData ? (editData.prizeDetails || '') : ''}</textarea>
-                </div>
-                <button onclick="saveTournament()" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-2.5 rounded-xl mt-2">Save Tournament</button>
-            `;
-            syncTeamSizeField();
-        }
-
-        window.syncTeamSizeField = function() {
-            const typeEl = document.getElementById('tour-type');
-            const sizeEl = document.getElementById('tour-slot-size');
-            if(!typeEl || !sizeEl) return;
-            const type = typeEl.value.toLowerCase();
-            sizeEl.value = type === 'solo' ? 1 : (type === 'duo' ? 2 : 4);
-        }
-
-        window.editTournament = function(id) {
-            const t = allTournaments.find(item => item.id === id);
-            if(t) openTournamentModal(t);
-        }
-
-        window.saveTournament = async function() {
-            const id = document.getElementById('tour-id').value;
-            const groupId = document.getElementById('tour-group').value;
-            const name = document.getElementById('tour-name').value;
-            const prize = document.getElementById('tour-prize').value;
-            const perKill = document.getElementById('tour-perkill').value;
-            const entryFee = Number(document.getElementById('tour-fee').value || 0);
-            const type = document.getElementById('tour-type').value;
-            const typeLower = type.toLowerCase();
-            const slotSize = typeLower === 'solo' ? 1 : (typeLower === 'duo' ? 2 : 4);
-            const map = document.getElementById('tour-map').value;
-            const slotsRaw = document.getElementById('tour-slots').value.trim();
-            const slotsMatch = slotsRaw.match(/(?:\/|of)\s*(\d+)$/i);
-            const totalSlots = slotsMatch ? Number(slotsMatch[1]) : Math.max(1, Number(slotsRaw.replace(/\D/g, '') || 50));
-            const slots = `0 / ${totalSlots}`;
-            const startTimeVal = document.getElementById('tour-start-time').value;
-            const statusRaw = document.getElementById('tour-status').value;
-            const status = statusRaw === 'complete' ? 'completed' : statusRaw;
-            const roomId = document.getElementById('tour-room-id').value.trim();
-            const roomPass = document.getElementById('tour-room-pass').value.trim();
-            const prizeDetails = document.getElementById('tour-prize-details').value;
-
-            if(!name || !groupId) { showToast('নাম ও গ্রুপ সিলেক্ট করুন', 'error'); return; }
-
-            let startTime = startTimeVal ? new Date(startTimeVal).getTime() : Date.now();
-            let timeStr = startTimeVal ? new Date(startTimeVal).toLocaleString() : '';
-
-            const payload = {
-                groupId, name, prize, perKill, entryFee, type, matchType: type,
-                slotSize, maxPlayersPerTeam: slotSize, map, slots, totalSlots,
-                startTime, time: timeStr, status, roomId, roomPass, prizeDetails
-            };
-            try {
-                if(id) {
-                    await updateDoc(doc(db, "tournaments", id), payload);
-                    showToast('টুর্নামেন্ট আপডেট হয়েছে!');
-                } else {
-                    await addDoc(collection(db, "tournaments"), payload);
-                    showToast('নতুন টুর্নামেন্ট তৈরি হয়েছে!');
-                }
-                closeGenericModal();
-                loadAllAdminData();
-            } catch(e) { showToast('সমস্যা হয়েছে', 'error'); }
-        }
-
-        window.openRoomDetailsModal = async function(tournamentId) {
-            try {
-                const snap = await getDoc(doc(db, "tournaments", tournamentId));
-                if(!snap.exists()) throw new Error("Tournament পাওয়া যায়নি।");
-                const t = snap.data() || {};
-                document.getElementById('modal-title').innerText = "Update Room Details";
-                document.getElementById('generic-modal').style.display = 'flex';
-                document.getElementById('modal-body').innerHTML = `
-                    <input type="hidden" id="room-tour-id" value="${tournamentId}">
-                    <div>
-                        <label class="text-slate-400 block mb-1">Room ID</label>
-                        <input id="room-update-id" value="${String(t.roomId || '').replace(/"/g,'&quot;')}" class="w-full bg-[#050811] border border-slate-800 rounded-xl p-2.5 text-white">
-                    </div>
-                    <div>
-                        <label class="text-slate-400 block mb-1">Room Password</label>
-                        <input id="room-update-pass" value="${String(t.roomPass || '').replace(/"/g,'&quot;')}" class="w-full bg-[#050811] border border-slate-800 rounded-xl p-2.5 text-white">
-                    </div>
-                    <p class="text-[11px] text-slate-500">শুধু Room ID/Password update হবে। Registration, players, slots, result বা tournament data মুছবে না।</p>
-                    <button onclick="updateRoomDetails()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2.5 rounded-xl mt-2">Update Room Details</button>
-                `;
-            } catch(e) {
-                showToast(e.message || "Room details load failed", "error");
-            }
-        };
-
-        window.updateRoomDetails = async function() {
-            const id = document.getElementById('room-tour-id')?.value;
-            if(!id) return;
-            try {
-                const roomId = document.getElementById('room-update-id')?.value.trim() || '';
-                const roomPass = document.getElementById('room-update-pass')?.value.trim() || '';
-                await updateDoc(doc(db, "tournaments", id), {
-                    roomId,
-                    roomPass,
-                    roomDetailsUpdatedAt: Date.now()
-                });
-                showToast("Room Details update হয়েছে!");
-                closeGenericModal();
-                await loadAllAdminData();
-            } catch(e) {
-                showToast(e.message || "Room update failed", "error");
-            }
-        };
-
-        const resultEscape = (v) => String(v ?? '')
-            .replace(/&/g,'&amp;').replace(/</g,'&lt;')
-            .replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#039;');
-
-        window.openTournamentResult = async function(tournamentId) {
-            const body = document.getElementById('modal-body');
-            try {
-                const snap = await getDoc(doc(db, 'tournaments', tournamentId));
-                if(!snap.exists()) throw new Error('Tournament পাওয়া যায়নি।');
-                const t = snap.data() || {};
-                const participants = Array.isArray(t.participants) ? t.participants : [];
-                const saved = Array.isArray(t.results) ? t.results : [];
-                const prizePerSlot = Number(t.prize || 0);
-                const killPrice = Number(t.perKill || 0);
-
-                document.getElementById('modal-title').innerText = 'Tournament Result & Winner Payout';
-                window.__activeResultTournamentId = tournamentId;
-                document.getElementById('generic-modal').setAttribute('data-result-tour-id', tournamentId);
-                document.getElementById('generic-modal').style.display = 'flex';
-                body.innerHTML = '<p class="text-center text-slate-400 py-6">Result লোড হচ্ছে...</p>';
-
-                let rows = '';
-                if(participants.length) {
-                    rows = participants.map((p, i) => {
-                        const uid = String(p.userId || p.uid || p.firebaseId || p.userID || '');
-                        const name = String(p.userName || p.username || p.ign || (Array.isArray(p.players) ? p.players[0] : '') || 'User');
-                        const count = Math.max(1, Number(p.count || p.slotCount || (Array.isArray(p.players) ? p.players.length : 1)));
-                        const old = saved.find(r => String(r.userId || r.uid || '') === uid) || saved[i] || {};
-                        const isWinnerChecked = old.winner ? 'checked' : '';
-                        const isKillOnlyChecked = old.killOnly ? 'checked' : '';
-                        const oldKills = old.kills ?? '';
-                        const oldPos = old.position ?? '';
-                        const oldPoints = old.points ?? '';
-                        
-                        return `
-                          <div class="result-row bg-[#050811] border border-slate-800 rounded-xl p-3 mb-3"
-                               data-user-id="${resultEscape(uid)}" data-slot-count="${count}">
-                            <div class="flex justify-between gap-2 items-start mb-2">
-                              <div class="min-w-0">
-                                <div class="font-bold text-white text-sm">${resultEscape(name)}</div>
-                                <div class="text-[10px] text-emerald-400">Registered Slots/Players: <b class="text-white">${count}</b> ${uid ? ' • UID: '+resultEscape(uid) : ' • UID missing'}</div>
-                              </div>
-                              <div class="flex items-center gap-3">
-                                <label class="flex items-center gap-1 text-[11px] text-amber-300 whitespace-nowrap cursor-pointer">
-                                  <input type="checkbox" class="result-winner" ${isWinnerChecked}> Winner (Prize×${count} + Kill)
-                                </label>
-                                <label class="flex items-center gap-1 text-[11px] text-blue-300 whitespace-nowrap cursor-pointer">
-                                  <input type="checkbox" class="result-kill-only" ${isKillOnlyChecked}> Only Kill Prize
-                                </label>
-                              </div>
-                            </div>
-                            <input type="hidden" class="result-user-name" value="${resultEscape(name)}">
-                            ${uid ? '' : '<input class="result-user-id w-full mb-2 bg-black border border-slate-800 rounded-lg p-2 text-white text-xs" placeholder="Winner বা Player এর User ID দিন">'}
-                            <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
-                              <input type="number" min="1" class="result-position bg-black border border-slate-800 rounded-lg p-2 text-white text-xs" placeholder="Position" value="${oldPos}">
-                              <input type="number" min="0" class="result-kills bg-black border border-slate-800 rounded-lg p-2 text-white text-xs" placeholder="Kills" value="${oldKills}">
-                              <input type="number" min="0" class="result-points bg-black border border-slate-800 rounded-lg p-2 text-white text-xs" placeholder="Points" value="${oldPoints}">
-                              <input type="number" min="0" class="result-prize bg-black border border-slate-800 rounded-lg p-2 text-white text-xs" placeholder="Prize / Slot" value="${old.prize ?? prizePerSlot}">
-                            </div>
-                          </div>`;
-                    }).join('');
-                } else {
-                    rows = '<p class="text-center text-slate-500 py-6">কোনো registered player পাওয়া যায়নি। নিচের "+ Add Player" বাটন দিয়ে ম্যানুয়ালি যোগ করতে পারেন।</p>';
-                }
-
-                body.innerHTML = `
-                  <div class="bg-amber-500/10 border border-amber-500/20 rounded-xl p-3 text-xs text-amber-200 mb-3">
-                    Tournament Prize / Slot: <b>৳${prizePerSlot}</b> • Kill Price: <b>৳${killPrice}</b>
-                    <div class="text-slate-300 mt-1">
-                      • <b>Winner সিলেক্ট করলে:</b> (Prize × registered player/slot count) + (Kills × Kill Price) পাবে।<br>
-                      • <b>Only Kill Prize সিলেক্ট করলে:</b> শুধু (Kills × Kill Price) পাবে, মূল প্রাইজ পাবেনা।<br>
-                      • Publish করলেই অটো ইউজারের ওয়ালেটে ব্যালেন্স চলে যাবে এবং টুর্নামেন্ট কমপ্লিট হয়ে যাবে।
-                    </div>
-                  </div>
-                  <div class="flex items-center justify-between mb-3">
-                    <span class="text-xs text-slate-400">Registered Players: <b class="text-white">${participants.length}</b></span>
-                    <label class="text-xs text-slate-300 flex items-center gap-2 cursor-pointer font-bold text-emerald-400">
-                      <input id="result-publish" type="checkbox" ${t.resultPublished ? 'checked' : ''}> Publish Result & Auto Send Prize to Wallet
-                    </label>
-                  </div>
-                  <div id="result-rows" class="max-h-[55vh] overflow-y-auto">${rows}</div>
-                  <button onclick="addManualResultRow()" class="w-full mt-2 bg-slate-800 text-white py-2 rounded-xl text-xs font-bold">+ Add Player</button>
-                  <button onclick="saveTournamentResult()" class="w-full mt-3 bg-amber-600 hover:bg-amber-500 text-white py-2.5 rounded-xl font-black">Save / Publish Result & Payout</button>`;
-            } catch(e) {
-                body.innerHTML = `<p class="text-center text-rose-400 py-6">${resultEscape(e.message || 'Result load failed')}</p>`;
-            }
-        };
-
-        window.addManualResultRow = function() {
-            const box = document.getElementById('result-rows');
-            if(!box) return;
-            const row = document.createElement('div');
-            row.className = 'result-row bg-[#050811] border border-slate-800 rounded-xl p-3 mb-3';
-            row.setAttribute('data-user-id','');
-            row.setAttribute('data-slot-count','1');
-            row.innerHTML = `
-              <div class="flex gap-2 mb-2">
-                <input class="result-user-name flex-1 bg-black border border-slate-800 rounded-lg p-2 text-white text-xs" placeholder="Username">
-                <input class="result-user-id w-32 bg-black border border-slate-800 rounded-lg p-2 text-white text-xs" placeholder="User UID">
-                <input class="result-slot-count w-20 bg-black border border-slate-800 rounded-lg p-2 text-white text-xs" type="number" min="1" value="1" placeholder="Slots">
-              </div>
-              <div class="flex gap-4 mb-2">
-                <label class="text-xs text-amber-300 flex items-center gap-1 cursor-pointer"><input type="checkbox" class="result-winner"> Winner</label>
-                <label class="text-xs text-blue-300 flex items-center gap-1 cursor-pointer"><input type="checkbox" class="result-kill-only"> Only Kill Prize</label>
-              </div>
-              <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
-                <input type="number" min="1" class="result-position bg-black border border-slate-800 rounded-lg p-2 text-white text-xs" placeholder="Position">
-                <input type="number" min="0" class="result-kills bg-black border border-slate-800 rounded-lg p-2 text-white text-xs" placeholder="Kills">
-                <input type="number" min="0" class="result-points bg-black border border-slate-800 rounded-lg p-2 text-white text-xs" placeholder="Points">
-                <input type="number" min="0" class="result-prize bg-black border border-slate-800 rounded-lg p-2 text-white text-xs" placeholder="Prize / Slot">
-              </div>`;
-            box.appendChild(row);
-        };
-
-        window.saveTournamentResult = async function() {
-            const modal = document.getElementById('generic-modal');
-            const resultBox = document.getElementById('result-rows');
-            const id = modal?.getAttribute('data-result-tour-id') || window.__activeResultTournamentId;
-            if(!id || !resultBox) { showToast('Result tournament ID পাওয়া যায়নি।', 'error'); return; }
-
-            const published = !!document.getElementById('result-publish')?.checked;
-            try {
-                const tourRef = doc(db,'tournaments',id);
-                const tourSnap = await getDoc(tourRef);
-                if(!tourSnap.exists()) throw new Error('Tournament পাওয়া যায়নি।');
-                const t = tourSnap.data() || {};
-                const perKill = Number(t.perKill || 0);
-                const resultRows = [...resultBox.querySelectorAll('.result-row')];
-                
-                const results = resultRows.map(row => {
-                    const userId = row.getAttribute('data-user-id') || row.querySelector('.result-user-id')?.value.trim() || '';
-                    const userName = row.querySelector('.result-user-name')?.value || 'User';
-                    const customSlotInput = row.querySelector('.result-slot-count');
-                    const count = Math.max(1, Number(customSlotInput ? customSlotInput.value : (row.getAttribute('data-slot-count') || 1)));
-                    const winner = !!row.querySelector('.result-winner')?.checked;
-                    const killOnly = !!row.querySelector('.result-kill-only')?.checked;
-                    const kills = Math.max(0, Number(row.querySelector('.result-kills')?.value || 0));
-                    const position = Math.max(0, Number(row.querySelector('.result-position')?.value || 0));
-                    const points = Math.max(0, Number(row.querySelector('.result-points')?.value || 0));
-                    const prize = Math.max(0, Number(row.querySelector('.result-prize')?.value || t.prize || 0));
-                    return {userId, uid:userId, userName, username:userName, slotCount:count, winner, killOnly, kills, position, points, prize};
-                }).filter(r => r.userId || r.userName || r.winner || r.killOnly || r.kills || r.position || r.points);
-
-                if(published) {
-                    for(const r of results) {
-                        if((r.winner || r.killOnly) && !r.userId) {
-                            throw new Error(`${r.userName || 'Player'}-এর User ID দেওয়া হয়নি, ব্যালেন্স পাঠানো সম্ভব নয়।`);
+            // Also listen to withdraws collection if stored separately
+            const wdQuery = query(collection(db, "withdraws"), where("userId", "==", uid));
+            onSnapshot(wdQuery, (snapshot) => {
+                snapshot.docChanges().forEach((change) => {
+                    if (change.type === "modified") {
+                        const data = change.doc.data();
+                        const status = String(data.status || "").toLowerCase();
+                        if (status === "approved" || status === "success") {
+                            showToast(`Withdraw request approve করা হয়েছে!`, "success");
+                            if ("Notification" in window && Notification.permission === "granted") {
+                                new Notification("Aura Skill Notification", { body: `Withdraw request approved!` });
+                            }
+                        } else if (status === "rejected") {
+                            showToast(`Withdraw request reject করা হয়েছে!`, "error");
+                            if ("Notification" in window && Notification.permission === "granted") {
+                                new Notification("Aura Skill Notification", { body: `Withdraw request rejected!` });
+                            }
                         }
-                        
-                        let payout = 0;
-                        if(r.winner) {
-                            // Duo/Squad er khetre prize * slotCount + (kills * perKill)
-                            payout = (r.prize * r.slotCount) + (r.kills * perKill);
-                        } else if(r.killOnly) {
-                            // Sudu kill er prize
-                            payout = r.kills * perKill;
+                    }
+                });
+            });
+
+            // 2. Listen to joined tournaments for room details updates
+            if (unsubTournamentsRealtime) unsubTournamentsRealtime();
+            unsubTournamentsRealtime = onSnapshot(collection(db, "tournaments"), (snapshot) => {
+                let reloadNeeded = false;
+                snapshot.docChanges().forEach((change) => {
+                    const data = change.doc.data();
+                    const participants = Array.isArray(data.participants) ? data.participants : [];
+                    const isJoined = participants.some(p => p.uid === uid);
+                    
+                    if (isJoined && change.type === "modified") {
+                        reloadNeeded = true;
+                        // Check if room details were updated
+                        if (data.roomId || data.roomPass) {
+                            showToast(`"${data.name || 'Match'}" এর Room Details আপডেট করা হয়েছে!`, "success");
+                            if ("Notification" in window && Notification.permission === "granted") {
+                                new Notification("Tournament Room Update", { body: `Room details updated for ${data.name || 'Match'}` });
+                            }
                         }
+                    }
+                });
+                if (reloadNeeded) {
+                    loadAllData();
+                }
+            });
 
-                        if(payout <= 0) continue;
+            // 3. Listen to Admin Push Notifications
+            if (unsubNotifications) unsubNotifications();
+            let initialNotifLoad = true;
+            unsubNotifications = onSnapshot(collection(db, "notifications"), (snapshot) => {
+                if (initialNotifLoad) {
+                    initialNotifLoad = false;
+                    return;
+                }
+                snapshot.docChanges().forEach((change) => {
+                    if (change.type === "added") {
+                        const notif = change.doc.data();
+                        const title = notif.title || "New Notification";
+                        const message = notif.message || "";
+                        showToast(`${title}: ${message}`, "success");
+                        if ("Notification" in window && Notification.permission === "granted") {
+                            new Notification(title, { body: message });
+                        }
+                    }
+                });
+            });
+        }
 
-                        const payoutId = `${id}_${encodeURIComponent(r.userId).replace(/%/g,'_')}`;
-                        const payoutRef = doc(db,'tournamentPayouts',payoutId);
-                        const userRef = doc(db,'users',r.userId);
+        async function fetchUserData(uid) {
+            try {
+                const snap = await getDoc(doc(db, "users", uid));
+                if (snap.exists()) {
+                    const userData = snap.data() || {};
+                    currentUserBalance = Number(userData.balance ?? 0);
+                    currentUserName = userData.name || userData.fullName || 'User';
+                    const nameEl = document.getElementById('user-display-name');
+                    const balEl = document.getElementById('wallet-balance');
+                    if(nameEl) nameEl.innerText = currentUserName;
+                    if(balEl) balEl.innerText = currentUserBalance;
+                }
+            } catch (e) { console.error(e); }
+        }
 
-                        await runTransaction(db, async(tx) => {
-                            const payoutSnap = await tx.get(payoutRef);
-                            if(payoutSnap.exists()) return; // ekbar e payout jeno hoy
-                            const userSnap = await tx.get(userRef);
-                            if(!userSnap.exists()) throw new Error(`User পাওয়া যায়নি: ${r.userName || r.userId}`);
-                            const bal = Number(userSnap.data().balance || 0);
-                            tx.update(userRef, { balance: bal + payout });
-                            tx.set(payoutRef, {
-                                tournamentId: id,
-                                userId: r.userId,
-                                userName: r.userName,
-                                slotCount: r.slotCount,
-                                prizePerSlot: r.prize,
-                                kills: r.kills,
-                                killPrice: perKill,
-                                amount: payout,
-                                createdAt: Date.now(),
-                                type: 'tournament_prize'
-                            });
+        async function loadAllData() {
+            if (siteMaintenanceActive || appUpdateActive) return;
+            try {
+                const [homePageSnap, oldSecSnap, newSecSnap, oldGroupSnap, newGroupSnap, tourSnap] = await Promise.all([
+                    getDoc(doc(db, "settings", "homePage")).catch(() => ({ exists: () => false })),
+                    getDocs(collection(db, "sections")).catch(() => ({ forEach: () => {} })),
+                    getDocs(collection(db, "tournamentSections")).catch(() => ({ forEach: () => {} })),
+                    getDocs(collection(db, "groups")).catch(() => ({ forEach: () => {} })),
+                    getDocs(collection(db, "tournamentGroups")).catch(() => ({ forEach: () => {} })),
+                    getDocs(collection(db, "tournaments")).catch(() => ({ forEach: () => {} }))
+                ]);
+
+                globalBanners = [];
+                if (homePageSnap.exists()) {
+                    const home = homePageSnap.data() || {};
+                    if (home.heroEnabled !== false && Array.isArray(home.heroMedia)) {
+                        home.heroMedia.forEach((m, i) => {
+                            if (!m || !m.url) return;
+                            globalBanners.push({id:'home_'+i,imageUrl:m.url,type:m.type==='video'?'video':'image',link:m.link||''});
                         });
                     }
                 }
 
-                const resultTime = Date.now();
-                if (published) {
-                    const archiveData = { ...t, results, completedAt: resultTime };
-                    await archiveTournamentForMyMatches(id, archiveData, results);
+                const sectionMap = new Map();
+                [oldSecSnap, newSecSnap].forEach(snap => {
+                    if(snap && typeof snap.forEach === 'function') {
+                        snap.forEach(d => {
+                            const data = d.data() || {};
+                            if (data.active === false) return;
+                            sectionMap.set(d.id, { id: d.id, ...data });
+                        });
+                    }
+                });
+                globalSections = Array.from(sectionMap.values()).map(sec => ({
+                    ...sec,
+                    name: sec.name || sec.title || 'Tournament Section',
+                    icon: sec.icon || 'fa-solid fa-gamepad'
+                }));
+
+                const groupMap = new Map();
+                [oldGroupSnap, newGroupSnap].forEach(snap => {
+                    if(snap && typeof snap.forEach === 'function') {
+                        snap.forEach(d => {
+                            const data = d.data() || {};
+                            if (data.active === false) return;
+                            groupMap.set(d.id, { id: d.id, ...data });
+                        });
+                    }
+                });
+                globalGroups = Array.from(groupMap.values()).map(g => ({
+                    ...g,
+                    sectionId: g.sectionId || g.section || g.sectionID || g.parentSectionId || '',
+                    name: g.name || g.groupName || g.title || 'Tournament Group',
+                    logo: g.logo || g.logoUrl || g.image || g.imageUrl || ''
+                }));
+
+                globalTournaments = [];
+                const now = Date.now();
+                if(tourSnap && typeof tourSnap.forEach === 'function') {
+                    tourSnap.forEach(d => {
+                        const data = d.data() || {};
+                        if (data.active === false || data.deleted === true) return;
+                        
+                        let tStatus = String(data.status || 'upcoming').toLowerCase();
+                        if(tStatus === 'complete') tStatus = 'completed';
+                        const startTime = Number(data.startTime || 0);
+
+                        // Room Details update NEVER changes lifecycle.
+                        // Result/status marks a match completed; otherwise startTime controls Upcoming -> Live.
+                        const hasResult =
+                            data.result != null ||
+                            data.matchResult != null ||
+                            data.outcome != null ||
+                            data.resultStatus != null ||
+                            data.completed === true ||
+                            data.isCompleted === true ||
+                            data.winnerUid != null ||
+                            (Array.isArray(data.winnerUids) && data.winnerUids.length > 0);
+
+                        if (['complete','completed','finished','finish','result'].includes(tStatus) ||
+                            data.completed === true || data.isCompleted === true || hasResult) {
+                            tStatus = 'completed';
+                        } else if (startTime > 0 && now >= startTime) {
+                            tStatus = 'live';
+                        } else {
+                            tStatus = 'upcoming';
+                        }
+
+                        if(tStatus === 'completed') {
+                            const completedAt = Number(data.completedAt || startTime || 0);
+                            if(completedAt > 0 && now >= (completedAt + 60 * 60 * 1000 + 10 * 60 * 1000)) {
+                                return; 
+                            }
+                        }
+
+                        globalTournaments.push({ id: d.id, ...data, status: tStatus });
+                    });
                 }
 
-                await updateDoc(tourRef, {
-                    results,
-                    resultPublished: published,
-                    resultUpdatedAt: resultTime,
-                    ...(published ? { status: 'completed', completedAt: resultTime, deleteAfter: resultTime + 60 * 60 * 1000 } : {})
+                globalTournaments.forEach(t => {
+                    if (!t.groupId && t.groupName) {
+                        const wanted = String(t.groupName).trim().toLowerCase();
+                        const found = globalGroups.find(g => String(g.name || '').trim().toLowerCase() === wanted);
+                        if (found) t.groupId = found.id;
+                    }
                 });
-                if (published) scheduleTournamentDeletion(id, resultTime + 60 * 60 * 1000);
 
-                showToast(published ? 'Result publish হয়েছে এবং বিজয়ী/কিলকারীদের ওয়ালেটে প্রাইজ মানি অটো চলে গেছে!' : 'Result সফলভাবে সেভ হয়েছে!');
-                closeGenericModal();
-                await loadAllAdminData();
-            } catch(e) {
-                showToast(e.message || 'Result save failed', 'error');
+                renderBanners();
+                renderSections();
+            } catch (e) {
+                console.error("Tournament data load error:", e);
+                showToast("Tournament data load করতে সমস্যা হয়েছে!", "error");
             }
-        };
+        }
 
-        window.openRegistrationsModal = async function(tournamentId, matchName) {
-            document.getElementById('modal-title').innerText = "Registrations: " + matchName;
-            document.getElementById('generic-modal').style.display = 'flex';
-            document.getElementById('modal-body').innerHTML = `<p class="text-center text-slate-400 py-4">লোড হচ্ছে...</p>`;
+        let bannerIndex = 0;
+        let bannerTimer = null;
 
+        function renderBanners() {
+            const container = document.getElementById('banner-container');
+            const slider = document.getElementById('banner-slider');
+            if(!container || !slider) return;
+            const activeBanners = globalBanners.filter(b => b && b.imageUrl);
+            clearInterval(bannerTimer);
+            bannerIndex = 0;
+            if(activeBanners.length === 0) { container.style.display = 'none'; return; }
+            container.style.display = 'block';
+            slider.innerHTML = '';
+            activeBanners.forEach((b, i) => {
+                const wrap = document.createElement('div');
+                wrap.className = 'w-full flex-shrink-0 h-36 relative bg-slate-900';
+                if (b.type === 'video') {
+                    const video = document.createElement('video');
+                    video.src = b.imageUrl; video.className='w-full h-full object-cover';
+                    video.muted=true; video.autoplay=i===0; video.playsInline=true; video.loop=true;
+                    wrap.appendChild(video);
+                } else {
+                    const img=document.createElement('img'); img.src=b.imageUrl; img.className='w-full h-full object-cover'; img.alt='Banner'; img.loading=i===0?'eager':'lazy'; wrap.appendChild(img);
+                }
+                if(b.link){ const a=document.createElement('a'); a.href=b.link; a.target='_blank'; a.rel='noopener noreferrer'; a.className='absolute inset-0'; wrap.appendChild(a); }
+                slider.appendChild(wrap);
+            });
+            const showBanner=(i)=>{ bannerIndex=(i+activeBanners.length)%activeBanners.length; slider.style.transform=`translateX(-${bannerIndex*100}%)`; };
+            showBanner(0);
+            if(activeBanners.length>1) bannerTimer=setInterval(()=>showBanner(bannerIndex+1),5000);
+        }
+
+        function renderSections() {
+            const grid = document.getElementById('sections-grid');
+            if(!grid) return;
+            grid.innerHTML = "";
+            document.getElementById('view-sections').style.display = 'block';
+            document.getElementById('view-groups').style.display = 'none';
+            document.getElementById('view-tournaments').style.display = 'none';
+            document.getElementById('back-btn').style.display = 'none';
+
+            globalSections.forEach(sec => {
+                const groupsInSec = globalGroups.filter(g => String(g.sectionId) === String(sec.id)).map(g => g.id);
+                const liveCount = globalTournaments.filter(t => groupsInSec.includes(t.groupId) && ['live','playing','ongoing_live','in_progress','upcoming'].includes(String(t.status || '').toLowerCase())).length;
+
+                grid.innerHTML += `
+                    <div onclick="openSection('${sec.id}', '${sec.name}')" class="glass-card glow-effect rounded-2xl p-4 cursor-pointer flex items-center justify-between shadow-lg">
+                        <div class="flex items-center space-x-4 pointer-events-none">
+                            <div class="w-14 h-14 rounded-xl bg-blue-600/20 border border-blue-500/30 flex items-center justify-center text-blue-400 text-2xl">
+                                <i class="${sec.icon || 'fa-solid fa-gamepad'}"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-base font-bold text-white">${sec.name}</h4>
+                                <span class="text-[11px] text-emerald-400 font-semibold block mt-0.5"><i class="fa-solid fa-circle text-[8px] mr-1"></i> ${liveCount} Matches Available</span>
+                            </div>
+                        </div>
+                        <div class="text-slate-500 text-sm pointer-events-none"><i class="fa-solid fa-chevron-right"></i></div>
+                    </div>
+                `;
+            });
+        }
+
+        window.openSection = function(secId, secName) {
+            selectedSectionId = secId;
+            const titleEl = document.getElementById('current-section-title');
+            if(titleEl) titleEl.innerText = secName;
+            renderGroups(secId);
+        }
+
+        function renderGroups(secId) {
+            const grid = document.getElementById('groups-grid');
+            if(!grid) return;
+            grid.innerHTML = "";
+            document.getElementById('view-sections').style.display = 'none';
+            document.getElementById('view-groups').style.display = 'block';
+            document.getElementById('back-btn').style.display = 'block';
+
+            const groups = globalGroups.filter(g => String(g.sectionId) === String(secId));
+            groups.forEach(g => {
+                const groupTours = globalTournaments.filter(t => String(t.groupId || '') === String(g.id) || (!t.groupId && String(t.groupName || '').trim().toLowerCase() === String(g.name || '').trim().toLowerCase()));
+                const liveCount = groupTours.filter(t => ['live','playing','ongoing_live','in_progress','upcoming'].includes(String(t.status || '').toLowerCase())).length;
+
+                grid.innerHTML += `
+                    <div onclick="openGroup('${g.id}', '${g.name}')" class="glass-card glow-effect rounded-2xl p-4 cursor-pointer flex items-center justify-between shadow-lg">
+                        <div class="flex items-center space-x-4 pointer-events-none">
+                            <div class="w-14 h-14 rounded-xl bg-slate-800 border border-slate-700 flex items-center justify-center text-blue-400 text-xl">
+                                <i class="fa-solid fa-fire"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-base font-bold text-white">${g.name}</h4>
+                                <span class="text-[11px] text-blue-400 font-semibold block mt-0.5"><i class="fa-solid fa-gamepad mr-1"></i> ${liveCount} Matches Active</span>
+                            </div>
+                        </div>
+                        <div class="text-slate-500 text-sm pointer-events-none"><i class="fa-solid fa-chevron-right"></i></div>
+                    </div>
+                `;
+            });
+        }
+
+        window.openGroup = function(groupId, groupName) {
+            selectedGroupId = groupId;
+            const titleEl = document.getElementById('current-group-title');
+            if(titleEl) titleEl.innerText = groupName;
+            renderTournaments(groupId);
+        }
+
+        function startLiveCountdowns() {
+            if(countdownInterval) clearInterval(countdownInterval);
+            countdownInterval = setInterval(() => {
+                document.querySelectorAll('.match-countdown').forEach(el => {
+                    const startTime = Number(el.getAttribute('data-starttime'));
+                    if(!startTime) return;
+                    const diff = startTime - Date.now();
+                    if(diff <= 0) {
+                        el.innerText = "LIVE NOW";
+                        el.className = "text-[11px] text-emerald-400 font-bold animate-live-pulse block mt-0.5";
+                    } else {
+                        const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                        const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                        const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+                        const d = new Date(startTime);
+                        const dateText = d.toLocaleDateString('bn-BD', {day:'2-digit', month:'short', year:'numeric'});
+                        const timeText = d.toLocaleTimeString('bn-BD', {hour:'2-digit', minute:'2-digit'});
+                        el.innerHTML = `Starts in: ${hours > 0 ? hours + 'h ' : ''}${minutes}m ${seconds}s<br><span class="text-slate-500">${dateText} • ${timeText}</span>`;
+                    }
+                });
+            }, 1000);
+        }
+
+        function renderTournaments(groupId) {
+            const grid = document.getElementById('tournaments-grid');
+            if(!grid) return;
+            grid.innerHTML = "";
+            document.getElementById('view-groups').style.display = 'none';
+            document.getElementById('view-tournaments').style.display = 'block';
+            document.getElementById('back-btn').style.display = 'block';
+
+            const selectedGroup = globalGroups.find(g => String(g.id) === String(groupId));
+            const selectedGroupName = selectedGroup ? String(selectedGroup.name || '').trim().toLowerCase() : '';
+            let groupTours = globalTournaments.filter(t => String(t.groupId || '') === String(groupId) || (!t.groupId && selectedGroupName && String(t.groupName || '').trim().toLowerCase() === selectedGroupName));
+            
+            if(currentTournamentFilter !== 'all') {
+                groupTours = groupTours.filter(t => String(t.status || 'upcoming').toLowerCase() === currentTournamentFilter);
+            }
+
+            groupTours = groupTours
+                .map((t, index) => ({ ...t, __sortTime: Number(t.startTime || 0), __originalIndex: index }))
+                .sort((a, b) => {
+                    const aTime = Number.isFinite(a.__sortTime) && a.__sortTime > 0 ? a.__sortTime : Number.POSITIVE_INFINITY;
+                    const bTime = Number.isFinite(b.__sortTime) && b.__sortTime > 0 ? b.__sortTime : Number.POSITIVE_INFINITY;
+                    return aTime - bTime || a.__originalIndex - b.__originalIndex;
+                })
+                .map(({ __sortTime, __originalIndex, ...t }) => t);
+
+            const badge = document.getElementById('match-count-badge');
+            if(badge) badge.innerText = `${groupTours.length} Matches Available`;
+
+            if(groupTours.length === 0) {
+                grid.innerHTML = `<div class="text-center py-12 text-slate-500 text-xs">কোনো ম্যাচ পাওয়া যায়নি</div>`;
+                return;
+            }
+
+            groupTours.forEach(t => {
+                const entryFee = Number(t.entryFee || 0);
+                const participants = Array.isArray(t.participants) ? t.participants : [];
+                const usedSlots = participants.reduce((sum, p) => sum + Number(p.count || (Array.isArray(p.players) ? p.players.length : 1) || 0), 0);
+                const parsedTotalSlots = ((String(t.slots || '').match(/(?:\/|of)\s*(\d+)$/i) || [])[1]);
+                const totalSlots = Number(t.totalSlots || parsedTotalSlots || 50);
+                const slotsText = `${Math.min(usedSlots, totalSlots)} / ${totalSlots}`;
+                const startTimeAttr = t.startTime || (Date.now() + 3600000);
+                const matchTypeLabel = t.matchType || t.type || 'Solo';
+                const typeLower = String(matchTypeLabel).toLowerCase();
+                const maxTeamSize = typeLower === 'solo' ? 1 : (typeLower === 'duo' ? 2 : (typeLower === 'squad' ? 4 : Number(t.slotSize || 1)));
+
+                const hasJoined = participants.some(p => p.uid === currentUserUid);
+                let joinBtnHtml = '';
+                if(hasJoined) {
+                    joinBtnHtml = `
+                        <button disabled class="w-full bg-slate-800 text-emerald-400 border border-emerald-500/30 text-xs font-bold py-2.5 rounded-xl shadow-lg cursor-not-allowed flex items-center justify-center space-x-1.5 opacity-90">
+                            <i class="fa-solid fa-circle-check"></i>
+                            <span>Joined</span>
+                        </button>
+                    `;
+                } else {
+                    joinBtnHtml = `
+                        <button onclick="handleJoinClick('${t.id}', ${entryFee}, '${t.name}', '${matchTypeLabel}', ${maxTeamSize}, ${totalSlots}, ${usedSlots})" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold py-2.5 rounded-xl shadow-lg transition flex items-center justify-center space-x-1.5">
+                            <i class="fa-solid fa-circle-plus"></i>
+                            <span>Join Match</span>
+                        </button>
+                    `;
+                }
+
+                grid.innerHTML += `
+                    <div class="glass-card rounded-2xl p-4 space-y-3 shadow-xl border border-slate-800">
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <h4 class="text-xs font-bold text-white leading-tight">${t.name}</h4>
+                                <span class="text-[10px] text-slate-300 font-semibold block">${t.time || 'Scheduled'}</span>
+                                <span class="text-[11px] text-amber-400 font-bold match-countdown block mt-0.5" data-starttime="${startTimeAttr}">Calculating...</span>
+                            </div>
+                            <span class="bg-blue-600/20 text-blue-400 border border-blue-500/30 px-2.5 py-1 rounded-lg text-[10px] font-bold">${matchTypeLabel} (${maxTeamSize}P)</span>
+                        </div>
+
+                        <div class="grid grid-cols-3 gap-2 text-center text-[10px]">
+                            <div class="bg-[#0b0f1a] border border-slate-800/80 p-2 rounded-xl">
+                                <span class="text-slate-400 block mb-0.5"><i class="fa-solid fa-trophy text-amber-400"></i> PRIZE</span>
+                                <strong class="text-white text-xs">${t.prize || '0 TK'}</strong>
+                            </div>
+                            <div class="bg-[#0b0f1a] border border-slate-800/80 p-2 rounded-xl">
+                                <span class="text-slate-400 block mb-0.5"><i class="fa-solid fa-crosshairs text-rose-400"></i> KILL</span>
+                                <strong class="text-white text-xs">${t.perKill || '0 TK'}</strong>
+                            </div>
+                            <div class="bg-[#0b0f1a] border border-slate-800/80 p-2 rounded-xl">
+                                <span class="text-slate-400 block mb-0.5"><i class="fa-solid fa-wallet text-blue-400"></i> FEE</span>
+                                <strong class="text-white text-xs">${entryFee} TK</strong>
+                            </div>
+                            <div class="bg-[#0b0f1a] border border-slate-800/80 p-2 rounded-xl">
+                                <span class="text-slate-400 block mb-0.5"><i class="fa-solid fa-user text-purple-400"></i> TYPE</span>
+                                <strong class="text-white text-xs">${matchTypeLabel}</strong>
+                            </div>
+                            <div class="bg-[#0b0f1a] border border-slate-800/80 p-2 rounded-xl">
+                                <span class="text-slate-400 block mb-0.5"><i class="fa-solid fa-map text-emerald-400"></i> MAP</span>
+                                <strong class="text-white text-xs">${t.map || 'Bermuda'}</strong>
+                            </div>
+                            <div class="bg-[#0b0f1a] border border-slate-800/80 p-2 rounded-xl">
+                                <span class="text-slate-400 block mb-0.5"><i class="fa-solid fa-users text-indigo-400"></i> SLOTS</span>
+                                <strong class="text-white text-xs">${slotsText}</strong>
+                            </div>
+                        </div>
+
+                        ${joinBtnHtml}
+
+                        <div class="grid grid-cols-2 gap-2">
+                            <button onclick="openRoomDetails('${t.id}')" class="bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold py-2 rounded-xl border border-slate-700/80 transition flex items-center justify-center space-x-1.5">
+                                <i class="fa-solid fa-door-open text-blue-400"></i>
+                                <span>Room</span>
+                            </button>
+                            <button onclick="openPrizeModal('${encodeURIComponent(t.prizeDetails || 'কোনো প্রাইজ বিবরণ দেওয়া হয়নি।')}', '${t.name}')" class="bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold py-2 rounded-xl border border-slate-700/80 transition flex items-center justify-center space-x-1.5">
+                                <i class="fa-solid fa-trophy text-amber-400"></i>
+                                <span>Prizes</span>
+                            </button>
+                        </div>
+                    </div>
+                `;
+            });
+            startLiveCountdowns();
+        }
+
+        window.openPrizeModal = function(detailsText, matchName) {
+            document.getElementById('custom-modal-title').innerText = "Prizes: " + matchName;
+            document.getElementById('custom-modal-body').innerHTML = `
+                <div class="bg-[#0b0f1a] p-3 rounded-xl border border-slate-800 text-slate-200 text-xs leading-relaxed space-y-2">
+                    <p>${decodeURIComponent(detailsText)}</p>
+                </div>
+            `;
+            document.getElementById('custom-action-modal').style.display = 'flex';
+        }
+
+        let pendingJoinTournamentId = null;
+        let pendingJoinEntryFee = 0;
+
+        window.handleJoinClick = function(tournamentId, entryFee, matchName, matchType, maxTeamSize, totalSlots, usedSlots) {
+            pendingJoinTournamentId = tournamentId;
+            pendingJoinEntryFee = Number(entryFee || 0);
+
+            const type = String(matchType || 'Solo');
+            const lower = type.toLowerCase();
+            const maxPlayers = lower === 'solo' ? 1 : (lower === 'duo' ? 2 : (lower === 'squad' ? 4 : Number(maxTeamSize || 1)));
+            const remainingSlots = Math.max(0, Number(totalSlots || 50) - Number(usedSlots || 0));
+
+            if(remainingSlots <= 0) {
+                showToast("এই ম্যাচের সব স্লট পূর্ণ হয়ে গেছে!", "error");
+                return;
+            }
+
+            const allowedMax = Math.min(maxPlayers, remainingSlots);
+            let selectorHtml = '';
+
+            if(lower === 'solo') {
+                selectorHtml = `
+                    <div class="bg-[#0b0f1a] border border-blue-500/30 rounded-xl p-3">
+                        <p class="text-blue-400 font-bold">SOLO Registration</p>
+                        <p class="text-slate-400 text-[10px] mt-1">শুধু ১ জন প্লেয়ারের registration করা যাবে।</p>
+                        <input type="hidden" id="selected-member-count" value="1">
+                    </div>
+                `;
+            } else {
+                let options = '';
+                for(let n = 1; n <= allowedMax; n++) {
+                    options += `<option value="${n}">${n} Player${n > 1 ? 's' : ''}</option>`;
+                }
+                selectorHtml = `
+                    <div>
+                        <label class="text-slate-400 block mb-1">${type} — কতজন Player?</label>
+                        <select id="selected-member-count" onchange="renderPlayerRegistrationFields()" class="w-full bg-[#050811] border border-slate-800 rounded-xl p-2.5 text-white">
+                            ${options}
+                        </select>
+                        <p class="text-[9px] text-slate-500 mt-1">${type === 'Duo' ? '১ বা ২ জন select করতে পারবেন।' : '১, ২, ৩ বা ৪ জন select করতে পারবেন।'}</p>
+                    </div>
+                `;
+            }
+
+            document.getElementById('custom-modal-title').innerText = `Join (${type}): ${matchName}`;
+            document.getElementById('custom-modal-body').innerHTML = `
+                <div class="space-y-3">
+                    ${selectorHtml}
+                    <div id="player-registration-fields"></div>
+                    <div id="registration-fee-summary"></div>
+                </div>
+            `;
+            renderPlayerRegistrationFields();
+            document.getElementById('custom-action-modal').style.display = 'flex';
+        }
+
+        window.renderPlayerRegistrationFields = function() {
+            const countEl = document.getElementById('selected-member-count');
+            if(!countEl) return;
+
+            const memberCount = Number(countEl.value || 1);
+            let inputsHtml = '';
+            for(let i = 1; i <= memberCount; i++) {
+                inputsHtml += `
+                    <div>
+                        <label class="text-slate-400 block mb-1">Player ${i} In-Game Name</label>
+                        <input type="text" id="ign-player-${i}" placeholder="IGN ${i} লিখুন..." class="w-full bg-[#050811] border border-slate-800 rounded-xl p-2.5 text-white player-ign-input">
+                    </div>
+                `;
+            }
+
+            const totalFee = pendingJoinEntryFee * memberCount;
+            document.getElementById('player-registration-fields').innerHTML = inputsHtml;
+            document.getElementById('registration-fee-summary').innerHTML = `
+                <p class="text-[11px] text-blue-400 font-semibold">Total Entry Fee: ৳${totalFee} (${memberCount} Player Slot)</p>
+                <button id="confirm-payment-btn" onclick="submitCurrentTournamentJoin(${totalFee}, ${memberCount})" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2.5 rounded-xl mt-2 transition shadow flex items-center justify-center gap-2">
+                    <span id="btn-text">কনফার্ম ও পেমেন্ট করুন</span>
+                </button>
+            `;
+        }
+
+        window.submitCurrentTournamentJoin = async function(totalFee, memberCount) {
+            if(!pendingJoinTournamentId) {
+                showToast("ম্যাচ সিলেক্ট করা হয়নি!", "error");
+                return;
+            }
+            const btn = document.getElementById('confirm-payment-btn');
+            if(btn) {
+                btn.disabled = true;
+                btn.innerHTML = `<div class="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div> <span>প্রসেসিং হচ্ছে...</span>`;
+            }
+            try {
+                await submitJoinTournament(pendingJoinTournamentId, totalFee, memberCount);
+            } finally {
+                if(btn) {
+                    btn.disabled = false;
+                    btn.innerHTML = `<span id="btn-text">কনফার্ম ও পেমেন্ট করুন</span>`;
+                }
+            }
+        }
+
+        window.submitJoinTournament = async function(tournamentId, totalFee, memberCount) {
+            try {
+                const tourRef = doc(db, "tournaments", tournamentId);
+                const userRef = doc(db, "users", currentUserUid);
+
+                const players = [];
+                for(let i = 1; i <= memberCount; i++) {
+                    const input = document.getElementById(`ign-player-${i}`);
+                    const val = input ? input.value.trim() : '';
+                    if(!val) {
+                        showToast(`দয়া করে প্লেয়ার ${i} এর নাম দিন!`, "warning");
+                        return;
+                    }
+                    players.push(val);
+                }
+
+                await runTransaction(db, async (transaction) => {
+                    const tourSnap = await transaction.get(tourRef);
+                    const userSnap = await transaction.get(userRef);
+
+                    if(!tourSnap.exists() || !userSnap.exists()) throw new Error("DATA_NOT_FOUND");
+
+                    const tour = tourSnap.data() || {};
+                    const user = userSnap.data() || {};
+                    const currentBalance = Number(user.balance || 0);
+
+                    if(currentBalance < Number(totalFee || 0)) throw new Error("INSUFFICIENT_BALANCE");
+
+                    const type = String(tour.matchType || tour.type || 'Solo');
+                    const lower = type.toLowerCase();
+                    const maxPlayers = lower === 'solo' ? 1 : (lower === 'duo' ? 2 : (lower === 'squad' ? 4 : Number(tour.slotSize || 1)));
+
+                    if(memberCount < 1 || memberCount > maxPlayers) throw new Error("INVALID_TEAM_SIZE");
+
+                    const participants = Array.isArray(tour.participants) ? tour.participants : [];
+                    if(participants.some(p => p.uid === currentUserUid)) throw new Error("ALREADY_JOINED");
+
+                    const usedSlots = participants.reduce((sum, p) => sum + Number(p.count || (Array.isArray(p.players) ? p.players.length : 1) || 0), 0);
+                    const parsedTotal = ((String(tour.slots || '').match(/(?:\/|of)\s*(\d+)$/i) || [])[1]);
+                    const totalSlots = Number(tour.totalSlots || parsedTotal || 50);
+
+                    if(usedSlots + memberCount > totalSlots) throw new Error("NOT_ENOUGH_SLOTS");
+
+                    transaction.update(userRef, { balance: currentBalance - Number(totalFee || 0) });
+                    transaction.update(tourRef, {
+                        participants: [...participants, {
+                            uid: currentUserUid,
+                            userName: currentUserName,
+                            players,
+                            count: memberCount,
+                            registeredAt: Date.now()
+                        }],
+                        slots: `${usedSlots + memberCount} / ${totalSlots}`
+                    });
+                });
+
+                currentUserBalance -= Number(totalFee || 0);
+                const balEl = document.getElementById('wallet-balance');
+                if(balEl) balEl.innerText = currentUserBalance;
+                showToast("সফলভাবে টুর্নামেন্টে জয়েন করেছেন!", "success");
+                closeCustomModal();
+                await loadAllData();
+            } catch(e) {
+                const messages = {
+                    INSUFFICIENT_BALANCE: "আপনার পর্যাপ্ত পরিমাণ টাকা নাই!",
+                    ALREADY_JOINED: "আপনি এই ম্যাচে ইতিমধ্যে registration করেছেন!",
+                    NOT_ENOUGH_SLOTS: "যতগুলো slot বাকি আছে, ততজন player নেওয়া যাবে না!",
+                    INVALID_TEAM_SIZE: "এই ম্যাচের team size সঠিক নয়!",
+                    DATA_NOT_FOUND: "ম্যাচ বা user data পাওয়া যায়নি!"
+                };
+                showToast(messages[e.message] || "জয়েন করতে সমস্যা হয়েছে!", "error");
+            }
+        }
+
+        window.openRoomDetails = async function(tournamentId) {
             try {
                 const tourSnap = await getDoc(doc(db, "tournaments", tournamentId));
                 if(!tourSnap.exists()) return;
                 const data = tourSnap.data();
                 const participants = data.participants || [];
+                const hasJoined = participants.some(p => p.uid === currentUserUid);
 
-                if(participants.length === 0) {
-                    document.getElementById('modal-body').innerHTML = `<p class="text-center text-slate-400 py-4">এখনো কেউ রেজিস্ট্রেশন করেনি।</p>`;
+                if(!hasJoined) {
+                    document.getElementById('custom-modal-title').innerText = "Access Restricted";
+                    document.getElementById('custom-modal-body').innerHTML = `<p class="text-center text-rose-400 py-4">আপনি এই ম্যাচে জয়েন করেননি!</p>`;
+                    document.getElementById('custom-action-modal').style.display = 'flex';
+                    showToast("প্রথমে ম্যাচে জয়েন করুন!", "warning");
                     return;
                 }
 
-                let html = `<div class="space-y-3 max-h-60 overflow-y-auto">`;
-                participants.forEach((p, idx) => {
-                    const namesStr = Array.isArray(p.players) ? p.players.join(', ') : (p.ign || 'Unknown');
-                    html += `
-                        <div class="bg-[#0b0f1a] p-3 rounded-xl border border-slate-800 text-xs flex justify-between items-center">
-                            <div>
-                                <span class="text-blue-400 font-bold">#${idx+1} | User: ${p.userName || 'User'} (UID: ${p.userId || p.uid || 'N/A'})</span>
-                                <p class="text-slate-300 mt-1">Players: <b>${namesStr}</b></p>
-                            </div>
-                            <span class="bg-emerald-500/10 text-emerald-400 px-2 py-1 rounded font-bold">${p.count || p.slotCount || 1} Slot</span>
-                        </div>
-                    `;
-                });
-                html += `</div>`;
-                document.getElementById('modal-body').innerHTML = html;
-            } catch(e) {
-                document.getElementById('modal-body').innerHTML = `<p class="text-center text-rose-400 py-4">ডাটা লোড করতে সমস্যা হয়েছে!</p>`;
-            }
-        }
+                const roomId = data.roomId || '';
+                const roomPass = data.roomPass || '';
 
-        window.renderBannersList = function() {
-            const list = document.getElementById('admin-banners-list');
-            if(!list) return;
-            list.innerHTML = "";
-            allBanners.forEach(b => {
-                list.innerHTML += `
-                    <div class="glass-card p-3 rounded-xl flex justify-between items-center shadow">
-                        <div class="flex items-center space-x-3">
-                            <img src="${b.imageUrl}" class="w-16 h-10 object-cover rounded-lg">
-                            <h4 class="font-bold text-white text-xs">${b.title || 'Banner'}</h4>
-                        </div>
-                        <button onclick="deleteDocItem('banners', '${b.id}')" class="bg-red-600/20 text-red-400 px-2.5 py-1.5 rounded-lg"><i class="fa-solid fa-trash"></i></button>
-                    </div>
-                `;
-            });
-        }
-
-        window.openBannerModal = function() {
-            document.getElementById('modal-title').innerText = "Add Banner";
-            document.getElementById('generic-modal').style.display = 'flex';
-            document.getElementById('modal-body').innerHTML = `
-                <div>
-                    <label class="text-slate-400 block mb-1">Image URL</label>
-                    <input type="text" id="banner-image" class="w-full bg-[#050811] border border-slate-800 rounded-xl p-2.5 text-white">
-                </div>
-                <button onclick="saveBanner()" class="w-full bg-blue-600 text-white font-bold py-2.5 rounded-xl mt-2">Add</button>
-            `;
-        }
-
-        window.saveBanner = async function() {
-            const imageUrl = document.getElementById('banner-image').value.trim();
-            if(!imageUrl) { showToast('লিংক দিন', 'error'); return; }
-
-            try {
-                await addDoc(collection(db, "banners"), {
-                    imageUrl,
-                    status: true,
-                    createdAt: Date.now()
-                });
-
-                const homeRef = doc(db, "settings", "homePage");
-                const homeSnap = await getDoc(homeRef);
-                const home = homeSnap.exists() ? (homeSnap.data() || {}) : {};
-                const currentMedia = Array.isArray(home.heroMedia) ? home.heroMedia : [];
-
-                const exists = currentMedia.some(m => String(m?.url || '').trim() === imageUrl);
-                const heroMedia = exists ? currentMedia : [
-                    ...currentMedia,
-                    { type: 'image', url: imageUrl, link: '' }
-                ];
-
-                await setDoc(homeRef, {
-                    heroEnabled: true,
-                    heroMedia,
-                    updatedAt: Date.now()
-                }, { merge: true });
-
-                closeGenericModal();
-                showToast('Banner সফলভাবে Home Page-এ publish হয়েছে!');
-                await loadAllAdminData();
-            } catch(e) {
-                showToast('Banner update করতে সমস্যা হয়েছে: ' + (e?.message || e), 'error');
-            }
-        }
-
-        window.filterDepositGateway = function(gw) {
-            currentDepGateway = gw;
-            document.getElementById('dep-filter-bkash').className = gw === 'bkash' ? 'flex-1 py-2.5 rounded-xl text-xs font-bold bg-pink-600 text-white transition' : 'flex-1 py-2.5 rounded-xl text-xs font-bold bg-slate-800 text-slate-300 transition';
-            document.getElementById('dep-filter-nagad').className = gw === 'nagad' ? 'flex-1 py-2.5 rounded-xl text-xs font-bold bg-pink-600 text-white transition' : 'flex-1 py-2.5 rounded-xl text-xs font-bold bg-slate-800 text-slate-300 transition';
-            renderDepositsList();
-        }
-
-        window.filterWithdrawGateway = function(gw) {
-            currentWdGateway = gw;
-            document.getElementById('wd-filter-bkash').className = gw === 'bkash' ? 'flex-1 py-2.5 rounded-xl text-xs font-bold bg-pink-600 text-white transition' : 'flex-1 py-2.5 rounded-xl text-xs font-bold bg-slate-800 text-slate-300 transition';
-            document.getElementById('wd-filter-nagad').className = gw === 'nagad' ? 'flex-1 py-2.5 rounded-xl text-xs font-bold bg-pink-600 text-white transition' : 'flex-1 py-2.5 rounded-xl text-xs font-bold bg-slate-800 text-slate-300 transition';
-            renderWithdrawsList();
-        }
-
-        function renderDepositsList() {
-            const list = document.getElementById('admin-deposits-list');
-            if(!list) return;
-            list.innerHTML = "";
-            
-            const filtered = allDeposits.filter(dep => {
-                const gw = String(dep.gateway || dep.method || 'bkash').toLowerCase();
-                const status = String(dep.status || 'pending').toLowerCase();
-                return gw.includes(currentDepGateway) && status === 'pending';
-            });
-
-            if(filtered.length === 0) {
-                list.innerHTML = `<p class="text-slate-500 text-xs text-center py-4">কোনো ${currentDepGateway.toUpperCase()} ডিপোজিট রিকোয়েস্ট নেই।</p>`;
-                return;
-            }
-
-            filtered.forEach(dep => {
-                let action = `<div class="flex gap-2">
-                    <button onclick="approveDeposit('${dep.id}', '${dep.userId || dep.uid || ''}', ${dep.amount})" class="bg-emerald-600 hover:bg-emerald-500 text-white px-3 py-1.5 rounded-lg font-bold text-xs">Approve</button>
-                    <button onclick="rejectDeposit('${dep.id}')" class="bg-red-600 hover:bg-red-500 text-white px-3 py-1.5 rounded-lg font-bold text-xs">Reject</button>
-                </div>`;
-                list.innerHTML += `
-                    <div class="glass-card p-4 rounded-xl flex justify-between items-center shadow">
-                        <div>
-                            <h4 class="font-bold text-white text-sm">${dep.userName || dep.userEmail || 'User'} (${dep.gateway || dep.method || currentDepGateway})</h4>
-                            <p class="text-[11px] text-slate-300">Amount: <b>৳${dep.amount}</b> | TrxID: <b>${dep.trxId || dep.transactionId || 'N/A'}</b></p>
-                            <p class="text-[10px] text-amber-400">Status: <b>${dep.status || 'Pending'}</b></p>
-                        </div>
-                        <div>${action}</div>
-                    </div>
-                `;
-            });
-        }
-
-        window.approveDeposit = async function(id, userId, amount) {
-            try {
-                let approvedUid = userId || '';
-                const depRef = doc(db, 'deposits', id);
-                const txRef = doc(db, 'transactions', id);
-                const [depSnapNow, txSnapNow] = await Promise.all([getDoc(depRef), getDoc(txRef)]);
-                const ref = depSnapNow.exists() ? depRef : txRef;
-                const sourceSnap = depSnapNow.exists() ? depSnapNow : txSnapNow;
-                if(!sourceSnap.exists()) throw new Error('Deposit request পাওয়া যায়নি।');
-
-                await runTransaction(db, async (transaction) => {
-                    const snap = await transaction.get(ref);
-                    if(!snap.exists()) throw new Error('Deposit request পাওয়া যায়নি।');
-                    const deposit = snap.data() || {};
-                    const status = String(deposit.status || 'pending').toLowerCase();
-                    if(status !== 'pending') throw new Error(`এই deposit request ইতিমধ্যে ${deposit.status || 'processed'} হয়েছে।`);
-
-                    const finalUserId = deposit.userId || deposit.uid || userId || '';
-                    approvedUid = finalUserId;
-                    const finalEmail = deposit.userEmail || deposit.email || '';
-                    const finalAmount = Number(deposit.amount ?? amount ?? 0);
-                    if(!finalAmount || finalAmount <= 0) throw new Error('Invalid deposit amount.');
-
-                    const now = Date.now();
-                    let credited = false;
-                    if(finalUserId){
-                        const userRef = doc(db,'users',finalUserId);
-                        const userSnap = await transaction.get(userRef);
-                        if(userSnap.exists()){
-                            const currentBal = Number(userSnap.data().balance || 0);
-                            transaction.update(userRef,{balance:currentBal+finalAmount});
-                            credited = true;
-                        }
-                    }
-                    if(!credited && finalEmail){
-                        const walletRef = doc(db,'wallets',finalEmail);
-                        const walletSnap = await transaction.get(walletRef);
-                        const currentBal = Number(walletSnap.exists() ? walletSnap.data().balance || 0 : 0);
-                        transaction.set(walletRef,{balance:currentBal+finalAmount,userEmail:finalEmail,updatedAt:now},{merge:true});
-                        credited = true;
-                    }
-                    if(!credited) throw new Error('User/Wallet পাওয়া যায়নি।');
-
-                    transaction.update(ref,{status:'approved',approvedAt:now,reviewedAt:now});
-                });
-
-                // Issue referral bonus only after the deposit has been successfully approved.
-                if (approvedUid) {
-                    const rewardResult = await processReferralReward(approvedUid);
-                    if (rewardResult.rewarded) showToast('ডিপোজিট অ্যাপ্রুভ হয়েছে। রেফারকারীকে ৳১০ বোনাস দেওয়া হয়েছে!');
-                    else showToast('ডিপোজিট অ্যাপ্রুভ হয়েছে এবং টাকা যোগ হয়েছে!');
-                } else {
-                    showToast('ডিপোজিট অ্যাপ্রুভ হয়েছে এবং টাকা যোগ হয়েছে!');
-                }
-                await loadAllAdminData();
-            } catch(e) {
-                showToast('ত্রুটি: ' + (e.message || e), 'error');
-            }
-        };
-
-        window.rejectDeposit = async function(id){
-            const reason=(prompt('Reject করার কারণ লিখুন:','Deposit verification failed')||'').trim();
-            if(!reason) return;
-            try{
-                const depRef=doc(db,'deposits',id);
-                const txRef=doc(db,'transactions',id);
-                const [depSnapNow,txSnapNow]=await Promise.all([getDoc(depRef),getDoc(txRef)]);
-                const ref=depSnapNow.exists()?depRef:txRef;
-                if(!(depSnapNow.exists()||txSnapNow.exists())) throw new Error('Deposit request পাওয়া যায়নি।');
-                await runTransaction(db,async(transaction)=>{
-                    const snap=await transaction.get(ref);
-                    if(!snap.exists()) throw new Error('Deposit request পাওয়া যায়নি।');
-                    const d=snap.data()||{};
-                    const status=String(d.status||'pending').toLowerCase();
-                    if(status!=='pending') throw new Error(`এই request ইতিমধ্যে ${d.status||'processed'} হয়েছে।`);
-                    const now=Date.now();
-                    transaction.update(ref,{status:'rejected',reviewedAt:now,rejectedAt:now,reason,reviewReason:reason});
-                });
-                showToast('Deposit reject হয়েছে।');
-                await loadAllAdminData();
-            }catch(e){showToast(e.message||'Reject failed','error');}
-        };
-
-        window.renderWithdrawsList = async function() {
-            const list = document.getElementById('admin-withdraws-list');
-            if(!list) return;
-            list.innerHTML = '<p class="text-slate-500 text-xs text-center py-6">Withdraw requests লোড হচ্ছে...</p>';
-            try {
-                const rows = allWithdraws.filter(r => {
-                    const method = String(r.method || 'bkash').toLowerCase();
-                    return method.includes(currentWdGateway);
-                }).sort((a,b)=>(Number(b.timestamp||b.createdAt||0)-Number(a.timestamp||a.createdAt||0)));
-
-                if(!rows.length){ list.innerHTML=`<p class="text-slate-500 text-xs text-center py-8">কোনো ${currentWdGateway.toUpperCase()} withdraw request পাওয়া যায়নি।</p>`; return; }
-                list.innerHTML = rows.map(r => {
-                    const status = String(r.status||'pending').toLowerCase();
-                    const pending = status === 'pending';
-                    const uid = r.uid || r.userId || '';
-                    const user = r.userEmail || r.email || r.username || uid || 'Unknown user';
-                    const amount = Number(r.amount||0);
-                    const method = r.method || currentWdGateway;
-                    const number = r.number || r.accountNumber || '';
-                    return `<div class="glass-card rounded-2xl p-4 border border-slate-800">
-                        <div class="flex justify-between gap-3">
-                            <div class="min-w-0">
-                                <div class="font-bold text-white text-sm">${user}</div>
-                                <div class="text-[10px] text-slate-500 break-all">UID: ${uid}</div>
-                                <div class="text-xs text-slate-300 mt-2">${method} • ${number}</div>
-                                <div class="text-lg font-black text-amber-400 mt-1">৳${amount}</div>
-                            </div>
-                            <span class="h-fit text-[10px] font-bold px-2 py-1 rounded-lg ${pending?'bg-amber-500/10 text-amber-300':'bg-slate-800 text-slate-300'}">${status.toUpperCase()}</span>
-                        </div>
-                        ${pending ? `<div class="grid grid-cols-2 gap-2 mt-3">
-                            <button onclick="adminApproveWithdraw('${r.id}')" class="bg-emerald-700 hover:bg-emerald-600 text-white py-2 rounded-xl text-xs font-bold"><i class="fa-solid fa-check mr-1"></i>Approve</button>
-                            <button onclick="adminRejectWithdraw('${r.id}')" class="bg-red-700 hover:bg-red-600 text-white py-2 rounded-xl text-xs font-bold"><i class="fa-solid fa-xmark mr-1"></i>Reject + Refund</button>
-                        </div>` : `<div class="text-[10px] text-slate-500 mt-3">Reviewed: ${r.reviewedAt ? new Date(r.reviewedAt).toLocaleString() : '—'}</div>`}
-                    </div>`;
-                }).join('');
-            } catch(e){ list.innerHTML=`<p class="text-rose-400 text-xs">Withdraw load failed: ${e.message}</p>`; }
-        };
-
-        window.adminApproveWithdraw = async function(id){
-            if(!confirm('এই withdraw request-টি approved হিসেবে mark করবেন?')) return;
-            try{
-                const ref = doc(db,'withdraws',id);
-                await runTransaction(db, async (transaction) => {
-                    const snap = await transaction.get(ref);
-                    if(!snap.exists()) throw new Error('Withdraw request পাওয়া যায়নি।');
-                    const r = snap.data() || {};
-                    const status = String(r.status || 'pending').toLowerCase();
-                    if(status !== 'pending') throw new Error(`এই request ইতিমধ্যে ${r.status || 'processed'} হয়েছে।`);
-                    const now = Date.now();
-                    transaction.update(ref,{status:'approved',reviewedAt:now,approvedAt:now});
-                });
-                showToast('Withdraw approved হয়েছে।');
-                await loadAllAdminData();
-                renderWithdrawsList();
-            }catch(e){showToast(e.message||'Approve failed','error');}
-        };
-
-        window.adminRejectWithdraw = async function(id){
-            const reason=(prompt('Reject করার কারণ লিখুন:','Withdraw verification failed')||'').trim();
-            if(!reason) return;
-            try{
-                const ref=doc(db,'withdraws',id);
-                await runTransaction(db, async (transaction) => {
-                    const snap=await transaction.get(ref);
-                    if(!snap.exists()) throw new Error('Withdraw request পাওয়া যায়নি।');
-                    const r = snap.data() || {};
-                    const status = String(r.status || 'pending').toLowerCase();
-                    if(status !== 'pending') throw new Error(`এই request ইতিমধ্যে ${r.status || 'processed'} হয়েছে।`);
-                    const uid = r.uid || r.userId || '';
-                    const amount = Number(r.amount || 0);
-                    if(!uid) throw new Error('User ID পাওয়া যায়নি।');
-                    if(!amount || amount <= 0) throw new Error('Invalid withdraw amount.');
-                    const userRef = doc(db,'users',uid);
-                    const userSnap = await transaction.get(userRef);
-                    if(!userSnap.exists()) throw new Error('User পাওয়া যায়নি।');
-                    const currentBalance = Number(userSnap.data().balance || 0);
-                    transaction.update(userRef,{balance:currentBalance+amount});
-                    const now = Date.now();
-                    transaction.update(ref,{status:'rejected',reviewedAt:now,rejectedAt:now,reason,reviewReason:reason});
-                });
-                showToast('Withdraw reject হয়েছে এবং refund করা হয়েছে।');
-                await loadAllAdminData();
-                renderWithdrawsList();
-            }catch(e){showToast(e.message||'Reject failed','error');}
-        };
-
-        window.openHistoryModal = async function(type = 'Deposit') {
-            document.getElementById('modal-title').innerText = `${type} History`;
-            document.getElementById('generic-modal').style.display = 'flex';
-            document.getElementById('modal-body').innerHTML = `
-                <div class="flex gap-2 mb-3">
-                    <button onclick="openHistoryModal('Deposit')" class="flex-1 py-1.5 rounded-lg text-xs font-bold ${type === 'Deposit' ? 'bg-blue-600 text-white' : 'bg-slate-800 text-slate-300'}">Deposit History</button>
-                    <button onclick="openHistoryModal('Withdraw')" class="flex-1 py-1.5 rounded-lg text-xs font-bold ${type === 'Withdraw' ? 'bg-blue-600 text-white' : 'bg-slate-800 text-slate-300'}">Withdraw History</button>
-                </div>
-                <div id="history-modal-list" class="space-y-2 max-h-[60vh] overflow-y-auto"><p class="text-center text-slate-400 py-4">লোড হচ্ছে...</p></div>
-            `;
-
-            try {
-                let html = '';
-                if(type === 'Deposit') {
-                    if(allDeposits.length === 0) html = '<p class="text-center text-slate-400 py-4">কোনো ডিপোজিট হিস্টরি নেই।</p>';
-                    else {
-                        allDeposits.forEach(d => {
-                            html += `<div class="bg-[#0b0f1a] p-3 rounded-xl border border-slate-800 text-xs">
-                                <div class="flex justify-between font-bold text-white"><span>${d.userName || d.userEmail || 'User'} (${d.gateway || 'bKash'})</span><span class="text-emerald-400">৳${d.amount}</span></div>
-                                <div class="text-[10px] text-slate-400 mt-1">TrxID: ${d.trxId || d.transactionId || 'N/A'} | Status: <b>${d.status || 'Pending'}</b></div>
-                            </div>`;
-                        });
-                    }
-                } else {
-                    if(allWithdraws.length === 0) html = '<p class="text-center text-slate-400 py-4">কোনো উইথড্র হিস্টরি নেই।</p>';
-                    else {
-                        allWithdraws.forEach(w => {
-                            html += `<div class="bg-[#0b0f1a] p-3 rounded-xl border border-slate-800 text-xs">
-                                <div class="flex justify-between font-bold text-white"><span>${w.userEmail || w.userId || 'User'} (${w.method || 'bKash'})</span><span class="text-amber-400">৳${w.amount}</span></div>
-                                <div class="text-[10px] text-slate-400 mt-1">Number: ${w.number || 'N/A'} | Status: <b>${w.status || 'Pending'}</b></div>
-                            </div>`;
-                        });
-                    }
-                }
-                document.getElementById('history-modal-list').innerHTML = html;
-            } catch(e) {
-                document.getElementById('history-modal-list').innerHTML = `<p class="text-rose-400 text-center py-4">লোড করতে সমস্যা হয়েছে!</p>`;
-            }
-        };
-
-        window.openGatewayModal = async function() {
-            document.getElementById('modal-title').innerText = "Deposit Numbers Setup";
-            document.getElementById('generic-modal').style.display = 'flex';
-            document.getElementById('modal-body').innerHTML = `
-                <div class="space-y-3">
-                    <p class="text-[11px] text-slate-400">এখানে শুধু existing deposit method-এর number edit করা যাবে।</p>
-                    <div id="gateway-list-container" class="space-y-2">লোড হচ্ছে...</div>
-                </div>
-            `;
-            loadGatewaySettings();
-        };
-
-        const rsAdminEsc = (v) => String(v ?? '').replace(/[&<>"']/g, m => ({
-            '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
-        }[m]));
-
-        window.loadGatewaySettings = async function() {
-            try {
-                const snap = await getDocs(collection(db, "paymentMethods"));
-                const container = document.getElementById('gateway-list-container');
-                if(!container) return;
-                if(snap.empty) {
-                    container.innerHTML = `<p class="text-slate-500 text-xs">কোনো payment method পাওয়া যায়নি।</p>`;
-                    return;
-                }
-
-                let html = '';
-                snap.forEach(d => {
-                    const item = d.data() || {};
-                    const name = rsAdminEsc(item.name || d.id);
-                    const number = rsAdminEsc(item.number || '');
-                    html += `
-                        <div class="bg-[#0b0f1a] p-3 rounded-xl border border-slate-800 text-xs">
-                            <div class="flex items-center justify-between gap-2 mb-2">
-                                <b class="text-white">${name}</b>
-                            </div>
-                            <div class="flex gap-2">
-                                <input id="gateway-number-${rsAdminEsc(d.id)}"
-                                    type="text"
-                                    value="${number}"
-                                    class="flex-1 bg-[#050811] border border-slate-800 rounded-xl p-2.5 text-white text-xs"
-                                    placeholder="Account Number">
-                                <button onclick="saveGatewayNumber('${rsAdminEsc(d.id)}')"
-                                    class="bg-blue-600 hover:bg-blue-500 text-white font-bold px-3 rounded-xl text-xs">
-                                    Save
+                document.getElementById('custom-modal-title').innerText = "Room Details";
+                if(roomId || roomPass) {
+                    document.getElementById('custom-modal-body').innerHTML = `
+                        <div class="space-y-3 p-3 bg-[#0b0f1a] rounded-xl border border-slate-800 text-xs">
+                            <div class="flex justify-between items-center bg-slate-900/60 p-2.5 rounded-lg border border-slate-800">
+                                <span class="text-slate-400">Room ID: <strong class="text-blue-400 ml-1 select-all" id="room-id-text">${roomId || 'N/A'}</strong></span>
+                                <button onclick="copyToClipboard('room-id-text')" class="bg-blue-600/20 hover:bg-blue-600/30 text-blue-400 border border-blue-500/30 px-2.5 py-1 rounded-md text-[10px] font-bold transition">
+                                    <i class="fa-regular fa-copy mr-1"></i> Copy
                                 </button>
                             </div>
-                        </div>`;
-                });
-                container.innerHTML = html;
-            } catch(e) {
-                const c = document.getElementById('gateway-list-container');
-                if(c) c.innerHTML = `<p class="text-rose-400 text-xs">লোড করতে সমস্যা হয়েছে</p>`;
-            }
-        };
-
-        window.saveGatewayNumber = async function(id) {
-            const input = document.getElementById(`gateway-number-${id}`);
-            const number = input ? input.value.trim() : '';
-            if(!number) { showToast('Deposit number দিন', 'error'); return; }
-            try {
-                await updateDoc(doc(db, "paymentMethods", id), { number, updatedAt: Date.now() });
-                showToast('Deposit number update হয়েছে!');
-                loadGatewaySettings();
-            } catch(e) {
-                showToast('Number update করতে সমস্যা হয়েছে', 'error');
-            }
-        };
-
-        window.openReferralHistory = async function() {
-            document.getElementById('modal-title').innerText = "Refer History";
-            document.getElementById('generic-modal').style.display = 'flex';
-            document.getElementById('modal-body').innerHTML = `
-                <div class="space-y-3">
-                    <div class="bg-[#0b0f1a] p-3 rounded-xl border border-slate-800">
-                        <div id="refer-history-summary" class="text-xs text-slate-300">লোড হচ্ছে...</div>
-                    </div>
-                    <div id="refer-history-list" class="space-y-2">লোড হচ্ছে...</div>
-                </div>
-            `;
-
-            try {
-                const snap = await getDocs(collection(db, "referralHistory"));
-                const rows = snap.docs.map(d => ({ id:d.id, ...(d.data() || {}) }));
-                const summary = document.getElementById('refer-history-summary');
-                const list = document.getElementById('refer-history-list');
-                if(summary) summary.innerHTML = `Total successful referral: <b class="text-emerald-400">${rows.length}</b>`;
-
-                if(!rows.length) {
-                    if(list) list.innerHTML = `<p class="text-center text-slate-500 text-xs py-5">কোনো refer history নেই।</p>`;
-                    return;
-                }
-
-                if(list) list.innerHTML = rows.map((r, i) => `
-                    <div class="bg-[#0b0f1a] p-3 rounded-xl border border-slate-800 text-xs">
-                        <div class="flex justify-between font-bold text-white">
-                            <span>#${i+1} ${rsAdminEsc(r.referredUsername || r.referredEmail || 'User')}</span>
-                            <span class="text-emerald-400">৳${Number(r.rewardAmount||0)}</span>
+                            <div class="flex justify-between items-center bg-slate-900/60 p-2.5 rounded-lg border border-slate-800">
+                                <span class="text-slate-400">Password: <strong class="text-amber-400 ml-1 select-all" id="room-pass-text">${roomPass || 'N/A'}</strong></span>
+                                <button onclick="copyToClipboard('room-pass-text')" class="bg-amber-600/20 hover:bg-amber-600/30 text-amber-400 border border-amber-500/30 px-2.5 py-1 rounded-md text-[10px] font-bold transition">
+                                    <i class="fa-regular fa-copy mr-1"></i> Copy
+                                </button>
+                            </div>
                         </div>
-                    </div>`).join('');
-            } catch(e) {
-                const list = document.getElementById('refer-history-list');
-                if(list) list.innerHTML = `<p class="text-rose-400 text-center text-xs py-5">লোড করতে সমস্যা হয়েছে</p>`;
-            }
-        };
-
-        window.deleteDocItem = async function(colName, docId) {
-            if(!confirm('কনফার্ম ডিলিট?')) return;
-            try {
-                let deletedData = null;
-                if(colName === 'banners') {
-                    const bannerSnap = await getDoc(doc(db, 'banners', docId));
-                    if(bannerSnap.exists()) deletedData = bannerSnap.data() || {};
+                    `;
+                } else {
+                    document.getElementById('custom-modal-body').innerHTML = `<p class="text-center text-slate-300 py-4">রুম ডিটেইলস এখনো দেওয়া হয়নি।</p>`;
+                    showToast("রুম ডিটেইলস এখনো দেওয়া হয়নি!", "warning");
                 }
-                await deleteDoc(doc(db, colName, docId));
-                showToast('ডিলিট সফল হয়েছে!');
-                await loadAllAdminData();
-            } catch(e) {
-                showToast('ডিলিট করতে সমস্যা হয়েছে', 'error');
+                document.getElementById('custom-action-modal').style.display = 'flex';
+            } catch(e) { console.error(e); }
+        }
+
+        window.copyToClipboard = function(elementId) {
+            const el = document.getElementById(elementId);
+            if(!el) return;
+            const text = el.innerText;
+            
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(text).then(() => {
+                    showToast("সফলভাবে কপি করা হয়েছে!", "success");
+                }).catch(() => {
+                    fallbackCopyText(text);
+                });
+            } else {
+                fallbackCopyText(text);
             }
         }
 
-        window.openAuraLegacyFeatures = function(){
-            const modal=document.getElementById('generic-modal');
-            document.getElementById('modal-title').innerText='AURA ARMAN — Admin Features';
-            modal.style.display='flex';
-            document.getElementById('modal-body').innerHTML=`
-                <div class="grid grid-cols-2 gap-2">
-                    <button onclick="auraDashboard()" class="bg-slate-800 hover:bg-slate-700 text-white p-3 rounded-xl font-bold"><i class="fa-solid fa-chart-line text-blue-400 block text-lg mb-1"></i>Dashboard</button>
-                    <button onclick="auraUsersWallet()" class="bg-slate-800 hover:bg-slate-700 text-white p-3 rounded-xl font-bold"><i class="fa-solid fa-users text-emerald-400 block text-lg mb-1"></i>Users & Wallet</button>
-                    <button onclick="auraPayments()" class="bg-slate-800 hover:bg-slate-700 text-white p-3 rounded-xl font-bold"><i class="fa-solid fa-money-bill-transfer text-amber-400 block text-lg mb-1"></i>Payments</button>
-                    <button onclick="auraGiftsSupport()" class="bg-slate-800 hover:bg-slate-700 text-white p-3 rounded-xl font-bold"><i class="fa-solid fa-gift text-pink-400 block text-lg mb-1"></i>Gift & Support</button>
-                    <button onclick="auraAnalytics()" class="bg-slate-800 hover:bg-slate-700 text-white p-3 rounded-xl font-bold"><i class="fa-solid fa-chart-pie text-cyan-400 block text-lg mb-1"></i>Analytics</button>
-                    <button onclick="auraGlobalSearch()" class="bg-slate-800 hover:bg-slate-700 text-white p-3 rounded-xl font-bold"><i class="fa-solid fa-magnifying-glass text-violet-400 block text-lg mb-1"></i>Global Search</button>
-                    <button onclick="auraHomeContent()" class="bg-slate-800 hover:bg-slate-700 text-white p-3 rounded-xl font-bold"><i class="fa-solid fa-house text-sky-400 block text-lg mb-1"></i>Home Content</button>
-                    <button onclick="auraMediaAPK()" class="bg-slate-800 hover:bg-slate-700 text-white p-3 rounded-xl font-bold"><i class="fa-solid fa-cloud-arrow-up text-lime-400 block text-lg mb-1"></i>Media / APK</button>
-                    <button onclick="auraMemoryCenter()" class="col-span-2 bg-red-950/40 hover:bg-red-900/50 border border-red-500/30 text-red-200 p-3 rounded-xl font-bold"><i class="fa-solid fa-database text-red-400 mr-1"></i> Memory Centre</button>
-                </div>`;
-        };
-
-        window.auraPanel = function(title, body){
-            document.getElementById('modal-title').innerText=title;
-            document.getElementById('modal-body').innerHTML=body;
-        };
-
-        window.auraDashboard = async function(){
-            try{
-                const [u,t,s,g,d,w]=await Promise.all([
-                    getDocs(collection(db,'users')),getDocs(collection(db,'tournaments')),getDocs(collection(db,'sections')),
-                    getDocs(collection(db,'groups')),getDocs(collection(db,'deposits')),getDocs(collection(db,'withdraws'))
-                ]);
-                auraPanel('AURA ARMAN — Dashboard',`<div class="grid grid-cols-2 gap-2">
-                    ${[['Users',u.size,'text-blue-400'],['Tournaments',t.size,'text-emerald-400'],['Sections',s.size,'text-cyan-400'],['Groups',g.size,'text-violet-400'],['Deposits',d.size,'text-amber-400'],['Withdrawals',w.size,'text-pink-400']].map(x=>`<div class="bg-[#050811] border border-slate-800 rounded-xl p-4"><div class="text-xs text-slate-500">${x[0]}</div><div class="text-2xl font-black ${x[2]}">${x[1]}</div></div>`).join('')}</div>`);
-            }catch(e){ auraPanel('Dashboard Error',`<p class="text-rose-400">ডাটা লোড করা যায়নি: ${e.message}</p>`); }
-        };
-
-        window.auraUsersWallet = async function(){
-            try{
-                const snap=await getDocs(collection(db,'users'));
-                let rows=''; snap.forEach(d=>{const u=d.data(); rows+=`<div class="bg-[#050811] border border-slate-800 rounded-xl p-3 flex justify-between gap-2 items-center"><div><b>${u.userName||u.username||u.email||d.id}</b><div class="text-[10px] text-slate-500">${u.email||d.id}</div><div class="text-xs text-emerald-400">Balance: ৳${Number(u.balance||0)}</div></div><div class="flex gap-1"><button class="bg-emerald-700 text-white px-2 py-1 rounded-lg" onclick="auraWalletChange('${d.id}',1)">+৳</button><button class="bg-red-700 text-white px-2 py-1 rounded-lg" onclick="auraWalletChange('${d.id}',-1)">-৳</button></div></div>`});
-                auraPanel('Users & Wallet',`<div class="space-y-2 max-h-[60vh] overflow-y-auto">${rows||'<p class="text-slate-500">কোনো user নেই।</p>'}</div>`);
-            }catch(e){auraPanel('Users Error',`<p class="text-rose-400">${e.message}</p>`)}
-        };
-        window.auraWalletChange = async function(uid,sign){
-            const amount=Number(prompt(sign>0?'কত টাকা credit করবেন?':'কত টাকা debit করবেন?')||0); if(!amount||amount<0)return;
-            const r=doc(db,'users',uid); const snap=await getDoc(r); if(!snap.exists())return;
-            const bal=Number(snap.data().balance||0); const next=bal+sign*amount; if(next<0){alert('Balance negative হতে পারবে না।');return;}
-            await updateDoc(r,{balance:next}); alert('Wallet update হয়েছে।'); auraUsersWallet();
-        };
-
-        window.auraPayments = async function(){
-            try{
-                const [d,w]=await Promise.all([getDocs(collection(db,'deposits')),getDocs(collection(db,'withdraws'))]);
-                let html='<div class="space-y-2 max-h-[60vh] overflow-y-auto">';
-                d.forEach(x=>{const v=x.data(); html+=`<div class="bg-[#050811] border border-slate-800 rounded-xl p-3"><b>Deposit</b> — ${v.userEmail||v.userId||''}<br>৳${v.amount||0} — <span class="text-amber-400">${v.status||'pending'}</span><div class="mt-2"><button class="bg-emerald-700 text-white px-2 py-1 rounded" onclick="auraReviewPayment('deposits','${x.id}','approve')">Approve</button> <button class="bg-red-700 text-white px-2 py-1 rounded" onclick="auraReviewPayment('deposits','${x.id}','reject')">Reject</button></div></div>`});
-                w.forEach(x=>{const v=x.data(); html+=`<div class="bg-[#050811] border border-slate-800 rounded-xl p-3"><b>Withdrawal</b> — ${v.userEmail||v.userId||''}<br>৳${v.amount||0} — <span class="text-amber-400">${v.status||'pending'}</span><div class="mt-2"><button class="bg-emerald-700 text-white px-2 py-1 rounded" onclick="adminApproveWithdraw('${x.id}')">Approve</button> <button class="bg-red-700 text-white px-2 py-1 rounded" onclick="adminRejectWithdraw('${x.id}')">Reject</button></div></div>`});
-                html+='</div>'; auraPanel('Payment Control',html);
-            }catch(e){auraPanel('Payment Error',`<p class="text-rose-400">${e.message}</p>`)}
-        };
-        window.auraReviewPayment = async function(col,id,action){
-            try{
-                const ref=doc(db,col,id);
-                await runTransaction(db, async(transaction)=>{
-                    const snap=await transaction.get(ref);
-                    if(!snap.exists()) throw new Error('Payment request পাওয়া যায়নি।');
-                    const v=snap.data()||{};
-                    const status=String(v.status||'pending').toLowerCase();
-                    if(status!=='pending') throw new Error(`এই request ইতিমধ্যে ${v.status || 'processed'} হয়েছে।`);
-
-                    if(action==='approve' && col==='deposits'){
-                        const uid=v.userId||v.uid;
-                        const amount=Number(v.amount||0);
-                        if(!uid) throw new Error('User ID পাওয়া যায়নি।');
-                        if(!amount || amount<=0) throw new Error('Invalid deposit amount.');
-                        const ur=doc(db,'users',uid);
-                        const us=await transaction.get(ur);
-                        if(!us.exists()) throw new Error('User পাওয়া যায়নি।');
-                        const bal=Number(us.data().balance||0);
-                        transaction.update(ur,{balance:bal+amount});
-                    }
-
-                    transaction.update(ref,{status:action==='approve'?'approved':'rejected',reviewedAt:Date.now()});
-                });
-                alert(action==='approve'?'Approved — টাকা একবারই যোগ হয়েছে.':'Rejected');
-                auraPayments();
-            }catch(e){alert(e.message||'Payment process failed');console.error(e);}
-        };
-        window.auraGiftsSupport = async function(){
-            const html=`<div class="space-y-3">
-                <div class="bg-[#050811] border border-slate-800 rounded-xl p-3">
-                    <div class="flex justify-between items-center mb-2">
-                        <h4 class="font-bold">Create Gift Code</h4>
-                        <button onclick="auraGiftHistory()" class="bg-violet-600 hover:bg-violet-500 text-white px-3 py-2 rounded-lg text-xs font-bold">Gift Code History</button>
-                    </div>
-                    <input id="aura-gift-code" class="w-full bg-black border border-slate-800 rounded-lg p-2 text-white mb-2" placeholder="Gift code">
-                    <input id="aura-gift-amount" type="number" min="1" class="w-full bg-black border border-slate-800 rounded-lg p-2 text-white mb-2" placeholder="Amount per user (৳)">
-                    <label class="block text-xs text-slate-400 mb-1">কতজন user এই code নিতে পারবে?</label>
-                    <input id="aura-gift-max" type="number" min="1" step="1" class="w-full bg-black border border-slate-800 rounded-lg p-2 text-white mb-2" placeholder="Maximum users">
-                    <button onclick="auraCreateGift()" class="w-full bg-blue-600 hover:bg-blue-500 text-white rounded-lg p-2 font-bold">🎁 Create Gift Code</button>
-                </div>
-                <div class="bg-[#050811] border border-slate-800 rounded-xl p-3">
-                    <h4 class="font-bold mb-2">Support Tickets</h4>
-                    <div id="aura-support-list">লোড হচ্ছে...</div>
-                </div>
-            </div>`;
-            auraPanel('Gift & Support',html);
-            try{
-                const snap=await getDocs(collection(db,'supportTickets'));
-                let out='';
-                snap.forEach(d=>{const v=d.data();out+=`<div class="border-b border-slate-800 py-2 text-xs"><b>${v.userEmail||v.userId||'User'}</b><br>${v.message||v.subject||''}<br><span class="text-slate-500">${v.status||'open'}</span></div>`});
-                document.getElementById('aura-support-list').innerHTML=out||'No tickets';
-            }catch(e){document.getElementById('aura-support-list').innerText=e.message}
-        };
-
-        window.auraCreateGift = async function(){
-            const code=(document.getElementById('aura-gift-code')?.value||'').trim().toUpperCase().replace(/\s+/g,'');
-            const amount=Number(document.getElementById('aura-gift-amount')?.value||0);
-            const maxUses=Math.floor(Number(document.getElementById('aura-gift-max')?.value||0));
-            if(!code||amount<=0||maxUses<1)return alert('Code, amount এবং maximum users দিন।');
-            try{
-                const ref=doc(db,'giftCodes',code);
-                const old=await getDoc(ref);
-                if(old.exists())return alert('এই gift code আগে থেকেই আছে। অন্য code দিন।');
-                await setDoc(ref,{code,amount,maxUses,usedCount:0,active:true,createdAt:Date.now(),createdBy:auth?.currentUser?.email||'admin'});
-                alert(`Gift code ${code} তৈরি হয়েছে। সর্বোচ্চ ${maxUses} জন নিতে পারবে।`);
-                auraGiftsSupport();
-            }catch(e){alert('Gift code create failed: '+(e.message||e));}
-        };
-
-        window.auraGiftHistory = async function(){
-            try{
-                const snap=await getDocs(collection(db,'giftCodes'));
-                const rows=snap.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>Number(b.createdAt||0)-Number(a.createdAt||0));
-                const esc=v=>String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
-                const body=`<div class="space-y-3">
-                    <button onclick="auraGiftsSupport()" class="w-full bg-slate-800 hover:bg-slate-700 text-white rounded-lg p-2 text-xs font-bold">← Back to Gift Code Create</button>
-                    ${rows.length?rows.map(r=>{
-                        const used=Number(r.usedCount||0), max=Number(r.maxUses||0);
-                        return `<div class="bg-[#050811] border border-slate-800 rounded-xl p-3">
-                            <div class="flex justify-between gap-2 items-start">
-                                <div><b class="text-white">${esc(r.code||r.id)}</b><div class="text-xs text-slate-400 mt-1">৳${Number(r.amount||0)} / user</div></div>
-                                <span class="text-[10px] px-2 py-1 rounded bg-emerald-500/10 text-emerald-400">${r.active===false?'DISABLED':'ACTIVE'}</span>
-                            </div>
-                            <div class="grid grid-cols-2 gap-2 mt-3 text-xs">
-                                <div class="bg-black rounded-lg p-2">Total allowed: <b>${max}</b></div>
-                                <div class="bg-black rounded-lg p-2">Taken: <b>${used}</b></div>
-                            </div>
-                            <div class="text-[11px] text-slate-500 mt-2">Remaining: ${Math.max(0,max-used)} • Created: ${r.createdAt?new Date(Number(r.createdAt)).toLocaleString():'N/A'}</div>
-                            <div class="grid grid-cols-2 gap-2 mt-3">
-                                <button onclick="auraEditGift('${esc(r.id)}')" class="bg-blue-600 hover:bg-blue-500 text-white rounded-lg p-2 text-xs font-bold">Edit</button>
-                                <button onclick="auraDeleteGift('${esc(r.id)}')" class="bg-rose-600 hover:bg-rose-500 text-white rounded-lg p-2 text-xs font-bold">Delete</button>
-                            </div>
-                        </div>`;
-                    }).join(''):'<div class="text-center text-slate-500 py-10 text-sm">কোনো Gift Code নেই।</div>'}
-                </div>`;
-                auraPanel('Gift Code History',body);
-            }catch(e){alert('Gift code history load failed: '+(e.message||e));}
-        };
-
-        window.auraEditGift = async function(id){
-            try{
-                const snap=await getDoc(doc(db,'giftCodes',id));
-                if(!snap.exists())return alert('Gift code পাওয়া যায়নি।');
-                const v=snap.data();
-                const esc=v=>String(v??'').replace(/"/g,'&quot;');
-                auraPanel('Edit Gift Code',`<div class="space-y-3">
-                    <input id="edit-gift-code" class="w-full bg-black border border-slate-800 rounded-lg p-2 text-white" value="${esc(v.code||id)}" readonly>
-                    <input id="edit-gift-amount" type="number" min="1" class="w-full bg-black border border-slate-800 rounded-lg p-2 text-white" value="${Number(v.amount||0)}" placeholder="Amount per user">
-                    <input id="edit-gift-max" type="number" min="${Math.max(1,Number(v.usedCount||0))}" class="w-full bg-black border border-slate-800 rounded-lg p-2 text-white" value="${Math.max(Number(v.maxUses||0),Number(v.usedCount||0))}" placeholder="Maximum users">
-                    <select id="edit-gift-active" class="w-full bg-black border border-slate-800 rounded-lg p-2 text-white"><option value="true" ${v.active!==false?'selected':''}>Active</option><option value="false" ${v.active===false?'selected':''}>Disabled</option></select>
-                    <button onclick="auraSaveGiftEdit('${esc(id)}')" class="w-full bg-blue-600 hover:bg-blue-500 text-white rounded-lg p-2 font-bold">Save Changes</button>
-                    <button onclick="auraGiftHistory()" class="w-full bg-slate-800 text-white rounded-lg p-2 text-xs font-bold">Cancel</button>
-                </div>`);
-            }catch(e){alert(e.message||e);}
-        };
-
-        window.auraSaveGiftEdit = async function(id){
-            const amount=Number(document.getElementById('edit-gift-amount')?.value||0);
-            const maxUses=Math.floor(Number(document.getElementById('edit-gift-max')?.value||0));
-            const active=document.getElementById('edit-gift-active')?.value==='true';
-            const current=await getDoc(doc(db,'giftCodes',id));
-            if(!current.exists())return alert('Gift code পাওয়া যায়নি।');
-            const used=Number(current.data().usedCount||0);
-            if(amount<=0||maxUses<used||maxUses<1)return alert(`Maximum users কমপক্ষে ${used} হতে হবে।`);
-            try{await updateDoc(doc(db,'giftCodes',id),{amount,maxUses,active,updatedAt:Date.now()});alert('Gift code updated ✓');auraGiftHistory();}catch(e){alert('Update failed: '+(e.message||e));}
-        };
-
-        window.auraDeleteGift = async function(id){
-            if(!confirm('এই Gift Code এবং এর history permanently delete করবেন?'))return;
-            try{await deleteDoc(doc(db,'giftCodes',id));alert('Gift code deleted ✓');auraGiftHistory();}catch(e){alert('Delete failed: '+(e.message||e));}
-        };
-
-        window.auraAnalytics = async function(){
-            try{const [u,t,d,w]=await Promise.all([getDocs(collection(db,'users')),getDocs(collection(db,'tournaments')),getDocs(collection(db,'deposits')),getDocs(collection(db,'withdraws'))]);
-            auraPanel('Analytics',`<div class="space-y-2"><div class="bg-[#050811] p-4 rounded-xl">Registered users: <b>${u.size}</b></div><div class="bg-[#050811] p-4 rounded-xl">Tournaments: <b>${t.size}</b></div><div class="bg-[#050811] p-4 rounded-xl">Deposit requests: <b>${d.size}</b></div><div class="bg-[#050811] p-4 rounded-xl">Withdrawal requests: <b>${w.size}</b></div></div>`)}catch(e){auraPanel('Analytics Error',e.message)}
-        };
-
-        window.auraGlobalSearch = function(){auraPanel('Global Search',`<input id="aura-search" oninput="auraRunSearch()" class="w-full bg-[#050811] border border-slate-800 rounded-xl p-3 text-white" placeholder="Username, email, tournament, group..."><div id="aura-search-results" class="space-y-2 mt-3"></div>`)};
-        window.auraRunSearch = async function(){const q=(document.getElementById('aura-search')?.value||'').toLowerCase().trim(),box=document.getElementById('aura-search-results');if(!box)return;if(!q){box.innerHTML='';return;}const [u,t,g,s]=await Promise.all([getDocs(collection(db,'users')),getDocs(collection(db,'tournaments')),getDocs(collection(db,'groups')),getDocs(collection(db,'sections'))]);let out='';[[u,'User'],[t,'Tournament'],[g,'Group'],[s,'Section']].forEach(([snap,label])=>snap.forEach(d=>{const v=d.data(),str=JSON.stringify(v).toLowerCase();if(str.includes(q))out+=`<div class="bg-[#050811] border border-slate-800 rounded-xl p-2 text-xs"><b>${label}</b> — ${v.name||v.userName||v.username||v.email||d.id}</div>`}));box.innerHTML=out||'<p class="text-slate-500">No result found.</p>';};
-
-        window.auraHomeContent = async function(){
-            try{const r=doc(db,'settings','homePage'),s=await getDoc(r),v=s.exists()?s.data():{};auraPanel('Home Content',`<div class="space-y-3"><label class="text-slate-400">Notice</label><textarea id="aura-notice" class="w-full bg-[#050811] border border-slate-800 rounded-xl p-2 text-white" rows="3">${v.noticeText||''}</textarea><label class="text-slate-400">Banner lines — type|image URL|optional click/download link</label><textarea id="aura-media" class="w-full bg-[#050811] border border-slate-800 rounded-xl p-2 text-white" rows="7">${(v.heroMedia||[]).map(x=>[x.type||'image',x.url||'',x.link||''].join('|')).join('\n')}</textarea><button onclick="auraSaveHomeContent()" class="w-full bg-blue-600 text-white p-2 rounded-xl font-bold">Save Home Content</button></div>`)}catch(e){auraPanel('Home Error',e.message)}
-        };
-        window.auraSaveHomeContent = async function(){const notice=document.getElementById('aura-notice').value;const lines=document.getElementById('aura-media').value.split('\n').map(x=>x.trim()).filter(Boolean);const heroMedia=lines.map(x=>{const [type,url,link]=x.split('|');return{type:type||'image',url:url||'',link:link||''}}).filter(x=>x.url);await setDoc(doc(db,'settings','homePage'),{noticeText:notice,heroMedia},{merge:true});alert('Home content saved');auraHomeContent();};
-
-        window.auraMediaAPK = function(){auraPanel('Media / APK',`<div class="space-y-3"><div><label class="text-slate-400">Home image/video</label><input id="aura-media-file" type="file" accept="image/*,video/*" class="w-full bg-[#050811] border border-slate-800 rounded-xl p-2 text-white"><button onclick="auraUploadMedia()" class="w-full bg-blue-600 text-white p-2 rounded-xl mt-2 font-bold">Upload Media</button></div><hr class="border-slate-800"><div><label class="text-slate-400">APK file</label><input id="aura-apk-file" type="file" accept=".apk,application/vnd.android.package-archive" class="w-full bg-[#050811] border border-slate-800 rounded-xl p-2 text-white"><button onclick="auraUploadAPK()" class="w-full bg-emerald-600 text-white p-2 rounded-xl mt-2 font-bold">Upload APK</button></div><div id="aura-upload-status" class="text-xs text-slate-400"></div></div>`)};
-        window.auraUploadMedia = async function(){const f=document.getElementById('aura-media-file').files[0];if(!f)return alert('File select করুন');const path=`home-media/${Date.now()}_${f.name}`;const r=storageRef(auraStorage,path);document.getElementById('aura-upload-status').innerText='Uploading...';await uploadBytes(r,f);const url=await getDownloadURL(r);const s=await getDoc(doc(db,'settings','homePage'));const v=s.exists()?s.data():{};const arr=Array.isArray(v.heroMedia)?v.heroMedia:[];arr.push({type:f.type.startsWith('video/')?'video':'image',url,link:''});await setDoc(doc(db,'settings','homePage'),{heroMedia:arr},{merge:true});document.getElementById('aura-upload-status').innerText='Media uploaded successfully.';};
-        window.auraUploadAPK = async function(){const f=document.getElementById('aura-apk-file').files[0];if(!f)return alert('APK select করুন');const r=storageRef(auraStorage,`app-downloads/${Date.now()}_${f.name}`);document.getElementById('aura-upload-status').innerText='Uploading APK...';await uploadBytes(r,f,{contentType:'application/vnd.android.package-archive'});const url=await getDownloadURL(r);await setDoc(doc(db,'settings','appDownload'),{url,name:f.name,updatedAt:Date.now()},{merge:true});document.getElementById('aura-upload-status').innerText='APK uploaded successfully.';};
-
-        window.auraMemoryCenter = function(){auraPanel('Memory Centre',`<div class="space-y-3"><p class="text-amber-300 text-xs">⚠️ এগুলো permanent delete হতে পারে। আগে নিশ্চিত হন।</p><div class="grid grid-cols-2 gap-2">${['users','sections','groups','tournaments','registrations','transactions','deposits','withdraws','giftCodes','supportTickets','notifications','banners'].map(c=>`<button onclick="auraClearCollection('${c}')" class="bg-red-950/40 border border-red-500/20 text-red-200 p-2 rounded-lg text-xs font-bold">Clear ${c}</button>`).join('')}</div><button onclick="auraClearStorageFolder('home-media')" class="w-full bg-red-900/40 border border-red-500/30 text-red-200 p-2 rounded-xl font-bold">Clear Home Media Storage</button><button onclick="auraClearStorageFolder('app-downloads')" class="w-full bg-red-900/40 border border-red-500/30 text-red-200 p-2 rounded-xl font-bold">Clear APK Storage</button></div>`)};
-        window.auraClearCollection = async function(col){if(!confirm(`${col} collection-এর সব data delete করবেন?`))return;const snap=await getDocs(collection(db,col));for(const d of snap.docs)await deleteDoc(d.ref);alert(`${col} cleared`);auraMemoryCenter();loadAllAdminData();};
-        window.auraClearStorageFolder = async function(folder){if(!confirm(`${folder} storage folder clear করবেন?`))return;const walk=async p=>{const l=await listAll(storageRef(auraStorage,p));for(const f of l.items)await deleteObject(f);for(const d of l.prefixes)await walk(d.fullPath)};await walk(folder);alert(`${folder} cleared`);};
-
-        window.closeGenericModal = function() {
-            document.getElementById('generic-modal').style.display = 'none';
+        function fallbackCopyText(text) {
+            const textArea = document.createElement("textarea");
+            textArea.value = text;
+            textArea.style.position = "fixed";
+            textArea.style.top = "0";
+            textArea.style.left = "0";
+            textArea.style.opacity = "0";
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+            try {
+                const successful = document.execCommand('copy');
+                if (successful) {
+                    showToast("সফলভাবে কপি করা হয়েছে!", "success");
+                } else {
+                    showToast("কপি করতে সমস্যা হয়েছে!", "error");
+                }
+            } catch (err) {
+                showToast("কপি করতে সমস্যা হয়েছে!", "error");
+            }
+            document.body.removeChild(textArea);
         }
-    </script>
 
+        window.filterTournaments = function(filterType) {
+            currentTournamentFilter = filterType;
+            ['upcoming', 'live', 'complete'].forEach(f => {
+                const btn = document.getElementById(`t-tab-${f}`);
+                if(btn) {
+                    btn.className = f === filterType ? "flex-1 py-2 text-[11px] font-bold rounded-xl bg-blue-600 text-white shadow transition" : "flex-1 py-2 text-[11px] font-bold rounded-xl text-slate-400 hover:text-white transition";
+                }
+            });
+            renderTournaments(selectedGroupId);
+        }
 
-<!-- =========================================================
-     SITE MAINTENANCE CONTROL
-     Firestore: settings/siteMaintenance
-     enabled: boolean
-     reason: string
-========================================================= -->
-<style>
-#siteMaintenanceAdminControl{position:fixed;right:14px;bottom:14px;z-index:999998;width:min(390px,calc(100vw - 28px));font-family:Arial,sans-serif}
-#siteMaintenanceAdminControl .sm-card{background:rgba(8,13,24,.97);border:1px solid rgba(59,130,246,.35);border-radius:18px;padding:14px;box-shadow:0 20px 60px rgba(0,0,0,.5);backdrop-filter:blur(14px)}
-#siteMaintenanceAdminControl .sm-title{font-size:13px;font-weight:900;color:#fff;margin-bottom:5px}
-#siteMaintenanceAdminControl .sm-status{font-size:11px;font-weight:800;margin-bottom:10px}
-#siteMaintenanceAdminControl textarea{width:100%;min-height:70px;resize:vertical;box-sizing:border-box;background:#0b1220;color:#fff;border:1px solid #26344d;border-radius:12px;padding:10px;outline:none;font-size:12px}
-#siteMaintenanceAdminControl textarea:focus{border-color:#3b82f6}
-#siteMaintenanceAdminControl .sm-row{display:flex;gap:8px;margin-top:9px}
-#siteMaintenanceAdminControl button{flex:1;border:0;border-radius:11px;padding:10px;font-size:11px;font-weight:900;cursor:pointer}
-#smOnBtn{background:#dc2626;color:#fff} #smOffBtn{background:#16a34a;color:#fff}
-#smReloadBtn{background:#1e293b;color:#cbd5e1}
-#smMaintenanceLock{display:none;position:fixed;inset:0;z-index:999997;background:rgba(2,6,23,.94);align-items:center;justify-content:center;padding:20px;text-align:center;color:#fff}
-#smMaintenanceLock .sm-lock-card{max-width:380px;background:#0f172a;border:1px solid rgba(245,158,11,.35);border-radius:22px;padding:28px;box-shadow:0 25px 80px rgba(0,0,0,.6)}
-</style>
-<div id="siteMaintenanceAdminControl">
-  <div class="sm-card">
-    <div class="sm-title">🛠 SITE MAINTENANCE</div>
-    <div id="smStatus" class="sm-status">Checking...</div>
-    <textarea id="smReason" placeholder="Maintenance reason লিখুন..."></textarea>
-    <div class="sm-row">
-      <button id="smOnBtn" type="button">MAINTENANCE ON</button>
-      <button id="smOffBtn" type="button">SITE OFF</button>
-      <button id="smReloadBtn" type="button">REFRESH</button>
-    </div>
-    <div style="font-size:9px;color:#64748b;margin-top:8px;line-height:1.45">ON করলে user login/index বন্ধ হবে। Maintenance ON থাকা অবস্থায় এই admin panel-এর normal কাজও locked থাকবে। OFF Firebase থেকে <b>settings/siteMaintenance.enabled=false</b> করে করতে পারবেন।</div>
-  </div>
-</div>
-<div id="smMaintenanceLock">
-  <div class="sm-lock-card">
-    <div style="font-size:40px;margin-bottom:12px">🛠️</div>
-    <h2 style="font-size:20px;font-weight:900;margin-bottom:8px">SITE MAINTENANCE ACTIVE</h2>
-    <p id="smLockReason" style="color:#94a3b8;font-size:13px;line-height:1.6"></p>
-    <p style="color:#fbbf24;font-size:11px;margin-top:15px">Admin actions are locked. Turn maintenance OFF from Firebase.</p>
-  </div>
-</div>
-<script type="module" id="site-maintenance-control-v1">
-import { getFirestore, doc, getDoc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-const SMDB=getFirestore();
-const smRef=doc(SMDB,'settings','siteMaintenance');
-const smStatus=document.getElementById('smStatus');
-const smReason=document.getElementById('smReason');
-const smLock=document.getElementById('smMaintenanceLock');
-const smLockReason=document.getElementById('smLockReason');
-const smPanel=document.getElementById('siteMaintenanceAdminControl');
-let smActive=false;
-function smApply(data={}){
-  smActive=data.enabled===true;
-  smStatus.textContent=smActive?'🔴 MAINTENANCE ON':'🟢 SITE ONLINE';
-  smStatus.style.color=smActive?'#f87171':'#34d399';
-  if(document.activeElement!==smReason) smReason.value=data.reason||'';
-  if(smActive){
-    smLockReason.textContent=data.reason||'সাইটটি বর্তমানে maintenance-এর মধ্যে আছে।';
-    smLock.style.display='flex';
-    // Lock the admin UI visually while maintenance is active.
-    document.documentElement.style.overflow='hidden';
-    smPanel.style.pointerEvents='none';
-    smPanel.style.opacity='.35';
-  }else{
-    smLock.style.display='none';
-    document.documentElement.style.overflow='';
-    smPanel.style.pointerEvents='auto';
-    smPanel.style.opacity='1';
-  }
-}
-async function smLoad(){try{const s=await getDoc(smRef);smApply(s.exists()?s.data():{});}catch(e){console.error('Maintenance admin load failed',e);smStatus.textContent='Permission / load error';smStatus.style.color='#f87171';}}
-smLoad();
-onSnapshot(smRef,s=>smApply(s.exists()?s.data():{}),e=>{console.error(e);smStatus.textContent='Permission denied';smStatus.style.color='#f87171';});
-document.getElementById('smOnBtn').addEventListener('click',async()=>{
-  if(smActive)return;
-  const reason=String(smReason.value||'').trim()||'সাইটটি বর্তমানে maintenance-এর মধ্যে আছে।';
-  try{await setDoc(smRef,{enabled:true,reason,updatedAt:Date.now()},{merge:true});}catch(e){alert('Maintenance ON failed: '+e.message);}
-});
-document.getElementById('smOffBtn').addEventListener('click',()=>{
-  alert('Maintenance ON থাকা অবস্থায় admin panel থেকে OFF করা যাবে না। Firebase Console → Firestore → settings/siteMaintenance → enabled = false করুন।');
-});
-document.getElementById('smReloadBtn').addEventListener('click',smLoad);
-</script>
+        window.goBackToHome = function() {
+            selectedGroupId = null;
+            selectedSectionId = null;
+            renderSections();
+        }
 
+        window.closeCustomModal = function() {
+            document.getElementById('custom-action-modal').style.display = 'none';
+            pendingJoinTournamentId = null;
+            pendingJoinEntryFee = 0;
+        }
 
-<script id="maintenance-modal-controller">
-(function(){
-  const modal = document.getElementById("maintenanceModal");
-  const openBtn = document.getElementById("openMaintenanceBtn");
-  const closeBtn = document.getElementById("closeMaintenanceBtn");
-  const reasonInput = document.getElementById("maintenanceReasonInput");
-  const onBtn = document.getElementById("maintenanceOnBtn");
-  const offBtn = document.getElementById("maintenanceOffBtn");
-  const statusEl = document.getElementById("maintenanceStatus");
+        window.handleLogout = function() {
+            const modal = document.getElementById("logoutModal");
+            if(modal) modal.style.display = "flex";
+        };
 
-  if(!modal || !openBtn) return;
+        window.closeLogoutModal = function() {
+            const modal = document.getElementById("logoutModal");
+            if(modal) modal.style.display = "none";
+        };
 
-  function openModal(){
-    modal.classList.add("show");
-    modal.setAttribute("aria-hidden","false");
-  }
-  function closeModal(){
-    modal.classList.remove("show");
-    modal.setAttribute("aria-hidden","true");
-  }
-
-  openBtn.addEventListener("click", openModal);
-  closeBtn?.addEventListener("click", closeModal);
-  modal.addEventListener("click", e => {
-    if(e.target === modal) closeModal();
-  });
-  document.addEventListener("keydown", e => {
-    if(e.key === "Escape") closeModal();
-  });
-
-  // Works with the existing Firebase db variable used by the admin file.
-  async function getMaintenance(){
-    try{
-      if(typeof db === "undefined"){
-        statusEl.textContent = "Firebase database পাওয়া যায়নি।";
-        return;
-      }
-      const snap = await getDoc(doc(db, "settings", "siteMaintenance"));
-      const data = snap.exists() ? (snap.data() || {}) : {};
-      if(data.enabled === true){
-        reasonInput.value = data.reason || "";
-        statusEl.innerHTML = '<span style="color:#fbbf24;font-weight:800">● MAINTENANCE ON</span>';
-      }else{
-        statusEl.innerHTML = '<span style="color:#34d399;font-weight:800">● MAINTENANCE OFF</span>';
-      }
-    }catch(e){
-      console.error("Maintenance status error:", e);
-      statusEl.textContent = "Status check failed: " + e.message;
-    }
-  }
-
-  onBtn?.addEventListener("click", async ()=>{
-    const reason = reasonInput.value.trim();
-    if(!reason){
-      alert("Maintenance reason দিন।");
-      reasonInput.focus();
-      return;
-    }
-    try{
-      onBtn.disabled = true;
-      onBtn.textContent = "TURNING ON...";
-      await setDoc(doc(db, "settings", "siteMaintenance"), {
-        enabled:true,
-        reason:reason,
-        updatedAt:Date.now()
-      }, {merge:true});
-      statusEl.innerHTML = '<span style="color:#fbbf24;font-weight:800">● MAINTENANCE ON</span>';
-      alert("Maintenance Mode ON হয়েছে।");
-      closeModal();
-    }catch(e){
-      console.error(e);
-      alert("Maintenance ON failed: " + e.message);
-    }finally{
-      onBtn.disabled = false;
-      onBtn.textContent = "TURN ON";
-    }
-  });
-
-  offBtn?.addEventListener("click", async ()=>{
-    try{
-      offBtn.disabled = true;
-      offBtn.textContent = "TURNING OFF...";
-      await setDoc(doc(db, "settings", "siteMaintenance"), {
-        enabled:false,
-        reason:"",
-        updatedAt:Date.now()
-      }, {merge:true});
-      statusEl.innerHTML = '<span style="color:#34d399;font-weight:800">● MAINTENANCE OFF</span>';
-      alert("Maintenance Mode OFF হয়েছে।");
-      closeModal();
-    }catch(e){
-      console.error(e);
-      alert("Maintenance OFF failed: " + e.message);
-    }finally{
-      offBtn.disabled = false;
-      offBtn.textContent = "TURN OFF";
-    }
-  });
-
-  // Initial status check only when modal is opened.
-  openBtn.addEventListener("click", getMaintenance);
-})();
-
+        window.confirmLogout = async function() {
+            try {
+                await signOut(auth);
+                window.location.replace('login.html');
+            } catch(error) {
+                console.error(error);
+                showToast("Logout করা যায়নি!", "error");
+            }
+        };
     </script>
 </body>
 </html>
