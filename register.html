@@ -748,7 +748,7 @@ function startOtpTimers() {
     }, Math.max(0, expiresAt - Date.now()));
 }
 
-async function checkEmailAvailability() {
+async function checkEmailAvailability(immediate = false) {
     const email = normalizeEmail(emailInput.value);
 
     clearTimeout(emailTimer);
@@ -759,7 +759,7 @@ async function checkEmailAvailability() {
     if (!email) {
         setEmailStatus("");
         resetOtpState();
-        return;
+        return false;
     }
 
     if (!isValidEmail(email)) {
@@ -768,7 +768,7 @@ async function checkEmailAvailability() {
             "used"
         );
         resetOtpState();
-        return;
+        return false;
     }
 
     setEmailStatus(
@@ -776,14 +776,15 @@ async function checkEmailAvailability() {
         "checking"
     );
 
-    emailTimer = setTimeout(async () => {
+    const runCheck = async () => {
         try {
             const q = query(
                 collection(db, "users"),
                 where("emailLower", "==", email)
             );
-
             const snap = await getDocs(q);
+
+            if (normalizeEmail(emailInput.value) !== email) return false;
 
             if (!snap.empty) {
                 emailAvailable = false;
@@ -792,7 +793,7 @@ async function checkEmailAvailability() {
                     "used"
                 );
                 resetOtpState();
-                return;
+                return false;
             }
 
             emailAvailable = true;
@@ -801,16 +802,25 @@ async function checkEmailAvailability() {
                 "available"
             );
             sendOtpBtn.disabled = false;
+            return true;
         } catch (error) {
             console.error("Email availability check error:", error);
             emailAvailable = false;
+            sendOtpBtn.disabled = true;
             setEmailStatus(
                 '<i class="fa-solid fa-triangle-exclamation mr-1"></i> Email check করা যায়নি',
                 "checking"
             );
             resetOtpState();
+            return false;
         }
-    }, 450);
+    };
+
+    if (immediate) return await runCheck();
+
+    return await new Promise(resolve => {
+        emailTimer = setTimeout(async () => resolve(await runCheck()), 450);
+    });
 }
 
 async function sendOtp(isResend = false) {
@@ -823,8 +833,12 @@ async function sendOtp(isResend = false) {
         return;
     }
 
-    if (!emailAvailable) {
-        showToast("এই Email available নয়।", "error");
+    // Send OTP click = one fresh Gmail availability check first.
+    showToast("Gmail availability check করা হচ্ছে...", "info");
+    const availableNow = await checkEmailAvailability(true);
+
+    if (!availableNow) {
+        showToast("এই Gmail available নয়। আগে availability check করুন।", "error");
         return;
     }
 
@@ -1057,7 +1071,15 @@ otpInput.addEventListener("input", () => {
     }
 });
 
-sendOtpBtn.addEventListener("click", () => sendOtp(false));
+sendOtpBtn.addEventListener("click", async () => {
+    if (sendOtpBtn.dataset.sending === "1") return;
+    sendOtpBtn.dataset.sending = "1";
+    try {
+        await sendOtp(false);
+    } finally {
+        sendOtpBtn.dataset.sending = "0";
+    }
+});
 resendOtpBtn.addEventListener("click", () => sendOtp(true));
 
 
