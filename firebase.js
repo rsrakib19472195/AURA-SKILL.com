@@ -1,122 +1,1886 @@
-// firebase.js
-// ============================================================
-// AURA ARMAN TOUR - FIREBASE + MEDIAN ONESIGNAL
-// ============================================================
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Create an Account</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        body {
+            background-color: #0b0f19;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .custom-input {
+            background-color: #131b2e;
+            border: 1px solid #1e293b;
+            transition: all .2s ease;
+        }
+
+        .custom-input:focus {
+            border-color: #3b82f6;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(59,130,246,.08);
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideOut {
+            from {
+                transform: translateX(0);
+                opacity: 1;
+            }
+
+            to {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+        }
+
+        .toast-slide-in {
+            animation: slideIn 0.25s ease-in-out forwards;
+        }
+
+        .toast-slide-out {
+            animation: slideOut 0.25s ease-in-out forwards;
+        }
+
+        .refer-status {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 6px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .refer-status.real {
+            color: #34d399;
+        }
+
+        .refer-status.fake {
+            color: #fb7185;
+        }
+
+        .refer-status.checking {
+            color: #94a3b8;
+        }
+
+        .logo-glow {
+            box-shadow:
+                0 0 20px rgba(59,130,246,.25),
+                0 0 50px rgba(59,130,246,.08);
+        }
+
+        .register-card {
+            box-shadow:
+                0 25px 60px rgba(0,0,0,.45),
+                0 0 35px rgba(59,130,246,.04);
+        }
+
+        .submit-loading {
+            pointer-events: none;
+            opacity: .75;
+        }
+
+        .email-status {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 6px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .email-status.available { color: #34d399; }
+        .email-status.used { color: #fb7185; }
+        .email-status.checking { color: #94a3b8; }
+        .email-status.verified { color: #34d399; }
+
+        .otp-row {
+            display: flex;
+            gap: 8px;
+        }
+
+        .otp-row.otp-hidden {
+            display: none;
+        }
+
+        .otp-row .otp-input-wrap {
+            flex: 1;
+            min-width: 0;
+            position: relative;
+        }
+
+        .otp-send-btn,
+        .otp-resend-btn {
+            flex: 0 0 auto;
+            min-width: 104px;
+            padding: 0 14px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 700;
+            transition: all .2s ease;
+        }
+
+        .otp-send-btn {
+            background: #2563eb;
+            color: #fff;
+        }
+
+        .otp-send-btn:hover:not(:disabled) {
+            background: #1d4ed8;
+        }
+
+        .otp-resend-btn {
+            background: #1e293b;
+            color: #cbd5e1;
+            border: 1px solid #334155;
+        }
+
+        .otp-send-btn:disabled,
+        .otp-resend-btn:disabled {
+            opacity: .5;
+            cursor: not-allowed;
+        }
+
+        .otp-message {
+            margin-top: 6px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .otp-message.success { color: #34d399; }
+        .otp-message.error { color: #fb7185; }
+        .otp-message.warning { color: #fbbf24; }
+        .otp-message.info { color: #94a3b8; }
+
+    </style>
+</head>
+
+<body class="flex items-center justify-center min-h-screen py-10 px-4 relative overflow-x-hidden">
+
+<!-- =========================================================
+     TOAST
+========================================================= -->
+
+<div id="toastContainer"
+     class="fixed top-5 right-5 z-50 flex flex-col space-y-3 pointer-events-none">
+</div>
+
+
+<!-- =========================================================
+     REGISTER CARD
+========================================================= -->
+
+<div class="w-full max-w-md bg-[#0f172a] p-8 rounded-3xl
+            border border-[#1e293b] register-card">
+
+    <!-- LOGO -->
+
+    <div class="flex flex-col items-center mb-6">
+
+        <div class="w-20 h-20 rounded-full flex items-center justify-center p-1
+                    logo-glow mb-3">
+
+            <img
+                src="https://videotourl.com/images/1789792991627-2a906ffa-fbc0-4f79-9d9b-8dddb80ca667.jpg"
+                alt="AURA ARMAN TOUR Logo"
+                class="w-full h-full object-cover rounded-full">
+
+        </div>
+
+        <h2 class="text-2xl font-bold text-white tracking-wide">
+            Create an account
+        </h2>
+
+        <p class="text-slate-400 text-sm mt-1">
+            Start your journey with us
+        </p>
+
+    </div>
+
+
+    <!-- =====================================================
+         FORM
+    ====================================================== -->
+
+    <form id="registerForm" class="space-y-4" novalidate>
+
+
+        <!-- FULL NAME -->
+
+        <div>
+
+            <label class="block text-xs font-semibold text-slate-300 uppercase mb-1">
+                Full Name
+            </label>
+
+            <div class="relative flex items-center">
+
+                <span class="absolute left-4 text-slate-400">
+                    <i class="fa-regular fa-user"></i>
+                </span>
+
+                <input
+                    type="text"
+                    id="fullName"
+                    placeholder="Enter your full name"
+                    autocomplete="name"
+                    maxlength="60"
+                    class="w-full pl-11 pr-4 py-3 rounded-xl text-sm text-white
+                           placeholder-slate-500 custom-input">
+
+            </div>
+
+        </div>
+
+
+        <!-- USERNAME -->
+
+        <div>
+
+            <label class="block text-xs font-semibold text-slate-300 uppercase mb-1">
+                Username (Unique)
+            </label>
+
+            <div class="relative flex items-center">
+
+                <span class="absolute left-4 text-slate-400">
+                    <i class="fa-solid fa-at"></i>
+                </span>
+
+                <input
+                    type="text"
+                    id="username"
+                    placeholder="Choose a unique username"
+                    autocomplete="username"
+                    autocapitalize="none"
+                    spellcheck="false"
+                    maxlength="30"
+                    class="w-full pl-11 pr-4 py-3 rounded-xl text-sm text-white
+                           placeholder-slate-500 custom-input">
+
+            </div>
+
+            <div id="usernameStatus"
+                 class="text-xs mt-1.5 hidden">
+            </div>
+
+        </div>
+
+
+        <!-- EMAIL -->
+
+        <div>
+
+            <label class="block text-xs font-semibold text-slate-300 uppercase mb-1">
+                Email Address
+            </label>
+
+            <div class="otp-row">
+
+                <div class="otp-input-wrap">
+                    <span class="absolute left-4 text-slate-400">
+                        <i class="fa-regular fa-envelope"></i>
+                    </span>
+
+                    <input
+                        type="email"
+                        id="email"
+                        placeholder="Enter your Gmail address"
+                        autocomplete="email"
+                        autocapitalize="none"
+                        spellcheck="false"
+                        class="w-full pl-11 pr-4 py-3 rounded-xl text-sm text-white
+                               placeholder-slate-500 custom-input">
+
+                </div>
+
+                <button
+                    type="button"
+                    id="sendOtpBtn"
+                    class="otp-send-btn"
+                    disabled>
+                    <i class="fa-solid fa-paper-plane mr-1"></i>
+                    Send OTP
+                </button>
+
+            </div>
+
+            <div id="emailStatus" class="email-status hidden"></div>
+
+            <div id="otpRow" class="otp-row mt-2 otp-hidden">
+
+                <div class="otp-input-wrap">
+                    <span class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400">
+                        <i class="fa-solid fa-shield-halved"></i>
+                    </span>
+
+                    <input
+                        type="text"
+                        id="otp"
+                        inputmode="numeric"
+                        autocomplete="one-time-code"
+                        maxlength="6"
+                        placeholder="Enter 6-digit OTP"
+                        class="w-full pl-11 pr-4 py-3 rounded-xl text-sm text-white
+                               placeholder-slate-500 custom-input"
+                        disabled>
+                </div>
+
+            </div>
+
+            <div class="flex items-center justify-between gap-3">
+                <div id="otpMessage" class="otp-message info"></div>
+
+                <button
+                    type="button"
+                    id="resendOtpBtn"
+                    class="otp-resend-btn hidden"
+                    disabled>
+                    Resend OTP
+                </button>
+            </div>
+
+        </div>
+
+
+        <!-- WHATSAPP -->
+
+        <div>
+
+            <label class="block text-xs font-semibold text-slate-300 uppercase mb-1">
+                WhatsApp Number (For Admin Contact)
+            </label>
+
+            <div class="relative flex items-center">
+
+                <span class="absolute left-4 text-slate-400 text-xs font-bold
+                             bg-[#1e293b] px-2 py-1 rounded">
+                    +88
+                </span>
+
+                <input
+                    type="tel"
+                    id="whatsapp"
+                    inputmode="numeric"
+                    maxlength="11"
+                    placeholder="Enter WhatsApp number"
+                    autocomplete="tel"
+                    class="w-full pl-16 pr-4 py-3 rounded-xl text-sm text-white
+                           placeholder-slate-500 custom-input">
+
+            </div>
+
+        </div>
+
+
+        <!-- PASSWORD -->
+
+        <div>
+
+            <label class="block text-xs font-semibold text-slate-300 uppercase mb-1">
+                Password
+            </label>
+
+            <div class="relative flex items-center">
+
+                <span class="absolute left-4 text-slate-400">
+                    <i class="fa-solid fa-lock"></i>
+                </span>
+
+                <input
+                    type="password"
+                    id="password"
+                    placeholder="Enter your password"
+                    autocomplete="new-password"
+                    minlength="6"
+                    class="w-full pl-11 pr-12 py-3 rounded-xl text-sm text-white
+                           placeholder-slate-500 custom-input">
+
+                <button
+                    type="button"
+                    onclick="togglePassword('password','eye1')"
+                    aria-label="Show password"
+                    class="absolute right-4 text-slate-400">
+
+                    <i id="eye1"
+                       class="fa-regular fa-eye-slash">
+                    </i>
+
+                </button>
+
+            </div>
+
+            <div id="passwordLengthStatus"
+                 class="text-xs mt-1.5 font-medium text-slate-400">
+                <i class="fa-solid fa-circle-info mr-1"></i>
+                Password কমপক্ষে 6 characters হতে হবে
+            </div>
+
+        </div>
+
+
+        <!-- CONFIRM PASSWORD -->
+
+        <div>
+
+            <label class="block text-xs font-semibold text-slate-300 uppercase mb-1">
+                Confirm Password
+            </label>
+
+            <div class="relative flex items-center">
+
+                <span class="absolute left-4 text-slate-400">
+                    <i class="fa-solid fa-lock"></i>
+                </span>
+
+                <input
+                    type="password"
+                    id="confirmPassword"
+                    placeholder="Confirm your password"
+                    autocomplete="new-password"
+                    minlength="6"
+                    class="w-full pl-11 pr-12 py-3 rounded-xl text-sm text-white
+                           placeholder-slate-500 custom-input">
+
+                <button
+                    type="button"
+                    onclick="togglePassword('confirmPassword','eye2')"
+                    aria-label="Show confirm password"
+                    class="absolute right-4 text-slate-400">
+
+                    <i id="eye2"
+                       class="fa-regular fa-eye-slash">
+                    </i>
+
+                </button>
+
+            </div>
+
+            <div id="passwordStatus"
+                 class="text-xs mt-1.5 hidden">
+            </div>
+
+        </div>
+
+
+        <!-- REFER CODE -->
+
+        <div>
+
+            <label class="block text-xs font-semibold text-slate-300 uppercase mb-1">
+                Refer Code (Optional)
+            </label>
+
+            <div class="relative flex items-center">
+
+                <span class="absolute left-4 text-slate-400">
+                    <i class="fa-solid fa-gift"></i>
+                </span>
+
+                <input
+                    type="text"
+                    id="referCode"
+                    placeholder="Enter refer code if any"
+                    autocomplete="off"
+                    autocapitalize="characters"
+                    spellcheck="false"
+                    maxlength="30"
+                    class="w-full pl-11 pr-4 py-3 rounded-xl text-sm text-white
+                           placeholder-slate-500 custom-input">
+
+            </div>
+
+            <div id="referCodeStatus"
+                 class="refer-status hidden">
+            </div>
+
+        </div>
+
+
+        <!-- TERMS -->
+
+        <div class="flex items-center space-x-2 pt-1">
+
+            <input
+                type="checkbox"
+                id="terms"
+                class="w-4 h-4 rounded bg-[#131b2e] border-slate-700
+                       text-blue-600 focus:ring-0 cursor-pointer">
+
+            <label
+                for="terms"
+                class="text-xs text-slate-400 cursor-pointer">
+
+                I agree to all Rules, Regulations and Policy
+
+            </label>
+
+        </div>
+
+
+        <!-- REGISTER BUTTON -->
+
+        <button
+            type="submit"
+            id="submitBtn"
+            class="w-full py-3.5 mt-2 bg-blue-600 hover:bg-blue-700
+                   text-white font-semibold rounded-xl transition
+                   shadow-lg shadow-blue-600/30">
+
+            <i class="fa-solid fa-user-plus mr-2"></i>
+            Register
+
+        </button>
+
+    </form>
+
+
+    <!-- LOGIN -->
+
+    <p class="text-center text-xs text-slate-400 mt-6">
+
+        Already have an account?
+
+        <a
+            href="login.html"
+            class="text-blue-400 font-semibold hover:underline">
+
+            Sign In
+
+        </a>
+
+    </p>
+
+</div>
+
+
+<!-- =========================================================
+     JAVASCRIPT
+========================================================= -->
+
+<script type="module">
 
 import {
-    initializeApp
-} from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    auth,
+    db,
+    DEFAULT_PROFILE_PHOTO
+} from "./firebase.js";
+
 
 import {
-    getAuth
+    createUserWithEmailAndPassword,
+    deleteUser
 } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
+
 import {
-    getFirestore,
+    collection,
+    query,
+    where,
+    getDocs,
     doc,
-    setDoc,
+    writeBatch,
+    runTransaction,
     serverTimestamp
 } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
 
 /* =========================================================
-   FIREBASE CONFIG
+   GLOBAL STATE
 ========================================================= */
 
-const firebaseConfig = {
+let usernameAvailable = false;
+let usernameTimer = null;
 
-    apiKey:
-        "AIzaSyA2wYMZAMx6p2GRC21KGgsHgiCoVz--81A",
+let referCodeTimer = null;
+let referCodeValid = true;
 
-    authDomain:
-        "aura-arman-tour.firebaseapp.com",
+/* =========================================================
+   EMAIL AVAILABILITY + OTP VERIFICATION
+   ========================================================= */
 
-    databaseURL:
-        "https://aura-arman-tour-default-rtdb.firebaseio.com",
+const OTP_API_URL =
+    "https://script.google.com/macros/s/AKfycbxcKFlQ7e3P2d5Dg_4gZHU5JXCDDBL71ZTlChGV7Fd5jwmDBslP_44Dg4S8QWeTZssjIw/exec";
 
-    projectId:
-        "aura-arman-tour",
+const OTP_EXPIRY_MS = 5 * 60 * 1000;
+const OTP_RESEND_MS = 30 * 1000;
 
-    storageBucket:
-        "aura-arman-tour.firebasestorage.app",
+let emailAvailable = false;
+let emailVerified = false;
+let emailTimer = null;
 
-    messagingSenderId:
-        "502326798792",
+let currentOtp = "";
+let otpExpiresAt = 0;
+let otpSentAt = 0;
+let otpUsed = false;
+let otpResendTimer = null;
+let otpExpiryTimer = null;
 
-    appId:
-        "1:502326798792:web:2afd27cb9cd44da48cb8fd"
+const emailInput = document.getElementById("email");
+const emailStatus = document.getElementById("emailStatus");
+const otpInput = document.getElementById("otp");
+const otpRow = document.getElementById("otpRow");
+const sendOtpBtn = document.getElementById("sendOtpBtn");
+const resendOtpBtn = document.getElementById("resendOtpBtn");
+const otpMessage = document.getElementById("otpMessage");
+
+function setEmailStatus(message, type = "checking") {
+    emailStatus.className = `email-status ${type}`;
+    emailStatus.innerHTML = message ? message : "";
+    emailStatus.classList.toggle("hidden", !message);
+}
+
+function setOtpMessage(message = "", type = "info") {
+    otpMessage.className = `otp-message ${type}`;
+    otpMessage.textContent = message;
+}
+
+function normalizeEmail(value) {
+    // Email must be entered manually; no auto-completion.
+    return String(value || "").trim().toLowerCase();
+}
+
+function normalizeGmail(value) {
+    // Keep the email exactly as the user types it (apart from
+    // trimming and lowercasing). Do NOT auto-add @gmail.com.
+    return String(value || "").trim().toLowerCase();
+}
+
+function isValidEmail(value) {
+    const email = normalizeGmail(value);
+    return /^[a-zA-Z0-9._%+-]+@gmail\.com$/i.test(email);
+}
+
+function generateOtp() {
+    const array = new Uint32Array(1);
+    crypto.getRandomValues(array);
+    return String(100000 + (array[0] % 900000));
+}
+
+function formatSeconds(ms) {
+    return Math.max(0, Math.ceil(ms / 1000));
+}
+
+function stopOtpTimers() {
+    clearInterval(otpResendTimer);
+    clearTimeout(otpExpiryTimer);
+    otpResendTimer = null;
+    otpExpiryTimer = null;
+}
+
+function resetOtpState(clearInput = true) {
+    stopOtpTimers();
+    currentOtp = "";
+    otpExpiresAt = 0;
+    otpSentAt = 0;
+    otpUsed = false;
+    emailVerified = false;
+
+    if (clearInput) otpInput.value = "";
+
+    otpInput.disabled = true;
+    otpRow.classList.add("otp-hidden");
+    sendOtpBtn.disabled = !emailAvailable || !isValidEmail(normalizeEmail(emailInput.value));
+    resendOtpBtn.classList.add("hidden");
+    resendOtpBtn.disabled = true;
+    setOtpMessage("");
+}
+
+function startOtpTimers() {
+    const resendEndsAt = otpSentAt + OTP_RESEND_MS;
+    const expiresAt = otpExpiresAt;
+
+    clearInterval(otpResendTimer);
+    clearTimeout(otpExpiryTimer);
+
+    resendOtpBtn.classList.remove("hidden");
+    resendOtpBtn.disabled = true;
+
+    const updateResend = () => {
+        const remaining = resendEndsAt - Date.now();
+
+        if (remaining <= 0) {
+            clearInterval(otpResendTimer);
+            resendOtpBtn.disabled = false;
+            resendOtpBtn.textContent = "Resend OTP";
+            return;
+        }
+
+        resendOtpBtn.disabled = true;
+        resendOtpBtn.textContent =
+            `Resend (${formatSeconds(remaining)}s)`;
+    };
+
+    updateResend();
+    otpResendTimer = setInterval(updateResend, 250);
+
+    otpExpiryTimer = setTimeout(() => {
+        if (!emailVerified && !otpUsed) {
+            currentOtp = "";
+            otpExpiresAt = 0;
+            otpInput.disabled = true;
+            resendOtpBtn.disabled = false;
+            resendOtpBtn.textContent = "Resend OTP";
+            setOtpMessage(
+                "OTP expired. আবার Resend OTP চাপুন।",
+                "warning"
+            );
+        }
+    }, Math.max(0, expiresAt - Date.now()));
+}
+
+async function checkEmailAvailability() {
+    const email = normalizeEmail(emailInput.value);
+
+    clearTimeout(emailTimer);
+    emailAvailable = false;
+    emailVerified = false;
+    sendOtpBtn.disabled = true;
+
+    if (!email) {
+        setEmailStatus("");
+        resetOtpState();
+        return;
+    }
+
+    if (!isValidEmail(email)) {
+        setEmailStatus(
+            '<i class="fa-solid fa-circle-exclamation mr-1"></i> Only @gmail.com is allowed',
+            "used"
+        );
+        resetOtpState();
+        return;
+    }
+
+    setEmailStatus(
+        '<i class="fa-solid fa-spinner fa-spin mr-1"></i> Checking email...',
+        "checking"
+    );
+
+    emailTimer = setTimeout(async () => {
+        try {
+            const q = query(
+                collection(db, "users"),
+                where("emailLower", "==", email)
+            );
+
+            const snap = await getDocs(q);
+
+            if (!snap.empty) {
+                emailAvailable = false;
+                setEmailStatus(
+                    '<i class="fa-solid fa-circle-xmark mr-1"></i> Email already registered',
+                    "used"
+                );
+                resetOtpState();
+                return;
+            }
+
+            emailAvailable = true;
+            setEmailStatus(
+                '<i class="fa-solid fa-circle-check mr-1"></i> Email available',
+                "available"
+            );
+            sendOtpBtn.disabled = false;
+        } catch (error) {
+            console.error("Email availability check error:", error);
+            emailAvailable = false;
+            setEmailStatus(
+                '<i class="fa-solid fa-triangle-exclamation mr-1"></i> Email check করা যায়নি',
+                "checking"
+            );
+            resetOtpState();
+        }
+    }, 450);
+}
+
+async function sendOtp(isResend = false) {
+    const email = normalizeGmail(emailInput.value);
+    emailInput.value = email;
+
+    if (!isValidEmail(email)) {
+        showToast("শুধু @gmail.com Email ব্যবহার করুন", "warning");
+        emailInput.focus();
+        return;
+    }
+
+    if (!emailAvailable) {
+        showToast("এই Email available নয়।", "error");
+        return;
+    }
+
+    if (isResend && otpSentAt && Date.now() - otpSentAt < OTP_RESEND_MS) {
+        return;
+    }
+
+    const oldEmail = email;
+    const otp = generateOtp();
+
+    currentOtp = "";
+    otpSentAt = 0;
+    otpExpiresAt = 0;
+    otpUsed = false;
+    emailVerified = false;
+
+    sendOtpBtn.disabled = true;
+    resendOtpBtn.disabled = true;
+    otpInput.disabled = true;
+    setOtpMessage("OTP পাঠানো হচ্ছে...", "info");
+
+    const subject = "Your AURA ARMAN TOUR Email Verification OTP";
+    const logoUrl = "https://files.catbox.moe/4jhy4h.jpg";
+
+    const htmlBody = `
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+</head>
+<body style="margin:0;background:#070b14;font-family:Arial,Helvetica,sans-serif;color:#e5e7eb;">
+  <div style="max-width:560px;margin:0 auto;padding:28px 16px;">
+    <div style="background:#0f172a;border:1px solid #1e293b;border-radius:24px;padding:30px;text-align:center;box-shadow:0 20px 50px rgba(0,0,0,.35);">
+      <img src="${logoUrl}" alt="AURA ARMAN TOUR" width="82" height="82"
+           style="width:82px;height:82px;border-radius:50%;object-fit:cover;border:3px solid #2563eb;display:block;margin:0 auto 18px;">
+      <div style="font-size:13px;letter-spacing:2px;color:#60a5fa;font-weight:700;">AURA ARMAN TOUR</div>
+      <h1 style="margin:10px 0 8px;color:#fff;font-size:26px;">Verify Your Email</h1>
+      <p style="margin:0 0 22px;color:#94a3b8;font-size:14px;line-height:1.6;">
+        Use the verification code below to complete your registration.
+      </p>
+      <div style="background:#111c31;border:1px solid #263a5a;border-radius:16px;padding:18px 12px;margin:0 auto 20px;">
+        <div style="font-size:12px;color:#94a3b8;margin-bottom:8px;">YOUR OTP</div>
+        <div style="font-size:36px;letter-spacing:9px;color:#60a5fa;font-weight:800;">${otp}</div>
+      </div>
+      <p style="margin:0;color:#94a3b8;font-size:13px;">
+        This OTP is valid for <strong style="color:#fff;">5 minutes</strong> and can be used only once.
+      </p>
+      <div style="height:1px;background:#1e293b;margin:24px 0;"></div>
+      <p style="margin:0;color:#64748b;font-size:11px;line-height:1.5;">
+        If you did not request this code, you can safely ignore this email.
+        Please do not reply to this message.
+      </p>
+    </div>
+  </div>
+</body>
+</html>`;
+
+    try {
+        // Use the same POST pattern as the working Mail Send API.
+        // text/plain avoids the browser's JSON preflight request.
+        const response = await fetch(OTP_API_URL, {
+            method: "POST",
+            headers: {
+                "Content-Type": "text/plain;charset=utf-8"
+            },
+            body: JSON.stringify({
+                to: [email],
+                subject: subject,
+                html: htmlBody,
+                senderName: "AURA ARMAN TOUR"
+            }),
+            redirect: "follow",
+            cache: "no-store"
+        });
+
+        const raw = await response.text();
+
+        let result;
+        try {
+            result = JSON.parse(raw);
+        } catch (parseError) {
+            console.error("OTP API non-JSON response:", raw);
+            throw new Error("Mail API response পাওয়া যায়নি");
+        }
+
+        if (!response.ok || !result?.success || Number(result.successCount || 0) < 1) {
+            const apiError = Array.isArray(result?.errors)
+                ? result.errors.join("; ")
+                : result?.errors || "OTP send failed";
+            throw new Error(apiError);
+        }
+
+        if (normalizeEmail(emailInput.value) !== oldEmail) {
+            resetOtpState();
+            return;
+        }
+
+        currentOtp = otp;
+        otpSentAt = Date.now();
+        otpExpiresAt = otpSentAt + OTP_EXPIRY_MS;
+
+        otpRow.classList.remove("otp-hidden");
+        otpInput.disabled = false;
+        otpInput.value = "";
+        otpInput.focus();
+        setOtpMessage(
+            "OTP sent. 5 minutesের মধ্যে OTP দিন।",
+            "success"
+        );
+        startOtpTimers();
+
+        showToast(
+            isResend ? "নতুন OTP পাঠানো হয়েছে।" : "OTP Email-এ পাঠানো হয়েছে।",
+            "success"
+        );
+    } catch (error) {
+        console.error("OTP send error:", error);
+        currentOtp = "";
+        otpSentAt = 0;
+        otpExpiresAt = 0;
+        otpInput.disabled = true;
+        otpRow.classList.add("otp-hidden");
+        sendOtpBtn.disabled = !emailAvailable || !isValidEmail(normalizeEmail(emailInput.value));
+        resendOtpBtn.classList.add("hidden");
+        setOtpMessage(
+            "OTP পাঠানো যায়নি। আবার চেষ্টা করুন।",
+            "error"
+        );
+        showToast("OTP পাঠানো যায়নি।", "error");
+    }
+}
+
+function verifyOtp() {
+    if (emailVerified) return true;
+
+    const entered = otpInput.value.trim();
+
+    if (!currentOtp || !otpExpiresAt) {
+        setOtpMessage(
+            "আগে Send OTP চাপুন।",
+            "warning"
+        );
+        return false;
+    }
+
+    if (Date.now() >= otpExpiresAt) {
+        currentOtp = "";
+        otpExpiresAt = 0;
+        otpInput.disabled = true;
+        resendOtpBtn.disabled = false;
+        resendOtpBtn.textContent = "Resend OTP";
+        setOtpMessage(
+            "OTP expired. আবার Resend OTP চাপুন।",
+            "warning"
+        );
+        return false;
+    }
+
+    if (!/^\d{6}$/.test(entered)) {
+        setOtpMessage(
+            "6 digit OTP দিন।",
+            "warning"
+        );
+        return false;
+    }
+
+    if (entered !== currentOtp) {
+        setOtpMessage(
+            "ভুল OTP। সঠিক OTP দিন।",
+            "error"
+        );
+        otpInput.select();
+        return false;
+    }
+
+    emailVerified = true;
+    otpUsed = true;
+    currentOtp = "";
+    otpExpiresAt = 0;
+    stopOtpTimers();
+
+    otpInput.disabled = true;
+    resendOtpBtn.classList.add("hidden");
+    setOtpMessage(
+        "Email verified successfully.",
+        "success"
+    );
+    setEmailStatus(
+        '<i class="fa-solid fa-circle-check mr-1"></i> Email verified',
+        "verified"
+    );
+
+    return true;
+}
+
+emailInput.addEventListener("input", () => {
+    // No auto-complete here. User must type the full Gmail address.
+    const current = normalizeEmail(emailInput.value);
+
+    if (current !== emailInput.dataset.otpEmail) {
+        emailInput.dataset.otpEmail = current;
+        resetOtpState();
+    }
+
+    checkEmailAvailability();
+});
+
+emailInput.addEventListener("blur", () => {
+    const email = normalizeEmail(emailInput.value);
+
+    if (email && !isValidEmail(email)) {
+        showToast("সঠিক Gmail address দিন (example@gmail.com)", "warning");
+        setEmailStatus(
+            '<i class="fa-solid fa-circle-exclamation mr-1"></i> Please enter a valid Gmail address',
+            "error"
+        );
+    }
+
+    checkEmailAvailability();
+});
+
+otpInput.addEventListener("input", () => {
+    otpInput.value = otpInput.value.replace(/\D/g, "").slice(0, 6);
+
+    if (emailVerified) return;
+
+    if (otpInput.value.length === 6) {
+        verifyOtp();
+    }
+});
+
+sendOtpBtn.addEventListener("click", () => sendOtp(false));
+resendOtpBtn.addEventListener("click", () => sendOtp(true));
+
+
+
+/* =========================================================
+   TOAST
+========================================================= */
+
+window.showToast = function(message, type = "success") {
+
+    const container =
+        document.getElementById("toastContainer");
+
+    const toast =
+        document.createElement("div");
+
+
+    let bg = "bg-emerald-600";
+    let icon = "fa-circle-check";
+
+
+    if (type === "error") {
+
+        bg = "bg-rose-600";
+        icon = "fa-circle-exclamation";
+
+    }
+
+
+    if (type === "warning") {
+
+        bg = "bg-amber-600";
+        icon = "fa-triangle-exclamation";
+
+    }
+
+
+    toast.className =
+        `pointer-events-auto flex items-center space-x-3
+         ${bg} text-white px-5 py-3 rounded-2xl shadow-xl
+         text-sm font-medium toast-slide-in min-w-[260px]
+         max-w-[calc(100vw-40px)]`;
+
+
+    toast.innerHTML = `
+        <i class="fa-solid ${icon}"></i>
+        <span>${escapeHtml(message)}</span>
+    `;
+
+
+    container.appendChild(toast);
+
+
+    setTimeout(() => {
+
+        toast.classList.remove("toast-slide-in");
+        toast.classList.add("toast-slide-out");
+
+
+        setTimeout(() => {
+
+            toast.remove();
+
+        }, 250);
+
+    }, 3000);
 
 };
 
 
 /* =========================================================
-   INITIALIZE FIREBASE
+   HTML ESCAPE
 ========================================================= */
 
-const app =
-    initializeApp(firebaseConfig);
+function escapeHtml(value) {
 
-
-export const auth =
-    getAuth(app);
-
-
-export const db =
-    getFirestore(app);
-
-
-/* =========================================================
-   GENERAL APP DATA
-========================================================= */
-
-export const DEFAULT_PROFILE_PHOTO =
-    "https://videotourl.com/images/1789800604014-b96e1edf-d789-4513-8557-9fb63a327a13.jpg";
-
-
-export const ADMIN_EMAIL =
-    "teamgamechangerofficial@gmail.com";
-
-
-/* =========================================================
-   ONESIGNAL
-========================================================= */
-
-export const ONESIGNAL_APP_ID =
-    "b4420740-b9f6-4de7-8792-f6302ad38e4d";
-
-
-/* =========================================================
-   CHECK MEDIAN APP
-========================================================= */
-
-export function isMedianApp() {
-
-    return (
-        typeof window !== "undefined" &&
-        typeof window.median !== "undefined"
-    );
+    return String(value)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
 
 }
 
 
 /* =========================================================
-   WAIT FOR MEDIAN BRIDGE
+   PASSWORD TOGGLE
 ========================================================= */
 
-export function waitForMedian(
-    timeout = 10000
-) {
+window.togglePassword = function(fieldId, iconId) {
 
-    return new Promise(
-        (resolve, reject) => {
+    const field =
+        document.getElementById(fieldId);
+
+    const icon =
+        document.getElementById(iconId);
+
+
+    if (field.type === "password") {
+
+        field.type = "text";
+
+        icon.className =
+            "fa-regular fa-eye";
+
+    } else {
+
+        field.type = "password";
+
+        icon.className =
+            "fa-regular fa-eye-slash";
+
+    }
+
+};
+
+
+/* =========================================================
+   USERNAME ELEMENTS
+========================================================= */
+
+const usernameInput =
+    document.getElementById("username");
+
+const usernameStatus =
+    document.getElementById("usernameStatus");
+
+
+/* =========================================================
+   USERNAME LIVE CHECK
+========================================================= */
+
+usernameInput.addEventListener("keydown", (event) => {
+    // Spaces are not allowed in usernames.
+    if (/\s/.test(event.key)) {
+        event.preventDefault();
+        showToast("Username-এ space দেওয়া যাবে না", "warning");
+    }
+});
+
+usernameInput.addEventListener("input", () => {
+
+    const hadSpace = /\s/.test(usernameInput.value);
+    if (hadSpace) {
+        usernameInput.value = usernameInput.value.replace(/\s+/g, "");
+        showToast("Username-এ space দেওয়া যাবে না", "warning");
+    }
+
+    clearTimeout(usernameTimer);
+
+    const username =
+        usernameInput.value
+            .trim()
+            .toLowerCase();
+
+
+    usernameAvailable = false;
+
+
+    if (!username) {
+
+        usernameStatus.classList.add("hidden");
+
+        return;
+
+    }
+
+
+    if (!/^[a-zA-Z0-9._-]{3,30}$/.test(username)) {
+
+        usernameStatus.classList.remove("hidden");
+
+        usernameStatus.className =
+            "text-xs mt-1.5 text-rose-400";
+
+        usernameStatus.innerHTML =
+            `<i class="fa-solid fa-circle-exclamation mr-1"></i>
+             Username 3-30 characters হতে হবে`;
+
+        return;
+
+    }
+
+
+    usernameStatus.classList.remove("hidden");
+
+    usernameStatus.className =
+        "text-xs mt-1.5 text-slate-400";
+
+    usernameStatus.innerHTML =
+        `<i class="fa-solid fa-spinner fa-spin mr-1"></i>
+         Checking...`;
+
+
+    usernameTimer = setTimeout(async () => {
+
+        try {
+
+            const q =
+                query(
+                    collection(db, "users"),
+                    where("usernameLower", "==", username)
+                );
+
+
+            const snap =
+                await getDocs(q);
+
+
+            if (!snap.empty) {
+
+                usernameAvailable = false;
+
+                usernameStatus.className =
+                    "text-xs mt-1.5 text-rose-500 font-medium";
+
+                usernameStatus.innerHTML =
+                    `<i class="fa-solid fa-circle-xmark mr-1"></i>
+                     Already taken!`;
+
+            } else {
+
+                usernameAvailable = true;
+
+                usernameStatus.className =
+                    "text-xs mt-1.5 text-emerald-400 font-medium";
+
+                usernameStatus.innerHTML =
+                    `<i class="fa-solid fa-circle-check mr-1"></i>
+                     Available!`;
+
+            }
+
+        } catch (error) {
+
+            console.error(
+                "Username check error:",
+                error
+            );
+
+            usernameAvailable = false;
+
+            usernameStatus.className =
+                "text-xs mt-1.5 text-amber-400";
+
+            usernameStatus.innerHTML =
+                `<i class="fa-solid fa-triangle-exclamation mr-1"></i>
+                 Username check করা যায়নি।`;
+
+        }
+
+    }, 400);
+
+});
+
+
+/* =========================================================
+   PASSWORD MATCH
+========================================================= */
+
+const passwordInput =
+    document.getElementById("password");
+
+const confirmPasswordInput =
+    document.getElementById("confirmPassword");
+
+const passwordStatus =
+    document.getElementById("passwordStatus");
+
+
+function checkPassword() {
+
+    const password =
+        passwordInput.value;
+
+    const confirm =
+        confirmPasswordInput.value;
+
+    const passwordLengthStatus =
+        document.getElementById("passwordLengthStatus");
+
+    /* Live minimum-6-character check */
+    if (password.length >= 6) {
+        passwordLengthStatus.className =
+            "text-xs mt-1.5 font-medium text-emerald-400";
+        passwordLengthStatus.innerHTML =
+            `<i class="fa-solid fa-circle-check mr-1"></i>
+             Password valid — ${password.length} characters`;
+    } else if (password.length > 0) {
+        const remaining = 6 - password.length;
+        passwordLengthStatus.className =
+            "text-xs mt-1.5 font-medium text-rose-400";
+        passwordLengthStatus.innerHTML =
+            `<i class="fa-solid fa-circle-xmark mr-1"></i>
+             আরও ${remaining} character দিন (minimum 6)`;
+    } else {
+        passwordLengthStatus.className =
+            "text-xs mt-1.5 font-medium text-slate-400";
+        passwordLengthStatus.innerHTML =
+            `<i class="fa-solid fa-circle-info mr-1"></i>
+             Password কমপক্ষে 6 characters হতে হবে`;
+    }
+
+
+    if (!confirm) {
+
+        passwordStatus.classList.add("hidden");
+
+        return;
+
+    }
+
+
+    passwordStatus.classList.remove("hidden");
+
+
+    if (password === confirm) {
+
+        passwordStatus.className =
+            "text-xs mt-1.5 text-emerald-400 font-medium";
+
+        passwordStatus.innerHTML =
+            `<i class="fa-solid fa-circle-check mr-1"></i>
+             Passwords match!`;
+
+    } else {
+
+        passwordStatus.className =
+            "text-xs mt-1.5 text-rose-500 font-medium";
+
+        passwordStatus.innerHTML =
+            `<i class="fa-solid fa-circle-xmark mr-1"></i>
+             Passwords do not match!`;
+
+    }
+
+}
+
+
+passwordInput.addEventListener(
+    "input",
+    checkPassword
+);
+
+confirmPasswordInput.addEventListener(
+    "input",
+    checkPassword
+);
+
+
+/* =========================================================
+   REFER CODE LIVE CHECK
+========================================================= */
+
+const referCodeInput =
+    document.getElementById("referCode");
+
+const referCodeStatus =
+    document.getElementById("referCodeStatus");
+
+
+referCodeInput.addEventListener("input", () => {
+
+    clearTimeout(referCodeTimer);
+
+
+    const code =
+        referCodeInput.value
+            .trim()
+            .toUpperCase();
+
+
+    referCodeValid =
+        !code;
+
+
+    if (!code) {
+
+        referCodeStatus.classList.add("hidden");
+
+        return;
+
+    }
+
+
+    referCodeStatus.classList.remove("hidden");
+
+    referCodeStatus.className =
+        "refer-status checking";
+
+    referCodeStatus.innerHTML =
+        `<i class="fa-solid fa-spinner fa-spin"></i>
+         <span>Checking refer code...</span>`;
+
+
+    referCodeTimer = setTimeout(async () => {
+
+        try {
+
+            const q =
+                query(
+                    collection(db, "users"),
+                    where("referCode", "==", code)
+                );
+
+
+            const snap =
+                await getDocs(q);
+
+
+            if (snap.empty) {
+
+                referCodeValid = false;
+
+                referCodeStatus.className =
+                    "refer-status fake";
+
+                referCodeStatus.innerHTML =
+                    `<i class="fa-solid fa-circle-xmark"></i>
+                     <span>Fake / Invalid refer code</span>`;
+
+            } else {
+
+                referCodeValid = true;
+
+                referCodeStatus.className =
+                    "refer-status real";
+
+                referCodeStatus.innerHTML =
+                    `<i class="fa-solid fa-circle-check"></i>
+                     <span>Real refer code</span>`;
+
+            }
+
+        } catch (error) {
+
+            console.error(
+                "Refer code check:",
+                error
+            );
+
+            referCodeValid = false;
+
+            referCodeStatus.className =
+                "refer-status checking";
+
+            referCodeStatus.innerHTML =
+                `<i class="fa-solid fa-triangle-exclamation"></i>
+                 <span>Refer code check করা যায়নি</span>`;
+
+        }
+
+    }, 350);
+
+});
+
+
+/* =========================================================
+   GENERATE UNIQUE REFER CODE
+========================================================= */
+
+function generateReferCode(username) {
+
+    const cleanUsername =
+        username
+            .toUpperCase()
+            .replace(/[^A-Z0-9]/g, "")
+            .slice(0, 8);
+
+
+    const random =
+        Math.random()
+            .toString(36)
+            .slice(2, 7)
+            .toUpperCase();
+
+
+    return `PT-${cleanUsername}-${random}`;
+
+}
+
+
+/* =========================================================
+   DISABLE / ENABLE BUTTON
+========================================================= */
+
+function setButtonLoading(loading) {
+
+    const button =
+        document.getElementById("submitBtn");
+
+
+    if (loading) {
+
+        button.disabled = true;
+
+        button.classList.add(
+            "submit-loading"
+        );
+
+        button.innerHTML =
+            `<i class="fa-solid fa-spinner fa-spin mr-2"></i>
+             Creating account...`;
+
+    } else {
+
+        button.disabled = false;
+
+        button.classList.remove(
+            "submit-loading"
+        );
+
+        button.innerHTML =
+            `<i class="fa-solid fa-user-plus mr-2"></i>
+             Register`;
+
+    }
+
+}
+
+
+/* =========================================================
+   GET REFERRER
+========================================================= */
+
+async function getReferrer(code, currentUid) {
+
+    if (!code) {
+
+        return {
+            uid: "",
+            code: ""
+        };
+
+    }
+
+
+    const q =
+        query(
+            collection(db, "users"),
+            where("referCode", "==", code)
+        );
+
+
+    const snap =
+        await getDocs(q);
+
+
+    if (snap.empty) {
+
+        throw new Error(
+            "এই refer code পাওয়া যায়নি।"
+        );
+
+    }
+
+
+    const refDoc =
+        snap.docs[0];
+
+
+    if (refDoc.id === currentUid) {
+
+        throw new Error(
+            "নিজের refer code ব্যবহার করা যাবে না।"
+        );
+
+    }
+
+
+    const data =
+        refDoc.data() || {};
+
+
+    return {
+
+        uid: refDoc.id,
+
+        code: String(
+            data.referCode || code
+        ).toUpperCase()
+
+    };
+
+}
+
+
+/* =========================================================
+   REGISTER FORM
+========================================================= */
+
+document
+    .getElementById("registerForm")
+    .addEventListener(
+        "submit",
+        async (event) => {
+
+            event.preventDefault();
+
 
             if (
-                typeof window !== "undefined" &&
-                window.median
+                document.getElementById(
+                    "submitBtn"
+                ).disabled
             ) {
 
-                resolve(
-                    window.median
+                return;
+
+            }
+
+
+            /* ---------------------------------------------
+               GET VALUES
+            --------------------------------------------- */
+
+            const fullName =
+                document.getElementById(
+                    "fullName"
+                ).value.trim();
+
+
+            const username =
+                document.getElementById(
+                    "username"
+                ).value.trim();
+
+
+            const usernameLower =
+                username.toLowerCase();
+
+
+            const emailInputValue =
+                document.getElementById(
+                    "email"
+                ).value;
+
+            const email =
+                normalizeGmail(emailInputValue);
+
+
+            const whatsappInput =
+                document.getElementById(
+                    "whatsapp"
+                ).value.trim();
+
+
+            const password =
+                document.getElementById(
+                    "password"
+                ).value;
+
+
+            const confirmPassword =
+                document.getElementById(
+                    "confirmPassword"
+                ).value;
+
+
+            const enteredReferCode =
+                document.getElementById(
+                    "referCode"
+                ).value.trim().toUpperCase();
+
+
+            const terms =
+                document.getElementById(
+                    "terms"
+                ).checked;
+
+
+            /* ---------------------------------------------
+               VALIDATION
+            --------------------------------------------- */
+
+            if (!fullName) {
+
+                showToast(
+                    "Full Name দিন",
+                    "warning"
+                );
+
+                document
+                    .getElementById("fullName")
+                    .focus();
+
+                return;
+
+            }
+
+
+            if (
+                !/^[a-zA-Z0-9._-]{3,30}$/
+                    .test(username)
+            ) {
+
+                showToast(
+                    "Valid username দিন",
+                    "warning"
+                );
+
+                usernameInput.focus();
+
+                return;
+
+            }
+
+
+            if (!email) {
+
+                showToast(
+                    "Gmail address দিন",
+                    "warning"
+                );
+
+                document
+                    .getElementById("email")
+                    .focus();
+
+                return;
+
+            }
+
+            if (!isValidEmail(email)) {
+
+                showToast(
+                    "সঠিক Gmail address দিন (example@gmail.com)",
+                    "warning"
+                );
+
+                document
+                    .getElementById("email")
+                    .focus();
+
+                return;
+
+            }
+
+
+            if (
+                !/^[a-zA-Z0-9._%+-]+@gmail\.com$/i
+                    .test(email)
+            ) {
+
+                showToast(
+                    "শুধু @gmail.com Email ব্যবহার করুন",
+                    "warning"
+                );
+
+                return;
+
+            }
+
+            if (!emailAvailable) {
+                showToast(
+                    "এই Email available নয়।",
+                    "error"
+                );
+                emailInput.focus();
+                return;
+            }
+
+            if (!emailVerified) {
+                showToast(
+                    "Register করার আগে Email OTP verify করুন।",
+                    "warning"
+                );
+                otpInput.focus();
+                return;
+            }
+
+
+            if (!/^(01)[0-9]{9}$/.test(
+                whatsappInput
+            )) {
+
+                showToast(
+                    "সঠিক 11 digit WhatsApp number দিন",
+                    "warning"
+                );
+
+                document
+                    .getElementById("whatsapp")
+                    .focus();
+
+                return;
+
+            }
+
+
+            if (password.length < 6) {
+
+                showToast(
+                    "Password কমপক্ষে 6 characters হতে হবে",
+                    "warning"
+                );
+
+                passwordInput.focus();
+
+                return;
+
+            }
+
+
+            if (password !== confirmPassword) {
+
+                showToast(
+                    "Password match করছে না",
+                    "error"
+                );
+
+                confirmPasswordInput.focus();
+
+                return;
+
+            }
+
+
+            if (!terms) {
+
+                showToast(
+                    "Rules & Policy accept করুন",
+                    "warning"
                 );
 
                 return;
@@ -124,707 +1888,625 @@ export function waitForMedian(
             }
 
 
-            const start =
-                Date.now();
+            if (
+                enteredReferCode &&
+                !referCodeValid
+            ) {
+
+                showToast(
+                    "সঠিক Real refer code দিন",
+                    "error"
+                );
+
+                referCodeInput.focus();
+
+                return;
+
+            }
 
 
-            const timer =
-                setInterval(() => {
+            setButtonLoading(true);
 
-                    if (
-                        typeof window !== "undefined" &&
-                        window.median
-                    ) {
 
-                        clearInterval(timer);
+            /* ---------------------------------------------
+               VARIABLES FOR ROLLBACK
+            --------------------------------------------- */
 
-                        resolve(
-                            window.median
+            let createdUser = null;
+
+            let usernameReserved = false;
+
+
+            try {
+
+                /* =========================================
+                   FINAL USERNAME CHECK
+                ========================================= */
+
+                const usernameQuery =
+                    query(
+                        collection(db, "users"),
+                        where(
+                            "usernameLower",
+                            "==",
+                            usernameLower
+                        )
+                    );
+
+
+                const usernameSnap =
+                    await getDocs(
+                        usernameQuery
+                    );
+
+
+                if (!usernameSnap.empty) {
+
+                    throw new Error(
+                        "এই username ইতিমধ্যে ব্যবহার করা হয়েছে।"
+                    );
+
+                }
+
+
+                /* =========================================
+                   FIREBASE AUTH ACCOUNT
+                ========================================= */
+
+                const credential =
+                    await createUserWithEmailAndPassword(
+                        auth,
+                        email,
+                        password
+                    );
+
+
+                createdUser =
+                    credential.user;
+
+
+                const uid =
+                    createdUser.uid;
+
+
+                /* =========================================
+                   FINAL REFER CODE CHECK
+                ========================================= */
+
+                let referredByUid = "";
+                let referredByCode = "";
+
+
+                if (enteredReferCode) {
+
+                    const referrer =
+                        await getReferrer(
+                            enteredReferCode,
+                            uid
                         );
 
-                        return;
+
+                    referredByUid =
+                        referrer.uid;
+
+                    referredByCode =
+                        referrer.code;
+
+                }
+
+
+                /* =========================================
+                   CREATE UNIQUE REFER CODE
+                ========================================= */
+
+                const ownReferCode =
+                    generateReferCode(
+                        username
+                    );
+
+
+                /* =========================================
+                   RESERVE USERNAME
+                   TRANSACTION PREVENTS RACE CONDITION
+                ========================================= */
+
+                const usernameRef =
+                    doc(
+                        db,
+                        "usernames",
+                        usernameLower
+                    );
+
+
+                await runTransaction(
+                    db,
+                    async (transaction) => {
+
+                        const usernameDoc =
+                            await transaction.get(
+                                usernameRef
+                            );
+
+
+                        if (usernameDoc.exists()) {
+
+                            throw new Error(
+                                "এই username ইতিমধ্যে ব্যবহার করা হয়েছে।"
+                            );
+
+                        }
+
+
+                        transaction.set(
+                            usernameRef,
+                            {
+                                uid: uid,
+                                username: username,
+                                email: email,
+                                createdAt:
+                                    serverTimestamp()
+                            }
+                        );
+
+                    }
+                );
+
+
+                usernameReserved = true;
+
+
+                /* =========================================
+                   USER DATA
+                ========================================= */
+
+                const userData = {
+
+                    uid: uid,
+
+                    name: fullName,
+                    fullName: fullName,
+
+                    username: username,
+                    usernameLower: usernameLower,
+
+                    email: email,
+                    emailLower: email,
+
+                    whatsapp:
+                        "+88" + whatsappInput,
+
+                    whatsappNumber:
+                        "+88" + whatsappInput,
+
+                    phone:
+                        "+88" + whatsappInput,
+
+                    referCode:
+                        ownReferCode,
+
+                    referredByUid:
+                        referredByUid,
+
+                    referredByCode:
+                        referredByCode,
+
+                    referralCount: 0,
+                    successfulReferrals: 0,
+
+                    referralBonusTotal: 0,
+
+                    referralRewardPaid: false,
+
+                    referralRewardAmount: 0,
+
+                    photoURL:
+                        DEFAULT_PROFILE_PHOTO,
+
+                    balance: 0,
+                    winnings: 0,
+
+                    matchesPlayed: 0,
+                    matchesWon: 0,
+                    matchesLost: 0,
+
+                    totalEarnings: 0,
+
+                    status: "active",
+
+                    createdAt:
+                        serverTimestamp(),
+
+                    updatedAt:
+                        serverTimestamp()
+
+                };
+
+
+                /* =========================================
+                   SAVE USER PROFILE
+                   ========================================= */
+
+                const userRef =
+                    doc(
+                        db,
+                        "users",
+                        uid
+                    );
+
+
+                const profileBatch =
+                    writeBatch(db);
+
+
+                profileBatch.set(
+                    userRef,
+                    userData
+                );
+
+
+                await profileBatch.commit();
+
+
+                /* =========================================
+                   OPTIONAL REFERRER UPDATE
+                ========================================= */
+
+                if (referredByUid) {
+
+                    try {
+
+                        const referrerRef =
+                            doc(
+                                db,
+                                "users",
+                                referredByUid
+                            );
+
+
+                        await runTransaction(
+                            db,
+                            async (
+                                transaction
+                            ) => {
+
+                                const refSnap =
+                                    await transaction.get(
+                                        referrerRef
+                                    );
+
+
+                                if (!refSnap.exists()) {
+                                    return;
+                                }
+
+
+                                const refData =
+                                    refSnap.data() || {};
+
+
+                                const currentCount =
+                                    Number(
+                                        refData.referralCount || 0
+                                    );
+
+
+                                transaction.update(
+                                    referrerRef,
+                                    {
+                                        referralCount:
+                                            currentCount + 1,
+
+                                        updatedAt:
+                                            serverTimestamp()
+                                    }
+                                );
+
+                            }
+                        );
+
+                    } catch (
+                        referralUpdateError
+                    ) {
+
+                        /*
+                         * Referral count update failure
+                         * should NOT cancel registration.
+                         */
+
+                        console.warn(
+                            "Referral count update failed:",
+                            referralUpdateError
+                        );
 
                     }
 
+                }
 
-                    if (
-                        Date.now() - start >=
-                        timeout
+
+                /* =========================================
+                   SUCCESS
+                ========================================= */
+
+                showToast(
+                    "রেজিস্ট্রেশন সফল হয়েছে! 🎉",
+                    "success"
+                );
+
+
+                setTimeout(() => {
+
+                    window.location.replace(
+                        "index.html"
+                    );
+
+                }, 1000);
+
+
+            } catch (error) {
+
+                console.error(
+                    "Registration Error:",
+                    error
+                );
+
+
+                /* =========================================
+                   ROLLBACK USERNAME
+                ========================================= */
+
+                if (
+                    usernameReserved &&
+                    createdUser
+                ) {
+
+                    try {
+
+                        const usernameRef =
+                            doc(
+                                db,
+                                "usernames",
+                                usernameLower
+                            );
+
+
+                        await runTransaction(
+                            db,
+                            async (
+                                transaction
+                            ) => {
+
+                                const snap =
+                                    await transaction.get(
+                                        usernameRef
+                                    );
+
+
+                                if (
+                                    snap.exists() &&
+                                    snap.data().uid ===
+                                    createdUser.uid
+                                ) {
+
+                                    transaction.delete(
+                                        usernameRef
+                                    );
+
+                                }
+
+                            }
+                        );
+
+                    } catch (
+                        rollbackError
                     ) {
 
-                        clearInterval(timer);
-
-                        reject(
-                            new Error(
-                                "MEDIAN_BRIDGE_TIMEOUT"
-                            )
+                        console.warn(
+                            "Username rollback failed:",
+                            rollbackError
                         );
 
                     }
 
-                }, 100);
+                }
+
+
+                /* =========================================
+                   DELETE AUTH ACCOUNT IF POSSIBLE
+                ========================================= */
+
+                if (createdUser) {
+
+                    try {
+
+                        await deleteUser(
+                            createdUser
+                        );
+
+                    } catch (
+                        deleteError
+                    ) {
+
+                        console.warn(
+                            "Auth rollback failed:",
+                            deleteError
+                        );
+
+                    }
+
+                }
+
+
+                /* =========================================
+                   FRIENDLY ERROR MESSAGE
+                ========================================= */
+
+                let message =
+                    "Registration করতে সমস্যা হয়েছে।";
+
+
+                if (
+                    error.code ===
+                    "auth/email-already-in-use"
+                ) {
+
+                    message =
+                        "এই Email দিয়ে account already আছে!";
+
+                }
+
+                else if (
+                    error.code ===
+                    "auth/invalid-email"
+                ) {
+
+                    message =
+                        "সঠিক Email address দিন!";
+
+                }
+
+                else if (
+                    error.code ===
+                    "auth/weak-password"
+                ) {
+
+                    message =
+                        "Password আরও শক্ত করুন!";
+
+                }
+
+                else if (
+                    error.code ===
+                    "auth/network-request-failed"
+                ) {
+
+                    message =
+                        "Internet connection check করুন এবং আবার চেষ্টা করুন।";
+
+                }
+
+                else if (
+                    error.code ===
+                    "permission-denied" ||
+                    error.code ===
+                    "PERMISSION_DENIED"
+                ) {
+
+                    message =
+                        "Firebase permission সমস্যা। Firestore Rules check করুন।";
+
+                }
+
+                else if (error.message) {
+
+                    message =
+                        error.message;
+
+                }
+
+
+                showToast(
+                    message,
+                    "error"
+                );
+
+
+                setButtonLoading(false);
+
+            }
 
         }
     );
 
-}
-
 
 /* =========================================================
-   GET ONESIGNAL INFO
+   WHATSAPP ONLY NUMBER
 ========================================================= */
 
-export async function getOneSignalInfo() {
+document
+    .getElementById("whatsapp")
+    .addEventListener(
+        "input",
+        function () {
 
-    const median =
-        await waitForMedian();
+            this.value =
+                this.value
+                    .replace(/\D/g, "")
+                    .slice(0, 11);
 
-
-    if (
-        !median.onesignal
-    ) {
-
-        throw new Error(
-            "ONESIGNAL_BRIDGE_UNAVAILABLE"
-        );
-
-    }
-
-
-    /*
-     * Current Median SDK
-     */
-
-    if (
-        typeof median.onesignal.info ===
-        "function"
-    ) {
-
-        return await median.onesignal.info();
-
-    }
-
-
-    /*
-     * Compatibility fallback
-     */
-
-    if (
-        typeof median.onesignal.onesignalInfo ===
-        "function"
-    ) {
-
-        return await median.onesignal.onesignalInfo();
-
-    }
-
-
-    throw new Error(
-        "ONESIGNAL_INFO_UNAVAILABLE"
+        }
     );
 
-}
+
+/* =========================================================
+   USERNAME NORMALIZE
+========================================================= */
+
+usernameInput.addEventListener(
+    "blur",
+    function () {
+
+        this.value =
+            this.value
+                .trim()
+                .toLowerCase();
+
+    }
+);
 
 
 /* =========================================================
-   REGISTER / REQUEST PUSH
+   REFER CODE NORMALIZE
 ========================================================= */
 
-export async function registerOneSignal() {
+referCodeInput.addEventListener(
+    "blur",
+    function () {
 
-    const median =
-        await waitForMedian();
-
-
-    if (
-        !median.onesignal
-    ) {
-
-        throw new Error(
-            "ONESIGNAL_BRIDGE_UNAVAILABLE"
-        );
+        this.value =
+            this.value
+                .trim()
+                .toUpperCase();
 
     }
-
-
-    if (
-        typeof median.onesignal.register !==
-        "function"
-    ) {
-
-        /*
-         * Auto-register mode normally handles
-         * the native permission prompt.
-         */
-
-        try {
-
-            return await getOneSignalInfo();
-
-        } catch (error) {
-
-            throw new Error(
-                "ONESIGNAL_REGISTER_UNAVAILABLE"
-            );
-
-        }
-
-    }
-
-
-    return await median.onesignal.register();
-
-}
+);
 
 
 /* =========================================================
-   LINK FIREBASE USER TO ONESIGNAL
+   ENTER KEY
 ========================================================= */
 
-export async function linkOneSignalUser(
-    userOrUid
-) {
+document
+    .getElementById("registerForm")
+    .addEventListener(
+        "keydown",
+        function (event) {
 
-    const uid =
-        typeof userOrUid === "string"
-            ? userOrUid
-            : userOrUid?.uid;
+            if (
+                event.key === "Enter" &&
+                event.target.tagName !== "TEXTAREA"
+            ) {
 
+                /*
+                 * Normal browser form submit handles this.
+                 * This listener intentionally does not
+                 * prevent default.
+                 */
 
-    if (!uid) {
-
-        throw new Error(
-            "FIREBASE_UID_REQUIRED"
-        );
-
-    }
-
-
-    /*
-     * Browser হলে OneSignal native bridge নেই।
-     */
-
-    if (!isMedianApp()) {
-
-        return {
-
-            success: false,
-
-            inMedian: false,
-
-            reason:
-                "NOT_RUNNING_IN_MEDIAN_APP"
-
-        };
-
-    }
-
-
-    const median =
-        await waitForMedian();
-
-
-    if (
-        !median.onesignal ||
-        typeof median.onesignal.login !==
-        "function"
-    ) {
-
-        throw new Error(
-            "ONESIGNAL_LOGIN_UNAVAILABLE"
-        );
-
-    }
-
-
-    /* =====================================================
-       LINK FIREBASE UID -> ONESIGNAL EXTERNAL ID
-    ===================================================== */
-
-    const loginResult =
-        await median.onesignal.login(
-            uid
-        );
-
-
-    /*
-     * Read OneSignal information
-     */
-
-    let info = null;
-
-
-    try {
-
-        info =
-            await getOneSignalInfo();
-
-    } catch (error) {
-
-        console.warn(
-            "OneSignal info unavailable:",
-            error
-        );
-
-    }
-
-
-    /* =====================================================
-       SAVE ONESIGNAL DATA TO FIRESTORE
-    ===================================================== */
-
-    if (info) {
-
-        try {
-
-            await setDoc(
-
-                doc(
-                    db,
-                    "users",
-                    uid
-                ),
-
-                {
-
-                    oneSignal: {
-
-                        appId:
-                            ONESIGNAL_APP_ID,
-
-                        oneSignalId:
-                            info.oneSignalId ||
-                            null,
-
-                        externalId:
-                            info.externalId ||
-                            uid,
-
-                        subscriptionId:
-                            info.subscription?.id ||
-                            null,
-
-                        optedIn:
-                            info.subscription?.optedIn === true,
-
-                        requiresUserPrivacyConsent:
-                            info.requiresUserPrivacyConsent === true,
-
-                        updatedAt:
-                            serverTimestamp()
-
-                    }
-
-                },
-
-                {
-                    merge: true
-                }
-
-            );
-
-        } catch (firestoreError) {
-
-            /*
-             * Notification sync failure should NOT
-             * cancel successful registration.
-             */
-
-            console.warn(
-                "Could not save OneSignal info:",
-                firestoreError
-            );
+            }
 
         }
-
-    } else {
-
-        /*
-         * At minimum save External ID.
-         */
-
-        try {
-
-            await setDoc(
-
-                doc(
-                    db,
-                    "users",
-                    uid
-                ),
-
-                {
-
-                    oneSignal: {
-
-                        appId:
-                            ONESIGNAL_APP_ID,
-
-                        externalId:
-                            uid,
-
-                        updatedAt:
-                            serverTimestamp()
-
-                    }
-
-                },
-
-                {
-                    merge: true
-                }
-
-            );
-
-        } catch (error) {
-
-            console.warn(
-                "Could not save OneSignal external ID:",
-                error
-            );
-
-        }
-
-    }
-
-
-    return {
-
-        success:
-            loginResult?.success !== false,
-
-        uid:
-            uid,
-
-        loginResult:
-            loginResult,
-
-        info:
-            info
-
-    };
-
-}
+    );
 
 
 /* =========================================================
-   SYNC ONESIGNAL AFTER REGISTRATION
+   PAGE READY
 ========================================================= */
 
-export async function syncRegisteredUserToOneSignal(
-    firebaseUser
-) {
+console.log(
+    "AURA ARMAN TOUR registration system ready."
+);
 
-    if (
-        !firebaseUser?.uid
-    ) {
+</script>
 
-        throw new Error(
-            "FIREBASE_USER_REQUIRED"
-        );
-
-    }
-
-
-    if (!isMedianApp()) {
-
-        return {
-
-            success: false,
-
-            inMedian: false,
-
-            subscribed: false
-
-        };
-
-    }
-
-
-    /*
-     * First link Firebase UID with OneSignal
-     */
-
-    const linked =
-        await linkOneSignalUser(
-            firebaseUser
-        );
-
-
-    /*
-     * Get latest subscription state
-     */
-
-    let info =
-        linked.info;
-
-
-    try {
-
-        info =
-            await getOneSignalInfo();
-
-    } catch (error) {
-
-        console.warn(
-            "Could not refresh OneSignal info:",
-            error
-        );
-
-    }
-
-
-    /*
-     * If permission is not active yet,
-     * try native register as a fallback.
-     *
-     * Auto-register ON থাকলেও এটা safe fallback।
-     */
-
-    if (
-        info &&
-        info.subscription &&
-        info.subscription.optedIn !== true
-    ) {
-
-        try {
-
-            await registerOneSignal();
-
-        } catch (error) {
-
-            console.warn(
-                "OneSignal register fallback:",
-                error
-            );
-
-        }
-
-
-        /*
-         * Give native SDK a moment to update.
-         */
-
-        await new Promise(
-            resolve =>
-                setTimeout(
-                    resolve,
-                    700
-                )
-        );
-
-
-        try {
-
-            info =
-                await getOneSignalInfo();
-
-        } catch (error) {
-
-            console.warn(
-                "Final OneSignal info failed:",
-                error
-            );
-
-        }
-
-    }
-
-
-    /*
-     * Save final status
-     */
-
-    if (info) {
-
-        try {
-
-            await setDoc(
-
-                doc(
-                    db,
-                    "users",
-                    firebaseUser.uid
-                ),
-
-                {
-
-                    oneSignal: {
-
-                        appId:
-                            ONESIGNAL_APP_ID,
-
-                        oneSignalId:
-                            info.oneSignalId ||
-                            null,
-
-                        externalId:
-                            info.externalId ||
-                            firebaseUser.uid,
-
-                        subscriptionId:
-                            info.subscription?.id ||
-                            null,
-
-                        optedIn:
-                            info.subscription?.optedIn === true,
-
-                        requiresUserPrivacyConsent:
-                            info.requiresUserPrivacyConsent === true,
-
-                        updatedAt:
-                            serverTimestamp()
-
-                    }
-
-                },
-
-                {
-                    merge: true
-                }
-
-            );
-
-        } catch (error) {
-
-            console.warn(
-                "Final OneSignal Firestore sync failed:",
-                error
-            );
-
-        }
-
-    }
-
-
-    return {
-
-        success: true,
-
-        uid:
-            firebaseUser.uid,
-
-        subscribed:
-            info?.subscription?.optedIn === true,
-
-        oneSignalId:
-            info?.oneSignalId ||
-            null,
-
-        externalId:
-            info?.externalId ||
-            firebaseUser.uid,
-
-        subscriptionId:
-            info?.subscription?.id ||
-            null
-
-    };
-
-}
-
-
-/* =========================================================
-   LOGOUT
-========================================================= */
-
-export async function logoutOneSignalUser() {
-
-    try {
-
-        const median =
-            await waitForMedian(5000);
-
-
-        if (
-            median.onesignal &&
-            typeof median.onesignal.logout ===
-            "function"
-        ) {
-
-            return await median.onesignal.logout();
-
-        }
-
-    } catch (error) {
-
-        console.warn(
-            "OneSignal logout:",
-            error
-        );
-
-    }
-
-
-    return null;
-
-}
-
-
-/* =========================================================
-   DEBUG INFO
-========================================================= */
-
-export async function getOneSignalDebugInfo() {
-
-    if (!isMedianApp()) {
-
-        return {
-
-            inMedian:
-                false,
-
-            subscribed:
-                false
-
-        };
-
-    }
-
-
-    try {
-
-        const info =
-            await getOneSignalInfo();
-
-
-        return {
-
-            inMedian:
-                true,
-
-            oneSignalId:
-                info?.oneSignalId ||
-                null,
-
-            externalId:
-                info?.externalId ||
-                null,
-
-            subscriptionId:
-                info?.subscription?.id ||
-                null,
-
-            subscribed:
-                info?.subscription?.optedIn === true
-
-        };
-
-    } catch (error) {
-
-        return {
-
-            inMedian:
-                true,
-
-            subscribed:
-                false,
-
-            error:
-                error.message
-
-        };
-
-    }
-
-}
+</body>
+</html>
