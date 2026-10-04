@@ -98,6 +98,79 @@
             pointer-events: none;
             opacity: .75;
         }
+
+        .email-status {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 6px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .email-status.available { color: #34d399; }
+        .email-status.used { color: #fb7185; }
+        .email-status.checking { color: #94a3b8; }
+        .email-status.verified { color: #34d399; }
+
+        .otp-row {
+            display: flex;
+            gap: 8px;
+        }
+
+        .otp-row.otp-hidden {
+            display: none;
+        }
+
+        .otp-row .otp-input-wrap {
+            flex: 1;
+            min-width: 0;
+            position: relative;
+        }
+
+        .otp-send-btn,
+        .otp-resend-btn {
+            flex: 0 0 auto;
+            min-width: 104px;
+            padding: 0 14px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 700;
+            transition: all .2s ease;
+        }
+
+        .otp-send-btn {
+            background: #2563eb;
+            color: #fff;
+        }
+
+        .otp-send-btn:hover:not(:disabled) {
+            background: #1d4ed8;
+        }
+
+        .otp-resend-btn {
+            background: #1e293b;
+            color: #cbd5e1;
+            border: 1px solid #334155;
+        }
+
+        .otp-send-btn:disabled,
+        .otp-resend-btn:disabled {
+            opacity: .5;
+            cursor: not-allowed;
+        }
+
+        .otp-message {
+            margin-top: 6px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .otp-message.success { color: #34d399; }
+        .otp-message.error { color: #fb7185; }
+        .otp-message.warning { color: #fbbf24; }
+        .otp-message.info { color: #94a3b8; }
+
     </style>
 </head>
 
@@ -221,22 +294,69 @@
                 Email Address
             </label>
 
-            <div class="relative flex items-center">
+            <div class="otp-row">
 
-                <span class="absolute left-4 text-slate-400">
-                    <i class="fa-regular fa-envelope"></i>
-                </span>
+                <div class="otp-input-wrap">
+                    <span class="absolute left-4 text-slate-400">
+                        <i class="fa-regular fa-envelope"></i>
+                    </span>
 
-                <input
-                    type="email"
-                    id="email"
-                    placeholder="Enter your email address"
-                    autocomplete="email"
-                    autocapitalize="none"
-                    spellcheck="false"
-                    class="w-full pl-11 pr-4 py-3 rounded-xl text-sm text-white
-                           placeholder-slate-500 custom-input">
+                    <input
+                        type="email"
+                        id="email"
+                        placeholder="Enter your Gmail address"
+                        autocomplete="email"
+                        autocapitalize="none"
+                        spellcheck="false"
+                        class="w-full pl-11 pr-4 py-3 rounded-xl text-sm text-white
+                               placeholder-slate-500 custom-input">
 
+                </div>
+
+                <button
+                    type="button"
+                    id="sendOtpBtn"
+                    class="otp-send-btn"
+                    disabled>
+                    <i class="fa-solid fa-paper-plane mr-1"></i>
+                    Send OTP
+                </button>
+
+            </div>
+
+            <div id="emailStatus" class="email-status hidden"></div>
+
+            <div id="otpRow" class="otp-row mt-2 otp-hidden">
+
+                <div class="otp-input-wrap">
+                    <span class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400">
+                        <i class="fa-solid fa-shield-halved"></i>
+                    </span>
+
+                    <input
+                        type="text"
+                        id="otp"
+                        inputmode="numeric"
+                        autocomplete="one-time-code"
+                        maxlength="6"
+                        placeholder="Enter 6-digit OTP"
+                        class="w-full pl-11 pr-4 py-3 rounded-xl text-sm text-white
+                               placeholder-slate-500 custom-input"
+                        disabled>
+                </div>
+
+            </div>
+
+            <div class="flex items-center justify-between gap-3">
+                <div id="otpMessage" class="otp-message info"></div>
+
+                <button
+                    type="button"
+                    id="resendOtpBtn"
+                    class="otp-resend-btn hidden"
+                    disabled>
+                    Resend OTP
+                </button>
             </div>
 
         </div>
@@ -307,6 +427,12 @@
 
                 </button>
 
+            </div>
+
+            <div id="passwordLengthStatus"
+                 class="text-xs mt-1.5 font-medium text-slate-400">
+                <i class="fa-solid fa-circle-info mr-1"></i>
+                Password কমপক্ষে 6 characters হতে হবে
             </div>
 
         </div>
@@ -488,6 +614,453 @@ let usernameTimer = null;
 let referCodeTimer = null;
 let referCodeValid = true;
 
+/* =========================================================
+   EMAIL AVAILABILITY + OTP VERIFICATION
+   ========================================================= */
+
+const OTP_API_URL =
+    "https://script.google.com/macros/s/AKfycbxcKFlQ7e3P2d5Dg_4gZHU5JXCDDBL71ZTlChGV7Fd5jwmDBslP_44Dg4S8QWeTZssjIw/exec";
+
+const OTP_EXPIRY_MS = 5 * 60 * 1000;
+const OTP_RESEND_MS = 30 * 1000;
+
+let emailAvailable = false;
+let emailVerified = false;
+let emailTimer = null;
+
+let currentOtp = "";
+let otpExpiresAt = 0;
+let otpSentAt = 0;
+let otpUsed = false;
+let otpResendTimer = null;
+let otpExpiryTimer = null;
+
+const emailInput = document.getElementById("email");
+const emailStatus = document.getElementById("emailStatus");
+const otpInput = document.getElementById("otp");
+const otpRow = document.getElementById("otpRow");
+const sendOtpBtn = document.getElementById("sendOtpBtn");
+const resendOtpBtn = document.getElementById("resendOtpBtn");
+const otpMessage = document.getElementById("otpMessage");
+
+function setEmailStatus(message, type = "checking") {
+    emailStatus.className = `email-status ${type}`;
+    emailStatus.innerHTML = message ? message : "";
+    emailStatus.classList.toggle("hidden", !message);
+}
+
+function setOtpMessage(message = "", type = "info") {
+    otpMessage.className = `otp-message ${type}`;
+    otpMessage.textContent = message;
+}
+
+function normalizeEmail(value) {
+    // Email must be entered manually; no auto-completion.
+    return String(value || "").trim().toLowerCase();
+}
+
+function normalizeGmail(value) {
+    // Keep the email exactly as the user types it (apart from
+    // trimming and lowercasing). Do NOT auto-add @gmail.com.
+    return String(value || "").trim().toLowerCase();
+}
+
+function isValidEmail(value) {
+    const email = normalizeGmail(value);
+    return /^[a-zA-Z0-9._%+-]+@gmail\.com$/i.test(email);
+}
+
+function generateOtp() {
+    const array = new Uint32Array(1);
+    crypto.getRandomValues(array);
+    return String(100000 + (array[0] % 900000));
+}
+
+function formatSeconds(ms) {
+    return Math.max(0, Math.ceil(ms / 1000));
+}
+
+function stopOtpTimers() {
+    clearInterval(otpResendTimer);
+    clearTimeout(otpExpiryTimer);
+    otpResendTimer = null;
+    otpExpiryTimer = null;
+}
+
+function resetOtpState(clearInput = true) {
+    stopOtpTimers();
+    currentOtp = "";
+    otpExpiresAt = 0;
+    otpSentAt = 0;
+    otpUsed = false;
+    emailVerified = false;
+
+    if (clearInput) otpInput.value = "";
+
+    otpInput.disabled = true;
+    otpRow.classList.add("otp-hidden");
+    sendOtpBtn.disabled = !emailAvailable || !isValidEmail(normalizeEmail(emailInput.value));
+    resendOtpBtn.classList.add("hidden");
+    resendOtpBtn.disabled = true;
+    setOtpMessage("");
+}
+
+function startOtpTimers() {
+    const resendEndsAt = otpSentAt + OTP_RESEND_MS;
+    const expiresAt = otpExpiresAt;
+
+    clearInterval(otpResendTimer);
+    clearTimeout(otpExpiryTimer);
+
+    resendOtpBtn.classList.remove("hidden");
+    resendOtpBtn.disabled = true;
+
+    const updateResend = () => {
+        const remaining = resendEndsAt - Date.now();
+
+        if (remaining <= 0) {
+            clearInterval(otpResendTimer);
+            resendOtpBtn.disabled = false;
+            resendOtpBtn.textContent = "Resend OTP";
+            return;
+        }
+
+        resendOtpBtn.disabled = true;
+        resendOtpBtn.textContent =
+            `Resend (${formatSeconds(remaining)}s)`;
+    };
+
+    updateResend();
+    otpResendTimer = setInterval(updateResend, 250);
+
+    otpExpiryTimer = setTimeout(() => {
+        if (!emailVerified && !otpUsed) {
+            currentOtp = "";
+            otpExpiresAt = 0;
+            otpInput.disabled = true;
+            resendOtpBtn.disabled = false;
+            resendOtpBtn.textContent = "Resend OTP";
+            setOtpMessage(
+                "OTP expired. আবার Resend OTP চাপুন।",
+                "warning"
+            );
+        }
+    }, Math.max(0, expiresAt - Date.now()));
+}
+
+async function checkEmailAvailability() {
+    const email = normalizeEmail(emailInput.value);
+
+    clearTimeout(emailTimer);
+    emailAvailable = false;
+    emailVerified = false;
+    sendOtpBtn.disabled = true;
+
+    if (!email) {
+        setEmailStatus("");
+        resetOtpState();
+        return;
+    }
+
+    if (!isValidEmail(email)) {
+        setEmailStatus(
+            '<i class="fa-solid fa-circle-exclamation mr-1"></i> Only @gmail.com is allowed',
+            "used"
+        );
+        resetOtpState();
+        return;
+    }
+
+    setEmailStatus(
+        '<i class="fa-solid fa-spinner fa-spin mr-1"></i> Checking email...',
+        "checking"
+    );
+
+    emailTimer = setTimeout(async () => {
+        try {
+            const q = query(
+                collection(db, "users"),
+                where("emailLower", "==", email)
+            );
+
+            const snap = await getDocs(q);
+
+            if (!snap.empty) {
+                emailAvailable = false;
+                setEmailStatus(
+                    '<i class="fa-solid fa-circle-xmark mr-1"></i> Email already registered',
+                    "used"
+                );
+                resetOtpState();
+                return;
+            }
+
+            emailAvailable = true;
+            setEmailStatus(
+                '<i class="fa-solid fa-circle-check mr-1"></i> Email available',
+                "available"
+            );
+            sendOtpBtn.disabled = false;
+        } catch (error) {
+            console.error("Email availability check error:", error);
+            emailAvailable = false;
+            setEmailStatus(
+                '<i class="fa-solid fa-triangle-exclamation mr-1"></i> Email check করা যায়নি',
+                "checking"
+            );
+            resetOtpState();
+        }
+    }, 450);
+}
+
+async function sendOtp(isResend = false) {
+    const email = normalizeGmail(emailInput.value);
+    emailInput.value = email;
+
+    if (!isValidEmail(email)) {
+        showToast("শুধু @gmail.com Email ব্যবহার করুন", "warning");
+        emailInput.focus();
+        return;
+    }
+
+    if (!emailAvailable) {
+        showToast("এই Email available নয়।", "error");
+        return;
+    }
+
+    if (isResend && otpSentAt && Date.now() - otpSentAt < OTP_RESEND_MS) {
+        return;
+    }
+
+    const oldEmail = email;
+    const otp = generateOtp();
+
+    currentOtp = "";
+    otpSentAt = 0;
+    otpExpiresAt = 0;
+    otpUsed = false;
+    emailVerified = false;
+
+    sendOtpBtn.disabled = true;
+    resendOtpBtn.disabled = true;
+    otpInput.disabled = true;
+    setOtpMessage("OTP পাঠানো হচ্ছে...", "info");
+
+    const subject = "Your AURA ARMAN TOUR Email Verification OTP";
+    const logoUrl = "https://files.catbox.moe/4jhy4h.jpg";
+
+    const htmlBody = `
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+</head>
+<body style="margin:0;background:#070b14;font-family:Arial,Helvetica,sans-serif;color:#e5e7eb;">
+  <div style="max-width:560px;margin:0 auto;padding:28px 16px;">
+    <div style="background:#0f172a;border:1px solid #1e293b;border-radius:24px;padding:30px;text-align:center;box-shadow:0 20px 50px rgba(0,0,0,.35);">
+      <img src="${logoUrl}" alt="AURA ARMAN TOUR" width="82" height="82"
+           style="width:82px;height:82px;border-radius:50%;object-fit:cover;border:3px solid #2563eb;display:block;margin:0 auto 18px;">
+      <div style="font-size:13px;letter-spacing:2px;color:#60a5fa;font-weight:700;">AURA ARMAN TOUR</div>
+      <h1 style="margin:10px 0 8px;color:#fff;font-size:26px;">Verify Your Email</h1>
+      <p style="margin:0 0 22px;color:#94a3b8;font-size:14px;line-height:1.6;">
+        Use the verification code below to complete your registration.
+      </p>
+      <div style="background:#111c31;border:1px solid #263a5a;border-radius:16px;padding:18px 12px;margin:0 auto 20px;">
+        <div style="font-size:12px;color:#94a3b8;margin-bottom:8px;">YOUR OTP</div>
+        <div style="font-size:36px;letter-spacing:9px;color:#60a5fa;font-weight:800;">${otp}</div>
+      </div>
+      <p style="margin:0;color:#94a3b8;font-size:13px;">
+        This OTP is valid for <strong style="color:#fff;">5 minutes</strong> and can be used only once.
+      </p>
+      <div style="height:1px;background:#1e293b;margin:24px 0;"></div>
+      <p style="margin:0;color:#64748b;font-size:11px;line-height:1.5;">
+        If you did not request this code, you can safely ignore this email.
+        Please do not reply to this message.
+      </p>
+    </div>
+  </div>
+</body>
+</html>`;
+
+    try {
+        // Use the same POST pattern as the working Mail Send API.
+        // text/plain avoids the browser's JSON preflight request.
+        const response = await fetch(OTP_API_URL, {
+            method: "POST",
+            headers: {
+                "Content-Type": "text/plain;charset=utf-8"
+            },
+            body: JSON.stringify({
+                to: [email],
+                subject: subject,
+                html: htmlBody,
+                senderName: "AURA ARMAN TOUR"
+            }),
+            redirect: "follow",
+            cache: "no-store"
+        });
+
+        const raw = await response.text();
+
+        let result;
+        try {
+            result = JSON.parse(raw);
+        } catch (parseError) {
+            console.error("OTP API non-JSON response:", raw);
+            throw new Error("Mail API response পাওয়া যায়নি");
+        }
+
+        if (!response.ok || !result?.success || Number(result.successCount || 0) < 1) {
+            const apiError = Array.isArray(result?.errors)
+                ? result.errors.join("; ")
+                : result?.errors || "OTP send failed";
+            throw new Error(apiError);
+        }
+
+        if (normalizeEmail(emailInput.value) !== oldEmail) {
+            resetOtpState();
+            return;
+        }
+
+        currentOtp = otp;
+        otpSentAt = Date.now();
+        otpExpiresAt = otpSentAt + OTP_EXPIRY_MS;
+
+        otpRow.classList.remove("otp-hidden");
+        otpInput.disabled = false;
+        otpInput.value = "";
+        otpInput.focus();
+        setOtpMessage(
+            "OTP sent. 5 minutesের মধ্যে OTP দিন।",
+            "success"
+        );
+        startOtpTimers();
+
+        showToast(
+            isResend ? "নতুন OTP পাঠানো হয়েছে।" : "OTP Email-এ পাঠানো হয়েছে।",
+            "success"
+        );
+    } catch (error) {
+        console.error("OTP send error:", error);
+        currentOtp = "";
+        otpSentAt = 0;
+        otpExpiresAt = 0;
+        otpInput.disabled = true;
+        otpRow.classList.add("otp-hidden");
+        sendOtpBtn.disabled = !emailAvailable || !isValidEmail(normalizeEmail(emailInput.value));
+        resendOtpBtn.classList.add("hidden");
+        setOtpMessage(
+            "OTP পাঠানো যায়নি। আবার চেষ্টা করুন।",
+            "error"
+        );
+        showToast("OTP পাঠানো যায়নি।", "error");
+    }
+}
+
+function verifyOtp() {
+    if (emailVerified) return true;
+
+    const entered = otpInput.value.trim();
+
+    if (!currentOtp || !otpExpiresAt) {
+        setOtpMessage(
+            "আগে Send OTP চাপুন।",
+            "warning"
+        );
+        return false;
+    }
+
+    if (Date.now() >= otpExpiresAt) {
+        currentOtp = "";
+        otpExpiresAt = 0;
+        otpInput.disabled = true;
+        resendOtpBtn.disabled = false;
+        resendOtpBtn.textContent = "Resend OTP";
+        setOtpMessage(
+            "OTP expired. আবার Resend OTP চাপুন।",
+            "warning"
+        );
+        return false;
+    }
+
+    if (!/^\d{6}$/.test(entered)) {
+        setOtpMessage(
+            "6 digit OTP দিন।",
+            "warning"
+        );
+        return false;
+    }
+
+    if (entered !== currentOtp) {
+        setOtpMessage(
+            "ভুল OTP। সঠিক OTP দিন।",
+            "error"
+        );
+        otpInput.select();
+        return false;
+    }
+
+    emailVerified = true;
+    otpUsed = true;
+    currentOtp = "";
+    otpExpiresAt = 0;
+    stopOtpTimers();
+
+    otpInput.disabled = true;
+    resendOtpBtn.classList.add("hidden");
+    setOtpMessage(
+        "Email verified successfully.",
+        "success"
+    );
+    setEmailStatus(
+        '<i class="fa-solid fa-circle-check mr-1"></i> Email verified',
+        "verified"
+    );
+
+    return true;
+}
+
+emailInput.addEventListener("input", () => {
+    // No auto-complete here. User must type the full Gmail address.
+    const current = normalizeEmail(emailInput.value);
+
+    if (current !== emailInput.dataset.otpEmail) {
+        emailInput.dataset.otpEmail = current;
+        resetOtpState();
+    }
+
+    checkEmailAvailability();
+});
+
+emailInput.addEventListener("blur", () => {
+    const email = normalizeEmail(emailInput.value);
+
+    if (email && !isValidEmail(email)) {
+        showToast("সঠিক Gmail address দিন (example@gmail.com)", "warning");
+        setEmailStatus(
+            '<i class="fa-solid fa-circle-exclamation mr-1"></i> Please enter a valid Gmail address',
+            "error"
+        );
+    }
+
+    checkEmailAvailability();
+});
+
+otpInput.addEventListener("input", () => {
+    otpInput.value = otpInput.value.replace(/\D/g, "").slice(0, 6);
+
+    if (emailVerified) return;
+
+    if (otpInput.value.length === 6) {
+        verifyOtp();
+    }
+});
+
+sendOtpBtn.addEventListener("click", () => sendOtp(false));
+resendOtpBtn.addEventListener("click", () => sendOtp(true));
+
+
 
 /* =========================================================
    TOAST
@@ -618,7 +1191,21 @@ const usernameStatus =
    USERNAME LIVE CHECK
 ========================================================= */
 
+usernameInput.addEventListener("keydown", (event) => {
+    // Spaces are not allowed in usernames.
+    if (/\s/.test(event.key)) {
+        event.preventDefault();
+        showToast("Username-এ space দেওয়া যাবে না", "warning");
+    }
+});
+
 usernameInput.addEventListener("input", () => {
+
+    const hadSpace = /\s/.test(usernameInput.value);
+    if (hadSpace) {
+        usernameInput.value = usernameInput.value.replace(/\s+/g, "");
+        showToast("Username-এ space দেওয়া যাবে না", "warning");
+    }
 
     clearTimeout(usernameTimer);
 
@@ -749,6 +1336,31 @@ function checkPassword() {
 
     const confirm =
         confirmPasswordInput.value;
+
+    const passwordLengthStatus =
+        document.getElementById("passwordLengthStatus");
+
+    /* Live minimum-6-character check */
+    if (password.length >= 6) {
+        passwordLengthStatus.className =
+            "text-xs mt-1.5 font-medium text-emerald-400";
+        passwordLengthStatus.innerHTML =
+            `<i class="fa-solid fa-circle-check mr-1"></i>
+             Password valid — ${password.length} characters`;
+    } else if (password.length > 0) {
+        const remaining = 6 - password.length;
+        passwordLengthStatus.className =
+            "text-xs mt-1.5 font-medium text-rose-400";
+        passwordLengthStatus.innerHTML =
+            `<i class="fa-solid fa-circle-xmark mr-1"></i>
+             আরও ${remaining} character দিন (minimum 6)`;
+    } else {
+        passwordLengthStatus.className =
+            "text-xs mt-1.5 font-medium text-slate-400";
+        passwordLengthStatus.innerHTML =
+            `<i class="fa-solid fa-circle-info mr-1"></i>
+             Password কমপক্ষে 6 characters হতে হবে`;
+    }
 
 
     if (!confirm) {
@@ -1078,10 +1690,13 @@ document
                 username.toLowerCase();
 
 
-            const email =
+            const emailInputValue =
                 document.getElementById(
                     "email"
-                ).value.trim().toLowerCase();
+                ).value;
+
+            const email =
+                normalizeGmail(emailInputValue);
 
 
             const whatsappInput =
@@ -1154,7 +1769,22 @@ document
             if (!email) {
 
                 showToast(
-                    "Email দিন",
+                    "Gmail address দিন",
+                    "warning"
+                );
+
+                document
+                    .getElementById("email")
+                    .focus();
+
+                return;
+
+            }
+
+            if (!isValidEmail(email)) {
+
+                showToast(
+                    "সঠিক Gmail address দিন (example@gmail.com)",
                     "warning"
                 );
 
@@ -1168,17 +1798,35 @@ document
 
 
             if (
-                !/^[^\s@]+@[^\s@]+\.[^\s@]+$/
+                !/^[a-zA-Z0-9._%+-]+@gmail\.com$/i
                     .test(email)
             ) {
 
                 showToast(
-                    "সঠিক Email address দিন",
+                    "শুধু @gmail.com Email ব্যবহার করুন",
                     "warning"
                 );
 
                 return;
 
+            }
+
+            if (!emailAvailable) {
+                showToast(
+                    "এই Email available নয়।",
+                    "error"
+                );
+                emailInput.focus();
+                return;
+            }
+
+            if (!emailVerified) {
+                showToast(
+                    "Register করার আগে Email OTP verify করুন।",
+                    "warning"
+                );
+                otpInput.focus();
+                return;
             }
 
 
