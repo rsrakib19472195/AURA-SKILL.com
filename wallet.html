@@ -4,304 +4,1284 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Aura Skill - My Wallet</title>
+
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&display=swap"
+          rel="stylesheet">
+
     <style>
-        body { font-family: 'Hind Siliguri', sans-serif; background-color: #050811; color: #f8fafc; }
-        .glass-card { background: rgba(15, 23, 42, 0.75); backdrop-filter: blur(12px); border: 1px solid rgba(30, 41, 59, 0.8); }
-        .menu-item:hover { background: rgba(30, 41, 59, 0.5); transition: all 0.2s ease; }
-        #toast-container { position: fixed; top: 20px; right: 20px; z-index: 9999; display: flex; flex-direction: column; gap: 10px; }
-        .toast {
-            background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(12px); border-left: 4px solid #3b82f6;
-            color: #fff; padding: 12px 20px; border-radius: 12px; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
-            font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 10px;
-            animation: slideIn 0.3s ease, fadeOut 0.3s ease 2.7s forwards;
+
+        body {
+            font-family: 'Hind Siliguri', sans-serif;
+            background-color: #050811;
+            color: #f8fafc;
         }
-        .toast.success { border-left-color: #10b981; }
-        .toast.error { border-left-color: #ef4444; }
-        .toast.warning { border-left-color: #f59e0b; }
-        @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
-        @keyframes fadeOut { from { opacity: 1; } to { opacity: 0; transform: translateY(-10px); } }
+
+        .glass-card {
+            background: rgba(15, 23, 42, 0.75);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(30, 41, 59, 0.8);
+        }
+
+        .menu-item:hover {
+            background: rgba(30, 41, 59, 0.5);
+            transition: all 0.2s ease;
+        }
+
+        #toast-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .toast {
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(12px);
+            border-left: 4px solid #3b82f6;
+            color: #fff;
+            padding: 12px 20px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
+            font-size: 13px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            animation: slideIn 0.3s ease,
+                       fadeOut 0.3s ease 2.7s forwards;
+            max-width: calc(100vw - 40px);
+        }
+
+        .toast.success {
+            border-left-color: #10b981;
+        }
+
+        .toast.error {
+            border-left-color: #ef4444;
+        }
+
+        .toast.warning {
+            border-left-color: #f59e0b;
+        }
+
+        .toast.info {
+            border-left-color: #3b82f6;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes fadeOut {
+            from {
+                opacity: 1;
+            }
+
+            to {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+        }
+
+        /* Loading text */
+
+        .loading-text {
+            display: inline-block;
+            color: #64748b;
+            font-weight: 600;
+            animation: loadingPulse 1.15s ease-in-out infinite;
+        }
+
+        .loading-shimmer {
+            display: inline-block;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .loading-shimmer::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                90deg,
+                transparent,
+                rgba(255,255,255,.13),
+                transparent
+            );
+            animation: shimmer 1.35s infinite;
+        }
+
+        @keyframes loadingPulse {
+            0%, 100% {
+                opacity: .45;
+            }
+
+            50% {
+                opacity: 1;
+            }
+        }
+
+        @keyframes shimmer {
+            100% {
+                left: 100%;
+            }
+        }
+
     </style>
 </head>
+
+
 <body class="min-h-screen flex flex-col pb-24">
 
-    <div id="toast-container"></div>
 
-    <!-- Header -->
-    <header class="px-4 py-3 flex items-center space-x-3 sticky top-0 z-30 bg-[#050811]/90 backdrop-blur-md border-b border-slate-900">
-        <a href="profile.html" class="w-9 h-9 rounded-xl bg-slate-800/80 hover:bg-slate-800 text-slate-300 flex items-center justify-center text-sm transition">
-            <i class="fa-solid fa-arrow-left"></i>
+<div id="toast-container"></div>
+
+
+<!-- Header -->
+
+<header class="px-4 py-3 flex items-center space-x-3 sticky top-0 z-30 bg-[#050811]/90 backdrop-blur-md border-b border-slate-900">
+
+    <a href="profile.html"
+       class="w-9 h-9 rounded-xl bg-slate-800/80 hover:bg-slate-800 text-slate-300 flex items-center justify-center text-sm transition">
+
+        <i class="fa-solid fa-arrow-left"></i>
+
+    </a>
+
+    <h1 class="text-sm font-black text-white tracking-wide">
+        My Wallet
+    </h1>
+
+</header>
+
+
+<main class="max-w-md mx-auto px-4 py-6 w-full space-y-6">
+
+
+<!-- Wallet Balance Card -->
+
+<div class="glass-card rounded-3xl p-6 text-center space-y-6 border border-slate-800 shadow-xl">
+
+    <div>
+
+        <p class="text-xs text-slate-400 font-medium">
+            Available Balance
+        </p>
+
+        <h2 class="text-4xl font-black text-white mt-1">
+
+            ৳
+
+            <span
+                id="wallet-balance"
+                class="loading-shimmer loading-text">
+
+                Loading...
+
+            </span>
+
+        </h2>
+
+    </div>
+
+
+    <div class="inline-flex items-center space-x-2 bg-[#0b101d] border border-slate-800/80 px-4 py-2 rounded-xl">
+
+        <i class="fa-solid fa-chart-line text-emerald-400 text-xs"></i>
+
+        <span class="text-xs text-slate-400 font-medium">
+            Winning Balance
+        </span>
+
+        <span class="text-xs font-bold text-white">
+
+            ৳
+
+            <span
+                id="winning-balance"
+                class="loading-shimmer loading-text">
+
+                Loading...
+
+            </span>
+
+        </span>
+
+    </div>
+
+
+    <div class="grid grid-cols-2 gap-3 pt-2">
+
+        <a
+            href="add-money.html"
+            class="bg-emerald-600 hover:bg-emerald-500 text-slate-950 font-extrabold text-xs py-3.5 rounded-xl transition shadow-lg shadow-emerald-600/25 flex items-center justify-center space-x-2">
+
+            <i class="fa-solid fa-plus text-[11px]"></i>
+
+            <span>
+                Add Money
+            </span>
+
         </a>
-        <h1 class="text-sm font-black text-white tracking-wide">My Wallet</h1>
-    </header>
 
-    <main class="max-w-md mx-auto px-4 py-6 w-full space-y-6">
 
-        <!-- Wallet Balance Card -->
-        <div class="glass-card rounded-3xl p-6 text-center space-y-6 border border-slate-800 shadow-xl">
-            <div>
-                <p class="text-xs text-slate-400 font-medium">Available Balance</p>
-                <h2 class="text-4xl font-black text-white mt-1">৳ <span id="wallet-balance">0</span></h2>
-            </div>
+        <a
+            href="withdraw.html"
+            class="bg-red-600 hover:bg-red-500 text-white font-extrabold text-xs py-3.5 rounded-xl transition shadow-lg shadow-red-600/25 flex items-center justify-center space-x-2">
 
-            <div class="inline-flex items-center space-x-2 bg-[#0b101d] border border-slate-800/80 px-4 py-2 rounded-xl">
-                <i class="fa-solid fa-chart-line text-emerald-400 text-xs"></i>
-                <span class="text-xs text-slate-400 font-medium">Winning Balance</span>
-                <span class="text-xs font-bold text-white">৳ <span id="winning-balance">0</span></span>
-            </div>
+            <i class="fa-solid fa-arrow-up text-[11px]"></i>
 
-            <div class="grid grid-cols-2 gap-3 pt-2">
-                <a href="add-money.html" class="bg-emerald-600 hover:bg-emerald-500 text-slate-950 font-extrabold text-xs py-3.5 rounded-xl transition shadow-lg shadow-emerald-600/25 flex items-center justify-center space-x-2">
-                    <i class="fa-solid fa-plus text-[11px]"></i>
-                    <span>Add Money</span>
-                </a>
-                <a href="withdraw.html" class="bg-red-600 hover:bg-red-500 text-white font-extrabold text-xs py-3.5 rounded-xl transition shadow-lg shadow-red-600/25 flex items-center justify-center space-x-2">
-                    <i class="fa-solid fa-arrow-up text-[11px]"></i>
-                    <span>Withdraw</span>
-                </a>
-            </div>
+            <span>
+                Withdraw
+            </span>
+
+        </a>
+
+    </div>
+
+</div>
+
+
+<!-- Gift Code Redeem Section -->
+
+<div class="space-y-2">
+
+    <p class="text-[11px] font-extrabold text-slate-400 uppercase tracking-widest px-1">
+        Gift Code Redeem
+    </p>
+
+
+    <div class="glass-card rounded-3xl p-5 space-y-4 border border-slate-800 shadow-xl">
+
+        <div class="space-y-1.5">
+
+            <label class="text-[11px] font-bold text-slate-300 block">
+                Enter Gift Code
+            </label>
+
+            <input
+                type="text"
+                id="gift-code-input"
+                placeholder="যেমন: GC-XYZ123"
+                class="w-full bg-[#050811] border border-slate-800 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-blue-500 transition">
+
         </div>
 
-        <!-- Gift Code Redeem Section -->
-        <div class="space-y-2">
-            <p class="text-[11px] font-extrabold text-slate-400 uppercase tracking-widest px-1">Gift Code Redeem</p>
-            <div class="glass-card rounded-3xl p-5 space-y-4 border border-slate-800 shadow-xl">
-                <div class="space-y-1.5">
-                    <label class="text-[11px] font-bold text-slate-300 block">Enter Gift Code</label>
-                    <input type="text" id="gift-code-input" placeholder="যেমন: GC-XYZ123" class="w-full bg-[#050811] border border-slate-800 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-blue-500 transition">
+
+        <button
+            id="apply-gift-btn"
+            onclick="applyGiftCode()"
+            class="w-full bg-blue-600 hover:bg-blue-500 text-white font-extrabold text-xs py-3.5 rounded-xl transition shadow-lg shadow-blue-600/25 flex items-center justify-center space-x-2">
+
+            <i class="fa-solid fa-gift text-[11px]"></i>
+
+            <span>
+                Apply Gift Code
+            </span>
+
+        </button>
+
+
+        <p class="text-[10px] text-slate-500 text-center">
+            অ্যাডমিন প্রদত্ত গিফট কোড একবারই ব্যবহারযোগ্য।
+        </p>
+
+    </div>
+
+</div>
+
+
+<!-- Quick Actions -->
+
+<div class="space-y-2">
+
+    <p class="text-[11px] font-extrabold text-slate-400 uppercase tracking-widest px-1">
+        Quick Actions
+    </p>
+
+
+    <div class="glass-card rounded-2xl overflow-hidden">
+
+        <a
+            href="transactions.html"
+            class="menu-item p-4 flex items-center justify-between text-xs font-semibold text-slate-200">
+
+            <div class="flex items-center space-x-3.5">
+
+                <div class="w-9 h-9 rounded-xl bg-blue-500/10 text-blue-400 flex items-center justify-center text-sm">
+
+                    <i class="fa-solid fa-wallet"></i>
+
                 </div>
-                <button id="apply-gift-btn" onclick="applyGiftCode()" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-extrabold text-xs py-3.5 rounded-xl transition shadow-lg shadow-blue-600/25 flex items-center justify-center space-x-2">
-                    <i class="fa-solid fa-gift text-[11px]"></i>
-                    <span>Apply Gift Code</span>
-                </button>
-                <p class="text-[10px] text-slate-500 text-center">অ্যাডমিন প্রদত্ত গিফট কোড একবারই ব্যবহারযোগ্য।</p>
+
+
+                <div>
+
+                    <p class="text-xs font-bold text-white">
+                        Transaction History
+                    </p>
+
+                    <p class="text-[10px] text-slate-400 mt-0.5">
+                        View all your transactions
+                    </p>
+
+                </div>
+
             </div>
-        </div>
 
-        <!-- Quick Actions -->
-        <div class="space-y-2">
-            <p class="text-[11px] font-extrabold text-slate-400 uppercase tracking-widest px-1">Quick Actions</p>
-            <div class="glass-card rounded-2xl overflow-hidden">
-                <a href="transactions.html" class="menu-item p-4 flex items-center justify-between text-xs font-semibold text-slate-200">
-                    <div class="flex items-center space-x-3.5">
-                        <div class="w-9 h-9 rounded-xl bg-blue-500/10 text-blue-400 flex items-center justify-center text-sm"><i class="fa-solid fa-wallet"></i></div>
-                        <div>
-                            <p class="text-xs font-bold text-white">Transaction History</p>
-                            <p class="text-[10px] text-slate-400 mt-0.5">View all your transactions</p>
-                        </div>
-                    </div>
-                    <i class="fa-solid fa-chevron-right text-slate-600 text-[10px]"></i>
-                </a>
+
+            <i class="fa-solid fa-chevron-right text-slate-600 text-[10px]"></i>
+
+        </a>
+
+    </div>
+
+</div>
+
+
+<!-- How to Guide -->
+
+<div class="space-y-2">
+
+    <p class="text-[11px] font-extrabold text-slate-400 uppercase tracking-widest px-1">
+        How to Guide
+    </p>
+
+
+    <div class="glass-card rounded-2xl overflow-hidden divide-y divide-slate-800/50">
+
+
+        <a
+            href="#"
+            onclick="showGuide('add-money'); return false;"
+            class="menu-item p-4 flex items-center justify-between text-xs font-semibold text-slate-200">
+
+            <div class="flex items-center space-x-3.5">
+
+                <div class="w-9 h-9 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center text-sm">
+
+                    <i class="fa-solid fa-credit-card"></i>
+
+                </div>
+
+                <span class="font-bold text-white">
+                    How to Add Money?
+                </span>
+
             </div>
-        </div>
 
-        <!-- How to Guide -->
-        <div class="space-y-2">
-            <p class="text-[11px] font-extrabold text-slate-400 uppercase tracking-widest px-1">How to Guide</p>
-            <div class="glass-card rounded-2xl overflow-hidden divide-y divide-slate-800/50">
-                <a href="#" onclick="showGuide('add-money'); return false;" class="menu-item p-4 flex items-center justify-between text-xs font-semibold text-slate-200">
-                    <div class="flex items-center space-x-3.5">
-                        <div class="w-9 h-9 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center text-sm"><i class="fa-solid fa-credit-card"></i></div>
-                        <span class="font-bold text-white">How to Add Money?</span>
-                    </div>
-                    <span class="bg-blue-600/20 text-blue-400 text-[10px] font-bold px-2.5 py-1 rounded-lg flex items-center space-x-1">
-                        <i class="fa-solid fa-play text-[8px]"></i>
-                        <span>Watch</span>
-                    </span>
-                </a>
-                <a href="#" onclick="showGuide('join-match'); return false;" class="menu-item p-4 flex items-center justify-between text-xs font-semibold text-slate-200">
-                    <div class="flex items-center space-x-3.5">
-                        <div class="w-9 h-9 rounded-xl bg-purple-500/10 text-purple-400 flex items-center justify-center text-sm"><i class="fa-solid fa-gamepad"></i></div>
-                        <span class="font-bold text-white">How to Join a Match?</span>
-                    </div>
-                    <span class="bg-blue-600/20 text-blue-400 text-[10px] font-bold px-2.5 py-1 rounded-lg flex items-center space-x-1">
-                        <i class="fa-solid fa-play text-[8px]"></i>
-                        <span>Watch</span>
-                    </span>
-                </a>
-                <a href="#" onclick="showGuide('withdraw'); return false;" class="menu-item p-4 flex items-center justify-between text-xs font-semibold text-slate-200">
-                    <div class="flex items-center space-x-3.5">
-                        <div class="w-9 h-9 rounded-xl bg-amber-500/10 text-amber-400 flex items-center justify-center text-sm"><i class="fa-solid fa-landmark"></i></div>
-                        <span class="font-bold text-white">How to Withdraw?</span>
-                    </div>
-                    <span class="bg-blue-600/20 text-blue-400 text-[10px] font-bold px-2.5 py-1 rounded-lg flex items-center space-x-1">
-                        <i class="fa-solid fa-play text-[8px]"></i>
-                        <span>Watch</span>
-                    </span>
-                </a>
+
+            <span class="bg-blue-600/20 text-blue-400 text-[10px] font-bold px-2.5 py-1 rounded-lg flex items-center space-x-1">
+
+                <i class="fa-solid fa-play text-[8px]"></i>
+
+                <span>
+                    Watch
+                </span>
+
+            </span>
+
+        </a>
+
+
+        <a
+            href="#"
+            onclick="showGuide('join-match'); return false;"
+            class="menu-item p-4 flex items-center justify-between text-xs font-semibold text-slate-200">
+
+            <div class="flex items-center space-x-3.5">
+
+                <div class="w-9 h-9 rounded-xl bg-purple-500/10 text-purple-400 flex items-center justify-center text-sm">
+
+                    <i class="fa-solid fa-gamepad"></i>
+
+                </div>
+
+                <span class="font-bold text-white">
+                    How to Join a Match?
+                </span>
+
             </div>
-        </div>
 
-    </main>
 
-    <!-- Firebase & Toast Logic Script -->
-    <script type="module">
-        import { auth, db } from "./firebase.js";
-        import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-        import { doc, getDoc, runTransaction } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-        import { processReferralReward } from "./referral.js";
+            <span class="bg-blue-600/20 text-blue-400 text-[10px] font-bold px-2.5 py-1 rounded-lg flex items-center space-x-1">
 
-        let currentUserId = null;
+                <i class="fa-solid fa-play text-[8px]"></i>
 
-        window.showToast = function(message, type = 'success') {
-            const container = document.getElementById('toast-container');
-            if (!container) return;
+                <span>
+                    Watch
+                </span>
 
-            const toast = document.createElement('div');
-            toast.className = `toast ${type}`;
+            </span>
 
-            let iconClass = "fa-solid fa-circle-check text-emerald-400";
-            if (type === 'error') iconClass = "fa-solid fa-circle-xmark text-red-400";
-            if (type === 'warning') iconClass = "fa-solid fa-triangle-exclamation text-amber-400";
+        </a>
 
-            toast.innerHTML = `<i class="${iconClass}"></i><span>${message}</span>`;
-            container.appendChild(toast);
 
-            setTimeout(() => toast.remove(), 3000);
-        };
+        <a
+            href="#"
+            onclick="showGuide('withdraw'); return false;"
+            class="menu-item p-4 flex items-center justify-between text-xs font-semibold text-slate-200">
 
-        onAuthStateChanged(auth, async (user) => {
-            if (!user) {
-                showToast("অনুগ্রহ করে আগে লগইন করুন।", "warning");
-                setTimeout(() => {
-                    window.location.replace('login.html');
-                }, 700);
-                return;
+            <div class="flex items-center space-x-3.5">
+
+                <div class="w-9 h-9 rounded-xl bg-amber-500/10 text-amber-400 flex items-center justify-center text-sm">
+
+                    <i class="fa-solid fa-landmark"></i>
+
+                </div>
+
+                <span class="font-bold text-white">
+                    How to Withdraw?
+                </span>
+
+            </div>
+
+
+            <span class="bg-blue-600/20 text-blue-400 text-[10px] font-bold px-2.5 py-1 rounded-lg flex items-center space-x-1">
+
+                <i class="fa-solid fa-play text-[8px]"></i>
+
+                <span>
+                    Watch
+                </span>
+
+            </span>
+
+        </a>
+
+    </div>
+
+</div>
+
+
+</main>
+
+
+<!-- Firebase & Wallet Logic -->
+
+<script type="module">
+
+import {
+    auth,
+    db
+} from "./firebase.js";
+
+
+import {
+    onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+
+
+import {
+    doc,
+    getDoc,
+    runTransaction
+} from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+
+import {
+    processReferralReward
+} from "./referral.js";
+
+
+let currentUserId = null;
+
+
+/* =========================================
+   TOAST
+========================================= */
+
+window.showToast = function(
+    message,
+    type = 'success'
+) {
+
+    const container =
+        document.getElementById(
+            'toast-container'
+        );
+
+
+    if (!container) return;
+
+
+    const toast =
+        document.createElement('div');
+
+
+    toast.className =
+        `toast ${type}`;
+
+
+    let iconClass =
+        "fa-solid fa-circle-check text-emerald-400";
+
+
+    if (type === 'error') {
+
+        iconClass =
+            "fa-solid fa-circle-xmark text-red-400";
+
+    }
+
+
+    if (type === 'warning') {
+
+        iconClass =
+            "fa-solid fa-triangle-exclamation text-amber-400";
+
+    }
+
+
+    if (type === 'info') {
+
+        iconClass =
+            "fa-solid fa-circle-info text-blue-400";
+
+    }
+
+
+    toast.innerHTML =
+        `<i class="${iconClass}"></i>
+         <span>${message}</span>`;
+
+
+    container.appendChild(toast);
+
+
+    setTimeout(
+        () => toast.remove(),
+        3000
+    );
+
+};
+
+
+/* =========================================
+   WALLET UI
+========================================= */
+
+function setWalletLoading() {
+
+    const balance =
+        document.getElementById(
+            'wallet-balance'
+        );
+
+    const winnings =
+        document.getElementById(
+            'winning-balance'
+        );
+
+
+    if (balance) {
+
+        balance.innerHTML =
+            `<span class="loading-shimmer loading-text">
+                Loading...
+             </span>`;
+
+    }
+
+
+    if (winnings) {
+
+        winnings.innerHTML =
+            `<span class="loading-shimmer loading-text">
+                Loading...
+             </span>`;
+
+    }
+
+}
+
+
+function updateWalletUI(data) {
+
+    const balance =
+        Number(data?.balance);
+
+
+    const winnings =
+        Number(data?.winnings);
+
+
+    const balanceElement =
+        document.getElementById(
+            'wallet-balance'
+        );
+
+
+    const winningsElement =
+        document.getElementById(
+            'winning-balance'
+        );
+
+
+    /*
+     * Number.isFinite() ব্যবহার করা হয়েছে
+     * যাতে undefined/null/invalid data
+     * কখনো ভুলভাবে 0 না দেখায়।
+     */
+
+    if (
+        balanceElement &&
+        Number.isFinite(balance)
+    ) {
+
+        balanceElement.textContent =
+            balance;
+
+    }
+
+
+    if (
+        winningsElement &&
+        Number.isFinite(winnings)
+    ) {
+
+        winningsElement.textContent =
+            winnings;
+
+    }
+
+}
+
+
+/* =========================================
+   LOAD WALLET
+========================================= */
+
+async function loadWallet(user) {
+
+    if (!user) return;
+
+
+    const userRef =
+        doc(
+            db,
+            "users",
+            user.uid
+        );
+
+
+    /*
+     * Loading শুরু।
+     */
+
+    setWalletLoading();
+
+
+    try {
+
+        /*
+         * শুধু user document-এর জন্য
+         * Firebase request করা হচ্ছে।
+         *
+         * Referral বা অন্য কোনো কাজ
+         * balance render আটকাবে না।
+         */
+
+        const userSnap =
+            await getDoc(userRef);
+
+
+        if (!userSnap.exists()) {
+
+            /*
+             * User document না থাকলে
+             * 0 ধরে নেওয়া হচ্ছে না।
+             *
+             * কারণ data পাওয়া যায়নি।
+             */
+
+            const balanceElement =
+                document.getElementById(
+                    'wallet-balance'
+                );
+
+            const winningsElement =
+                document.getElementById(
+                    'winning-balance'
+                );
+
+
+            if (balanceElement) {
+
+                balanceElement.textContent =
+                    '—';
+
             }
 
-            currentUserId = user.uid;
+
+            if (winningsElement) {
+
+                winningsElement.textContent =
+                    '—';
+
+            }
+
+
+            showToast(
+                "Wallet data পাওয়া যায়নি।",
+                "warning"
+            );
+
+
+            return;
+
+        }
+
+
+        const data =
+            userSnap.data() || {};
+
+
+        /*
+         * IMPORTANT:
+         *
+         * Firestore data পাওয়ার সাথে সাথে
+         * balance + winnings update।
+         *
+         * Referral processing এখানে
+         * wait করানো হয়নি।
+         */
+
+        updateWalletUI(data);
+
+
+        /*
+         * Referral processing background-এ।
+         */
+
+        processReferralReward(
+            user.uid
+        )
+        .then(async () => {
+
+            /*
+             * Referral reward balance change
+             * করলে latest balance নিয়ে আসবে।
+             */
 
             try {
-                const userRef = doc(db, "users", user.uid);
-                const userSnap = await getDoc(userRef);
 
-                try {
-                    await processReferralReward(user.uid);
-                } catch (e) {
-                    console.warn("Referral check:", e);
+                const refreshed =
+                    await getDoc(userRef);
+
+
+                if (
+                    refreshed.exists()
+                ) {
+
+                    updateWalletUI(
+                        refreshed.data() || {}
+                    );
+
                 }
 
-                if (userSnap.exists()) {
-                    const data = userSnap.data();
-                    document.getElementById('wallet-balance').innerText = data.balance || 0;
-                    document.getElementById('winning-balance').innerText = data.winnings || 0;
-                }
             } catch (e) {
-                console.error(e);
-                showToast("ওয়ালেট ব্যালেন্স লোড করতে সমস্যা হয়েছে।", "error");
+
+                console.warn(
+                    "Wallet refresh after referral:",
+                    e
+                );
+
             }
+
+        })
+        .catch(e => {
+
+            console.warn(
+                "Referral check:",
+                e
+            );
+
         });
 
-        window.applyGiftCode = async function() {
-            const codeInput = document.getElementById('gift-code-input');
-            const applyBtn = document.getElementById('apply-gift-btn');
-            const code = codeInput ? codeInput.value.trim() : '';
 
-            if (!code) {
-                showToast("অনুগ্রহ করে একটি গিফট কোড লিখুন।", "warning");
-                return;
-            }
+    } catch (e) {
 
-            if (!currentUserId) {
-                showToast("ইউজার যাচাই সম্পন্ন হয়নি। একটু পর আবার চেষ্টা করুন।", "error");
-                return;
-            }
+        console.error(
+            "Wallet loading error:",
+            e
+        );
 
-            applyBtn.disabled = true;
-            applyBtn.innerHTML = `<i class="fa-solid fa-spinner fa-spin text-[11px]"></i><span>Applying...</span>`;
-            applyBtn.classList.add('opacity-75', 'cursor-not-allowed');
 
-            const userRef = doc(db, "users", currentUserId);
+        /*
+         * Error হলে 0 নয়।
+         */
 
-            try {
-                const giftRef = doc(db, "giftCodes", code);
+        const balanceElement =
+            document.getElementById(
+                'wallet-balance'
+            );
 
-                await runTransaction(db, async (transaction) => {
-                    const giftSnap = await transaction.get(giftRef);
 
-                    if (!giftSnap.exists()) {
-                        throw new Error("গিফট কোডটি ভুল অথবা আর ব্যবহারযোগ্য নেই।");
-                    }
+        const winningsElement =
+            document.getElementById(
+                'winning-balance'
+            );
 
-                    const giftData = giftSnap.data();
-                    const amount = Number(giftData.amount || 0);
 
-                    const usedBy = Array.isArray(giftData.usedBy) ? giftData.usedBy : [];
-                    const claimedUsers = Array.isArray(giftData.claimedUsers) ? giftData.claimedUsers : [];
+        if (balanceElement) {
 
-                    if (usedBy.includes(currentUserId) || claimedUsers.includes(currentUserId)) {
-                        throw new Error("আপনি ইতিমধ্যে এই গিফট কোডটি ব্যবহার করেছেন।");
-                    }
+            balanceElement.textContent =
+                '—';
 
-                    const maxUses = Number(giftData.maxUses || 0);
-                    const currentUses = Math.max(
-                        Number(giftData.usedCount || 0),
+        }
+
+
+        if (winningsElement) {
+
+            winningsElement.textContent =
+                '—';
+
+        }
+
+
+        showToast(
+            "ওয়ালেট ব্যালেন্স লোড করতে সমস্যা হয়েছে।",
+            "error"
+        );
+
+    }
+
+}
+
+
+/* =========================================
+   AUTH
+========================================= */
+
+onAuthStateChanged(
+    auth,
+    user => {
+
+        if (!user) {
+
+            showToast(
+                "অনুগ্রহ করে আগে লগইন করুন।",
+                "warning"
+            );
+
+
+            setTimeout(
+                () => {
+
+                    window.location.replace(
+                        'login.html'
+                    );
+
+                },
+                700
+            );
+
+
+            return;
+
+        }
+
+
+        currentUserId =
+            user.uid;
+
+
+        /*
+         * Wallet load immediately শুরু।
+         *
+         * Referral এখানে আগে চালানো হচ্ছে না।
+         */
+
+        loadWallet(user)
+            .catch(
+                error =>
+                    console.error(
+                        "Wallet background load:",
+                        error
+                    )
+            );
+
+    }
+);
+
+
+/* =========================================
+   GIFT CODE
+========================================= */
+
+window.applyGiftCode =
+async function() {
+
+    const codeInput =
+        document.getElementById(
+            'gift-code-input'
+        );
+
+
+    const applyBtn =
+        document.getElementById(
+            'apply-gift-btn'
+        );
+
+
+    const code =
+        codeInput
+            ? codeInput.value.trim()
+            : '';
+
+
+    if (!code) {
+
+        showToast(
+            "অনুগ্রহ করে একটি গিফট কোড লিখুন।",
+            "warning"
+        );
+
+        return;
+
+    }
+
+
+    if (!currentUserId) {
+
+        showToast(
+            "ইউজার যাচাই সম্পন্ন হয়নি। একটু পর আবার চেষ্টা করুন।",
+            "error"
+        );
+
+        return;
+
+    }
+
+
+    applyBtn.disabled = true;
+
+
+    applyBtn.innerHTML =
+        `<i class="fa-solid fa-spinner fa-spin text-[11px]"></i>
+         <span>Applying...</span>`;
+
+
+    applyBtn.classList.add(
+        'opacity-75',
+        'cursor-not-allowed'
+    );
+
+
+    const userRef =
+        doc(
+            db,
+            "users",
+            currentUserId
+        );
+
+
+    try {
+
+        const giftRef =
+            doc(
+                db,
+                "giftCodes",
+                code
+            );
+
+
+        await runTransaction(
+            db,
+            async transaction => {
+
+                const giftSnap =
+                    await transaction.get(
+                        giftRef
+                    );
+
+
+                if (!giftSnap.exists()) {
+
+                    throw new Error(
+                        "গিফট কোডটি ভুল অথবা আর ব্যবহারযোগ্য নেই।"
+                    );
+
+                }
+
+
+                const giftData =
+                    giftSnap.data();
+
+
+                const amount =
+                    Number(
+                        giftData.amount || 0
+                    );
+
+
+                const usedBy =
+                    Array.isArray(
+                        giftData.usedBy
+                    )
+                    ? giftData.usedBy
+                    : [];
+
+
+                const claimedUsers =
+                    Array.isArray(
+                        giftData.claimedUsers
+                    )
+                    ? giftData.claimedUsers
+                    : [];
+
+
+                if (
+                    usedBy.includes(
+                        currentUserId
+                    )
+                    ||
+                    claimedUsers.includes(
+                        currentUserId
+                    )
+                ) {
+
+                    throw new Error(
+                        "আপনি ইতিমধ্যে এই গিফট কোডটি ব্যবহার করেছেন।"
+                    );
+
+                }
+
+
+                const maxUses =
+                    Number(
+                        giftData.maxUses || 0
+                    );
+
+
+                const currentUses =
+                    Math.max(
+                        Number(
+                            giftData.usedCount || 0
+                        ),
                         usedBy.length,
                         claimedUsers.length
                     );
 
-                    if (maxUses > 0 && currentUses >= maxUses) {
-                        throw new Error("এই গিফট কোডের সর্বোচ্চ ব্যবহার সীমা পূর্ণ হয়ে গেছে।");
-                    }
 
-                    const userSnap = await transaction.get(userRef);
+                if (
+                    maxUses > 0 &&
+                    currentUses >= maxUses
+                ) {
 
-                    if (!userSnap.exists()) {
-                        throw new Error("ইউজার ডাটা পাওয়া যায়নি।");
-                    }
+                    throw new Error(
+                        "এই গিফট কোডের সর্বোচ্চ ব্যবহার সীমা পূর্ণ হয়ে গেছে।"
+                    );
 
-                    const userData = userSnap.data();
-                    const currentBalance = Number(userData.balance || 0);
-
-                    usedBy.push(currentUserId);
-                    claimedUsers.push(currentUserId);
-
-                    const newUsedCount = currentUses + 1;
-
-                    transaction.update(giftRef, {
-                        usedBy: usedBy,
-                        claimedUsers: claimedUsers,
-                        usedCount: newUsedCount,
-                        used: true
-                    });
-
-                    transaction.update(userRef, {
-                        balance: currentBalance + amount,
-                        updatedAt: Date.now()
-                    });
-                });
-
-                const updatedUserSnap = await getDoc(userRef);
-
-                if (updatedUserSnap.exists()) {
-                    const data = updatedUserSnap.data();
-                    document.getElementById('wallet-balance').innerText = data.balance || 0;
-                    document.getElementById('winning-balance').innerText = data.winnings || 0;
                 }
 
-                codeInput.value = '';
-                showToast("অভিনন্দন! গিফট কোডটি সফলভাবে রিডিম হয়েছে। আপনার ব্যালেন্সে টাকা যোগ হয়েছে।", "success");
 
-            } catch (e) {
-                showToast(e.message || "গিফট কোড রিডিম করতে সমস্যা হয়েছে।", "error");
-            } finally {
-                applyBtn.disabled = false;
-                applyBtn.innerHTML = `<i class="fa-solid fa-gift text-[11px]"></i><span>Apply Gift Code</span>`;
-                applyBtn.classList.remove('opacity-75', 'cursor-not-allowed');
-            }
-        };
+                const userSnap =
+                    await transaction.get(
+                        userRef
+                    );
 
-        window.showGuide = function(type) {
-            if (type === 'add-money') {
-                showToast("Add Money-এর নির্দেশনামূলক ভিডিও শীঘ্রই আসছে।", "warning");
-            } else if (type === 'join-match') {
-                showToast("Match Join-এর নির্দেশনামূলক ভিডিও শীঘ্রই আসছে।", "warning");
-            } else if (type === 'withdraw') {
-                showToast("Withdraw-এর নির্দেশনামূলক ভিডিও শীঘ্রই আসছে।", "warning");
+
+                if (!userSnap.exists()) {
+
+                    throw new Error(
+                        "ইউজার ডাটা পাওয়া যায়নি।"
+                    );
+
+                }
+
+
+                const userData =
+                    userSnap.data();
+
+
+                const currentBalance =
+                    Number(
+                        userData.balance || 0
+                    );
+
+
+                usedBy.push(
+                    currentUserId
+                );
+
+
+                claimedUsers.push(
+                    currentUserId
+                );
+
+
+                const newUsedCount =
+                    currentUses + 1;
+
+
+                transaction.update(
+                    giftRef,
+                    {
+
+                        usedBy:
+                            usedBy,
+
+                        claimedUsers:
+                            claimedUsers,
+
+                        usedCount:
+                            newUsedCount,
+
+                        used:
+                            true
+
+                    }
+                );
+
+
+                transaction.update(
+                    userRef,
+                    {
+
+                        balance:
+                            currentBalance +
+                            amount,
+
+                        updatedAt:
+                            Date.now()
+
+                    }
+                );
+
             }
-        };
-    </script>
+        );
+
+
+        /*
+         * Gift redeem successful.
+         *
+         * Latest Firebase balance আবার load।
+         */
+
+        const updatedUserSnap =
+            await getDoc(userRef);
+
+
+        if (
+            updatedUserSnap.exists()
+        ) {
+
+            updateWalletUI(
+                updatedUserSnap.data() || {}
+            );
+
+        }
+
+
+        codeInput.value = '';
+
+
+        showToast(
+            "অভিনন্দন! গিফট কোডটি সফলভাবে রিডিম হয়েছে। আপনার ব্যালেন্সে টাকা যোগ হয়েছে।",
+            "success"
+        );
+
+
+    } catch (e) {
+
+        console.error(
+            "Gift code error:",
+            e
+        );
+
+
+        showToast(
+            e.message ||
+            "গিফট কোড রিডিম করতে সমস্যা হয়েছে।",
+            "error"
+        );
+
+
+    } finally {
+
+        applyBtn.disabled =
+            false;
+
+
+        applyBtn.innerHTML =
+            `<i class="fa-solid fa-gift text-[11px]"></i>
+             <span>Apply Gift Code</span>`;
+
+
+        applyBtn.classList.remove(
+            'opacity-75',
+            'cursor-not-allowed'
+        );
+
+    }
+
+};
+
+
+/* =========================================
+   GUIDE
+========================================= */
+
+window.showGuide =
+function(type) {
+
+    if (
+        type === 'add-money'
+    ) {
+
+        showToast(
+            "Add Money-এর নির্দেশনামূলক ভিডিও শীঘ্রই আসছে।",
+            "warning"
+        );
+
+    }
+
+    else if (
+        type === 'join-match'
+    ) {
+
+        showToast(
+            "Match Join-এর নির্দেশনামূলক ভিডিও শীঘ্রই আসছে।",
+            "warning"
+        );
+
+    }
+
+    else if (
+        type === 'withdraw'
+    ) {
+
+        showToast(
+            "Withdraw-এর নির্দেশনামূলক ভিডিও শীঘ্রই আসছে।",
+            "warning"
+        );
+
+    }
+
+};
+
+</script>
+
 </body>
 </html>
