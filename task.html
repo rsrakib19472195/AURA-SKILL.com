@@ -589,43 +589,26 @@ const forceHideLoader =
             document.getElementById("loader");
 
         if(loader){
-
-            loader.classList.add(
-                "hide"
-            );
-
+            loader.classList.add("hide");
         }
 
     },2000);
 
 
 /* =========================================================
-   MISSIONS
+   ONLY 4 MISSIONS
 ========================================================= */
 
 const missions = [
 
     {
-        id:"play_1",
+        id:"play_5",
         type:"match",
-        target:1,
-        reward:2,
+        target:5,
+        reward:5,
         progressKey:"matches",
-        title:"Play 1 Match",
-        description:"Complete 1 match",
-        icon:"fa-gamepad",
-        button:"Play Match",
-        link:"index.html"
-    },
-
-    {
-        id:"play_3",
-        type:"match",
-        target:3,
-        reward:6,
-        progressKey:"matches",
-        title:"Play 3 Matches",
-        description:"Complete 3 matches",
+        title:"Play 5 Matches",
+        description:"Complete 5 matches",
         icon:"fa-gamepad",
         button:"Play Match",
         link:"index.html"
@@ -635,7 +618,7 @@ const missions = [
         id:"win_1",
         type:"match",
         target:1,
-        reward:3,
+        reward:2,
         progressKey:"wins",
         title:"Win 1 Match",
         description:"Win any 1 completed match",
@@ -651,21 +634,8 @@ const missions = [
         reward:5,
         progressKey:"referrals",
         title:"Refer 1 Friend",
-        description:"Invite 1 friend",
+        description:"Friend must complete a successful deposit",
         icon:"fa-user-plus",
-        button:"Refer",
-        link:"referral.html"
-    },
-
-    {
-        id:"refer_5",
-        type:"referral",
-        target:5,
-        reward:30,
-        progressKey:"referrals",
-        title:"Refer 5 Friends",
-        description:"Invite 5 friends",
-        icon:"fa-users",
         button:"Refer",
         link:"referral.html"
     },
@@ -843,9 +813,7 @@ function isWinnerRecord(
     for(const value of values){
 
         if(value === true){
-
             return true;
-
         }
 
 
@@ -922,21 +890,13 @@ async function loadActualMatchStats(){
                 item.data() || {};
 
 
-            if(
-                isCancelledMatch(data)
-            ){
-
+            if(isCancelledMatch(data)){
                 return;
-
             }
 
 
-            if(
-                !isCompletedMatch(data)
-            ){
-
+            if(!isCompletedMatch(data)){
                 return;
-
             }
 
 
@@ -949,20 +909,12 @@ async function loadActualMatchStats(){
 
 
             if(matchId){
-
-                matchIds.add(
-                    String(matchId)
-                );
-
+                matchIds.add(String(matchId));
             }
 
 
-            if(
-                isWinnerRecord(data)
-            ){
-
+            if(isWinnerRecord(data)){
                 wins++;
-
             }
 
         });
@@ -995,12 +947,8 @@ async function loadActualMatchStats(){
                 item.data() || {};
 
 
-            if(
-                isCancelledMatch(data)
-            ){
-
+            if(isCancelledMatch(data)){
                 return;
-
             }
 
 
@@ -1009,18 +957,12 @@ async function loadActualMatchStats(){
 
 
             if(!participant){
-
                 return;
-
             }
 
 
-            if(
-                !isCompletedMatch(data)
-            ){
-
+            if(!isCompletedMatch(data)){
                 return;
-
             }
 
 
@@ -1032,11 +974,7 @@ async function loadActualMatchStats(){
 
 
             if(matchId){
-
-                matchIds.add(
-                    String(matchId)
-                );
-
+                matchIds.add(String(matchId));
             }
 
 
@@ -1075,7 +1013,99 @@ async function loadActualMatchStats(){
 
 
 /* =========================================================
+   CHECK REFERRED USER SUCCESSFUL DEPOSIT
+========================================================= */
+
+async function referredUserHasSuccessfulDeposit(
+    referredUid
+){
+
+    try{
+
+        const depositQuery =
+            query(
+
+                collection(
+                    db,
+                    "transactions"
+                ),
+
+                where(
+                    "userId",
+                    "==",
+                    referredUid
+                )
+
+            );
+
+
+        const snapshot =
+            await getDocs(
+                depositQuery
+            );
+
+
+        for(const item of snapshot.docs){
+
+            const data =
+                item.data() || {};
+
+
+            const status =
+                normalizeText(
+                    data.status
+                );
+
+
+            const amount =
+                safeNumber(
+                    data.amount
+                );
+
+
+            const approved = [
+
+                "approved",
+                "success",
+                "successful",
+                "completed"
+
+            ].includes(status);
+
+
+            if(
+                approved &&
+                amount > 0
+            ){
+
+                return true;
+
+            }
+
+        }
+
+
+    }catch(error){
+
+        console.error(
+            "Referred deposit check error:",
+            error
+        );
+
+    }
+
+
+    return false;
+
+}
+
+
+/* =========================================================
    REFERRAL STATS
+
+   IMPORTANT:
+   Referral only counts when the referred user
+   has at least one successful/approved deposit.
 ========================================================= */
 
 async function loadReferralStats(){
@@ -1083,45 +1113,145 @@ async function loadReferralStats(){
     if(!currentUser) return;
 
 
+    userStats.referrals =
+        0;
+
+
     try{
 
-        const userRef =
-            doc(
+        const usersRef =
+            collection(
                 db,
-                "users",
-                currentUser.uid
+                "users"
             );
 
 
-        const snap =
-            await getDoc(
-                userRef
-            );
+        /* Support common referral field names */
+
+        const referralQueries = [
+
+            query(
+                usersRef,
+                where(
+                    "referredBy",
+                    "==",
+                    currentUser.uid
+                )
+            ),
+
+            query(
+                usersRef,
+                where(
+                    "referrerId",
+                    "==",
+                    currentUser.uid
+                )
+            ),
+
+            query(
+                usersRef,
+                where(
+                    "referrerUid",
+                    "==",
+                    currentUser.uid
+                )
+            ),
+
+            query(
+                usersRef,
+                where(
+                    "referredByUid",
+                    "==",
+                    currentUser.uid
+                )
+            )
+
+        ];
 
 
-        if(!snap.exists()){
+        const referredUsers =
+            new Map();
 
-            userStats.referrals =
-                0;
 
-            return;
+        for(
+            const referralQuery
+            of referralQueries
+        ){
+
+            try{
+
+                const snapshot =
+                    await getDocs(
+                        referralQuery
+                    );
+
+
+                snapshot.forEach(item => {
+
+                    if(
+                        item.id !==
+                        currentUser.uid
+                    ){
+
+                        referredUsers.set(
+                            item.id,
+                            true
+                        );
+
+                    }
+
+                });
+
+            }catch(error){
+
+                console.error(
+                    "Referral query error:",
+                    error
+                );
+
+            }
 
         }
 
 
-        const data =
-            snap.data() || {};
+        /*
+
+           Check every referred user.
+           Only successful deposit referrals count.
+
+        */
+
+        for(
+            const referredUid
+            of referredUsers.keys()
+        ){
+
+            const deposited =
+                await referredUserHasSuccessfulDeposit(
+                    referredUid
+                );
 
 
-        userStats.referrals =
-            safeNumber(
+            if(deposited){
 
-                data.referrals ??
-                data.totalReferrals ??
-                data.referralCount ??
-                0
+                userStats.referrals++;
 
-            );
+                /*
+                   Mission target is only 1,
+                   so no need to continue checking.
+                */
+
+                if(
+                    userStats.referrals >= 1
+                ){
+
+                    break;
+
+                }
+
+            }
+
+        }
 
 
     }catch(error){
@@ -1364,16 +1494,12 @@ function showToast(message){
 async function claimTask(taskId){
 
     if(!currentUser){
-
         return;
-
     }
 
 
     if(claimingTaskId){
-
         return;
-
     }
 
 
@@ -1384,9 +1510,7 @@ async function claimTask(taskId){
 
 
     if(!task){
-
         return;
-
     }
 
 
@@ -1409,18 +1533,26 @@ async function claimTask(taskId){
         !isMissionComplete(task)
     ){
 
-        showToast(
-            "Mission এখনো complete হয়নি।"
-        );
+        if(task.id === "refer_1"){
+
+            showToast(
+                "Friend-কে আগে successful deposit করতে হবে।"
+            );
+
+        }else{
+
+            showToast(
+                "Mission এখনো complete হয়নি।"
+            );
+
+        }
 
         return;
 
     }
 
 
-    /* =========================================
-       SHOW SPINNER ON THIS CLAIM BUTTON
-    ========================================= */
+    /* SHOW SPINNER */
 
     claimingTaskId =
         task.id;
@@ -1516,9 +1648,7 @@ async function claimTask(taskId){
                     },
 
                     {
-
                         merge:true
-
                     }
 
                 );
@@ -1638,18 +1768,12 @@ function handleTaskButton(task){
 
 
     if(claimed){
-
         return;
-
     }
 
 
-    if(
-        claimingTaskId
-    ){
-
+    if(claimingTaskId){
         return;
-
     }
 
 
@@ -1793,9 +1917,7 @@ function renderTasks(){
             let disabled = "";
 
 
-            /* =====================================
-               CLAIMED
-            ===================================== */
+            /* CLAIMED */
 
             if(claimed){
 
@@ -1810,9 +1932,7 @@ function renderTasks(){
 
             }
 
-            /* =====================================
-               CLAIM LOADING
-            ===================================== */
+            /* CLAIM LOADING */
 
             else if(isClaiming){
 
@@ -1832,9 +1952,7 @@ function renderTasks(){
 
             }
 
-            /* =====================================
-               COMPLETE
-            ===================================== */
+            /* COMPLETE */
 
             else if(complete){
 
@@ -1846,9 +1964,7 @@ function renderTasks(){
 
             }
 
-            /* =====================================
-               INCOMPLETE
-            ===================================== */
+            /* INCOMPLETE */
 
             else{
 
@@ -2065,9 +2181,7 @@ window.handleMission =
 
 
         if(!task){
-
             return;
-
         }
 
 
