@@ -99,7 +99,7 @@
             }
         }
 
-        /* Loading text */
+        /* Loading */
 
         .loading-text {
             display: inline-block;
@@ -476,8 +476,6 @@
 </main>
 
 
-<!-- Firebase & Wallet Logic -->
-
 <script type="module">
 
 import {
@@ -512,20 +510,19 @@ let currentUserId = null;
 
 window.showToast = function(
     message,
-    type = 'success'
+    type = "success"
 ) {
 
     const container =
         document.getElementById(
-            'toast-container'
+            "toast-container"
         );
-
 
     if (!container) return;
 
 
     const toast =
-        document.createElement('div');
+        document.createElement("div");
 
 
     toast.className =
@@ -536,7 +533,7 @@ window.showToast = function(
         "fa-solid fa-circle-check text-emerald-400";
 
 
-    if (type === 'error') {
+    if (type === "error") {
 
         iconClass =
             "fa-solid fa-circle-xmark text-red-400";
@@ -544,7 +541,7 @@ window.showToast = function(
     }
 
 
-    if (type === 'warning') {
+    if (type === "warning") {
 
         iconClass =
             "fa-solid fa-triangle-exclamation text-amber-400";
@@ -552,7 +549,7 @@ window.showToast = function(
     }
 
 
-    if (type === 'info') {
+    if (type === "info") {
 
         iconClass =
             "fa-solid fa-circle-info text-blue-400";
@@ -577,90 +574,231 @@ window.showToast = function(
 
 
 /* =========================================
-   WALLET UI
+   LOADING
 ========================================= */
 
 function setWalletLoading() {
 
     const balance =
         document.getElementById(
-            'wallet-balance'
+            "wallet-balance"
         );
+
 
     const winnings =
         document.getElementById(
-            'winning-balance'
+            "winning-balance"
         );
 
 
     if (balance) {
 
-        balance.innerHTML =
-            `<span class="loading-shimmer loading-text">
-                Loading...
-             </span>`;
+        balance.className =
+            "loading-shimmer loading-text";
+
+
+        balance.textContent =
+            "Loading...";
 
     }
 
 
     if (winnings) {
 
-        winnings.innerHTML =
-            `<span class="loading-shimmer loading-text">
-                Loading...
-             </span>`;
+        winnings.className =
+            "loading-shimmer loading-text";
+
+
+        winnings.textContent =
+            "Loading...";
 
     }
 
 }
 
 
-function updateWalletUI(data) {
+/* =========================================
+   REMOVE LOADING EFFECT
+========================================= */
 
-    const balance =
-        Number(data?.balance);
+function removeLoadingEffect(element) {
+
+    if (!element) return;
+
+    /*
+     * সবচেয়ে গুরুত্বপূর্ণ fix:
+     * data আসার পরে loading class
+     * পুরোপুরি remove করা হচ্ছে।
+     */
+
+    element.classList.remove(
+        "loading-shimmer",
+        "loading-text"
+    );
+
+    element.style.color = "";
+    element.style.opacity = "";
+}
 
 
-    const winnings =
-        Number(data?.winnings);
+/* =========================================
+   GET NUMBER
+========================================= */
+
+function getNumber(value, fallback = 0) {
+
+    if (
+        value === undefined ||
+        value === null ||
+        value === ""
+    ) {
+        return fallback;
+    }
 
 
-    const balanceElement =
-        document.getElementById(
-            'wallet-balance'
-        );
+    const number =
+        Number(value);
 
 
-    const winningsElement =
-        document.getElementById(
-            'winning-balance'
-        );
+    return Number.isFinite(number)
+        ? number
+        : fallback;
+
+}
+
+
+/* =========================================
+   WINNING BALANCE
+========================================= */
+
+function getWinningBalance(data) {
+
+    if (!data) return 0;
 
 
     /*
-     * Number.isFinite() ব্যবহার করা হয়েছে
-     * যাতে undefined/null/invalid data
-     * কখনো ভুলভাবে 0 না দেখায়।
+     * বিভিন্ন existing field support করা হয়েছে।
+     *
+     * Priority:
+     * winningBalance
+     * winnings
+     * winning
+     * totalWinnings
      */
 
     if (
-        balanceElement &&
-        Number.isFinite(balance)
+        data.winningBalance !== undefined &&
+        data.winningBalance !== null
     ) {
 
-        balanceElement.textContent =
-            balance;
+        return getNumber(
+            data.winningBalance
+        );
 
     }
 
 
     if (
-        winningsElement &&
-        Number.isFinite(winnings)
+        data.winnings !== undefined &&
+        data.winnings !== null
     ) {
 
+        return getNumber(
+            data.winnings
+        );
+
+    }
+
+
+    if (
+        data.winning !== undefined &&
+        data.winning !== null
+    ) {
+
+        return getNumber(
+            data.winning
+        );
+
+    }
+
+
+    if (
+        data.totalWinnings !== undefined &&
+        data.totalWinnings !== null
+    ) {
+
+        return getNumber(
+            data.totalWinnings
+        );
+
+    }
+
+
+    return 0;
+
+}
+
+
+/* =========================================
+   UPDATE WALLET UI
+========================================= */
+
+function updateWalletUI(data) {
+
+    data = data || {};
+
+
+    const balance =
+        getNumber(
+            data.balance,
+            0
+        );
+
+
+    const winnings =
+        getWinningBalance(
+            data
+        );
+
+
+    const balanceElement =
+        document.getElementById(
+            "wallet-balance"
+        );
+
+
+    const winningsElement =
+        document.getElementById(
+            "winning-balance"
+        );
+
+
+    /* Balance */
+
+    if (balanceElement) {
+
+        removeLoadingEffect(
+            balanceElement
+        );
+
+
+        balanceElement.textContent =
+            String(balance);
+
+    }
+
+
+    /* Winning Balance */
+
+    if (winningsElement) {
+
+        removeLoadingEffect(
+            winningsElement
+        );
+
+
         winningsElement.textContent =
-            winnings;
+            String(winnings);
 
     }
 
@@ -684,59 +822,56 @@ async function loadWallet(user) {
         );
 
 
-    /*
-     * Loading শুরু।
-     */
-
     setWalletLoading();
 
 
     try {
 
         /*
-         * শুধু user document-এর জন্য
-         * Firebase request করা হচ্ছে।
-         *
-         * Referral বা অন্য কোনো কাজ
-         * balance render আটকাবে না।
+         * প্রথমেই শুধু users document
+         * load করা হচ্ছে।
          */
 
         const userSnap =
-            await getDoc(userRef);
+            await getDoc(
+                userRef
+            );
 
 
         if (!userSnap.exists()) {
 
-            /*
-             * User document না থাকলে
-             * 0 ধরে নেওয়া হচ্ছে না।
-             *
-             * কারণ data পাওয়া যায়নি।
-             */
-
             const balanceElement =
                 document.getElementById(
-                    'wallet-balance'
+                    "wallet-balance"
                 );
+
 
             const winningsElement =
                 document.getElementById(
-                    'winning-balance'
+                    "winning-balance"
                 );
 
 
             if (balanceElement) {
 
+                removeLoadingEffect(
+                    balanceElement
+                );
+
                 balanceElement.textContent =
-                    '—';
+                    "—";
 
             }
 
 
             if (winningsElement) {
 
+                removeLoadingEffect(
+                    winningsElement
+                );
+
                 winningsElement.textContent =
-                    '—';
+                    "—";
 
             }
 
@@ -757,104 +892,107 @@ async function loadWallet(user) {
 
 
         /*
-         * IMPORTANT:
-         *
-         * Firestore data পাওয়ার সাথে সাথে
-         * balance + winnings update।
-         *
-         * Referral processing এখানে
-         * wait করানো হয়নি।
+         * Firestore data আসার সাথে সাথেই
+         * UI update হবে।
          */
 
-        updateWalletUI(data);
+        updateWalletUI(
+            data
+        );
 
 
         /*
-         * Referral processing background-এ।
+         * Referral background-এ চলবে।
+         * Balance display আটকে থাকবে না।
          */
 
         processReferralReward(
             user.uid
         )
-        .then(async () => {
+        .then(
+            async () => {
 
-            /*
-             * Referral reward balance change
-             * করলে latest balance নিয়ে আসবে।
-             */
+                try {
 
-            try {
-
-                const refreshed =
-                    await getDoc(userRef);
+                    const refreshed =
+                        await getDoc(
+                            userRef
+                        );
 
 
-                if (
-                    refreshed.exists()
-                ) {
+                    if (
+                        refreshed.exists()
+                    ) {
 
-                    updateWalletUI(
-                        refreshed.data() || {}
+                        updateWalletUI(
+                            refreshed.data() || {}
+                        );
+
+                    }
+
+                } catch (e) {
+
+                    console.warn(
+                        "Wallet refresh:",
+                        e
                     );
 
                 }
 
-            } catch (e) {
+            }
+        )
+        .catch(
+            e => {
 
                 console.warn(
-                    "Wallet refresh after referral:",
+                    "Referral check:",
                     e
                 );
 
             }
-
-        })
-        .catch(e => {
-
-            console.warn(
-                "Referral check:",
-                e
-            );
-
-        });
-
-
-    } catch (e) {
-
-        console.error(
-            "Wallet loading error:",
-            e
         );
 
 
-        /*
-         * Error হলে 0 নয়।
-         */
+    } catch (error) {
+
+        console.error(
+            "Wallet loading error:",
+            error
+        );
+
 
         const balanceElement =
             document.getElementById(
-                'wallet-balance'
+                "wallet-balance"
             );
 
 
         const winningsElement =
             document.getElementById(
-                'winning-balance'
+                "winning-balance"
             );
 
 
         if (balanceElement) {
 
+            removeLoadingEffect(
+                balanceElement
+            );
+
             balanceElement.textContent =
-                '—';
+                "—";
 
         }
 
 
         if (winningsElement) {
 
+            removeLoadingEffect(
+                winningsElement
+            );
+
             winningsElement.textContent =
-                '—';
+                "—";
 
         }
 
@@ -889,7 +1027,7 @@ onAuthStateChanged(
                 () => {
 
                     window.location.replace(
-                        'login.html'
+                        "login.html"
                     );
 
                 },
@@ -906,19 +1044,16 @@ onAuthStateChanged(
             user.uid;
 
 
-        /*
-         * Wallet load immediately শুরু।
-         *
-         * Referral এখানে আগে চালানো হচ্ছে না।
-         */
-
         loadWallet(user)
             .catch(
-                error =>
+                error => {
+
                     console.error(
                         "Wallet background load:",
                         error
-                    )
+                    );
+
+                }
             );
 
     }
@@ -934,20 +1069,20 @@ async function() {
 
     const codeInput =
         document.getElementById(
-            'gift-code-input'
+            "gift-code-input"
         );
 
 
     const applyBtn =
         document.getElementById(
-            'apply-gift-btn'
+            "apply-gift-btn"
         );
 
 
     const code =
         codeInput
             ? codeInput.value.trim()
-            : '';
+            : "";
 
 
     if (!code) {
@@ -983,8 +1118,8 @@ async function() {
 
 
     applyBtn.classList.add(
-        'opacity-75',
-        'cursor-not-allowed'
+        "opacity-75",
+        "cursor-not-allowed"
     );
 
 
@@ -1174,13 +1309,14 @@ async function() {
 
 
         /*
-         * Gift redeem successful.
-         *
-         * Latest Firebase balance আবার load।
+         * Gift code সফল হওয়ার পর
+         * latest data load।
          */
 
         const updatedUserSnap =
-            await getDoc(userRef);
+            await getDoc(
+                userRef
+            );
 
 
         if (
@@ -1194,7 +1330,7 @@ async function() {
         }
 
 
-        codeInput.value = '';
+        codeInput.value = "";
 
 
         showToast(
@@ -1203,16 +1339,16 @@ async function() {
         );
 
 
-    } catch (e) {
+    } catch (error) {
 
         console.error(
             "Gift code error:",
-            e
+            error
         );
 
 
         showToast(
-            e.message ||
+            error.message ||
             "গিফট কোড রিডিম করতে সমস্যা হয়েছে।",
             "error"
         );
@@ -1230,8 +1366,8 @@ async function() {
 
 
         applyBtn.classList.remove(
-            'opacity-75',
-            'cursor-not-allowed'
+            "opacity-75",
+            "cursor-not-allowed"
         );
 
     }
@@ -1247,7 +1383,7 @@ window.showGuide =
 function(type) {
 
     if (
-        type === 'add-money'
+        type === "add-money"
     ) {
 
         showToast(
@@ -1257,8 +1393,9 @@ function(type) {
 
     }
 
+
     else if (
-        type === 'join-match'
+        type === "join-match"
     ) {
 
         showToast(
@@ -1268,8 +1405,9 @@ function(type) {
 
     }
 
+
     else if (
-        type === 'withdraw'
+        type === "withdraw"
     ) {
 
         showToast(
