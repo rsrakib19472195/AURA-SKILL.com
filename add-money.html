@@ -28,7 +28,6 @@
 
     <div id="toast-container"></div>
 
-    <!-- Header -->
     <header class="px-4 py-3 flex items-center space-x-3 sticky top-0 z-30 bg-[#050811]/90 backdrop-blur-md border-b border-slate-900">
         <a href="wallet.html" class="w-9 h-9 rounded-xl bg-slate-800/85 hover:bg-slate-800 text-slate-300 flex items-center justify-center text-sm transition">
             <i class="fa-solid fa-arrow-left"></i>
@@ -37,8 +36,7 @@
     </header>
 
     <main class="max-w-md mx-auto px-4 py-6 w-full space-y-6">
-        
-        <!-- Active Gateway Card -->
+
         <div class="glass-card rounded-2xl p-4 flex items-center justify-between border border-slate-800">
             <div class="flex items-center space-x-3">
                 <div class="w-10 h-10 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center text-base">
@@ -52,10 +50,9 @@
             <span class="bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-[10px] font-bold px-2.5 py-1 rounded-lg">Active</span>
         </div>
 
-        <!-- Enter Amount Card -->
         <div class="glass-card rounded-3xl p-6 space-y-4 border border-slate-800 shadow-xl">
             <p class="text-[11px] font-extrabold text-slate-400 uppercase tracking-widest">Enter Amount</p>
-            
+
             <div class="relative flex items-center">
                 <span class="absolute left-4 text-base font-black text-slate-400">৳</span>
                 <input type="number" id="deposit-amount" placeholder="Amount" class="w-full bg-[#0b101d] border border-slate-800 rounded-2xl py-3.5 pl-10 pr-4 text-sm font-bold text-white focus:border-emerald-500 outline-none transition">
@@ -66,7 +63,6 @@
             </button>
         </div>
 
-        <!-- Info / Security List -->
         <div class="glass-card rounded-2xl p-4 space-y-3 border border-slate-800/80 text-[11px] text-slate-400">
             <div class="flex items-center space-x-2.5">
                 <i class="fa-solid fa-shield-halved text-blue-400"></i>
@@ -82,7 +78,6 @@
             </div>
         </div>
 
-        <!-- Deposit Admin Contact Box -->
         <div class="glass-card rounded-2xl p-4 bg-gradient-to-r from-blue-950/40 to-slate-900/60 border border-blue-500/20 text-center space-y-3">
             <p class="text-xs text-slate-300 font-semibold leading-relaxed">
                 ৫ মিনিটের ভিতরে যদি আপনার ব্যালেন্স add না হয়, তাহলে নিচে deposit admin-কে মেসেজ দিন।
@@ -95,11 +90,10 @@
 
     </main>
 
-    <!-- Script Logic -->
     <script type="module">
         import { auth, db } from "./firebase.js";
         import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-        import { doc, getDoc, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { doc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         let currentUser = null;
         let currentUserData = null;
@@ -109,7 +103,7 @@
             if (!container) return;
             const toast = document.createElement('div');
             toast.className = `toast ${type}`;
-            
+
             let iconClass = "fa-solid fa-circle-check text-emerald-400";
             if (type === 'error') iconClass = "fa-solid fa-circle-xmark text-red-400";
             if (type === 'warning') iconClass = "fa-solid fa-triangle-exclamation text-amber-400";
@@ -117,42 +111,52 @@
             toast.innerHTML = `<i class="${iconClass}"></i> <span>${message}</span>`;
             container.appendChild(toast);
             setTimeout(() => toast.remove(), 3000);
-        }
+        };
 
         onAuthStateChanged(auth, async (user) => {
             if (!user) {
                 showToast("দয়া করে লগইন করুন!", "warning");
                 setTimeout(() => { window.location.href = 'login.html'; }, 1000);
-            } else {
-                currentUser = user;
+                return;
+            }
+
+            currentUser = user;
+
+            try {
                 const userSnap = await getDoc(doc(db, "users", user.uid));
                 if (userSnap.exists()) {
                     currentUserData = userSnap.data();
                 }
+            } catch (error) {
+                console.error("User data load failed:", error);
             }
         });
 
         window.proceedToDeposit = function() {
             const input = document.getElementById('deposit-amount');
-            const amountInput = input.value.trim();
-            const amount = parseFloat(amountInput);
+            const amountInput = input ? input.value.trim() : '';
+            const amount = Number(amountInput);
 
-            // Amount is mandatory
-            if (!amountInput || Number.isNaN(amount)) {
+            if (!amountInput || !Number.isFinite(amount)) {
                 showToast("দয়া করে একটি Amount লিখুন!", "warning");
-                input.focus();
-                return;
+                if (input) input.focus();
+                return false;
             }
 
-            // Minimum deposit is ৳10
             if (amount < 10) {
                 showToast("Minimum Deposit Amount ৳10!", "warning");
-                input.focus();
-                return;
+                if (input) input.focus();
+                return false;
             }
 
-            // Only proceed after a valid amount is entered
+            if (amount > 10000000) {
+                showToast("Amount অনেক বেশি হয়েছে!", "warning");
+                if (input) input.focus();
+                return false;
+            }
+
             window.location.href = 'deposit.html?amount=' + encodeURIComponent(amount.toFixed(2));
+            return true;
         };
 
         window.contactAdminWhatsApp = function() {
@@ -160,6 +164,7 @@
             let uid = "Not Found";
 
             const user = auth.currentUser;
+
             if (user) {
                 email = user.email || "Not Found";
                 uid = user.uid || "Not Found";
@@ -168,47 +173,14 @@
                 uid = currentUser.uid || "Not Found";
             }
 
-            const text = `ASSALAMUALAIKUM ami AURA ARMAN TOUR app theke support er jonno esechi amar gmail: ${email}, uid: ${uid}. Amar deposit akhono success hoy nai please check kore taratari balance add kore den`;
+            const text = `আসসালামু আলাইকুম। আমি AURA ARMAN TOUR অ্যাপ থেকে সাপোর্টের জন্য যোগাযোগ করছি।
+আমার Gmail: ${email}
+আমার UID: ${uid}
+
+আমি Deposit করেছি, কিন্তু এখনো আমার ব্যালেন্সে টাকা যোগ হয়নি। অনুগ্রহ করে বিষয়টি একটু চেক করে যত দ্রুত সম্ভব আমার ব্যালেন্সটি যোগ করে দেওয়ার ব্যবস্থা করবেন। ধন্যবাদ। ❤️`;
             const encodedText = encodeURIComponent(text);
-            window.open(`https://wa.me/8801738990063?text=${encodedText}`, '_blank');
-        }
-    </script>
 
-    <!-- Amount validation is kept outside the Firebase module so the button still works even if Firebase takes time to load. -->
-    <script>
-        window.proceedToDeposit = function() {
-            const input = document.getElementById('deposit-amount');
-            const raw = input ? input.value.trim() : '';
-            const amount = Number(raw);
-
-            const toast = (message, type = 'warning') => {
-                if (typeof window.showToast === 'function') {
-                    window.showToast(message, type);
-                } else {
-                    alert(message);
-                }
-            };
-
-            if (!raw || !Number.isFinite(amount)) {
-                toast('দয়া করে একটি Amount লিখুন!', 'warning');
-                if (input) input.focus();
-                return false;
-            }
-
-            if (amount < 10) {
-                toast('Minimum Deposit Amount ৳10!', 'warning');
-                if (input) input.focus();
-                return false;
-            }
-
-            if (amount > 10000000) {
-                toast('Amount অনেক বেশি হয়েছে!', 'warning');
-                if (input) input.focus();
-                return false;
-            }
-
-            window.location.href = 'deposit.html?amount=' + encodeURIComponent(amount.toFixed(2));
-            return true;
+            window.open(`https://wa.me/8801871132039?text=${encodedText}`, '_blank');
         };
     </script>
 </body>
