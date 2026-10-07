@@ -7,200 +7,1729 @@
 <script src="https://cdn.tailwindcss.com"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&display=swap" rel="stylesheet">
+
 <style>
-body{font-family:'Hind Siliguri',sans-serif;background:#050811;color:#f8fafc}
-.glass-card{background:rgba(15,23,42,.75);backdrop-filter:blur(12px);border:1px solid rgba(30,41,59,.8)}
-.menu-item:hover{background:rgba(30,41,59,.5);transition:all .2s ease}
-#toast-container{position:fixed;top:20px;right:20px;z-index:9999;display:flex;flex-direction:column;gap:10px}
-.toast{background:rgba(15,23,42,.95);backdrop-filter:blur(12px);border-left:4px solid #3b82f6;color:#fff;padding:12px 20px;border-radius:12px;box-shadow:0 10px 25px -5px rgba(0,0,0,.5);font-size:13px;font-weight:600;display:flex;align-items:center;gap:10px;animation:slideIn .3s ease,fadeOut .3s ease 2.7s forwards;max-width:calc(100vw - 40px)}
-.toast.success{border-left-color:#10b981}.toast.error{border-left-color:#ef4444}.toast.warning{border-left-color:#f59e0b}.toast.info{border-left-color:#3b82f6}
-@keyframes slideIn{from{transform:translateX(100%);opacity:0}to{transform:translateX(0);opacity:1}}
-@keyframes fadeOut{from{opacity:1}to{opacity:0;transform:translateY(-10px)}}
+body{
+    font-family:'Hind Siliguri',sans-serif;
+    background:#050811;
+    color:#f8fafc
+}
+
+.glass-card{
+    background:rgba(15,23,42,.75);
+    backdrop-filter:blur(12px);
+    border:1px solid rgba(30,41,59,.8)
+}
+
+.menu-item:hover{
+    background:rgba(30,41,59,.5);
+    transition:all .2s ease
+}
+
+#toast-container{
+    position:fixed;
+    top:20px;
+    right:20px;
+    z-index:9999;
+    display:flex;
+    flex-direction:column;
+    gap:10px
+}
+
+.toast{
+    background:rgba(15,23,42,.95);
+    backdrop-filter:blur(12px);
+    border-left:4px solid #3b82f6;
+    color:#fff;
+    padding:12px 20px;
+    border-radius:12px;
+    box-shadow:0 10px 25px -5px rgba(0,0,0,.5);
+    font-size:13px;
+    font-weight:600;
+    display:flex;
+    align-items:center;
+    gap:10px;
+    animation:slideIn .3s ease,fadeOut .3s ease 2.7s forwards;
+    max-width:calc(100vw - 40px)
+}
+
+.toast.success{border-left-color:#10b981}
+.toast.error{border-left-color:#ef4444}
+.toast.warning{border-left-color:#f59e0b}
+.toast.info{border-left-color:#3b82f6}
+
+@keyframes slideIn{
+    from{
+        transform:translateX(100%);
+        opacity:0
+    }
+    to{
+        transform:translateX(0);
+        opacity:1
+    }
+}
+
+@keyframes fadeOut{
+    from{
+        opacity:1
+    }
+    to{
+        opacity:0;
+        transform:translateY(-10px)
+    }
+}
+
+/* Loading state */
+.loading-text{
+    display:inline-block;
+    color:#64748b;
+    font-weight:600;
+    animation:loadingPulse 1.2s ease-in-out infinite;
+}
+
+.loading-shimmer{
+    display:inline-block;
+    color:#64748b;
+    position:relative;
+    overflow:hidden;
+}
+
+.loading-shimmer::after{
+    content:"";
+    position:absolute;
+    top:0;
+    left:-100%;
+    width:100%;
+    height:100%;
+    background:linear-gradient(
+        90deg,
+        transparent,
+        rgba(255,255,255,.12),
+        transparent
+    );
+    animation:shimmer 1.4s infinite;
+}
+
+@keyframes loadingPulse{
+    0%,100%{
+        opacity:.45
+    }
+    50%{
+        opacity:1
+    }
+}
+
+@keyframes shimmer{
+    100%{
+        left:100%
+    }
+}
 </style>
 </head>
+
 <body class="min-h-screen flex flex-col pb-28">
+
 <div id="toast-container"></div>
 
-<div id="logoutModal" class="fixed inset-0 z-[99999] flex items-center justify-center bg-black/80 backdrop-blur-md px-4" style="display:none;">
-<div class="bg-[#0f172a] border border-red-500/40 rounded-3xl p-6 max-w-sm w-full shadow-2xl text-center space-y-4">
-<div class="w-16 h-16 bg-red-500/10 border border-red-500/30 rounded-full flex items-center justify-center mx-auto text-red-500 text-2xl shadow-lg shadow-red-500/10"><i class="fa-solid fa-right-from-bracket"></i></div>
-<div><h3 class="text-lg font-bold text-white tracking-wide">লগআউট করতে চান?</h3><p class="text-xs text-slate-400 mt-1">আপনি কি নিশ্চিতভাবে আপনার অ্যাকাউন্ট থেকে বের হয়ে যেতে চান?</p></div>
-<div class="grid grid-cols-2 gap-3 pt-2">
-<button onclick="closeLogoutModal()" class="py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold text-xs transition border border-slate-700">বাতিল</button>
-<button onclick="confirmLogout()" class="py-2.5 rounded-xl bg-red-600 hover:bg-red-500 text-white font-bold text-xs transition shadow-lg shadow-red-600/30">লগআউট</button>
-</div></div></div>
+<!-- Logout Modal -->
+<div id="logoutModal"
+     class="fixed inset-0 z-[99999] flex items-center justify-center bg-black/80 backdrop-blur-md px-4"
+     style="display:none;">
 
+    <div class="bg-[#0f172a] border border-red-500/40 rounded-3xl p-6 max-w-sm w-full shadow-2xl text-center space-y-4">
+
+        <div class="w-16 h-16 bg-red-500/10 border border-red-500/30 rounded-full flex items-center justify-center mx-auto text-red-500 text-2xl shadow-lg shadow-red-500/10">
+            <i class="fa-solid fa-right-from-bracket"></i>
+        </div>
+
+        <div>
+            <h3 class="text-lg font-bold text-white tracking-wide">
+                লগআউট করতে চান?
+            </h3>
+
+            <p class="text-xs text-slate-400 mt-1">
+                আপনি কি নিশ্চিতভাবে আপনার অ্যাকাউন্ট থেকে বের হয়ে যেতে চান?
+            </p>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3 pt-2">
+
+            <button
+                onclick="closeLogoutModal()"
+                class="py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold text-xs transition border border-slate-700">
+                বাতিল
+            </button>
+
+            <button
+                onclick="confirmLogout()"
+                class="py-2.5 rounded-xl bg-red-600 hover:bg-red-500 text-white font-bold text-xs transition shadow-lg shadow-red-600/30">
+                লগআউট
+            </button>
+
+        </div>
+    </div>
+</div>
+
+
+<!-- Header -->
 <header class="px-4 py-3 flex justify-between items-center sticky top-0 z-30 bg-[#050811]/90 backdrop-blur-md">
-<div class="flex items-center space-x-2"><div class="w-8 h-8 rounded-lg bg-blue-600/20 flex items-center justify-center text-blue-400 font-black text-xs">AS</div></div>
-<a href="wallet.html" class="bg-[#10172a] border border-slate-800 hover:border-blue-500/50 text-slate-200 px-3 py-1.5 rounded-xl text-xs font-semibold flex items-center space-x-1.5 transition"><i class="fa-solid fa-wallet text-blue-400 text-[11px]"></i><span>৳ Wallet</span></a>
+
+    <div class="flex items-center space-x-2">
+        <div class="w-8 h-8 rounded-lg bg-blue-600/20 flex items-center justify-center text-blue-400 font-black text-xs">
+            AS
+        </div>
+    </div>
+
+    <a href="wallet.html"
+       class="bg-[#10172a] border border-slate-800 hover:border-blue-500/50 text-slate-200 px-3 py-1.5 rounded-xl text-xs font-semibold flex items-center space-x-1.5 transition">
+
+        <i class="fa-solid fa-wallet text-blue-400 text-[11px]"></i>
+
+        <span>৳ Wallet</span>
+
+    </a>
+
 </header>
 
+
 <main class="max-w-md mx-auto px-4 py-2 w-full space-y-6 flex-grow">
+
+
+<!-- Profile Card -->
 <div class="glass-card rounded-3xl p-5 space-y-5 shadow-xl border border-slate-800/80">
-<div class="flex items-center space-x-4">
-<div class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-blue-600 to-indigo-600 p-0.5 shadow-lg flex-shrink-0">
-<div class="w-full h-full bg-[#0b101d] rounded-[14px] flex items-center justify-center overflow-hidden">
-<img id="user-avatar" src="https://videotourl.com/images/1789800604014-b96e1edf-d789-4513-8557-9fb63a327a13.jpg" alt="Avatar" class="w-full h-full object-cover">
-</div></div>
-<div><h2 id="user-name" class="text-base font-black text-white tracking-wide">RSRAKIB19</h2><p id="user-uid" class="text-xs text-blue-400 font-semibold mt-0.5">UID : #9819</p><p id="user-refer-code" class="text-[11px] text-emerald-400 font-bold mt-1">Refer Code : —</p></div>
+
+    <div class="flex items-center space-x-4">
+
+        <div class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-blue-600 to-indigo-600 p-0.5 shadow-lg flex-shrink-0">
+
+            <div class="w-full h-full bg-[#0b101d] rounded-[14px] flex items-center justify-center overflow-hidden">
+
+                <img
+                    id="user-avatar"
+                    src="https://videotourl.com/images/1789800604014-b96e1edf-d789-4513-8557-9fb63a327a13.jpg"
+                    alt="Avatar"
+                    class="w-full h-full object-cover">
+
+            </div>
+
+        </div>
+
+
+        <div>
+
+            <!-- NAME: NO INITIAL 0 -->
+            <h2
+                id="user-name"
+                class="text-base font-black text-white tracking-wide">
+                <span class="loading-shimmer loading-text">Loading...</span>
+            </h2>
+
+            <p
+                id="user-uid"
+                class="text-xs text-blue-400 font-semibold mt-0.5">
+                <span class="loading-text">Loading...</span>
+            </p>
+
+            <p
+                id="user-refer-code"
+                class="text-[11px] text-emerald-400 font-bold mt-1">
+                <span class="loading-text">Loading...</span>
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <!-- Balance -->
+    <div class="bg-[#0b101d] border border-slate-800/90 rounded-2xl p-4 space-y-3">
+
+        <div class="flex justify-between items-center">
+
+            <div>
+
+                <p class="text-[11px] text-slate-400 font-medium">
+                    Available Balance
+                </p>
+
+                <h3 class="text-2xl font-black text-white mt-0.5">
+
+                    ৳
+
+                    <span
+                        id="wallet-balance"
+                        class="loading-shimmer loading-text">
+                        Loading...
+                    </span>
+
+                </h3>
+
+            </div>
+
+
+            <a
+                href="wallet.html"
+                class="bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-extrabold text-xs px-4 py-2 rounded-xl transition shadow-lg shadow-emerald-500/20">
+
+                + ADD
+
+            </a>
+
+        </div>
+
+
+        <div class="pt-2 border-t border-slate-900 flex items-center justify-between">
+
+            <span class="text-[11px] text-slate-400">
+
+                Winnings: ৳
+
+                <span
+                    id="winnings-balance"
+                    class="loading-shimmer loading-text">
+                    Loading...
+                </span>
+
+            </span>
+
+        </div>
+
+    </div>
+
+
+    <!-- Stats -->
+    <div class="grid grid-cols-3 gap-3 text-center">
+
+
+        <div class="bg-[#0b101d]/60 border border-slate-800/60 rounded-xl p-2.5">
+
+            <div class="text-blue-400 text-xs mb-1">
+                <i class="fa-solid fa-gamepad"></i>
+            </div>
+
+            <h4
+                id="stat-matches"
+                class="text-sm font-bold text-white">
+                <span class="loading-text">Loading...</span>
+            </h4>
+
+            <p class="text-[10px] text-slate-400 mt-0.5">
+                Matches
+            </p>
+
+        </div>
+
+
+        <div class="bg-[#0b101d]/60 border border-slate-800/60 rounded-xl p-2.5">
+
+            <div class="text-amber-400 text-xs mb-1">
+                <i class="fa-solid fa-trophy"></i>
+            </div>
+
+            <h4
+                id="stat-wins"
+                class="text-sm font-bold text-white">
+                <span class="loading-text">Loading...</span>
+            </h4>
+
+            <p class="text-[10px] text-slate-400 mt-0.5">
+                Wins
+            </p>
+
+        </div>
+
+
+        <div class="bg-[#0b101d]/60 border border-slate-800/60 rounded-xl p-2.5">
+
+            <div class="text-emerald-400 text-xs mb-1">
+                <i class="fa-solid fa-coins"></i>
+            </div>
+
+            <h4
+                id="stat-earnings"
+                class="text-sm font-bold text-white">
+                <span class="loading-text">Loading...</span>
+            </h4>
+
+            <p class="text-[10px] text-slate-400 mt-0.5">
+                Earnings
+            </p>
+
+        </div>
+
+    </div>
+
 </div>
 
-<div class="bg-[#0b101d] border border-slate-800/90 rounded-2xl p-4 space-y-3">
-<div class="flex justify-between items-center"><div><p class="text-[11px] text-slate-400 font-medium">Available Balance</p><h3 class="text-2xl font-black text-white mt-0.5">৳ <span id="wallet-balance">0</span></h3></div>
-<a href="wallet.html" class="bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-extrabold text-xs px-4 py-2 rounded-xl transition shadow-lg shadow-emerald-500/20">+ ADD</a></div>
-<div class="pt-2 border-t border-slate-900 flex items-center justify-between"><span class="text-[11px] text-slate-400">Winnings: ৳ <span id="winnings-balance">0</span></span></div>
+
+<!-- Account -->
+<div class="space-y-2">
+
+    <p class="text-[11px] font-extrabold text-slate-400 uppercase tracking-widest px-1">
+        Account
+    </p>
+
+    <div class="glass-card rounded-2xl overflow-hidden divide-y divide-slate-800/50">
+
+
+        <a
+            href="edit-profile.html"
+            class="menu-item p-3.5 flex items-center justify-between text-xs font-semibold text-slate-200">
+
+            <div class="flex items-center space-x-3">
+
+                <div class="w-8 h-8 rounded-xl bg-blue-500/10 text-blue-400 flex items-center justify-center text-xs">
+                    <i class="fa-solid fa-user-pen"></i>
+                </div>
+
+                <span>Edit Profile</span>
+
+            </div>
+
+            <i class="fa-solid fa-chevron-right text-slate-600 text-[10px]"></i>
+
+        </a>
+
+
+        <a
+            href="wallet.html"
+            class="menu-item p-3.5 flex items-center justify-between text-xs font-semibold text-slate-200">
+
+            <div class="flex items-center space-x-3">
+
+                <div class="w-8 h-8 rounded-xl bg-purple-500/10 text-purple-400 flex items-center justify-center text-xs">
+                    <i class="fa-solid fa-wallet"></i>
+                </div>
+
+                <span>My Wallet</span>
+
+            </div>
+
+            <i class="fa-solid fa-chevron-right text-slate-600 text-[10px]"></i>
+
+        </a>
+
+
+        <a
+            href="my-matches.html"
+            class="menu-item p-3.5 flex items-center justify-between text-xs font-semibold text-slate-200">
+
+            <div class="flex items-center space-x-3">
+
+                <div class="w-8 h-8 rounded-xl bg-indigo-500/10 text-indigo-400 flex items-center justify-center text-xs">
+                    <i class="fa-solid fa-gamepad"></i>
+                </div>
+
+                <span>My Matches</span>
+
+            </div>
+
+            <i class="fa-solid fa-chevron-right text-slate-600 text-[10px]"></i>
+
+        </a>
+
+
+        <a
+            href="top-players.html"
+            class="menu-item p-3.5 flex items-center justify-between text-xs font-semibold text-slate-200">
+
+            <div class="flex items-center space-x-3">
+
+                <div class="w-8 h-8 rounded-xl bg-amber-500/10 text-amber-400 flex items-center justify-center text-xs">
+                    <i class="fa-solid fa-ranking-star"></i>
+                </div>
+
+                <span>Top Players</span>
+
+            </div>
+
+            <i class="fa-solid fa-chevron-right text-slate-600 text-[10px]"></i>
+
+        </a>
+
+
+        <a
+            href="https://chat.whatsapp.com/DCxfqldDvbl8wOtk7PzCP9?s=cl&p=a&mlu=4&ilr=4"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="menu-item p-3.5 flex items-center justify-between text-xs font-semibold text-slate-200">
+
+            <div class="flex items-center space-x-3">
+
+                <div class="w-8 h-8 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center text-xs">
+                    <i class="fa-brands fa-whatsapp"></i>
+                </div>
+
+                <span>Support</span>
+
+            </div>
+
+            <i class="fa-solid fa-chevron-right text-slate-600 text-[10px]"></i>
+
+        </a>
+
+    </div>
+
 </div>
 
-<div class="grid grid-cols-3 gap-3 text-center">
-<div class="bg-[#0b101d]/60 border border-slate-800/60 rounded-xl p-2.5"><div class="text-blue-400 text-xs mb-1"><i class="fa-solid fa-gamepad"></i></div><h4 id="stat-matches" class="text-sm font-bold text-white">0</h4><p class="text-[10px] text-slate-400 mt-0.5">Matches</p></div>
-<div class="bg-[#0b101d]/60 border border-slate-800/60 rounded-xl p-2.5"><div class="text-amber-400 text-xs mb-1"><i class="fa-solid fa-trophy"></i></div><h4 id="stat-wins" class="text-sm font-bold text-white">0</h4><p class="text-[10px] text-slate-400 mt-0.5">Wins</p></div>
-<div class="bg-[#0b101d]/60 border border-slate-800/60 rounded-xl p-2.5"><div class="text-emerald-400 text-xs mb-1"><i class="fa-solid fa-coins"></i></div><h4 id="stat-earnings" class="text-sm font-bold text-white">৳0</h4><p class="text-[10px] text-slate-400 mt-0.5">Earnings</p></div>
-</div></div>
 
-<div class="space-y-2"><p class="text-[11px] font-extrabold text-slate-400 uppercase tracking-widest px-1">Account</p>
-<div class="glass-card rounded-2xl overflow-hidden divide-y divide-slate-800/50">
-<a href="edit-profile.html" class="menu-item p-3.5 flex items-center justify-between text-xs font-semibold text-slate-200"><div class="flex items-center space-x-3"><div class="w-8 h-8 rounded-xl bg-blue-500/10 text-blue-400 flex items-center justify-center text-xs"><i class="fa-solid fa-user-pen"></i></div><span>Edit Profile</span></div><i class="fa-solid fa-chevron-right text-slate-600 text-[10px]"></i></a>
-<a href="wallet.html" class="menu-item p-3.5 flex items-center justify-between text-xs font-semibold text-slate-200"><div class="flex items-center space-x-3"><div class="w-8 h-8 rounded-xl bg-purple-500/10 text-purple-400 flex items-center justify-center text-xs"><i class="fa-solid fa-wallet"></i></div><span>My Wallet</span></div><i class="fa-solid fa-chevron-right text-slate-600 text-[10px]"></i></a>
-<a href="my-matches.html" class="menu-item p-3.5 flex items-center justify-between text-xs font-semibold text-slate-200"><div class="flex items-center space-x-3"><div class="w-8 h-8 rounded-xl bg-indigo-500/10 text-indigo-400 flex items-center justify-center text-xs"><i class="fa-solid fa-gamepad"></i></div><span>My Matches</span></div><i class="fa-solid fa-chevron-right text-slate-600 text-[10px]"></i></a>
-<a href="top-players.html" class="menu-item p-3.5 flex items-center justify-between text-xs font-semibold text-slate-200"><div class="flex items-center space-x-3"><div class="w-8 h-8 rounded-xl bg-amber-500/10 text-amber-400 flex items-center justify-center text-xs"><i class="fa-solid fa-ranking-star"></i></div><span>Top Players</span></div><i class="fa-solid fa-chevron-right text-slate-600 text-[10px]"></i></a>
-<a href="https://chat.whatsapp.com/DCxfqldDvbl8wOtk7PzCP9?s=cl&p=a&mlu=4&ilr=4" target="_blank" rel="noopener noreferrer" class="menu-item p-3.5 flex items-center justify-between text-xs font-semibold text-slate-200"><div class="flex items-center space-x-3"><div class="w-8 h-8 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center text-xs"><i class="fa-brands fa-whatsapp"></i></div><span>Support</span></div><i class="fa-solid fa-chevron-right text-slate-600 text-[10px]"></i></a>
-</div></div>
+<!-- More -->
+<div class="space-y-2">
 
-<div class="space-y-2"><p class="text-[11px] font-extrabold text-slate-400 uppercase tracking-widest px-1">More</p>
-<div class="glass-card rounded-2xl overflow-hidden divide-y divide-slate-800/50">
-<button onclick="shareApp()" class="w-full menu-item p-3.5 flex items-center justify-between text-xs font-semibold text-slate-200 text-left"><div class="flex items-center space-x-3"><div class="w-8 h-8 rounded-xl bg-sky-500/10 text-sky-400 flex items-center justify-center text-xs"><i class="fa-solid fa-share-nodes"></i></div><span>Share App</span></div><i class="fa-solid fa-chevron-right text-slate-600 text-[10px]"></i></button>
-<a href="rules.html" class="menu-item p-3.5 flex items-center justify-between text-xs font-semibold text-slate-200"><div class="flex items-center space-x-3"><div class="w-8 h-8 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center text-xs"><i class="fa-solid fa-book"></i></div><span>Match Rules</span></div><i class="fa-solid fa-chevron-right text-slate-600 text-[10px]"></i></a>
-<a href="terms.html" class="menu-item p-3.5 flex items-center justify-between text-xs font-semibold text-slate-200"><div class="flex items-center space-x-3"><div class="w-8 h-8 rounded-xl bg-teal-500/10 text-teal-400 flex items-center justify-center text-xs"><i class="fa-solid fa-file-lines"></i></div><span>Terms & Conditions</span></div><i class="fa-solid fa-chevron-right text-slate-600 text-[10px]"></i></a>
-<a href="dev-rs.html" class="menu-item p-3.5 flex items-center justify-between text-xs font-semibold text-slate-200"><div class="flex items-center space-x-3"><div class="w-8 h-8 rounded-xl bg-rose-500/10 text-rose-400 flex items-center justify-center text-xs"><i class="fa-solid fa-code"></i></div><span>Developer Profile</span></div><i class="fa-solid fa-chevron-right text-slate-600 text-[10px]"></i></a>
-<button onclick="handleLogout()" class="w-full menu-item p-3.5 flex items-center justify-between text-xs font-semibold text-red-400 text-left"><div class="flex items-center space-x-3"><div class="w-8 h-8 rounded-xl bg-red-500/10 text-red-400 flex items-center justify-center text-xs"><i class="fa-solid fa-right-from-bracket"></i></div><span>Logout</span></div><i class="fa-solid fa-chevron-right text-slate-600 text-[10px]"></i></button>
-</div></div>
+    <p class="text-[11px] font-extrabold text-slate-400 uppercase tracking-widest px-1">
+        More
+    </p>
+
+    <div class="glass-card rounded-2xl overflow-hidden divide-y divide-slate-800/50">
+
+
+        <button
+            onclick="shareApp()"
+            class="w-full menu-item p-3.5 flex items-center justify-between text-xs font-semibold text-slate-200 text-left">
+
+            <div class="flex items-center space-x-3">
+
+                <div class="w-8 h-8 rounded-xl bg-sky-500/10 text-sky-400 flex items-center justify-center text-xs">
+                    <i class="fa-solid fa-share-nodes"></i>
+                </div>
+
+                <span>Share App</span>
+
+            </div>
+
+            <i class="fa-solid fa-chevron-right text-slate-600 text-[10px]"></i>
+
+        </button>
+
+
+        <a
+            href="rules.html"
+            class="menu-item p-3.5 flex items-center justify-between text-xs font-semibold text-slate-200">
+
+            <div class="flex items-center space-x-3">
+
+                <div class="w-8 h-8 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center text-xs">
+                    <i class="fa-solid fa-book"></i>
+                </div>
+
+                <span>Match Rules</span>
+
+            </div>
+
+            <i class="fa-solid fa-chevron-right text-slate-600 text-[10px]"></i>
+
+        </a>
+
+
+        <a
+            href="terms.html"
+            class="menu-item p-3.5 flex items-center justify-between text-xs font-semibold text-slate-200">
+
+            <div class="flex items-center space-x-3">
+
+                <div class="w-8 h-8 rounded-xl bg-teal-500/10 text-teal-400 flex items-center justify-center text-xs">
+                    <i class="fa-solid fa-file-lines"></i>
+                </div>
+
+                <span>Terms & Conditions</span>
+
+            </div>
+
+            <i class="fa-solid fa-chevron-right text-slate-600 text-[10px]"></i>
+
+        </a>
+
+
+        <a
+            href="dev-rs.html"
+            class="menu-item p-3.5 flex items-center justify-between text-xs font-semibold text-slate-200">
+
+            <div class="flex items-center space-x-3">
+
+                <div class="w-8 h-8 rounded-xl bg-rose-500/10 text-rose-400 flex items-center justify-center text-xs">
+                    <i class="fa-solid fa-code"></i>
+                </div>
+
+                <span>Developer Profile</span>
+
+            </div>
+
+            <i class="fa-solid fa-chevron-right text-slate-600 text-[10px]"></i>
+
+        </a>
+
+
+        <button
+            onclick="handleLogout()"
+            class="w-full menu-item p-3.5 flex items-center justify-between text-xs font-semibold text-red-400 text-left">
+
+            <div class="flex items-center space-x-3">
+
+                <div class="w-8 h-8 rounded-xl bg-red-500/10 text-red-400 flex items-center justify-center text-xs">
+                    <i class="fa-solid fa-right-from-bracket"></i>
+                </div>
+
+                <span>Logout</span>
+
+            </div>
+
+            <i class="fa-solid fa-chevron-right text-slate-600 text-[10px]"></i>
+
+        </button>
+
+    </div>
+
+</div>
+
 </main>
 
+
+<!-- Bottom Navigation -->
 <nav class="fixed bottom-0 left-0 right-0 max-w-md mx-auto bg-[#0b0f1a]/95 backdrop-blur-md border-t border-slate-900 px-6 py-2.5 flex justify-around items-center z-40 shadow-2xl">
-<a href="index.html" class="flex flex-col items-center text-slate-400 hover:text-blue-400 transition space-y-1"><i class="fa-solid fa-house text-base"></i><span class="text-[10px] font-semibold">Home</span></a>
-<a href="wallet.html" class="flex flex-col items-center text-slate-400 hover:text-blue-400 transition space-y-1"><i class="fa-solid fa-wallet text-base"></i><span class="text-[10px] font-semibold">Wallet</span></a>
-<a href="profile.html" class="flex flex-col items-center text-blue-400 space-y-1"><i class="fa-solid fa-user text-base"></i><span class="text-[10px] font-bold">Profile</span></a>
+
+    <a
+        href="index.html"
+        class="flex flex-col items-center text-slate-400 hover:text-blue-400 transition space-y-1">
+
+        <i class="fa-solid fa-house text-base"></i>
+
+        <span class="text-[10px] font-semibold">
+            Home
+        </span>
+
+    </a>
+
+
+    <a
+        href="wallet.html"
+        class="flex flex-col items-center text-slate-400 hover:text-blue-400 transition space-y-1">
+
+        <i class="fa-solid fa-wallet text-base"></i>
+
+        <span class="text-[10px] font-semibold">
+            Wallet
+        </span>
+
+    </a>
+
+
+    <a
+        href="profile.html"
+        class="flex flex-col items-center text-blue-400 space-y-1">
+
+        <i class="fa-solid fa-user text-base"></i>
+
+        <span class="text-[10px] font-bold">
+            Profile
+        </span>
+
+    </a>
+
 </nav>
 
+
 <script type="module">
-import {auth,db,DEFAULT_PROFILE_PHOTO} from "./firebase.js";
-import {onAuthStateChanged,signOut} from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-import {doc,getDoc,setDoc,serverTimestamp,collection,getDocs,query,where} from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-import {processReferralReward} from "./referral.js";
+
+import {
+    auth,
+    db,
+    DEFAULT_PROFILE_PHOTO
+} from "./firebase.js";
+
+import {
+    onAuthStateChanged,
+    signOut
+} from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+
+import {
+    doc,
+    getDoc,
+    setDoc,
+    serverTimestamp,
+    collection,
+    getDocs,
+    query,
+    where
+} from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+import {
+    processReferralReward
+} from "./referral.js";
+
+
+/* =========================================
+   SAFE VALUE
+========================================= */
 
 function safe(value,fallback=0){
- return value===undefined||value===null||value===""?fallback:value;
+
+    return value === undefined ||
+           value === null ||
+           value === ""
+        ? fallback
+        : value;
+
 }
+
+
+/* =========================================
+   LOADING HELPERS
+========================================= */
+
+function setLoading(id){
+
+    const el=document.getElementById(id);
+
+    if(!el)return;
+
+    el.innerHTML='<span class="loading-shimmer loading-text">Loading...</span>';
+
+}
+
+
+function setText(id,value){
+
+    const el=document.getElementById(id);
+
+    if(!el)return;
+
+    el.textContent=String(value);
+
+}
+
+
+/* =========================================
+   REAL MATCH STATISTICS
+   Runs in background so profile data
+   does not wait for this.
+========================================= */
 
 async function getRealMatchStats(uid){
- const byTournament=new Map();
- try{
-  const [historySnap,tournamentsSnap]=await Promise.all([
-   getDocs(query(collection(db,"matchHistory"),where("userId","==",uid))).catch(()=>null),
-   getDocs(collection(db,"tournaments"))
-  ]);
-  if(historySnap) historySnap.forEach(d=>{
-   const h=d.data()||{},id=String(h.tournamentId||d.id);
-   byTournament.set(id,{result:String(h.result||"").toLowerCase(),wonAmount:Number(h.wonAmount??h.winnings??h.prizeWon??0)||0,completed:true});
-  });
-  tournamentsSnap.forEach(d=>{
-   const t=d.data()||{},participants=Array.isArray(t.participants)?t.participants:[];
-   const entry=participants.find(p=>String(p?.uid||p?.userId||p?.firebaseId||"")===uid);
-   if(!entry||byTournament.has(d.id))return;
-   const status=String(t.status||"").toLowerCase();
-   const completed=["complete","completed","finished","finish","result"].includes(status)||t.completed===true||t.isCompleted===true||t.resultPublished===true;
-   const results=Array.isArray(t.results)?t.results:[];
-   const result=results.find(r=>String(r?.userId||r?.uid||"")===uid)||{};
-   const perSlot=Math.max(1,Number(entry.count||entry.slotCount||1));
-   const amount=result.winner===true?Number(result.prize??t.prize??0)*perSlot+Number(result.kills||0)*Number(t.perKill||0):result.killOnly===true?Number(result.kills||0)*Number(t.perKill||0):Number(result.wonAmount??result.winnings??0);
-   byTournament.set(d.id,{result:result.winner===true||amount>0?"win":Object.keys(result).length?"loss":"pending",wonAmount:Number.isFinite(amount)?amount:0,completed});
-  });
-  const entries=[...byTournament.values()];
-  return {matches:byTournament.size,wins:entries.filter(x=>x.result==="win"||x.result==="won"||x.wonAmount>0).length,earnings:entries.reduce((sum,x)=>sum+Math.max(0,x.wonAmount),0)};
- }catch(e){console.warn("Match statistics unavailable; using saved profile totals:",e);return null;}
+
+    const byTournament=new Map();
+
+    try{
+
+        const [
+            historySnap,
+            tournamentsSnap
+        ]=await Promise.all([
+
+            getDocs(
+                query(
+                    collection(db,"matchHistory"),
+                    where("userId","==",uid)
+                )
+            ).catch(()=>null),
+
+            getDocs(
+                collection(db,"tournaments")
+            )
+
+        ]);
+
+
+        if(historySnap){
+
+            historySnap.forEach(d=>{
+
+                const h=d.data()||{};
+
+                const id=String(
+                    h.tournamentId||d.id
+                );
+
+                byTournament.set(id,{
+
+                    result:String(
+                        h.result||""
+                    ).toLowerCase(),
+
+                    wonAmount:Number(
+                        h.wonAmount ??
+                        h.winnings ??
+                        h.prizeWon ??
+                        0
+                    )||0,
+
+                    completed:true
+
+                });
+
+            });
+
+        }
+
+
+        tournamentsSnap.forEach(d=>{
+
+            const t=d.data()||{};
+
+            const participants=
+                Array.isArray(t.participants)
+                ?t.participants
+                :[];
+
+            const entry=participants.find(
+                p=>String(
+                    p?.uid||
+                    p?.userId||
+                    p?.firebaseId||
+                    ""
+                )===uid
+            );
+
+
+            if(!entry || byTournament.has(d.id))
+                return;
+
+
+            const status=
+                String(t.status||"").toLowerCase();
+
+
+            const completed=
+                [
+                    "complete",
+                    "completed",
+                    "finished",
+                    "finish",
+                    "result"
+                ].includes(status)
+                ||
+                t.completed===true
+                ||
+                t.isCompleted===true
+                ||
+                t.resultPublished===true;
+
+
+            const results=
+                Array.isArray(t.results)
+                ?t.results
+                :[];
+
+
+            const result=results.find(
+                r=>String(
+                    r?.userId||
+                    r?.uid||
+                    ""
+                )===uid
+            )||{};
+
+
+            const perSlot=Math.max(
+                1,
+                Number(
+                    entry.count||
+                    entry.slotCount||
+                    1
+                )
+            );
+
+
+            const amount=
+                result.winner===true
+                ?
+                Number(
+                    result.prize??
+                    t.prize??
+                    0
+                )*perSlot+
+                Number(
+                    result.kills||0
+                )*
+                Number(
+                    t.perKill||0
+                )
+
+                :
+
+                result.killOnly===true
+                ?
+                Number(
+                    result.kills||0
+                )*
+                Number(
+                    t.perKill||0
+                )
+
+                :
+
+                Number(
+                    result.wonAmount??
+                    result.winnings??
+                    0
+                );
+
+
+            byTournament.set(
+                d.id,
+                {
+
+                    result:
+                        result.winner===true ||
+                        amount>0
+                        ?"win"
+                        :
+                        Object.keys(result).length
+                        ?"loss"
+                        :"pending",
+
+                    wonAmount:
+                        Number.isFinite(amount)
+                        ?amount
+                        :0,
+
+                    completed
+
+                }
+            );
+
+        });
+
+
+        const entries=[
+            ...byTournament.values()
+        ];
+
+
+        return {
+
+            matches:byTournament.size,
+
+            wins:entries.filter(
+                x=>
+                    x.result==="win"||
+                    x.result==="won"||
+                    x.wonAmount>0
+            ).length,
+
+            earnings:entries.reduce(
+                (sum,x)=>
+                    sum+
+                    Math.max(
+                        0,
+                        x.wonAmount
+                    ),
+                0
+            )
+
+        };
+
+    }catch(e){
+
+        console.warn(
+            "Match statistics unavailable:",
+            e
+        );
+
+        return null;
+
+    }
+
 }
 
-async function loadProfile(user){
- if(!user)return;
- try{
-  const userRef=doc(db,"users",user.uid),snap=await getDoc(userRef);
-  if(!snap.exists()){
-   const generatedReferCode="PT-"+String(user.displayName||user.email||"USER").toUpperCase().replace(/[^A-Z0-9]/g,"").slice(0,8)+"-"+Math.random().toString(36).slice(2,6).toUpperCase();
-   const basicData={uid:user.uid,name:user.displayName||"User",fullName:user.displayName||"User",username:"",usernameLower:"",email:user.email||"",emailLower:(user.email||"").toLowerCase(),whatsapp:"",whatsappNumber:"",phone:"",referCode:generatedReferCode,referredByUid:"",referredByCode:"",referralCount:0,successfulReferrals:0,referralBonusTotal:0,photoURL:DEFAULT_PROFILE_PHOTO,balance:0,winnings:0,matchesPlayed:0,matchesWon:0,matchesLost:0,totalEarnings:0,status:"active",createdAt:serverTimestamp(),updatedAt:serverTimestamp()};
-   await setDoc(userRef,basicData,{merge:true});
-   applyProfile(user,{...basicData});
-   getRealMatchStats(user.uid).then(realStats=>{
-    if(realStats)applyProfile(user,{...basicData,matchesPlayed:realStats.matches,matchesWon:realStats.wins,totalEarnings:realStats.earnings});
-   }).catch(()=>{});
-   return;
-  }
-  let data=snap.data();
-  if(!String(data.referCode||"").trim()){
-   const generatedReferCode="PT-"+String(data.username||data.name||user.email||"USER").toUpperCase().replace(/[^A-Z0-9]/g,"").slice(0,8)+"-"+Math.random().toString(36).slice(2,6).toUpperCase();
-   data={...data,referCode:generatedReferCode};
-   setDoc(userRef,{referCode:generatedReferCode,referredByUid:data.referredByUid||"",referredByCode:data.referredByCode||"",referralCount:Number(data.referralCount||0),successfulReferrals:Number(data.successfulReferrals||0),referralBonusTotal:Number(data.referralBonusTotal||0),updatedAt:serverTimestamp()},{merge:true}).catch(e=>console.warn("Refer code save:",e));
-  }
-  applyProfile(user,data);
-  getRealMatchStats(user.uid).then(realStats=>{
-   if(realStats)applyProfile(user,{...data,matchesPlayed:realStats.matches,matchesWon:realStats.wins,totalEarnings:realStats.earnings});
-  }).catch(()=>{});
-  processReferralReward(user.uid).catch(e=>console.warn("Referral check:",e));
- }catch(error){
-  console.error("Profile load error:",error);
-  showToast("Profile data load করতে সমস্যা হচ্ছে!","error");
- }
-}
+
+/* =========================================
+   APPLY PROFILE
+========================================= */
 
 function applyProfile(user,data){
- const name=data.name||data.fullName||data.username||user.displayName||"User",uid=data.uid||user.uid,referCode=String(data.referCode||"").trim()||"—",photo=data.photoURL||DEFAULT_PROFILE_PHOTO,balance=safe(data.balance,0),winnings=safe(data.winnings,0),matches=safe(data.matchesPlayed??data.matches??0,0),wins=safe(data.matchesWon??data.wins??0,0),earnings=safe(data.totalEarnings??data.earnings??data.winnings??0,0);
- document.getElementById("user-name").innerText=name;
- document.getElementById("user-uid").innerText=`UID : #${uid}`;
- document.getElementById("user-refer-code").innerText=`Refer Code : ${referCode}`;
- document.getElementById("user-avatar").src=photo;
- document.getElementById("wallet-balance").innerText=balance;
- document.getElementById("winnings-balance").innerText=winnings;
- document.getElementById("stat-matches").innerText=matches;
- document.getElementById("stat-wins").innerText=wins;
- document.getElementById("stat-earnings").innerText=`৳${earnings}`;
+
+    if(!user)return;
+
+
+    const name=
+        data.showName||
+        data.name||
+        data.fullName||
+        data.username||
+        user.displayName||
+        "User";
+
+
+    const uid=
+        data.uid||
+        user.uid;
+
+
+    const referCode=
+        String(
+            data.referCode||""
+        ).trim()||
+        "—";
+
+
+    const photo=
+        data.photoURL||
+        DEFAULT_PROFILE_PHOTO;
+
+
+    const balance=
+        safe(
+            data.balance,
+            0
+        );
+
+
+    const winnings=
+        safe(
+            data.winnings,
+            0
+        );
+
+
+    const matches=
+        safe(
+            data.matchesPlayed ??
+            data.matches ??
+            0,
+            0
+        );
+
+
+    const wins=
+        safe(
+            data.matchesWon ??
+            data.wins ??
+            0,
+            0
+        );
+
+
+    const earnings=
+        safe(
+            data.totalEarnings ??
+            data.earnings ??
+            data.winnings ??
+            0,
+            0
+        );
+
+
+    /* Name */
+
+    setText(
+        "user-name",
+        name
+    );
+
+
+    /* UID */
+
+    setText(
+        "user-uid",
+        `UID : #${uid}`
+    );
+
+
+    /* Refer */
+
+    setText(
+        "user-refer-code",
+        `Refer Code : ${referCode}`
+    );
+
+
+    /* Same profile photo */
+
+    const avatar=
+        document.getElementById(
+            "user-avatar"
+        );
+
+    if(avatar){
+
+        avatar.src=photo;
+
+        avatar.onerror=()=>{
+
+            avatar.onerror=null;
+
+            avatar.src=
+                DEFAULT_PROFILE_PHOTO;
+
+        };
+
+    }
+
+
+    /* Balance */
+
+    setText(
+        "wallet-balance",
+        balance
+    );
+
+
+    /* Winnings */
+
+    setText(
+        "winnings-balance",
+        winnings
+    );
+
+
+    /* Stats */
+
+    setText(
+        "stat-matches",
+        matches
+    );
+
+
+    setText(
+        "stat-wins",
+        wins
+    );
+
+
+    setText(
+        "stat-earnings",
+        `৳${earnings}`
+    );
+
 }
 
-window.showToast=function(message,type="success"){
- const container=document.getElementById("toast-container");if(!container)return;
- const toast=document.createElement("div");toast.className=`toast ${type}`;
- let icon="fa-solid fa-circle-check text-emerald-400";
- if(type==="error")icon="fa-solid fa-circle-xmark text-red-400";
- if(type==="warning")icon="fa-solid fa-triangle-exclamation text-amber-400";
- toast.innerHTML=`<i class="${icon}"></i><span>${message}</span>`;
- container.appendChild(toast);
- setTimeout(()=>toast.remove(),3000);
+
+/* =========================================
+   LOAD PROFILE
+========================================= */
+
+async function loadProfile(user){
+
+    if(!user)return;
+
+
+    const userRef=
+        doc(
+            db,
+            "users",
+            user.uid
+        );
+
+
+    try{
+
+        /*
+         * First Firestore request only.
+         *
+         * Name / Balance / Winnings are
+         * applied immediately after this
+         * document arrives.
+         */
+
+        const snap=
+            await getDoc(userRef);
+
+
+        if(!snap.exists()){
+
+            const generatedReferCode=
+                "PT-"+
+                String(
+                    user.displayName||
+                    user.email||
+                    "USER"
+                )
+                .toUpperCase()
+                .replace(
+                    /[^A-Z0-9]/g,
+                    ""
+                )
+                .slice(0,8)+
+                "-"+
+                Math.random()
+                    .toString(36)
+                    .slice(2,6)
+                    .toUpperCase();
+
+
+            const basicData={
+
+                uid:user.uid,
+
+                showName:
+                    user.displayName||
+                    "User",
+
+                name:
+                    user.displayName||
+                    "User",
+
+                fullName:
+                    user.displayName||
+                    "User",
+
+                username:"",
+
+                usernameLower:"",
+
+                email:
+                    user.email||"",
+
+                emailLower:
+                    (user.email||"")
+                    .toLowerCase(),
+
+                whatsapp:"",
+
+                whatsappNumber:"",
+
+                phone:"",
+
+                referCode:
+                    generatedReferCode,
+
+                referredByUid:"",
+
+                referredByCode:"",
+
+                referralCount:0,
+
+                successfulReferrals:0,
+
+                referralBonusTotal:0,
+
+                photoURL:
+                    DEFAULT_PROFILE_PHOTO,
+
+                balance:0,
+
+                winnings:0,
+
+                matchesPlayed:0,
+
+                matchesWon:0,
+
+                matchesLost:0,
+
+                totalEarnings:0,
+
+                status:"active",
+
+                createdAt:
+                    serverTimestamp(),
+
+                updatedAt:
+                    serverTimestamp()
+
+            };
+
+
+            /*
+             * IMPORTANT:
+             * UI gets data immediately.
+             * Firestore write happens after.
+             */
+
+            applyProfile(
+                user,
+                basicData
+            );
+
+
+            setDoc(
+                userRef,
+                basicData,
+                {merge:true}
+            ).catch(
+                e=>console.warn(
+                    "Initial profile save:",
+                    e
+                )
+            );
+
+
+            /*
+             * Statistics run separately.
+             */
+
+            getRealMatchStats(
+                user.uid
+            )
+            .then(realStats=>{
+
+                if(!realStats)return;
+
+                applyProfile(
+                    user,
+                    {
+                        ...basicData,
+
+                        matchesPlayed:
+                            realStats.matches,
+
+                        matchesWon:
+                            realStats.wins,
+
+                        totalEarnings:
+                            realStats.earnings
+
+                    }
+                );
+
+            })
+            .catch(()=>{});
+
+
+            return;
+
+        }
+
+
+        let data=snap.data();
+
+
+        /*
+         * Generate missing referral code
+         */
+
+        if(
+            !String(
+                data.referCode||""
+            ).trim()
+        ){
+
+            const generatedReferCode=
+                "PT-"+
+                String(
+                    data.showName||
+                    data.username||
+                    data.name||
+                    user.email||
+                    "USER"
+                )
+                .toUpperCase()
+                .replace(
+                    /[^A-Z0-9]/g,
+                    ""
+                )
+                .slice(0,8)+
+                "-"+
+                Math.random()
+                    .toString(36)
+                    .slice(2,6)
+                    .toUpperCase();
+
+
+            data={
+                ...data,
+                referCode:
+                    generatedReferCode
+            };
+
+
+            setDoc(
+                userRef,
+                {
+
+                    referCode:
+                        generatedReferCode,
+
+                    referredByUid:
+                        data.referredByUid||
+                        "",
+
+                    referredByCode:
+                        data.referredByCode||
+                        "",
+
+                    referralCount:
+                        Number(
+                            data.referralCount||0
+                        ),
+
+                    successfulReferrals:
+                        Number(
+                            data.successfulReferrals||0
+                        ),
+
+                    referralBonusTotal:
+                        Number(
+                            data.referralBonusTotal||0
+                        ),
+
+                    updatedAt:
+                        serverTimestamp()
+
+                },
+                {merge:true}
+            )
+            .catch(
+                e=>console.warn(
+                    "Refer code save:",
+                    e
+                )
+            );
+
+        }
+
+
+        /*
+         * THIS IS THE IMPORTANT PART:
+         *
+         * Profile data is rendered NOW.
+         * Match statistics do NOT block it.
+         */
+
+        applyProfile(
+            user,
+            data
+        );
+
+
+        /*
+         * Match statistics run in background.
+         */
+
+        getRealMatchStats(
+            user.uid
+        )
+        .then(realStats=>{
+
+            if(!realStats)return;
+
+
+            /*
+             * Only update stats.
+             *
+             * Name / Balance /
+             * Winnings remain from
+             * the main profile data.
+             */
+
+            setText(
+                "stat-matches",
+                realStats.matches
+            );
+
+            setText(
+                "stat-wins",
+                realStats.wins
+            );
+
+            setText(
+                "stat-earnings",
+                `৳${realStats.earnings}`
+            );
+
+        })
+        .catch(()=>{});
+
+
+        /*
+         * Referral check is also background.
+         */
+
+        processReferralReward(
+            user.uid
+        )
+        .catch(
+            e=>console.warn(
+                "Referral check:",
+                e
+            )
+        );
+
+
+    }catch(error){
+
+        console.error(
+            "Profile load error:",
+            error
+        );
+
+
+        /*
+         * Never replace loading with 0.
+         * If Firebase is slow/error, user sees
+         * a clear fallback instead.
+         */
+
+        const userName=
+            user.displayName||
+            "User";
+
+
+        setText(
+            "user-name",
+            userName
+        );
+
+
+        setText(
+            "user-uid",
+            `UID : #${user.uid}`
+        );
+
+
+        setText(
+            "user-refer-code",
+            "Refer Code : —"
+        );
+
+
+        setText(
+            "wallet-balance",
+            "—"
+        );
+
+
+        setText(
+            "winnings-balance",
+            "—"
+        );
+
+
+        setText(
+            "stat-matches",
+            "—"
+        );
+
+
+        setText(
+            "stat-wins",
+            "—"
+        );
+
+
+        setText(
+            "stat-earnings",
+            "৳—"
+        );
+
+
+        showToast(
+            "Profile data load করতে সমস্যা হচ্ছে!",
+            "error"
+        );
+
+    }
+
+}
+
+
+/* =========================================
+   TOAST
+========================================= */
+
+window.showToast=function(
+    message,
+    type="success"
+){
+
+    const container=
+        document.getElementById(
+            "toast-container"
+        );
+
+
+    if(!container)return;
+
+
+    const toast=
+        document.createElement(
+            "div"
+        );
+
+
+    toast.className=
+        `toast ${type}`;
+
+
+    let icon=
+        "fa-solid fa-circle-check text-emerald-400";
+
+
+    if(type==="error")
+        icon=
+            "fa-solid fa-circle-xmark text-red-400";
+
+
+    if(type==="warning")
+        icon=
+            "fa-solid fa-triangle-exclamation text-amber-400";
+
+
+    toast.innerHTML=
+        `<i class="${icon}"></i>
+         <span>${message}</span>`;
+
+
+    container.appendChild(
+        toast
+    );
+
+
+    setTimeout(
+        ()=>toast.remove(),
+        3000
+    );
+
 };
 
-onAuthStateChanged(auth,user=>{
- if(!user){
-  showToast("দয়া করে আগে login করুন!","warning");
-  setTimeout(()=>window.location.replace("login.html"),700);
-  return;
- }
- // Profile data loads in the background. The page is never blocked by a loader.
- loadProfile(user).catch(e=>console.error("Background profile load:",e));
-});
+
+/* =========================================
+   AUTH
+========================================= */
+
+onAuthStateChanged(
+    auth,
+    user=>{
+
+        if(!user){
+
+            showToast(
+                "দয়া করে আগে login করুন!",
+                "warning"
+            );
+
+
+            setTimeout(
+                ()=>window.location.replace(
+                    "login.html"
+                ),
+                700
+            );
+
+
+            return;
+
+        }
+
+
+        /*
+         * Profile load starts immediately.
+         */
+
+        loadProfile(user)
+            .catch(
+                e=>console.error(
+                    "Background profile load:",
+                    e
+                )
+            );
+
+    }
+);
+
+
+/* =========================================
+   SHARE
+========================================= */
 
 window.shareApp=async function(){
- try{
-  if(navigator.share){await navigator.share({title:"Aura Skill",text:"Gaming Tournament App",url:window.location.href});return;}
-  await navigator.clipboard.writeText(window.location.href);
-  showToast("Link copied!","success");
- }catch(error){
-  if(error?.name!=="AbortError")showToast("Share করা যায়নি!","error");
- }
+
+    try{
+
+        if(navigator.share){
+
+            await navigator.share({
+
+                title:"Aura Skill",
+
+                text:
+                    "Gaming Tournament App",
+
+                url:
+                    window.location.href
+
+            });
+
+            return;
+
+        }
+
+
+        await navigator.clipboard.writeText(
+            window.location.href
+        );
+
+
+        showToast(
+            "Link copied!",
+            "success"
+        );
+
+
+    }catch(error){
+
+        if(
+            error?.name!=="AbortError"
+        ){
+
+            showToast(
+                "Share করা যায়নি!",
+                "error"
+            );
+
+        }
+
+    }
+
 };
 
-window.handleLogout=function(){const modal=document.getElementById("logoutModal");if(modal)modal.style.display="flex";};
-window.closeLogoutModal=function(){const modal=document.getElementById("logoutModal");if(modal)modal.style.display="none";};
-window.confirmLogout=async function(){
- try{await signOut(auth);window.location.replace("login.html");}
- catch(error){console.error(error);showToast("Logout করা যায়নি!","error");}
+
+/* =========================================
+   LOGOUT
+========================================= */
+
+window.handleLogout=function(){
+
+    const modal=
+        document.getElementById(
+            "logoutModal"
+        );
+
+
+    if(modal)
+        modal.style.display="flex";
+
 };
+
+
+window.closeLogoutModal=function(){
+
+    const modal=
+        document.getElementById(
+            "logoutModal"
+        );
+
+
+    if(modal)
+        modal.style.display="none";
+
+};
+
+
+window.confirmLogout=async function(){
+
+    try{
+
+        await signOut(auth);
+
+        window.location.replace(
+            "login.html"
+        );
+
+    }catch(error){
+
+        console.error(error);
+
+
+        showToast(
+            "Logout করা যায়নি!",
+            "error"
+        );
+
+    }
+
+};
+
 </script>
+
 </body>
 </html>
