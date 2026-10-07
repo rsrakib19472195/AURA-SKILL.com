@@ -9,10 +9,10 @@
 <script src="https://cdn.tailwindcss.com"></script>
 
 <link rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
 <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700;800&display=swap"
-      rel="stylesheet">
+rel="stylesheet">
 
 <style>
 
@@ -54,7 +54,7 @@ body{
 }
 
 .glass-strong{
-    background:rgba(10,16,29,.9);
+    background:rgba(10,16,29,.94);
     backdrop-filter:blur(22px);
     -webkit-backdrop-filter:blur(22px);
     border:1px solid rgba(255,255,255,.08);
@@ -146,6 +146,7 @@ body{
     padding:2px;
     border-radius:50%;
     background:linear-gradient(135deg,#60a5fa,#8b5cf6);
+    overflow:hidden;
 }
 
 .avatar-img{
@@ -154,6 +155,7 @@ body{
     object-fit:cover;
     border-radius:50%;
     background:#111827;
+    display:block;
 }
 
 .avatar-fallback{
@@ -224,9 +226,9 @@ body{
 }
 
 .modal-backdrop{
-    background:rgba(0,0,0,.7);
-    backdrop-filter:blur(8px);
-    -webkit-backdrop-filter:blur(8px);
+    background:rgba(0,0,0,.74);
+    backdrop-filter:blur(9px);
+    -webkit-backdrop-filter:blur(9px);
 }
 
 .modal-box{
@@ -252,7 +254,23 @@ body{
     min-width:0;
 }
 
+.avatar-upload-box{
+    border:1px dashed rgba(96,165,250,.28);
+    background:rgba(37,99,235,.055);
+    transition:.2s;
+}
+
+.avatar-upload-box:active{
+    transform:scale(.985);
+}
+
+.avatar-preview{
+    width:76px;
+    height:76px;
+}
+
 @media(max-width:370px){
+
     .podium-name{
         font-size:9px!important;
     }
@@ -260,150 +278,290 @@ body{
     .podium-money{
         font-size:9px!important;
     }
+
 }
 
 </style>
 </head>
 
+
 <body class="min-h-screen flex flex-col pb-28 overflow-x-hidden">
 
 <div id="toast-container"></div>
 
+
 <!-- LOADER -->
+
 <div id="app-loader"
-     class="fixed inset-0 z-[100] flex flex-col items-center justify-center"
-     style="background:#050811">
+class="fixed inset-0 z-[100] flex flex-col items-center justify-center"
+style="background:#050811">
 
     <div class="relative w-14 h-14">
 
-        <div class="absolute inset-0 rounded-full border-2 border-blue-500/20"></div>
+        <div class="absolute inset-0 rounded-full
+                    border-2 border-blue-500/20"></div>
 
-        <div class="absolute inset-0 rounded-full border-2 border-transparent border-t-blue-500 animate-spin"></div>
+        <div class="absolute inset-0 rounded-full
+                    border-2 border-transparent
+                    border-t-blue-500 animate-spin"></div>
 
-        <div class="absolute inset-3 rounded-full bg-blue-500/10 flex items-center justify-center">
-            <i class="fa-solid fa-trophy text-blue-400 text-sm"></i>
+        <div class="absolute inset-3 rounded-full
+                    bg-blue-500/10
+                    flex items-center justify-center">
+
+            <i class="fa-solid fa-trophy
+                      text-blue-400 text-sm"></i>
+
         </div>
 
     </div>
 
-    <p class="mt-4 text-[10px] tracking-[.25em] uppercase text-slate-500 font-bold">
+    <p class="mt-4 text-[10px]
+              tracking-[.25em]
+              uppercase
+              text-slate-500
+              font-bold">
+
         Loading Leaderboard
+
     </p>
 
 </div>
 
 
 <!-- PROFILE SETUP MODAL -->
-<div id="profile-modal"
-     class="hidden fixed inset-0 z-[90] modal-backdrop flex items-end sm:items-center justify-center p-3">
 
-    <div class="modal-box glass-strong rounded-[28px] w-full max-w-md p-5 shadow-2xl">
+<div id="profile-modal"
+class="hidden fixed inset-0 z-[90]
+       modal-backdrop
+       flex items-end sm:items-center
+       justify-center p-3">
+
+    <div class="modal-box glass-strong
+                rounded-[28px]
+                w-full max-w-md
+                p-5 shadow-2xl">
+
+        <!-- HEADER -->
 
         <div class="text-center mb-5">
 
-            <div class="mx-auto w-16 h-16 rounded-2xl
-                        bg-gradient-to-br from-blue-500/20 to-purple-500/20
+            <div class="mx-auto w-16 h-16
+                        rounded-2xl
+                        bg-gradient-to-br
+                        from-blue-500/20
+                        to-purple-500/20
                         border border-blue-400/20
-                        flex items-center justify-center mb-3">
+                        flex items-center
+                        justify-center mb-3">
 
-                <i class="fa-solid fa-user-pen text-blue-400 text-xl"></i>
+                <i class="fa-solid fa-user-pen
+                          text-blue-400 text-xl"></i>
 
             </div>
 
             <h2 class="text-lg font-extrabold text-white">
+
                 Complete Your Profile
+
             </h2>
 
-            <p class="text-[11px] text-slate-400 mt-1 leading-relaxed">
-                Leaderboard-এ সবাই যেন তোমাকে সুন্দরভাবে চিনতে পারে,
-                একটি Show Name ও Avatar সেট করো।
-            </p>
+            <p class="text-[11px]
+                      text-slate-400
+                      mt-1 leading-relaxed">
 
-        </div>
+                Leaderboard-এ সবাই যেন তোমাকে
+                সুন্দরভাবে চিনতে পারে,
+                তোমার Show Name ও Avatar সেট করো।
 
-
-        <!-- SHOW NAME -->
-        <div class="mb-3">
-
-            <label class="text-[10px] uppercase tracking-wider
-                          text-slate-500 font-bold ml-1">
-                Show Name
-            </label>
-
-            <div class="mt-1.5 relative">
-
-                <i class="fa-solid fa-signature
-                          absolute left-3 top-1/2 -translate-y-1/2
-                          text-slate-500 text-xs"></i>
-
-                <input id="show-name-input"
-                       maxlength="24"
-                       type="text"
-                       placeholder="যে নামে সবাই তোমাকে দেখবে"
-                       class="w-full bg-slate-950/70 border border-slate-800
-                              rounded-xl py-3 pl-9 pr-3
-                              text-xs text-white outline-none
-                              focus:border-blue-500/60 transition">
-
-            </div>
-
-            <p class="text-[9px] text-slate-600 mt-1 ml-1">
-                24 characters maximum
             </p>
 
         </div>
 
 
         <!-- AVATAR -->
+
         <div class="mb-4">
 
-            <label class="text-[10px] uppercase tracking-wider
-                          text-slate-500 font-bold ml-1">
-                Avatar URL
+            <label class="text-[10px]
+                          uppercase
+                          tracking-wider
+                          text-slate-500
+                          font-bold ml-1">
+
+                Profile Avatar
+
             </label>
+
+
+            <input
+                id="avatar-file"
+                type="file"
+                accept="image/jpeg,image/png,image/webp,image/jpg"
+                class="hidden"
+                onchange="previewAvatar(event)"
+            >
+
+
+            <button
+                type="button"
+                onclick="document.getElementById('avatar-file').click()"
+                class="avatar-upload-box
+                       mt-2
+                       w-full
+                       rounded-2xl
+                       p-4
+                       flex items-center
+                       gap-4
+                       text-left">
+
+                <div id="modal-avatar-preview"
+                     class="avatar-ring avatar-preview
+                            shrink-0">
+
+                    <div class="avatar-fallback">
+
+                        <i class="fa-solid fa-camera
+                                  text-lg"></i>
+
+                    </div>
+
+                </div>
+
+
+                <div class="min-w-0">
+
+                    <div id="avatar-action-text"
+                         class="text-xs
+                                text-white
+                                font-extrabold">
+
+                        Choose Avatar
+
+                    </div>
+
+                    <p class="text-[9px]
+                              text-slate-500
+                              mt-1 leading-relaxed">
+
+                        Gallery থেকে একটি ছবি
+                        select করো।
+
+                        <br>
+
+                        ছবি automatically
+                        optimize হবে।
+
+                    </p>
+
+                </div>
+
+
+                <i class="fa-solid fa-chevron-right
+                          ml-auto
+                          text-slate-600
+                          text-xs"></i>
+
+            </button>
+
+        </div>
+
+
+        <!-- SHOW NAME -->
+
+        <div class="mb-4">
+
+            <label class="text-[10px]
+                          uppercase
+                          tracking-wider
+                          text-slate-500
+                          font-bold ml-1">
+
+                Show Name
+
+            </label>
+
 
             <div class="mt-1.5 relative">
 
-                <i class="fa-solid fa-image
-                          absolute left-3 top-1/2 -translate-y-1/2
-                          text-slate-500 text-xs"></i>
+                <i class="fa-solid fa-signature
+                          absolute left-3
+                          top-1/2
+                          -translate-y-1/2
+                          text-slate-500
+                          text-xs"></i>
 
-                <input id="avatar-url-input"
-                       type="url"
-                       placeholder="https://example.com/avatar.jpg"
-                       class="w-full bg-slate-950/70 border border-slate-800
-                              rounded-xl py-3 pl-9 pr-3
-                              text-xs text-white outline-none
-                              focus:border-blue-500/60 transition">
+                <input
+                    id="show-name-input"
+                    maxlength="24"
+                    type="text"
+                    placeholder="যে নামে সবাই তোমাকে দেখবে"
+                    class="w-full
+                           bg-slate-950/70
+                           border border-slate-800
+                           rounded-xl
+                           py-3 pl-9 pr-3
+                           text-xs
+                           text-white
+                           outline-none
+                           focus:border-blue-500/60
+                           transition"
+                >
 
             </div>
 
-            <p class="text-[9px] text-slate-600 mt-1 ml-1">
-                Avatar image link দিলে এখানে save হবে।
+
+            <p class="text-[9px]
+                      text-slate-600
+                      mt-1 ml-1">
+
+                সর্বোচ্চ 24 characters।
+
             </p>
 
         </div>
 
 
-        <button id="save-profile-btn"
-                onclick="saveLeaderboardProfile()"
-                class="w-full py-3.5 rounded-xl
-                       bg-gradient-to-r from-blue-600 to-indigo-600
-                       text-white text-xs font-extrabold
-                       shadow-lg shadow-blue-900/20
-                       active:scale-[.98] transition">
+        <!-- SAVE -->
+
+        <button
+            id="save-profile-btn"
+            onclick="saveLeaderboardProfile()"
+            class="w-full
+                   py-3.5
+                   rounded-xl
+                   bg-gradient-to-r
+                   from-blue-600
+                   to-indigo-600
+                   text-white
+                   text-xs
+                   font-extrabold
+                   shadow-lg
+                   shadow-blue-900/20
+                   active:scale-[.98]
+                   transition">
 
             <i class="fa-solid fa-check mr-1"></i>
+
             Update Profile
 
         </button>
 
 
-        <button onclick="closeProfileModal()"
-                class="w-full py-3 mt-2 rounded-xl
-                       bg-slate-900/70 border border-slate-800
-                       text-slate-400 text-xs font-bold
-                       active:scale-[.98] transition">
+        <!-- SKIP -->
+
+        <button
+            onclick="closeProfileModal()"
+            class="w-full
+                   py-3 mt-2
+                   rounded-xl
+                   bg-slate-900/70
+                   border border-slate-800
+                   text-slate-400
+                   text-xs
+                   font-bold
+                   active:scale-[.98]
+                   transition">
 
             Skip Now
 
@@ -415,12 +573,16 @@ body{
 
 
 <!-- HEADER -->
-<header class="sticky top-0 z-40
-              bg-[#070c16]/80 backdrop-blur-xl
-              border-b border-white/[.05]">
 
-    <div class="max-w-md mx-auto px-4 py-3.5
-                flex items-center justify-between">
+<header class="sticky top-0 z-40
+               bg-[#070c16]/80
+               backdrop-blur-xl
+               border-b border-white/[.05]">
+
+    <div class="max-w-md mx-auto
+                px-4 py-3.5
+                flex items-center
+                justify-between">
 
         <div class="flex items-center gap-2.5">
 
@@ -428,29 +590,44 @@ body{
                class="w-9 h-9 rounded-xl
                       bg-white/[.04]
                       border border-white/[.06]
-                      flex items-center justify-center
+                      flex items-center
+                      justify-center
                       text-slate-400
-                      hover:text-white transition">
+                      hover:text-white
+                      transition">
 
-                <i class="fa-solid fa-arrow-left text-xs"></i>
+                <i class="fa-solid fa-arrow-left
+                          text-xs"></i>
 
             </a>
+
 
             <div>
 
                 <div class="flex items-center gap-1.5">
 
-                    <i class="fa-solid fa-trophy text-amber-400 text-[11px]"></i>
+                    <i class="fa-solid fa-trophy
+                              text-amber-400
+                              text-[11px]"></i>
 
-                    <span class="text-xs font-extrabold
-                                 tracking-[.12em] text-white">
+                    <span class="text-xs
+                                 font-extrabold
+                                 tracking-[.12em]
+                                 text-white">
+
                         LEADERBOARD
+
                     </span>
 
                 </div>
 
-                <p class="text-[9px] text-slate-500 font-medium mt-0.5">
+
+                <p class="text-[9px]
+                          text-slate-500
+                          font-medium mt-0.5">
+
                     Top earning players
+
                 </p>
 
             </div>
@@ -459,28 +636,48 @@ body{
 
 
         <!-- WALLET -->
-        <button onclick="window.location.href='wallet.html'"
-                class="glass rounded-xl px-3 py-2
-                       flex items-center gap-2
-                       active:scale-95 transition">
 
-            <div class="w-6 h-6 rounded-lg
+        <button
+            onclick="window.location.href='wallet.html'"
+            class="glass
+                   rounded-xl
+                   px-3 py-2
+                   flex items-center
+                   gap-2
+                   active:scale-95
+                   transition">
+
+            <div class="w-6 h-6
+                        rounded-lg
                         bg-blue-500/10
-                        flex items-center justify-center">
+                        flex items-center
+                        justify-center">
 
-                <i class="fa-solid fa-wallet text-blue-400 text-[10px]"></i>
+                <i class="fa-solid fa-wallet
+                          text-blue-400
+                          text-[10px]"></i>
 
             </div>
 
+
             <div class="text-right">
 
-                <span class="block text-[8px] text-slate-500 uppercase font-bold">
+                <span class="block text-[8px]
+                             text-slate-500
+                             uppercase
+                             font-bold">
+
                     Balance
+
                 </span>
 
                 <span id="wallet-balance"
-                      class="block text-[11px] text-white font-extrabold">
+                      class="block text-[11px]
+                             text-white
+                             font-extrabold">
+
                     ৳0
+
                 </span>
 
             </div>
@@ -492,32 +689,48 @@ body{
 </header>
 
 
-<main class="max-w-md mx-auto px-4 py-5 w-full flex-grow">
+<main class="max-w-md mx-auto
+             px-4 py-5
+             w-full flex-grow">
 
 
     <!-- YOUR POSITION -->
+
     <section id="your-position"
-             class="glass shine rounded-[24px] p-4
+             class="glass shine
+                    rounded-[24px]
+                    p-4
                     border border-blue-500/15
                     relative overflow-hidden
                     fade-up">
 
         <div class="absolute -right-12 -top-12
-                    w-32 h-32 rounded-full
-                    bg-blue-600/10 blur-3xl"></div>
+                    w-32 h-32
+                    rounded-full
+                    bg-blue-600/10
+                    blur-3xl"></div>
 
-        <div class="flex items-center justify-between relative z-10">
+
+        <div class="flex items-center
+                    justify-between
+                    relative z-10">
 
             <div class="flex items-center gap-3">
 
                 <div id="my-avatar-wrap"
-                     class="avatar-ring w-12 h-12 shrink-0">
+                     class="avatar-ring
+                            w-12 h-12
+                            shrink-0">
 
                     <div class="avatar-fallback">
-                        <i class="fa-solid fa-user text-sm"></i>
+
+                        <i class="fa-solid fa-user
+                                  text-sm"></i>
+
                     </div>
 
                 </div>
+
 
                 <div class="min-w-0">
 
@@ -526,20 +739,34 @@ body{
                                  uppercase
                                  text-slate-500
                                  font-extrabold">
+
                         YOUR RANK
+
                     </span>
 
-                    <div class="flex items-center gap-2 mt-0.5">
+
+                    <div class="flex items-center
+                                gap-2 mt-0.5">
 
                         <strong id="my-rank"
-                                class="text-lg font-black text-blue-400">
+                                class="text-lg
+                                       font-black
+                                       text-blue-400">
+
                             #-
+
                         </strong>
 
+
                         <h3 id="my-name"
-                            class="text-xs font-extrabold
-                                   text-white truncate max-w-[125px]">
+                            class="text-xs
+                                   font-extrabold
+                                   text-white
+                                   truncate
+                                   max-w-[125px]">
+
                             Loading...
+
                         </h3>
 
                     </div>
@@ -556,14 +783,19 @@ body{
                              uppercase
                              tracking-wider
                              font-bold">
+
                     TOTAL EARNINGS
+
                 </span>
+
 
                 <strong id="my-earnings"
                         class="block text-base
                                text-amber-400
                                font-black mt-0.5">
+
                     ৳0
+
                 </strong>
 
             </div>
@@ -574,31 +806,53 @@ body{
 
 
     <!-- FILTER -->
+
     <section class="mt-4">
 
-        <div class="glass rounded-2xl p-1.5 flex gap-1">
+        <div class="glass
+                    rounded-2xl
+                    p-1.5
+                    flex gap-1">
 
             <button id="filter-all"
                     onclick="setFilter('all')"
-                    class="filter-active flex-1 py-2.5 rounded-xl
-                           text-[10px] font-extrabold transition">
+                    class="filter-active
+                           flex-1 py-2.5
+                           rounded-xl
+                           text-[10px]
+                           font-extrabold
+                           transition">
+
                 All Time
+
             </button>
+
 
             <button id="filter-monthly"
                     onclick="setFilter('monthly')"
-                    class="flex-1 py-2.5 rounded-xl
-                           text-[10px] font-extrabold
-                           text-slate-500 transition">
+                    class="flex-1 py-2.5
+                           rounded-xl
+                           text-[10px]
+                           font-extrabold
+                           text-slate-500
+                           transition">
+
                 Monthly
+
             </button>
+
 
             <button id="filter-weekly"
                     onclick="setFilter('weekly')"
-                    class="flex-1 py-2.5 rounded-xl
-                           text-[10px] font-extrabold
-                           text-slate-500 transition">
+                    class="flex-1 py-2.5
+                           rounded-xl
+                           text-[10px]
+                           font-extrabold
+                           text-slate-500
+                           transition">
+
                 Weekly
+
             </button>
 
         </div>
@@ -607,27 +861,45 @@ body{
 
 
     <!-- SEARCH -->
+
     <section class="mt-3">
 
-        <div class="glass rounded-xl px-3.5 py-3 flex items-center gap-2.5">
+        <div class="glass
+                    rounded-xl
+                    px-3.5 py-3
+                    flex items-center
+                    gap-2.5">
 
             <i class="fa-solid fa-magnifying-glass
-                      text-slate-500 text-xs"></i>
+                      text-slate-500
+                      text-xs"></i>
 
-            <input id="player-search"
-                   oninput="filterPlayers()"
-                   type="text"
-                   placeholder="Search player..."
-                   class="search-input bg-transparent
-                          outline-none border-none
-                          text-xs text-white
-                          flex-1 min-w-0">
 
-            <button onclick="clearSearch()"
-                    id="clear-search"
-                    class="hidden text-slate-600 hover:text-white">
+            <input
+                id="player-search"
+                oninput="filterPlayers()"
+                type="text"
+                placeholder="Search player..."
+                class="search-input
+                       bg-transparent
+                       outline-none
+                       border-none
+                       text-xs
+                       text-white
+                       flex-1
+                       min-w-0"
+            >
 
-                <i class="fa-solid fa-xmark text-xs"></i>
+
+            <button
+                onclick="clearSearch()"
+                id="clear-search"
+                class="hidden
+                       text-slate-600
+                       hover:text-white">
+
+                <i class="fa-solid fa-xmark
+                          text-xs"></i>
 
             </button>
 
@@ -637,15 +909,23 @@ body{
 
 
     <!-- PODIUM -->
+
     <section id="podium-section"
              class="mt-6">
 
-        <div class="flex items-end justify-center gap-2">
+        <div class="flex items-end
+                    justify-center
+                    gap-2">
+
 
             <!-- 2ND -->
+
             <div id="podium-2"
-                 class="podium-card glass silver-glow
-                        rounded-[22px] p-3
+                 class="podium-card
+                        glass
+                        silver-glow
+                        rounded-[22px]
+                        p-3
                         w-[31%]
                         text-center
                         mt-8
@@ -654,39 +934,61 @@ body{
                 <div class="flex justify-center">
 
                     <div id="p2-avatar"
-                         class="avatar-ring w-12 h-12">
+                         class="avatar-ring
+                                w-12 h-12">
 
                         <div class="avatar-fallback">
-                            <i class="fa-solid fa-user text-xs"></i>
+
+                            <i class="fa-solid fa-user
+                                      text-xs"></i>
+
                         </div>
 
                     </div>
 
                 </div>
 
+
                 <div class="mt-2">
 
                     <div class="flex justify-center mb-1">
-                        <span class="px-2 py-0.5 rounded-full
+
+                        <span class="px-2 py-0.5
+                                     rounded-full
                                      bg-slate-300/10
                                      text-slate-300
-                                     text-[8px] font-black">
+                                     text-[8px]
+                                     font-black">
+
                             #2
+
                         </span>
+
                     </div>
 
+
                     <h4 id="p2-name"
-                        class="podium-name text-[10px]
-                               font-extrabold text-white
+                        class="podium-name
+                               text-[10px]
+                               font-extrabold
+                               text-white
                                truncate">
+
                         -
+
                     </h4>
 
-                    <p class="podium-money mt-1
+
+                    <p class="podium-money
+                              mt-1
                               text-[9px]
                               text-slate-400
                               font-semibold">
-                        <span id="p2-earnings">৳0</span>
+
+                        <span id="p2-earnings">
+                            ৳0
+                        </span>
+
                     </p>
 
                 </div>
@@ -695,15 +997,22 @@ body{
 
 
             <!-- 1ST -->
+
             <div id="podium-1"
-                 class="podium-card glass gold-glow shine
-                        rounded-[24px] p-3.5
+                 class="podium-card
+                        glass
+                        gold-glow
+                        shine
+                        rounded-[24px]
+                        p-3.5
                         w-[38%]
                         text-center
                         relative
                         stagger">
 
-                <div class="absolute -top-4 left-1/2
+                <div class="absolute
+                            -top-4
+                            left-1/2
                             -translate-x-1/2
                             float-crown">
 
@@ -719,11 +1028,20 @@ body{
                 <div class="flex justify-center">
 
                     <div id="p1-avatar"
-                         class="avatar-ring w-16 h-16"
-                         style="background:linear-gradient(135deg,#f59e0b,#fde68a,#f59e0b)">
+                         class="avatar-ring
+                                w-16 h-16"
+                         style="background:
+                         linear-gradient(
+                         135deg,
+                         #f59e0b,
+                         #fde68a,
+                         #f59e0b)">
 
                         <div class="avatar-fallback">
-                            <i class="fa-solid fa-user text-sm"></i>
+
+                            <i class="fa-solid fa-user
+                                      text-sm"></i>
+
                         </div>
 
                     </div>
@@ -735,37 +1053,56 @@ body{
 
                     <div class="flex justify-center mb-1">
 
-                        <span class="px-2.5 py-0.5 rounded-full
+                        <span class="px-2.5 py-0.5
+                                     rounded-full
                                      bg-amber-500/15
-                                     border border-amber-400/15
+                                     border
+                                     border-amber-400/15
                                      text-amber-300
                                      text-[8px]
                                      font-black">
+
                             #1 CHAMPION
+
                         </span>
 
                     </div>
 
+
                     <h4 id="p1-name"
-                        class="podium-name text-[11px]
-                               font-black text-amber-300
+                        class="podium-name
+                               text-[11px]
+                               font-black
+                               text-amber-300
                                truncate">
+
                         -
+
                     </h4>
 
-                    <p class="podium-money mt-1
+
+                    <p class="podium-money
+                              mt-1
                               text-[10px]
                               text-amber-400
                               font-extrabold">
-                        <span id="p1-earnings">৳0</span>
+
+                        <span id="p1-earnings">
+                            ৳0
+                        </span>
+
                     </p>
 
-                    <span class="block text-[7px]
+
+                    <span class="block
+                                 text-[7px]
                                  uppercase
                                  tracking-wider
                                  text-slate-600
                                  font-bold mt-0.5">
+
                         Total Earnings
+
                     </span>
 
                 </div>
@@ -774,9 +1111,13 @@ body{
 
 
             <!-- 3RD -->
+
             <div id="podium-3"
-                 class="podium-card glass bronze-glow
-                        rounded-[22px] p-3
+                 class="podium-card
+                        glass
+                        bronze-glow
+                        rounded-[22px]
+                        p-3
                         w-[31%]
                         text-center
                         mt-12
@@ -785,42 +1126,66 @@ body{
                 <div class="flex justify-center">
 
                     <div id="p3-avatar"
-                         class="avatar-ring w-12 h-12"
-                         style="background:linear-gradient(135deg,#92400e,#d97706)">
+                         class="avatar-ring
+                                w-12 h-12"
+                         style="background:
+                         linear-gradient(
+                         135deg,
+                         #92400e,
+                         #d97706)">
 
                         <div class="avatar-fallback">
-                            <i class="fa-solid fa-user text-xs"></i>
+
+                            <i class="fa-solid fa-user
+                                      text-xs"></i>
+
                         </div>
 
                     </div>
 
                 </div>
 
+
                 <div class="mt-2">
 
                     <div class="flex justify-center mb-1">
 
-                        <span class="px-2 py-0.5 rounded-full
+                        <span class="px-2 py-0.5
+                                     rounded-full
                                      bg-orange-500/10
                                      text-orange-400
-                                     text-[8px] font-black">
+                                     text-[8px]
+                                     font-black">
+
                             #3
+
                         </span>
 
                     </div>
 
+
                     <h4 id="p3-name"
-                        class="podium-name text-[10px]
-                               font-extrabold text-white
+                        class="podium-name
+                               text-[10px]
+                               font-extrabold
+                               text-white
                                truncate">
+
                         -
+
                     </h4>
 
-                    <p class="podium-money mt-1
+
+                    <p class="podium-money
+                              mt-1
                               text-[9px]
                               text-slate-400
                               font-semibold">
-                        <span id="p3-earnings">৳0</span>
+
+                        <span id="p3-earnings">
+                            ৳0
+                        </span>
+
                     </p>
 
                 </div>
@@ -833,9 +1198,12 @@ body{
 
 
     <!-- ALL PLAYERS -->
+
     <section class="mt-7">
 
-        <div class="flex items-center justify-between mb-2.5 px-1">
+        <div class="flex items-center
+                    justify-between
+                    mb-2.5 px-1">
 
             <div>
 
@@ -844,20 +1212,30 @@ body{
                            tracking-[.15em]
                            text-white
                            uppercase">
+
                     All Players
+
                 </h3>
 
-                <p class="text-[8px] text-slate-600 mt-0.5">
+
+                <p class="text-[8px]
+                          text-slate-600
+                          mt-0.5">
+
                     Ranked by total earnings
+
                 </p>
 
             </div>
+
 
             <span id="player-count"
                   class="text-[9px]
                          text-slate-600
                          font-bold">
+
                 0 Players
+
             </span>
 
         </div>
@@ -873,7 +1251,9 @@ body{
 
 
 <!-- BOTTOM NAV -->
-<nav class="fixed bottom-0 left-0 right-0
+
+<nav class="fixed bottom-0
+           left-0 right-0
            max-w-md mx-auto
            bg-[#070c16]/90
            backdrop-blur-xl
@@ -884,7 +1264,8 @@ body{
            z-40">
 
     <a href="index.html"
-       class="flex flex-col items-center
+       class="flex flex-col
+              items-center
               text-slate-500
               hover:text-blue-400
               transition gap-1">
@@ -899,7 +1280,8 @@ body{
 
 
     <a href="wallet.html"
-       class="flex flex-col items-center
+       class="flex flex-col
+              items-center
               text-slate-500
               hover:text-blue-400
               transition gap-1">
@@ -914,7 +1296,8 @@ body{
 
 
     <a href="profile.html"
-       class="flex flex-col items-center
+       class="flex flex-col
+              items-center
               text-blue-400
               transition gap-1">
 
@@ -947,17 +1330,23 @@ import {
 
 
 let currentUser = null;
+
 let allPlayers = [];
+
 let currentFilter = "all";
+
 let currentPayouts = [];
-let currentUserData = null;
+
+let currentUserData = {};
+
+let selectedAvatarBase64 = "";
 
 
 /* =========================
    TOAST
 ========================= */
 
-window.showToast = function(message,type="success"){
+window.showToast=function(message,type="success"){
 
     const container =
         document.getElementById("toast-container");
@@ -968,7 +1357,8 @@ window.showToast = function(message,type="success"){
     toast.className =
         `toast ${type}`;
 
-    toast.innerHTML = `
+    toast.innerHTML=`
+
         <i class="fa-solid ${
             type==="error"
             ? "fa-circle-exclamation text-rose-400"
@@ -983,11 +1373,12 @@ window.showToast = function(message,type="success"){
     setTimeout(()=>{
         toast.remove();
     },3500);
+
 };
 
 
 /* =========================
-   ESCAPE HTML
+   ESCAPE
 ========================= */
 
 function escapeHtml(value){
@@ -998,6 +1389,7 @@ function escapeHtml(value){
         .replace(/>/g,"&gt;")
         .replace(/"/g,"&quot;")
         .replace(/'/g,"&#039;");
+
 }
 
 
@@ -1010,20 +1402,23 @@ function money(value){
     const number =
         Number(value || 0);
 
-    return "৳" +
-        number.toLocaleString("en-BD",{
+    return "৳"+number.toLocaleString(
+        "en-BD",
+        {
             maximumFractionDigits:2
-        });
+        }
+    );
+
 }
 
 
 /* =========================
-   AVATAR
+   AVATAR FIELD
 ========================= */
 
 function getAvatar(data){
 
-    return (
+    return(
         data?.avatar ||
         data?.photoURL ||
         data?.photoUrl ||
@@ -1031,6 +1426,7 @@ function getAvatar(data){
         data?.image ||
         ""
     );
+
 }
 
 
@@ -1040,7 +1436,7 @@ function getAvatar(data){
 
 function getShowName(data){
 
-    return (
+    return(
         data?.showName ||
         data?.displayName ||
         data?.username ||
@@ -1048,6 +1444,7 @@ function getShowName(data){
         data?.fullName ||
         "User"
     );
+
 }
 
 
@@ -1060,28 +1457,52 @@ function avatarHTML(url,small=false){
     const size =
         small ? "w-10 h-10" : "w-12 h-12";
 
+
     if(url){
 
-        return `
-            <div class="avatar-ring ${size} shrink-0">
+        return`
+
+            <div class="avatar-ring
+                        ${size}
+                        shrink-0">
+
                 <img
                     src="${escapeHtml(url)}"
                     class="avatar-img"
                     alt="Avatar"
-                    onerror="this.parentElement.innerHTML='<div class=&quot;avatar-fallback&quot;><i class=&quot;fa-solid fa-user text-xs&quot;></i></div>'"
+                    onerror="
+                    this.parentElement.innerHTML=
+                    '<div class=&quot;avatar-fallback&quot;>
+                    <i class=&quot;fa-solid fa-user text-xs&quot;></i>
+                    </div>'
+                    "
                 >
+
             </div>
+
         `;
 
     }
 
-    return `
-        <div class="avatar-ring ${size} shrink-0">
+
+    return`
+
+        <div class="avatar-ring
+                    ${size}
+                    shrink-0">
+
             <div class="avatar-fallback">
-                <i class="fa-solid fa-user text-xs"></i>
+
+                <i class="fa-solid
+                          fa-user
+                          text-xs"></i>
+
             </div>
+
         </div>
+
     `;
+
 }
 
 
@@ -1091,24 +1512,34 @@ function avatarHTML(url,small=false){
 
 function countUp(element,target){
 
-    target = Number(target || 0);
+    target =
+        Number(target || 0);
 
     const duration = 700;
-    const start = performance.now();
+
+    const start =
+        performance.now();
+
 
     function animate(now){
 
         const progress =
-            Math.min((now-start)/duration,1);
+            Math.min(
+                (now-start)/duration,
+                1
+            );
+
 
         const eased =
-            1-Math.pow(1-progress,3);
+            1-Math.pow(
+                1-progress,
+                3
+            );
 
-        const value =
-            target*eased;
 
         element.innerText =
-            money(value);
+            money(target*eased);
+
 
         if(progress<1){
 
@@ -1118,10 +1549,14 @@ function countUp(element,target){
 
             element.innerText =
                 money(target);
+
         }
+
     }
 
+
     requestAnimationFrame(animate);
+
 }
 
 
@@ -1129,64 +1564,85 @@ function countUp(element,target){
    AUTH
 ========================= */
 
-onAuthStateChanged(auth,async user=>{
+onAuthStateChanged(
+    auth,
+    async user=>{
 
-    if(!user){
+        if(!user){
 
-        window.location.replace("login.html");
-        return;
+            window.location.replace(
+                "login.html"
+            );
+
+            return;
+
+        }
+
+
+        currentUser=user;
+
+
+        try{
+
+            await fetchLeaderboardData(
+                user.uid
+            );
+
+        }catch(error){
+
+            console.error(error);
+
+            showToast(
+                "Leaderboard load korte somoshya hoyese!",
+                "error"
+            );
+
+        }finally{
+
+            document.getElementById(
+                "app-loader"
+            ).style.display="none";
+
+        }
+
     }
-
-    currentUser = user;
-
-    try{
-
-        await fetchLeaderboardData(user.uid);
-
-    }catch(error){
-
-        console.error(error);
-
-        showToast(
-            "Leaderboard load korte somoshya hoyese!",
-            "error"
-        );
-
-    }finally{
-
-        document.getElementById("app-loader").style.display="none";
-
-    }
-
-});
+);
 
 
 /* =========================
-   LOAD DATA
+   FETCH DATA
 ========================= */
 
 async function fetchLeaderboardData(uid){
 
-    const [
+    const[
         usersSnap,
         payoutSnap,
         userDocSnap
-    ] = await Promise.all([
+    ]=await Promise.all([
 
-        getDocs(collection(db,"users")),
+        getDocs(
+            collection(db,"users")
+        ),
 
-        getDocs(collection(db,"tournamentPayouts")),
+        getDocs(
+            collection(db,"tournamentPayouts")
+        ),
 
-        getDoc(doc(db,"users",uid))
+        getDoc(
+            doc(db,"users",uid)
+        )
 
     ]);
 
 
-    currentPayouts = [];
+    currentPayouts=[];
+
 
     payoutSnap.forEach(d=>{
 
-        const data = d.data() || {};
+        const data =
+            d.data() || {};
 
         currentPayouts.push({
             id:d.id,
@@ -1202,7 +1658,7 @@ async function fetchLeaderboardData(uid){
         : {};
 
 
-    const payoutTotals = {};
+    const payoutTotals={};
 
 
     currentPayouts.forEach(x=>{
@@ -1212,22 +1668,24 @@ async function fetchLeaderboardData(uid){
             x.uid ||
             "";
 
-        if(!id) return;
+        if(!id)return;
 
-        payoutTotals[id] =
-            (payoutTotals[id] || 0)
-            + Number(x.amount || 0);
+
+        payoutTotals[id]=
+            (payoutTotals[id]||0)
+            +Number(x.amount||0);
 
     });
 
 
-    allPlayers = [];
+    allPlayers=[];
 
 
     usersSnap.forEach(d=>{
 
         const data =
             d.data() || {};
+
 
         const referral =
             Number(
@@ -1247,13 +1705,13 @@ async function fetchLeaderboardData(uid){
 
 
         const paidTournament =
-            payoutTotals[d.id] || 0;
+            payoutTotals[d.id]||0;
 
 
         const totalEarned =
-            paidTournament > 0
-            ? paidTournament + referral
-            : storedTournament + referral;
+            paidTournament>0
+            ? paidTournament+referral
+            : storedTournament+referral;
 
 
         allPlayers.push({
@@ -1284,34 +1742,54 @@ async function fetchLeaderboardData(uid){
     );
 
 
-    /* WALLET */
-
-    document.getElementById("wallet-balance")
-        .innerText =
-        money(currentUserData.balance || 0);
+    document.getElementById(
+        "wallet-balance"
+    ).innerText =
+        money(
+            currentUserData.balance||0
+        );
 
 
     renderLeaderboard();
 
 
-    /* PROFILE PROMPT */
+    /*
+      IMPORTANT:
 
-    const showName =
-        currentUserData.showName ||
-        currentUserData.displayName ||
-        "";
+      Popup only appears when
+      Show Name OR Avatar is missing.
 
-    const avatar =
-        getAvatar(currentUserData);
+      Save করলে আর popup আসবে না.
+
+      Skip করলে কিছু save হবে না,
+      তাই next visit-এ আবার popup আসবে.
+    */
+
+    const hasShowName =
+        !!(
+            currentUserData.showName ||
+            currentUserData.displayName
+        );
 
 
-    if(!showName || !avatar){
+    const hasAvatar =
+        !!getAvatar(currentUserData);
+
+
+    if(!hasShowName || !hasAvatar){
 
         setTimeout(()=>{
 
             openProfileModal(
-                showName,
-                avatar
+                hasShowName
+                ?(
+                    currentUserData.showName ||
+                    currentUserData.displayName
+                )
+                :"",
+                hasAvatar
+                ?getAvatar(currentUserData)
+                :""
             );
 
         },700);
@@ -1325,17 +1803,24 @@ async function fetchLeaderboardData(uid){
    FILTER
 ========================= */
 
-window.setFilter = function(filter){
+window.setFilter=function(filter){
 
-    currentFilter = filter;
+    currentFilter=filter;
+
 
     document
-        .querySelectorAll("[id^='filter-']")
+        .querySelectorAll(
+            "[id^='filter-']"
+        )
         .forEach(button=>{
 
-            button.classList.remove("filter-active");
+            button.classList.remove(
+                "filter-active"
+            );
 
-            button.classList.add("text-slate-500");
+            button.classList.add(
+                "text-slate-500"
+            );
 
         });
 
@@ -1345,11 +1830,16 @@ window.setFilter = function(filter){
             "filter-"+filter
         );
 
+
     if(selected){
 
-        selected.classList.add("filter-active");
+        selected.classList.add(
+            "filter-active"
+        );
 
-        selected.classList.remove("text-slate-500");
+        selected.classList.remove(
+            "text-slate-500"
+        );
 
     }
 
@@ -1372,20 +1862,20 @@ function getFilteredPlayers(){
     }
 
 
-    const now = Date.now();
+    const now=Date.now();
 
 
     const range =
         currentFilter==="weekly"
-        ? 7*24*60*60*1000
-        : 30*24*60*60*1000;
+        ?7*24*60*60*1000
+        :30*24*60*60*1000;
 
 
     const cutoff =
         now-range;
 
 
-    const totals = {};
+    const totals={};
 
 
     currentPayouts.forEach(item=>{
@@ -1395,35 +1885,39 @@ function getFilteredPlayers(){
             item.uid ||
             "";
 
-        if(!uid) return;
+
+        if(!uid)return;
 
 
-        let dateValue =
+        const dateValue =
             item.createdAt ||
             item.timestamp ||
             item.date ||
             item.created_at;
 
 
-        let time = 0;
+        let time=0;
 
 
         if(dateValue?.toMillis){
 
-            time =
-                dateValue.toMillis();
+            time=dateValue.toMillis();
 
         }else if(
             dateValue?.seconds
         ){
 
             time =
-                Number(dateValue.seconds)*1000;
+                Number(
+                    dateValue.seconds
+                )*1000;
 
         }else{
 
             time =
-                new Date(dateValue).getTime();
+                new Date(
+                    dateValue
+                ).getTime();
 
         }
 
@@ -1432,9 +1926,9 @@ function getFilteredPlayers(){
             return;
 
 
-        totals[uid] =
-            (totals[uid] || 0)
-            + Number(item.amount || 0);
+        totals[uid]=
+            (totals[uid]||0)
+            +Number(item.amount||0);
 
     });
 
@@ -1445,7 +1939,7 @@ function getFilteredPlayers(){
             ...player,
 
             earnings:
-                totals[player.uid] || 0
+                totals[player.uid]||0
 
         }));
 
@@ -1461,7 +1955,7 @@ function getFilteredPlayers(){
 
 
 /* =========================
-   RENDER
+   RENDER LEADERBOARD
 ========================= */
 
 function renderLeaderboard(){
@@ -1515,28 +2009,21 @@ function renderMyPosition(players){
 
     let me =
         players.find(
-            player =>
-            player.uid === currentUser.uid
+            p=>p.uid===currentUser.uid
         );
 
-
-    /*
-      Search/filter করলে user না থাকলেও
-      allPlayers থেকে নিজের data নেওয়া হবে.
-    */
 
     if(!me){
 
         me =
             allPlayers.find(
-                player =>
-                player.uid === currentUser.uid
+                p=>p.uid===currentUser.uid
             );
 
     }
 
 
-    if(!me) return;
+    if(!me)return;
 
 
     const original =
@@ -1545,36 +2032,38 @@ function renderMyPosition(players){
 
     const index =
         original.findIndex(
-            player =>
-            player.uid === currentUser.uid
+            p=>p.uid===currentUser.uid
         );
 
 
     const rank =
         index>=0
-        ? "#"+(index+1)
-        : "#-";
+        ?" #"+(index+1)
+        :" #-";
 
 
-    document.getElementById("my-rank")
-        .innerText = rank;
+    document.getElementById(
+        "my-rank"
+    ).innerText=rank.trim();
 
 
-    document.getElementById("my-name")
-        .innerText = me.name;
+    document.getElementById(
+        "my-name"
+    ).innerText=me.name;
 
 
     countUp(
-        document.getElementById("my-earnings"),
+        document.getElementById(
+            "my-earnings"
+        ),
         me.earnings
     );
 
 
-    document.getElementById("my-avatar-wrap")
-        .innerHTML =
-        avatarHTML(
-            me.avatar
-        );
+    document.getElementById(
+        "my-avatar-wrap"
+    ).innerHTML=
+        avatarHTML(me.avatar);
 
 }
 
@@ -1605,86 +2094,155 @@ function renderPodium(players){
     ).style.display="block";
 
 
-    /* FIRST */
+    /* 1ST */
 
     if(podium[0]){
 
-        document.getElementById("p1-name")
-            .innerText =
+        document.getElementById(
+            "p1-name"
+        ).innerText =
             podium[0].name;
 
+
         countUp(
-            document.getElementById("p1-earnings"),
+            document.getElementById(
+                "p1-earnings"
+            ),
             podium[0].earnings
         );
 
 
-        document.getElementById("p1-avatar")
-            .innerHTML =
+        document.getElementById(
+            "p1-avatar"
+        ).innerHTML =
             podium[0].avatar
-            ? `<img src="${escapeHtml(podium[0].avatar)}"
-                    class="avatar-img"
-                    alt="Avatar"
-                    onerror="this.parentElement.innerHTML='<div class=&quot;avatar-fallback&quot;><i class=&quot;fa-solid fa-user text-sm&quot;></i></div>'">`
-            : `<div class="avatar-fallback">
-                    <i class="fa-solid fa-user text-sm"></i>
-               </div>`;
+
+            ?
+
+            `<img
+                src="${escapeHtml(
+                    podium[0].avatar
+                )}"
+                class="avatar-img"
+                alt="Avatar"
+                onerror="
+                this.parentElement.innerHTML=
+                '<div class=&quot;avatar-fallback&quot;>
+                <i class=&quot;fa-solid fa-user text-sm&quot;></i>
+                </div>'
+                "
+            >`
+
+            :
+
+            `<div class="avatar-fallback">
+
+                <i class="fa-solid fa-user
+                          text-sm"></i>
+
+            </div>`;
 
     }
 
 
-    /* SECOND */
+    /* 2ND */
 
     if(podium[1]){
 
-        document.getElementById("p2-name")
-            .innerText =
+        document.getElementById(
+            "p2-name"
+        ).innerText =
             podium[1].name;
 
+
         countUp(
-            document.getElementById("p2-earnings"),
+            document.getElementById(
+                "p2-earnings"
+            ),
             podium[1].earnings
         );
 
 
-        document.getElementById("p2-avatar")
-            .innerHTML =
+        document.getElementById(
+            "p2-avatar"
+        ).innerHTML =
             podium[1].avatar
-            ? `<img src="${escapeHtml(podium[1].avatar)}"
-                    class="avatar-img"
-                    alt="Avatar"
-                    onerror="this.parentElement.innerHTML='<div class=&quot;avatar-fallback&quot;><i class=&quot;fa-solid fa-user text-xs&quot;></i></div>'">`
-            : `<div class="avatar-fallback">
-                    <i class="fa-solid fa-user text-xs"></i>
-               </div>`;
+
+            ?
+
+            `<img
+                src="${escapeHtml(
+                    podium[1].avatar
+                )}"
+                class="avatar-img"
+                alt="Avatar"
+                onerror="
+                this.parentElement.innerHTML=
+                '<div class=&quot;avatar-fallback&quot;>
+                <i class=&quot;fa-solid fa-user text-xs&quot;></i>
+                </div>'
+                "
+            >`
+
+            :
+
+            `<div class="avatar-fallback">
+
+                <i class="fa-solid fa-user
+                          text-xs"></i>
+
+            </div>`;
 
     }
 
 
-    /* THIRD */
+    /* 3RD */
 
     if(podium[2]){
 
-        document.getElementById("p3-name")
-            .innerText =
+        document.getElementById(
+            "p3-name"
+        ).innerText =
             podium[2].name;
 
+
         countUp(
-            document.getElementById("p3-earnings"),
+            document.getElementById(
+                "p3-earnings"
+            ),
             podium[2].earnings
         );
 
 
-        document.getElementById("p3-avatar")
-            .innerHTML =
+        document.getElementById(
+            "p3-avatar"
+        ).innerHTML =
             podium[2].avatar
-            ? `<img src="${escapeHtml(podium[2].avatar)}"
-                    class="avatar-img"
-                    alt="Avatar"
-                    onerror="this.parentElement.innerHTML='<div class=&quot;avatar-fallback&quot;><i class=&quot;fa-solid fa-user text-xs&quot;></i></div>'">`
-            : `<div class="avatar-fallback">
-                    <i class="fa-solid fa-user text-xs"></i>
-               </div>`;
+
+            ?
+
+            `<img
+                src="${escapeHtml(
+                    podium[2].avatar
+                )}"
+                class="avatar-img"
+                alt="Avatar"
+                onerror="
+                this.parentElement.innerHTML=
+                '<div class=&quot;avatar-fallback&quot;>
+                <i class=&quot;fa-solid fa-user text-xs&quot;></i>
+                </div>'
+                "
+            >`
+
+            :
+
+            `<div class="avatar-fallback">
+
+                <i class="fa-solid fa-user
+                          text-xs"></i>
+
+            </div>`;
 
     }
 
@@ -1692,7 +2250,7 @@ function renderPodium(players){
 
 
 /* =========================
-   PLAYER LIST
+   LIST
 ========================= */
 
 function renderList(players){
@@ -1706,32 +2264,42 @@ function renderList(players){
     list.innerHTML="";
 
 
-    document.getElementById("player-count")
-        .innerText =
+    document.getElementById(
+        "player-count"
+    ).innerText =
         `${players.length} Players`;
 
 
     if(!players.length){
 
-        list.innerHTML = `
+        list.innerHTML=`
 
-            <div class="glass rounded-2xl
-                        py-12 text-center">
+            <div class="glass
+                        rounded-2xl
+                        py-12
+                        text-center">
 
-                <div class="w-12 h-12 rounded-2xl
+                <div class="w-12 h-12
+                            rounded-2xl
                             bg-slate-900
-                            mx-auto flex items-center
-                            justify-center mb-3">
+                            mx-auto
+                            flex items-center
+                            justify-center
+                            mb-3">
 
-                    <i class="fa-solid fa-user-slash
+                    <i class="fa-solid
+                              fa-user-slash
                               text-slate-600"></i>
 
                 </div>
 
+
                 <p class="text-xs
                           text-slate-500
                           font-semibold">
+
                     No player found
+
                 </p>
 
             </div>
@@ -1743,103 +2311,127 @@ function renderList(players){
     }
 
 
-    players.forEach((player,index)=>{
+    players.forEach(
+        (player,index)=>{
 
-        const rank =
-            allPlayers.findIndex(
-                p=>p.uid===player.uid
-            )+1;
-
-
-        const isMe =
-            player.uid===currentUser.uid;
+            const rank =
+                allPlayers.findIndex(
+                    p=>p.uid===player.uid
+                )+1;
 
 
-        let rankIcon =
-            `<span class="text-[10px]
-                         font-black
-                         text-slate-500">
-                #${rank}
-             </span>`;
+            const isMe =
+                player.uid===currentUser.uid;
 
 
-        if(rank===1){
-
-            rankIcon =
-                `<i class="fa-solid fa-crown
-                          text-amber-400 text-[10px]"></i>`;
-
-        }else if(rank===2){
-
-            rankIcon =
-                `<i class="fa-solid fa-medal
-                          text-slate-300 text-[10px]"></i>`;
-
-        }else if(rank===3){
-
-            rankIcon =
-                `<i class="fa-solid fa-medal
-                          text-orange-500 text-[10px]"></i>`;
-
-        }
+            let rankIcon =
+                `<span class="text-[10px]
+                             font-black
+                             text-slate-500">
+                    #${rank}
+                 </span>`;
 
 
-        const card =
-            document.createElement("div");
+            if(rank===1){
+
+                rankIcon =
+                    `<i class="fa-solid
+                              fa-crown
+                              text-amber-400
+                              text-[10px]"></i>`;
+
+            }else if(rank===2){
+
+                rankIcon =
+                    `<i class="fa-solid
+                              fa-medal
+                              text-slate-300
+                              text-[10px]"></i>`;
+
+            }else if(rank===3){
+
+                rankIcon =
+                    `<i class="fa-solid
+                              fa-medal
+                              text-orange-500
+                              text-[10px]"></i>`;
+
+            }
 
 
-        card.className =
-            `glass rounded-2xl p-3
-             flex items-center justify-between
-             border
-             ${isMe
-                ? "border-blue-500/35 bg-blue-500/[.06]"
-                : "border-white/[.05]"
-             }
-             stagger`;
+            const card =
+                document.createElement("div");
 
 
-        card.style.animationDelay =
-            `${Math.min(index*45,450)}ms`;
+            card.className=
+                `glass rounded-2xl
+                 p-3
+                 flex items-center
+                 justify-between
+                 border
+                 ${
+                    isMe
+                    ?"border-blue-500/35 bg-blue-500/[.06]"
+                    :"border-white/[.05]"
+                 }
+                 stagger`;
 
 
-        card.innerHTML = `
-
-            <div class="flex items-center
-                        gap-3 min-w-0">
-
-                <div class="w-8 h-8 shrink-0
-                            rounded-xl
-                            bg-slate-950/70
-                            border border-white/[.05]
-                            flex items-center
-                            justify-center">
-
-                    ${rankIcon}
-
-                </div>
+            card.style.animationDelay =
+                `${Math.min(index*45,450)}ms`;
 
 
-                ${avatarHTML(player.avatar,true)}
+            card.innerHTML=`
+
+                <div class="flex items-center
+                            gap-3
+                            min-w-0">
+
+                    <div class="w-8 h-8
+                                shrink-0
+                                rounded-xl
+                                bg-slate-950/70
+                                border
+                                border-white/[.05]
+                                flex items-center
+                                justify-center">
+
+                        ${rankIcon}
+
+                    </div>
 
 
-                <div class="min-w-0">
+                    ${avatarHTML(
+                        player.avatar,
+                        true
+                    )}
 
-                    <div class="flex items-center gap-1.5">
 
-                        <h4 class="text-[11px]
-                                   font-extrabold
-                                   text-white
-                                   truncate
-                                   max-w-[130px]">
+                    <div class="min-w-0">
 
-                            ${escapeHtml(player.name)}
+                        <div class="flex
+                                    items-center
+                                    gap-1.5">
 
-                        </h4>
+                            <h4 class="text-[11px]
+                                       font-extrabold
+                                       text-white
+                                       truncate
+                                       max-w-[130px]">
 
-                        ${
-                            isMe
-                            ? `
+                                ${escapeHtml(
+                                    player.name
+                                )}
+
+                            </h4>
+
+
+                            ${
+                                isMe
+
+                                ?
+
+                                `
                                 <span class="shrink-0
                                              px-1.5 py-0.5
                                              rounded-full
@@ -1847,63 +2439,74 @@ function renderList(players){
                                              text-blue-400
                                              text-[7px]
                                              font-black">
+
                                     YOU
+
                                 </span>
-                              `
-                            : ""
-                        }
+                                `
+
+                                :
+
+                                ""
+                            }
+
+                        </div>
+
+
+                        <span class="text-[8px]
+                                     text-slate-600
+                                     font-semibold">
+
+                            ${
+                                rank<=3
+                                ?"Top Player"
+                                :"Rank #"+rank
+                            }
+
+                        </span>
 
                     </div>
 
+                </div>
 
-                    <span class="text-[8px]
+
+                <div class="text-right
+                            ml-2
+                            shrink-0">
+
+                    <strong class="block
+                                   text-[11px]
+                                   text-amber-400
+                                   font-black">
+
+                        ${money(
+                            player.earnings
+                        )}
+
+                    </strong>
+
+
+                    <span class="block
+                                 text-[7px]
                                  text-slate-600
-                                 font-semibold">
+                                 uppercase
+                                 tracking-wider
+                                 font-bold
+                                 mt-0.5">
 
-                        ${
-                            rank<=3
-                            ? "Top Player"
-                            : "Rank #"+rank
-                        }
+                        Total Earnings
 
                     </span>
 
                 </div>
 
-            </div>
+            `;
 
 
-            <div class="text-right ml-2 shrink-0">
+            list.appendChild(card);
 
-                <strong class="block
-                               text-[11px]
-                               text-amber-400
-                               font-black">
-
-                    ${money(player.earnings)}
-
-                </strong>
-
-                <span class="block
-                             text-[7px]
-                             text-slate-600
-                             uppercase
-                             tracking-wider
-                             font-bold
-                             mt-0.5">
-
-                    Total Earnings
-
-                </span>
-
-            </div>
-
-        `;
-
-
-        list.appendChild(card);
-
-    });
+        }
+    );
 
 }
 
@@ -1912,7 +2515,7 @@ function renderList(players){
    SEARCH
 ========================= */
 
-window.filterPlayers = function(){
+window.filterPlayers=function(){
 
     const input =
         document.getElementById(
@@ -1920,13 +2523,9 @@ window.filterPlayers = function(){
         );
 
 
-    const clear =
-        document.getElementById(
-            "clear-search"
-        );
-
-
-    clear.classList.toggle(
+    document.getElementById(
+        "clear-search"
+    ).classList.toggle(
         "hidden",
         !input.value
     );
@@ -1937,7 +2536,7 @@ window.filterPlayers = function(){
 };
 
 
-window.clearSearch = function(){
+window.clearSearch=function(){
 
     const input =
         document.getElementById(
@@ -1946,6 +2545,7 @@ window.clearSearch = function(){
 
 
     input.value="";
+
 
     document.getElementById(
         "clear-search"
@@ -1961,7 +2561,10 @@ window.clearSearch = function(){
    PROFILE MODAL
 ========================= */
 
-function openProfileModal(showName="",avatar=""){
+function openProfileModal(
+    showName="",
+    avatar=""
+){
 
     document.getElementById(
         "show-name-input"
@@ -1969,10 +2572,53 @@ function openProfileModal(showName="",avatar=""){
         showName || "";
 
 
-    document.getElementById(
-        "avatar-url-input"
-    ).value =
+    selectedAvatarBase64 =
         avatar || "";
+
+
+    if(avatar){
+
+        document.getElementById(
+            "modal-avatar-preview"
+        ).innerHTML=`
+
+            <img
+                src="${escapeHtml(avatar)}"
+                class="avatar-img"
+                alt="Avatar"
+            >
+
+        `;
+
+
+        document.getElementById(
+            "avatar-action-text"
+        ).innerText =
+            "Change Avatar";
+
+    }else{
+
+        document.getElementById(
+            "modal-avatar-preview"
+        ).innerHTML=`
+
+            <div class="avatar-fallback">
+
+                <i class="fa-solid
+                          fa-camera
+                          text-lg"></i>
+
+            </div>
+
+        `;
+
+
+        document.getElementById(
+            "avatar-action-text"
+        ).innerText =
+            "Choose Avatar";
+
+    }
 
 
     document.getElementById(
@@ -1980,34 +2626,270 @@ function openProfileModal(showName="",avatar=""){
     ).classList.remove("hidden");
 
 
-    document.body.classList.add("no-scroll");
+    document.body.classList.add(
+        "no-scroll"
+    );
 
 }
 
 
-window.closeProfileModal = function(){
+/* =========================
+   CLOSE MODAL
+========================= */
+
+window.closeProfileModal=function(){
 
     document.getElementById(
         "profile-modal"
     ).classList.add("hidden");
 
 
-    document.body.classList.remove("no-scroll");
+    document.body.classList.remove(
+        "no-scroll"
+    );
 
 };
+
+
+/* =========================
+   AVATAR PREVIEW
+========================= */
+
+window.previewAvatar=function(event){
+
+    const file =
+        event.target.files?.[0];
+
+
+    if(!file)return;
+
+
+    if(!file.type.startsWith("image/")){
+
+        showToast(
+            "শুধু image select করতে পারবে!",
+            "error"
+        );
+
+        return;
+
+    }
+
+
+    /*
+      Maximum original file size
+      10MB
+    */
+
+    if(file.size>10*1024*1024){
+
+        showToast(
+            "ছবির size 10MB-এর বেশি হতে পারবে না!",
+            "error"
+        );
+
+        event.target.value="";
+
+        return;
+
+    }
+
+
+    const reader =
+        new FileReader();
+
+
+    reader.onload=function(e){
+
+        document.getElementById(
+            "modal-avatar-preview"
+        ).innerHTML=`
+
+            <img
+                src="${e.target.result}"
+                class="avatar-img"
+                alt="Preview"
+            >
+
+        `;
+
+
+        document.getElementById(
+            "avatar-action-text"
+        ).innerText =
+            "Avatar Selected";
+
+
+        /*
+          Compress image before saving.
+        */
+
+        compressImage(
+            file,
+            320,
+            0.72
+        ).then(base64=>{
+
+            selectedAvatarBase64 =
+                base64;
+
+        }).catch(error=>{
+
+            console.error(error);
+
+            showToast(
+                "ছবি process করা যায়নি!",
+                "error"
+            );
+
+        });
+
+    };
+
+
+    reader.readAsDataURL(file);
+
+};
+
+
+/* =========================
+   COMPRESS IMAGE
+========================= */
+
+function compressImage(
+    file,
+    maxSize=320,
+    quality=0.72
+){
+
+    return new Promise(
+        (resolve,reject)=>{
+
+            const reader =
+                new FileReader();
+
+
+            reader.onload=function(event){
+
+                const img =
+                    new Image();
+
+
+                img.onload=function(){
+
+                    let width =
+                        img.width;
+
+                    let height =
+                        img.height;
+
+
+                    /*
+                      Resize large image.
+                    */
+
+                    if(width>height){
+
+                        if(width>maxSize){
+
+                            height =
+                                Math.round(
+                                    height*
+                                    maxSize/
+                                    width
+                                );
+
+                            width=maxSize;
+
+                        }
+
+                    }else{
+
+                        if(height>maxSize){
+
+                            width =
+                                Math.round(
+                                    width*
+                                    maxSize/
+                                    height
+                                );
+
+                            height=maxSize;
+
+                        }
+
+                    }
+
+
+                    const canvas =
+                        document.createElement(
+                            "canvas"
+                        );
+
+
+                    canvas.width=width;
+
+                    canvas.height=height;
+
+
+                    const ctx =
+                        canvas.getContext(
+                            "2d"
+                        );
+
+
+                    ctx.drawImage(
+                        img,
+                        0,
+                        0,
+                        width,
+                        height
+                    );
+
+
+                    /*
+                      JPEG keeps Firestore
+                      document much smaller.
+                    */
+
+                    const result =
+                        canvas.toDataURL(
+                            "image/jpeg",
+                            quality
+                        );
+
+
+                    resolve(result);
+
+                };
+
+
+                img.onerror=reject;
+
+                img.src =
+                    event.target.result;
+
+            };
+
+
+            reader.onerror=reject;
+
+            reader.readAsDataURL(file);
+
+        }
+    );
+
+}
 
 
 /* =========================
    SAVE PROFILE
 ========================= */
 
-window.saveLeaderboardProfile = async function(){
+window.saveLeaderboardProfile =
+async function(){
 
-    if(!currentUser){
-
-        return;
-
-    }
+    if(!currentUser)return;
 
 
     const showName =
@@ -2016,10 +2898,15 @@ window.saveLeaderboardProfile = async function(){
         ).value.trim();
 
 
+    /*
+      If user did not choose a new image,
+      keep existing avatar.
+    */
+
     const avatar =
-        document.getElementById(
-            "avatar-url-input"
-        ).value.trim();
+        selectedAvatarBase64 ||
+        getAvatar(currentUserData) ||
+        "";
 
 
     if(!showName){
@@ -2046,6 +2933,18 @@ window.saveLeaderboardProfile = async function(){
     }
 
 
+    if(!avatar){
+
+        showToast(
+            "একটি Avatar select করুন!",
+            "error"
+        );
+
+        return;
+
+    }
+
+
     const button =
         document.getElementById(
             "save-profile-btn"
@@ -2054,33 +2953,47 @@ window.saveLeaderboardProfile = async function(){
 
     button.disabled=true;
 
+
     button.innerHTML=`
-        <i class="fa-solid fa-spinner animate-spin mr-1"></i>
+
+        <i class="fa-solid
+                  fa-spinner
+                  animate-spin
+                  mr-1"></i>
+
         Saving...
+
     `;
 
 
     try{
 
         await updateDoc(
-            doc(db,"users",currentUser.uid),
+
+            doc(
+                db,
+                "users",
+                currentUser.uid
+            ),
+
             {
                 showName:showName,
-                avatar:avatar || ""
+                avatar:avatar
             }
+
         );
 
+
+        /*
+          Update local data.
+        */
 
         currentUserData.showName =
             showName;
 
         currentUserData.avatar =
-            avatar || "";
+            avatar;
 
-
-        /*
-          Local leaderboard data update
-        */
 
         const me =
             allPlayers.find(
@@ -2094,12 +3007,13 @@ window.saveLeaderboardProfile = async function(){
                 showName;
 
             me.avatar =
-                avatar || "";
+                avatar;
 
         }
 
 
         closeProfileModal();
+
 
         renderLeaderboard();
 
@@ -2122,9 +3036,15 @@ window.saveLeaderboardProfile = async function(){
 
         button.disabled=false;
 
+
         button.innerHTML=`
-            <i class="fa-solid fa-check mr-1"></i>
+
+            <i class="fa-solid
+                      fa-check
+                      mr-1"></i>
+
             Update Profile
+
         `;
 
     }
@@ -2133,21 +3053,26 @@ window.saveLeaderboardProfile = async function(){
 
 
 /* =========================
-   ESCAPE MODAL
+   MODAL BACKDROP
 ========================= */
 
 document.getElementById(
     "profile-modal"
-).addEventListener("click",e=>{
+).addEventListener(
+    "click",
+    event=>{
 
-    if(e.target.id==="profile-modal"){
+        if(
+            event.target.id===
+            "profile-modal"
+        ){
 
-        closeProfileModal();
+            closeProfileModal();
+
+        }
 
     }
-
-});
-
+);
 
 </script>
 
