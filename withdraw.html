@@ -218,7 +218,6 @@
 
 <div id="toast-container"></div>
 
-<!-- HEADER -->
 <header class="px-4 py-4 flex items-center justify-between border-b border-slate-900 bg-[#0b0f1a]/80 backdrop-blur-md sticky top-0 z-30">
     <div class="flex items-center space-x-3">
 
@@ -235,20 +234,16 @@
     </div>
 </header>
 
-
 <main class="max-w-md w-full mx-auto px-4 py-6 space-y-5">
 
-    <!-- CHANNEL -->
     <div class="text-center">
         <span class="text-[10px] font-bold tracking-widest text-slate-400 uppercase">
             Choose your payment channel
         </span>
     </div>
 
-
     <div class="grid grid-cols-2 gap-3">
 
-        <!-- BKASH -->
         <div
             id="channel-bkash"
             onclick="selectChannel('bkash')"
@@ -276,8 +271,6 @@
 
         </div>
 
-
-        <!-- NAGAD -->
         <div
             id="channel-nagad"
             onclick="selectChannel('nagad')"
@@ -308,11 +301,8 @@
 
     </div>
 
-
-    <!-- FORM -->
     <div class="space-y-4 pt-1">
 
-        <!-- WALLET -->
         <div>
 
             <div class="relative">
@@ -336,7 +326,6 @@
 
             </div>
 
-
             <div
                 id="wallet-message"
                 class="text-[10px] px-2 mt-1.5 min-h-[15px] text-slate-500">
@@ -347,8 +336,6 @@
 
         </div>
 
-
-        <!-- SAVED NUMBER -->
         <div id="saved-number-box" class="hidden">
 
             <div class="flex items-center justify-between bg-[#0d1322] border border-slate-800 rounded-xl px-3 py-2.5">
@@ -378,8 +365,6 @@
 
         </div>
 
-
-        <!-- AMOUNT -->
         <div>
 
             <div class="relative">
@@ -406,7 +391,6 @@
 
             </div>
 
-
             <div class="flex justify-between items-center text-[11px] text-slate-500 px-2 mt-1.5">
 
                 <span>
@@ -421,8 +405,6 @@
 
         </div>
 
-
-        <!-- QUICK AMOUNTS -->
         <div>
 
             <div class="text-[10px] font-bold text-slate-500 mb-2 px-1">
@@ -431,32 +413,27 @@
 
             <div class="grid grid-cols-5 gap-2">
 
-                <button
-                    onclick="setQuickAmount(50)"
+                <button onclick="setQuickAmount(50)"
                     class="amount-chip bg-[#0d1322] border border-slate-800 rounded-xl py-2.5 text-[10px] font-bold text-slate-300">
                     ৳50
                 </button>
 
-                <button
-                    onclick="setQuickAmount(100)"
+                <button onclick="setQuickAmount(100)"
                     class="amount-chip bg-[#0d1322] border border-slate-800 rounded-xl py-2.5 text-[10px] font-bold text-slate-300">
                     ৳100
                 </button>
 
-                <button
-                    onclick="setQuickAmount(500)"
+                <button onclick="setQuickAmount(500)"
                     class="amount-chip bg-[#0d1322] border border-slate-800 rounded-xl py-2.5 text-[10px] font-bold text-slate-300">
                     ৳500
                 </button>
 
-                <button
-                    onclick="setQuickAmount(1000)"
+                <button onclick="setQuickAmount(1000)"
                     class="amount-chip bg-[#0d1322] border border-slate-800 rounded-xl py-2.5 text-[10px] font-bold text-slate-300">
                     ৳1000
                 </button>
 
-                <button
-                    onclick="setQuickAmount(5000)"
+                <button onclick="setQuickAmount(5000)"
                     class="amount-chip bg-[#0d1322] border border-slate-800 rounded-xl py-2.5 text-[10px] font-bold text-slate-300">
                     ৳5000
                 </button>
@@ -465,8 +442,6 @@
 
         </div>
 
-
-        <!-- FEE CALCULATION -->
         <div class="glass-card rounded-2xl p-4 border border-slate-800 space-y-2.5">
 
             <div class="flex justify-between text-xs">
@@ -483,7 +458,6 @@
 
             </div>
 
-
             <div class="flex justify-between text-xs">
 
                 <span class="text-slate-400">
@@ -497,7 +471,6 @@
                 </span>
 
             </div>
-
 
             <div class="border-t border-slate-800 pt-2.5 flex justify-between">
 
@@ -513,7 +486,6 @@
 
             </div>
 
-
             <div
                 id="total-deduction"
                 class="text-[10px] text-slate-500 text-right">
@@ -524,8 +496,6 @@
 
         </div>
 
-
-        <!-- WITHDRAW BUTTON -->
         <button
             onclick="submitWithdraw()"
             id="withdraw-btn"
@@ -537,8 +507,6 @@
 
     </div>
 
-
-    <!-- BALANCE -->
     <div class="glass-card rounded-2xl p-4 flex justify-between items-center border border-slate-800 shadow">
 
         <div class="flex items-center space-x-2.5">
@@ -555,19 +523,14 @@
 
         </div>
 
-
         <span
             id="user-balance-display"
             class="text-sm font-black text-emerald-400">
-
             ৳0
-
         </span>
 
     </div>
 
-
-    <!-- PENDING NOTICE -->
     <div
         id="pending-box"
         class="hidden bg-amber-500/10 border border-amber-500/20 rounded-2xl p-4">
@@ -584,7 +547,6 @@
 
         </div>
 
-
         <p
             id="pending-text"
             class="text-[11px] text-slate-300 leading-relaxed">
@@ -595,8 +557,6 @@
 
     </div>
 
-
-    <!-- NOTICE -->
     <div class="bg-[#0f1d17] border border-emerald-500/20 rounded-2xl p-4 space-y-1.5 shadow-md">
 
         <div class="flex items-center space-x-2">
@@ -609,7 +569,6 @@
 
         </div>
 
-
         <p class="text-[11px] text-slate-300 leading-relaxed">
 
             সর্বনিম্ন উত্তোলন পরিমাণ টাকা ৫০ এবং সর্বোচ্চ উত্তোলন পরিমাণ টাকা ১,০০,০০০।
@@ -619,8 +578,6 @@
 
     </div>
 
-
-    <!-- HISTORY -->
     <div class="space-y-3 pt-2">
 
         <div class="flex items-center justify-between">
@@ -637,7 +594,6 @@
 
             </div>
 
-
             <button
                 onclick="loadWithdrawalHistory()"
                 class="w-8 h-8 rounded-xl bg-slate-900 border border-slate-800 text-slate-400 hover:text-white">
@@ -647,7 +603,6 @@
             </button>
 
         </div>
-
 
         <div
             id="history-list"
@@ -666,7 +621,6 @@
     </div>
 
 </main>
-
 
 <!-- CONFIRM MODAL -->
 <div
@@ -693,7 +647,6 @@
 
         </div>
 
-
         <div class="bg-[#0b1220] rounded-2xl p-4 space-y-3">
 
             <div class="flex justify-between">
@@ -710,7 +663,6 @@
 
             </div>
 
-
             <div class="flex justify-between">
 
                 <span class="text-[11px] text-slate-500">
@@ -724,7 +676,6 @@
                 </span>
 
             </div>
-
 
             <div class="flex justify-between">
 
@@ -740,7 +691,6 @@
 
             </div>
 
-
             <div class="flex justify-between">
 
                 <span class="text-[11px] text-slate-500">
@@ -754,7 +704,6 @@
                 </span>
 
             </div>
-
 
             <div class="border-t border-slate-800 pt-3 flex justify-between">
 
@@ -772,7 +721,6 @@
 
         </div>
 
-
         <div class="grid grid-cols-2 gap-3 mt-5">
 
             <button
@@ -781,7 +729,6 @@
                 class="py-3 rounded-2xl bg-slate-800 border border-slate-700 text-slate-300 text-xs font-bold">
                 Cancel
             </button>
-
 
             <button
                 onclick="confirmWithdrawal()"
@@ -793,9 +740,7 @@
         </div>
 
     </div>
-
 </div>
-
 
 <!-- SUCCESS MODAL -->
 <div
@@ -810,11 +755,9 @@
 
         </div>
 
-
         <h3 class="text-lg font-bold text-white">
             Withdrawal Request Submitted ✓
         </h3>
-
 
         <p class="text-xs text-slate-400 mt-2 leading-relaxed">
 
@@ -822,7 +765,6 @@
             Admin review করার পর টাকা পাঠানো হবে।
 
         </p>
-
 
         <button
             onclick="closeSuccessModal()"
@@ -833,9 +775,7 @@
         </button>
 
     </div>
-
 </div>
-
 
 <script type="module">
 
@@ -856,20 +796,11 @@ import {
 } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
 
-/* =========================================================
-   GLOBAL
-========================================================= */
-
 let selectedChannelName = "bkash";
-
 let currentUser = null;
-
 let userCurrentBalance = 0;
-
 let currentPendingWithdrawal = null;
-
 let selectedAmount = 0;
-
 let isProcessing = false;
 
 let savedNumbers = {
@@ -899,13 +830,11 @@ window.showToast = function(message, type = "success") {
         "fa-solid fa-circle-check text-emerald-400";
 
     if (type === "error") {
-
         icon =
             "fa-solid fa-circle-xmark text-red-400";
     }
 
     if (type === "warning") {
-
         icon =
             "fa-solid fa-triangle-exclamation text-amber-400";
     }
@@ -918,9 +847,7 @@ window.showToast = function(message, type = "success") {
     container.appendChild(toast);
 
     setTimeout(() => {
-
         toast.remove();
-
     }, 3000);
 };
 
@@ -992,6 +919,38 @@ function displayWalletNumber(value) {
 
 
 /* =========================================================
+   TIME FIX
+========================================================= */
+
+function getTimeValue(item) {
+
+    const values = [
+        item?.timestamp,
+        item?.createdAt,
+        item?.reviewedAt,
+        item?.rejectedAt
+    ];
+
+    for (const value of values) {
+
+        if (typeof value === "number" && value > 0) {
+            return value;
+        }
+
+        if (value?.toMillis) {
+            return value.toMillis();
+        }
+
+        if (value?.seconds) {
+            return Number(value.seconds) * 1000;
+        }
+    }
+
+    return 0;
+}
+
+
+/* =========================================================
    FEE
 ========================================================= */
 
@@ -1016,9 +975,7 @@ function calculateFee(amount) {
 function updateAmountSummary() {
 
     const input =
-        document.getElementById(
-            "withdraw-amount"
-        );
+        document.getElementById("withdraw-amount");
 
     const amount =
         Number(input.value || 0);
@@ -1033,30 +990,18 @@ function updateAmountSummary() {
         amount + fee;
 
 
-    document.getElementById(
-        "summary-amount"
-    ).innerText =
+    document.getElementById("summary-amount").innerText =
         money(amount);
 
-
-    document.getElementById(
-        "summary-fee"
-    ).innerText =
+    document.getElementById("summary-fee").innerText =
         money(fee);
 
-
-    document.getElementById(
-        "summary-receive"
-    ).innerText =
+    document.getElementById("summary-receive").innerText =
         money(receive);
 
-
-    document.getElementById(
-        "total-deduction"
-    ).innerText =
+    document.getElementById("total-deduction").innerText =
         "Balance থেকে কাটা হবে: " +
         money(total);
-
 
     validateAmount(false);
 }
@@ -1069,9 +1014,7 @@ function updateAmountSummary() {
 function validateAmount(showToastMessage = true) {
 
     const input =
-        document.getElementById(
-            "withdraw-amount"
-        );
+        document.getElementById("withdraw-amount");
 
     const amount =
         Number(input.value || 0);
@@ -1079,9 +1022,7 @@ function validateAmount(showToastMessage = true) {
 
     if (!amount) {
 
-        input.classList.remove(
-            "border-red-500"
-        );
+        input.classList.remove("border-red-500");
 
         return false;
     }
@@ -1089,9 +1030,7 @@ function validateAmount(showToastMessage = true) {
 
     if (amount < 50) {
 
-        input.classList.add(
-            "border-red-500"
-        );
+        input.classList.add("border-red-500");
 
         if (showToastMessage) {
 
@@ -1107,9 +1046,7 @@ function validateAmount(showToastMessage = true) {
 
     if (amount > 100000) {
 
-        input.classList.add(
-            "border-red-500"
-        );
+        input.classList.add("border-red-500");
 
         if (showToastMessage) {
 
@@ -1132,9 +1069,7 @@ function validateAmount(showToastMessage = true) {
 
     if (total > userCurrentBalance) {
 
-        input.classList.add(
-            "border-red-500"
-        );
+        input.classList.add("border-red-500");
 
         if (showToastMessage) {
 
@@ -1148,9 +1083,7 @@ function validateAmount(showToastMessage = true) {
     }
 
 
-    input.classList.remove(
-        "border-red-500"
-    );
+    input.classList.remove("border-red-500");
 
     return true;
 }
@@ -1193,9 +1126,7 @@ function(amount) {
 
 
     const input =
-        document.getElementById(
-            "withdraw-amount"
-        );
+        document.getElementById("withdraw-amount");
 
     input.value =
         amount;
@@ -1227,7 +1158,6 @@ function() {
     const balance =
         Number(userCurrentBalance || 0);
 
-
     let maxAmount = 0;
 
 
@@ -1258,9 +1188,7 @@ function() {
 
 
     const input =
-        document.getElementById(
-            "withdraw-amount"
-        );
+        document.getElementById("withdraw-amount");
 
     input.value =
         maxAmount;
@@ -1281,30 +1209,21 @@ function(channel) {
     if (isProcessing)
         return;
 
-
     selectedChannelName =
         channel;
 
 
     const bkash =
-        document.getElementById(
-            "channel-bkash"
-        );
+        document.getElementById("channel-bkash");
 
     const nagad =
-        document.getElementById(
-            "channel-nagad"
-        );
+        document.getElementById("channel-nagad");
 
     const bkashCheck =
-        document.getElementById(
-            "check-bkash"
-        );
+        document.getElementById("check-bkash");
 
     const nagadCheck =
-        document.getElementById(
-            "check-nagad"
-        );
+        document.getElementById("check-nagad");
 
 
     if (channel === "bkash") {
@@ -1348,20 +1267,13 @@ function(channel) {
 function validateWallet(showToastMessage = false) {
 
     const input =
-        document.getElementById(
-            "wallet-number"
-        );
+        document.getElementById("wallet-number");
 
     const icon =
-        document.getElementById(
-            "wallet-valid-icon"
-        );
+        document.getElementById("wallet-valid-icon");
 
     const message =
-        document.getElementById(
-            "wallet-message"
-        );
-
+        document.getElementById("wallet-message");
 
     const number =
         cleanNumber(input.value);
@@ -1493,14 +1405,10 @@ function loadSavedNumbers() {
                 JSON.parse(data);
 
             savedNumbers.bkash =
-                cleanNumber(
-                    parsed.bkash || ""
-                );
+                cleanNumber(parsed.bkash || "");
 
             savedNumbers.nagad =
-                cleanNumber(
-                    parsed.nagad || ""
-                );
+                cleanNumber(parsed.nagad || "");
         }
 
     } catch (e) {
@@ -1538,20 +1446,13 @@ function saveCurrentNumber(number) {
 function loadSavedNumber() {
 
     const saved =
-        savedNumbers[
-            selectedChannelName
-        ];
-
+        savedNumbers[selectedChannelName];
 
     const box =
-        document.getElementById(
-            "saved-number-box"
-        );
+        document.getElementById("saved-number-box");
 
     const text =
-        document.getElementById(
-            "saved-number-text"
-        );
+        document.getElementById("saved-number-text");
 
 
     if (!saved) {
@@ -1573,18 +1474,14 @@ window.useSavedNumber =
 function() {
 
     const saved =
-        savedNumbers[
-            selectedChannelName
-        ];
+        savedNumbers[selectedChannelName];
 
     if (!saved)
         return;
 
 
     const input =
-        document.getElementById(
-            "wallet-number"
-        );
+        document.getElementById("wallet-number");
 
     input.value =
         displayWalletNumber(saved);
@@ -1611,8 +1508,7 @@ onAuthStateChanged(
 
         if (!user) {
 
-            currentUser =
-                null;
+            currentUser = null;
 
             showToast(
                 "দয়া করে প্রথমে লগইন করুন!",
@@ -1630,7 +1526,6 @@ onAuthStateChanged(
 
 
         loadSavedNumbers();
-
         loadSavedNumber();
 
 
@@ -1680,8 +1575,7 @@ async function loadUserBalance() {
 
     if (!snap.exists()) {
 
-        userCurrentBalance =
-            0;
+        userCurrentBalance = 0;
 
     } else {
 
@@ -1699,9 +1593,7 @@ async function loadUserBalance() {
 function updateBalanceUI() {
 
     document
-        .getElementById(
-            "user-balance-display"
-        )
+        .getElementById("user-balance-display")
         .innerText =
         money(userCurrentBalance);
 }
@@ -1714,9 +1606,7 @@ function updateBalanceUI() {
 function disableWithdraw() {
 
     const btn =
-        document.getElementById(
-            "withdraw-btn"
-        );
+        document.getElementById("withdraw-btn");
 
     btn.disabled = true;
 }
@@ -1729,19 +1619,13 @@ function disableWithdraw() {
 function updatePendingUI() {
 
     const box =
-        document.getElementById(
-            "pending-box"
-        );
+        document.getElementById("pending-box");
 
     const text =
-        document.getElementById(
-            "pending-text"
-        );
+        document.getElementById("pending-text");
 
     const btn =
-        document.getElementById(
-            "withdraw-btn"
-        );
+        document.getElementById("withdraw-btn");
 
 
     if (currentPendingWithdrawal) {
@@ -1792,9 +1676,7 @@ async function() {
 
 
     const history =
-        document.getElementById(
-            "history-list"
-        );
+        document.getElementById("history-list");
 
 
     try {
@@ -1827,30 +1709,23 @@ async function() {
 
 
         records.sort(
-            (a, b) => {
-
-                const aTime =
-                    Number(
-                        a.timestamp ||
-                        a.createdAt ||
-                        0
-                    );
-
-                const bTime =
-                    Number(
-                        b.timestamp ||
-                        b.createdAt ||
-                        0
-                    );
-
-                return bTime - aTime;
-            }
+            (a, b) =>
+                getTimeValue(b) -
+                getTimeValue(a)
         );
 
 
         records =
             records.slice(0, 20);
 
+
+        /*
+            শুধু PENDING record দিয়ে
+            pending block করা হবে।
+            
+            Rejected/Completed history
+            এখানে থাকবে।
+        */
 
         currentPendingWithdrawal =
             records.find(
@@ -1927,7 +1802,8 @@ function renderHistoryItem(item) {
     const status =
         String(
             item.status || "pending"
-        ).toLowerCase();
+        ).toLowerCase()
+        .trim();
 
 
     let statusText =
@@ -1943,7 +1819,8 @@ function renderHistoryItem(item) {
     if (
         status === "completed" ||
         status === "complete" ||
-        status === "approved"
+        status === "approved" ||
+        status === "success"
     ) {
 
         statusText =
@@ -2007,11 +1884,7 @@ function renderHistoryItem(item) {
 
 
     const timestamp =
-        Number(
-            item.timestamp ||
-            item.createdAt ||
-            0
-        );
+        getTimeValue(item);
 
 
     const date =
@@ -2030,22 +1903,49 @@ function renderHistoryItem(item) {
             : "Date unavailable";
 
 
+    /*
+        IMPORTANT:
+
+        তোমার Firebase document-এ
+        rejection reason এই field-গুলোতে
+        থাকতে পারে:
+
+        1. rejectReason
+        2. reviewReason
+        3. reason
+
+        তাই তিনটিই check করা হচ্ছে।
+    */
+
+    const rejectionReason =
+        String(
+            item.rejectReason ||
+            item.reviewReason ||
+            item.reason ||
+            ""
+        ).trim();
+
+
     let reasonHTML =
         "";
 
 
     if (
-        status === "rejected" &&
-        item.rejectReason
+        (
+            status === "rejected" ||
+            status === "reject" ||
+            status === "failed"
+        ) &&
+        rejectionReason
     ) {
 
         reasonHTML = `
 
-            <div class="mt-3 px-3 py-2.5 rounded-xl bg-red-500/5 border border-red-500/10">
+            <div class="mt-3 px-3 py-3 rounded-xl bg-red-500/5 border border-red-500/15">
 
-                <div class="flex items-center gap-1.5 mb-1">
+                <div class="flex items-center gap-1.5 mb-1.5">
 
-                    <i class="fa-solid fa-circle-info text-red-400 text-[9px]"></i>
+                    <i class="fa-solid fa-circle-xmark text-red-400 text-[10px]"></i>
 
                     <span class="text-[9px] font-bold text-red-400">
                         Rejection Reason
@@ -2053,8 +1953,46 @@ function renderHistoryItem(item) {
 
                 </div>
 
-                <p class="text-[10px] text-slate-400 leading-relaxed">
-                    ${escapeHtml(item.rejectReason)}
+                <p class="text-[10px] text-slate-300 leading-relaxed break-words">
+                    ${escapeHtml(rejectionReason)}
+                </p>
+
+            </div>
+
+        `;
+    }
+
+
+    /*
+        যদি rejected হয় কিন্তু reason field না থাকে,
+        তাহলে status-এর নিচে ছোট notice দেখাবে।
+    */
+
+    if (
+        (
+            status === "rejected" ||
+            status === "reject" ||
+            status === "failed"
+        ) &&
+        !rejectionReason
+    ) {
+
+        reasonHTML = `
+
+            <div class="mt-3 px-3 py-2.5 rounded-xl bg-red-500/5 border border-red-500/10">
+
+                <div class="flex items-center gap-1.5">
+
+                    <i class="fa-solid fa-circle-info text-red-400 text-[9px]"></i>
+
+                    <span class="text-[9px] font-bold text-red-400">
+                        Withdrawal rejected
+                    </span>
+
+                </div>
+
+                <p class="text-[10px] text-slate-500 mt-1">
+                    Rejection reason দেওয়া হয়নি।
                 </p>
 
             </div>
@@ -2178,9 +2116,7 @@ async function() {
 
     } catch (error) {
 
-        console.error(
-            error
-        );
+        console.error(error);
 
         showToast(
             "Balance check করা যায়নি।",
@@ -2190,11 +2126,6 @@ async function() {
         return;
     }
 
-
-    /*
-        Pending check transaction-এর
-        বাইরে করা হচ্ছে।
-    */
 
     await loadWithdrawalHistory();
 
@@ -2211,15 +2142,11 @@ async function() {
 
 
     const input =
-        document.getElementById(
-            "wallet-number"
-        );
+        document.getElementById("wallet-number");
 
 
     const number =
-        cleanNumber(
-            input.value
-        );
+        cleanNumber(input.value);
 
 
     if (!validateWallet(true)) {
@@ -2257,10 +2184,7 @@ async function() {
         amount;
 
 
-    if (
-        total >
-        userCurrentBalance
-    ) {
+    if (total > userCurrentBalance) {
 
         showToast(
             `Fee সহ ${money(total)} balance প্রয়োজন।`,
@@ -2275,9 +2199,7 @@ async function() {
         amount;
 
 
-    saveCurrentNumber(
-        number
-    );
+    saveCurrentNumber(number);
 
 
     document.getElementById(
@@ -2323,17 +2245,11 @@ async function() {
 function openConfirmModal() {
 
     const modal =
-        document.getElementById(
-            "confirm-modal"
-        );
+        document.getElementById("confirm-modal");
 
-    modal.classList.remove(
-        "hidden"
-    );
+    modal.classList.remove("hidden");
 
-    modal.classList.add(
-        "flex"
-    );
+    modal.classList.add("flex");
 }
 
 
@@ -2345,17 +2261,11 @@ function() {
 
 
     const modal =
-        document.getElementById(
-            "confirm-modal"
-        );
+        document.getElementById("confirm-modal");
 
-    modal.classList.add(
-        "hidden"
-    );
+    modal.classList.add("hidden");
 
-    modal.classList.remove(
-        "flex"
-    );
+    modal.classList.remove("flex");
 };
 
 
@@ -2382,9 +2292,7 @@ async function() {
 
 
     const amount =
-        Number(
-            selectedAmount || 0
-        );
+        Number(selectedAmount || 0);
 
 
     const number =
@@ -2447,39 +2355,21 @@ async function() {
         );
 
 
-    confirmBtn.disabled =
-        true;
-
-    cancelBtn.disabled =
-        true;
+    confirmBtn.disabled = true;
+    cancelBtn.disabled = true;
 
 
     confirmBtn.innerHTML =
         `<span class="spinner mr-2"></span> Processing...`;
 
 
-    mainBtn.disabled =
-        true;
+    mainBtn.disabled = true;
 
     mainBtn.innerHTML =
         `<span class="spinner mr-2"></span> Processing...`;
 
 
     try {
-
-        /*
-            IMPORTANT FIX:
-
-            আগে transaction-এর ভিতরে
-            transaction.get(pendingQuery)
-            করা হচ্ছিল।
-
-            Firestore Web Transaction-এ Query
-            এভাবে transaction.get() করা যাবে না।
-
-            তাই pending check transaction-এর
-            আগে করা হচ্ছে।
-        */
 
         await loadWithdrawalHistory();
 
@@ -2509,20 +2399,9 @@ async function() {
             );
 
 
-        /*
-            FIRESTORE TRANSACTION
-
-            এখানে শুধু document reads/writes
-            করা হচ্ছে।
-        */
-
         await runTransaction(
             db,
             async (transaction) => {
-
-                /*
-                    READ USER
-                */
 
                 const userSnap =
                     await transaction.get(
@@ -2544,14 +2423,7 @@ async function() {
                     );
 
 
-                /*
-                    FINAL BALANCE CHECK
-                */
-
-                if (
-                    latestBalance <
-                    total
-                ) {
+                if (latestBalance < total) {
 
                     throw new Error(
                         "INSUFFICIENT_BALANCE"
@@ -2568,10 +2440,6 @@ async function() {
                     Date.now();
 
 
-                /*
-                    UPDATE BALANCE
-                */
-
                 transaction.update(
                     userRef,
                     {
@@ -2580,10 +2448,6 @@ async function() {
                     }
                 );
 
-
-                /*
-                    CREATE WITHDRAW
-                */
 
                 transaction.set(
                     withdrawRef,
@@ -2637,64 +2501,36 @@ async function() {
                 );
 
 
-                /*
-                    Local balance update
-                */
-
                 userCurrentBalance =
                     newBalance;
             }
         );
 
 
-        /*
-            SUCCESS
-        */
-
         updateBalanceUI();
 
-
-        /*
-            Close confirm
-        */
 
         const confirmModal =
             document.getElementById(
                 "confirm-modal"
             );
 
-        confirmModal.classList.add(
-            "hidden"
-        );
+        confirmModal.classList.add("hidden");
 
-        confirmModal.classList.remove(
-            "flex"
-        );
+        confirmModal.classList.remove("flex");
 
-
-        /*
-            Reload history
-        */
 
         await loadWithdrawalHistory();
 
-
-        /*
-            Success modal
-        */
 
         const successModal =
             document.getElementById(
                 "success-modal"
             );
 
-        successModal.classList.remove(
-            "hidden"
-        );
+        successModal.classList.remove("hidden");
 
-        successModal.classList.add(
-            "flex"
-        );
+        successModal.classList.add("flex");
 
 
         showToast(
@@ -2750,11 +2586,6 @@ async function() {
 
         } else {
 
-            /*
-                Firebase-এর আসল error console-এ
-                দেখা যাবে।
-            */
-
             console.error(
                 "Firebase error code:",
                 error.code
@@ -2793,15 +2624,6 @@ async function() {
 
                 message =
                     "Internet/Firebase connection problem হয়েছে।";
-
-            } else if (
-                error.message
-            ) {
-
-                console.warn(
-                    "Actual Firebase error:",
-                    error.message
-                );
             }
 
 
@@ -2846,13 +2668,9 @@ function() {
             "success-modal"
         );
 
-    modal.classList.add(
-        "hidden"
-    );
+    modal.classList.add("hidden");
 
-    modal.classList.remove(
-        "flex"
-    );
+    modal.classList.remove("flex");
 };
 
 
@@ -2883,9 +2701,7 @@ document
         "click",
         function(e) {
 
-            if (
-                e.target === this
-            ) {
+            if (e.target === this) {
 
                 closeSuccessModal();
             }
