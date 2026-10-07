@@ -120,6 +120,27 @@ body{
 }
 
 /* =========================
+   CLAIM SPINNER
+========================= */
+
+.claim-spinner{
+    width:16px;
+    height:16px;
+    border:2px solid rgba(4,16,10,.25);
+    border-top-color:#04100a;
+    border-radius:50%;
+    animation:claimSpin .65s linear infinite;
+    display:inline-block;
+    vertical-align:middle;
+}
+
+@keyframes claimSpin{
+    to{
+        transform:rotate(360deg);
+    }
+}
+
+/* =========================
    GLASS
 ========================= */
 
@@ -145,7 +166,7 @@ body{
 }
 
 /* =========================
-   OVERALL PROGRESS
+   PROGRESS
 ========================= */
 
 .progress-ring{
@@ -212,7 +233,7 @@ body{
 }
 
 /* =========================
-   BUTTON COLORS
+   BUTTON
 ========================= */
 
 .task-btn{
@@ -225,9 +246,11 @@ body{
     border:0;
     transition:.2s ease;
     flex-shrink:0;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:7px;
 }
-
-/* INCOMPLETE = RED */
 
 .task-btn.incomplete{
     background:#ef4444;
@@ -235,21 +258,23 @@ body{
     box-shadow:0 5px 15px rgba(239,68,68,.18);
 }
 
-/* COMPLETE = GREEN */
-
 .task-btn.complete{
     background:#22c55e;
     color:#04100a;
     box-shadow:0 5px 15px rgba(34,197,94,.18);
 }
 
-/* ALREADY CLAIMED */
-
 .task-btn.claimed{
     background:#334155;
     color:#cbd5e1;
     cursor:not-allowed;
     box-shadow:none;
+}
+
+.task-btn.loading{
+    cursor:wait;
+    pointer-events:none;
+    opacity:.9;
 }
 
 .task-btn:active{
@@ -326,9 +351,7 @@ body{
 
 <body>
 
-<!-- =========================
-     LOADER
-========================= -->
+<!-- LOADER -->
 
 <div id="loader" class="loader">
 
@@ -354,9 +377,7 @@ body{
 </div>
 
 
-<!-- =========================
-     HEADER
-========================= -->
+<!-- HEADER -->
 
 <header class="header">
 
@@ -393,12 +414,7 @@ body{
 </header>
 
 
-<!-- =========================
-     MAIN
-========================= -->
-
 <main class="max-w-3xl mx-auto px-4 py-5 pb-10">
-
 
     <!-- OVERALL PROGRESS -->
 
@@ -485,9 +501,7 @@ body{
     </section>
 
 
-    <!-- =========================
-         TABS
-    ========================= -->
+    <!-- TABS -->
 
     <div class="glass rounded-2xl p-1.5 flex gap-1 mb-5">
 
@@ -526,9 +540,7 @@ body{
     </div>
 
 
-    <!-- =========================
-         TASK LIST
-    ========================= -->
+    <!-- TASK LIST -->
 
     <div
         id="taskList"
@@ -537,8 +549,6 @@ body{
 
 </main>
 
-
-<!-- TOAST -->
 
 <div id="toast" class="toast"></div>
 
@@ -569,22 +579,24 @@ import {
 
 
 /* =========================================================
-   LOADER SAFETY
-   Maximum 2 seconds
+   LOADER MAX 2 SEC
 ========================================================= */
 
-const loaderStartTime = Date.now();
+const forceHideLoader =
+    setTimeout(() => {
 
-const forceHideLoader = setTimeout(() => {
+        const loader =
+            document.getElementById("loader");
 
-    const loader =
-        document.getElementById("loader");
+        if(loader){
 
-    if(loader){
-        loader.classList.add("hide");
-    }
+            loader.classList.add(
+                "hide"
+            );
 
-},2000);
+        }
+
+    },2000);
 
 
 /* =========================================================
@@ -684,6 +696,8 @@ let currentTab = "all";
 
 let claimedTasks = new Set();
 
+let claimingTaskId = null;
+
 let userStats = {
 
     matches:0,
@@ -703,7 +717,8 @@ let userStats = {
 
 function safeNumber(value){
 
-    const n = Number(value);
+    const n =
+        Number(value);
 
     return Number.isFinite(n)
         ? n
@@ -755,13 +770,9 @@ function isCompletedMatch(data){
     return (
 
         status === "completed" ||
-
         status === "complete" ||
-
         status === "finished" ||
-
         status === "finish" ||
-
         !!data?.completedAt
 
     );
@@ -786,9 +797,7 @@ function findUserParticipant(tournamentData){
         return (
 
             p.uid === currentUser.uid ||
-
             p.userId === currentUser.uid ||
-
             p.firebaseUid === currentUser.uid
 
         );
@@ -806,15 +815,10 @@ function isWinnerRecord(
     const values = [
 
         data?.isWinner,
-
         data?.winner,
-
         data?.won,
-
         data?.result,
-
         data?.matchResult,
-
         data?.position
 
     ];
@@ -825,15 +829,10 @@ function isWinnerRecord(
         values.push(
 
             participant.isWinner,
-
             participant.winner,
-
             participant.won,
-
             participant.result,
-
             participant.matchResult,
-
             participant.position
 
         );
@@ -886,7 +885,8 @@ async function loadActualMatchStats(){
     if(!currentUser) return;
 
 
-    let matchIds = new Set();
+    let matchIds =
+        new Set();
 
     let wins = 0;
 
@@ -895,25 +895,28 @@ async function loadActualMatchStats(){
 
         const historyQuery =
             query(
+
                 collection(
                     db,
                     "matchHistory"
                 ),
+
                 where(
                     "userId",
                     "==",
                     currentUser.uid
                 )
+
             );
 
 
-        const historySnapshot =
+        const snapshot =
             await getDocs(
                 historyQuery
             );
 
 
-        historySnapshot.forEach(item => {
+        snapshot.forEach(item => {
 
             const data =
                 item.data() || {};
@@ -940,11 +943,8 @@ async function loadActualMatchStats(){
             const matchId =
 
                 data.tournamentId ??
-
                 data.matchId ??
-
                 data.tournamentID ??
-
                 item.id;
 
 
@@ -1027,9 +1027,7 @@ async function loadActualMatchStats(){
             const matchId =
 
                 data.tournamentId ??
-
                 data.matchId ??
-
                 item.id;
 
 
@@ -1077,7 +1075,7 @@ async function loadActualMatchStats(){
 
 
 /* =========================================================
-   REFERRAL
+   REFERRAL STATS
 ========================================================= */
 
 async function loadReferralStats(){
@@ -1096,12 +1094,15 @@ async function loadReferralStats(){
 
 
         const snap =
-            await getDoc(userRef);
+            await getDoc(
+                userRef
+            );
 
 
         if(!snap.exists()){
 
-            userStats.referrals = 0;
+            userStats.referrals =
+                0;
 
             return;
 
@@ -1116,11 +1117,8 @@ async function loadReferralStats(){
             safeNumber(
 
                 data.referrals ??
-
                 data.totalReferrals ??
-
                 data.referralCount ??
-
                 0
 
             );
@@ -1133,7 +1131,8 @@ async function loadReferralStats(){
             error
         );
 
-        userStats.referrals = 0;
+        userStats.referrals =
+            0;
 
     }
 
@@ -1141,7 +1140,7 @@ async function loadReferralStats(){
 
 
 /* =========================================================
-   DEPOSIT
+   DEPOSIT STATS
 ========================================================= */
 
 async function loadDepositStats(){
@@ -1230,7 +1229,8 @@ async function loadDepositStats(){
             error
         );
 
-        userStats.deposits = 0;
+        userStats.deposits =
+            0;
 
     }
 
@@ -1256,11 +1256,8 @@ async function loadClaimedTasks(){
             collection(
 
                 db,
-
                 "users",
-
                 currentUser.uid,
-
                 "claimedTasks"
 
             );
@@ -1292,7 +1289,7 @@ async function loadClaimedTasks(){
 
 
 /* =========================================================
-   PROGRESS
+   MISSION PROGRESS
 ========================================================= */
 
 function getMissionProgress(task){
@@ -1373,6 +1370,13 @@ async function claimTask(taskId){
     }
 
 
+    if(claimingTaskId){
+
+        return;
+
+    }
+
+
     const task =
         missions.find(
             x => x.id === taskId
@@ -1414,6 +1418,17 @@ async function claimTask(taskId){
     }
 
 
+    /* =========================================
+       SHOW SPINNER ON THIS CLAIM BUTTON
+    ========================================= */
+
+    claimingTaskId =
+        task.id;
+
+
+    renderTasks();
+
+
     const userRef =
         doc(
             db,
@@ -1426,9 +1441,7 @@ async function claimTask(taskId){
         doc(
 
             db,
-
             "users",
-
             currentUser.uid,
 
             "claimedTasks",
@@ -1485,7 +1498,7 @@ async function claimTask(taskId){
                     );
 
 
-                /* Add reward to wallet */
+                /* WALLET BALANCE */
 
                 transaction.set(
 
@@ -1511,7 +1524,7 @@ async function claimTask(taskId){
                 );
 
 
-                /* Save claim */
+                /* CLAIM RECORD */
 
                 transaction.set(
 
@@ -1547,6 +1560,10 @@ async function claimTask(taskId){
         );
 
 
+        claimingTaskId =
+            null;
+
+
         renderTasks();
 
 
@@ -1561,6 +1578,10 @@ async function claimTask(taskId){
             "Claim error:",
             error
         );
+
+
+        claimingTaskId =
+            null;
 
 
         if(
@@ -1586,6 +1607,9 @@ async function claimTask(taskId){
         }
 
 
+        renderTasks();
+
+
         showToast(
             "Reward claim করা যায়নি। আবার চেষ্টা করুন।"
         );
@@ -1596,13 +1620,15 @@ async function claimTask(taskId){
 
 
 /* =========================================================
-   BUTTON ACTION
+   TASK BUTTON
 ========================================================= */
 
 function handleTaskButton(task){
 
     const complete =
-        isMissionComplete(task);
+        isMissionComplete(
+            task
+        );
 
 
     const claimed =
@@ -1612,6 +1638,15 @@ function handleTaskButton(task){
 
 
     if(claimed){
+
+        return;
+
+    }
+
+
+    if(
+        claimingTaskId
+    ){
 
         return;
 
@@ -1647,7 +1682,7 @@ function handleTaskButton(task){
 
 
 /* =========================================================
-   RENDER
+   RENDER TASKS
 ========================================================= */
 
 function renderTasks(){
@@ -1725,6 +1760,11 @@ function renderTasks(){
                 );
 
 
+            const isClaiming =
+                claimingTaskId ===
+                task.id;
+
+
             const percent =
                 Math.min(
 
@@ -1753,6 +1793,10 @@ function renderTasks(){
             let disabled = "";
 
 
+            /* =====================================
+               CLAIMED
+            ===================================== */
+
             if(claimed){
 
                 buttonClass =
@@ -1766,6 +1810,32 @@ function renderTasks(){
 
             }
 
+            /* =====================================
+               CLAIM LOADING
+            ===================================== */
+
+            else if(isClaiming){
+
+                buttonClass =
+                    "complete loading";
+
+                disabled =
+                    "disabled";
+
+                buttonText = `
+
+                    <span class="claim-spinner"></span>
+
+                    <span>Claiming...</span>
+
+                `;
+
+            }
+
+            /* =====================================
+               COMPLETE
+            ===================================== */
+
             else if(complete){
 
                 buttonClass =
@@ -1773,6 +1843,20 @@ function renderTasks(){
 
                 buttonText =
                     "Claim";
+
+            }
+
+            /* =====================================
+               INCOMPLETE
+            ===================================== */
+
+            else{
+
+                buttonClass =
+                    "incomplete";
+
+                buttonText =
+                    task.button;
 
             }
 
@@ -2115,18 +2199,13 @@ onAuthStateChanged(
                 "Mission data load করতে সমস্যা হয়েছে।"
             );
 
+
         }finally{
 
             clearTimeout(
                 forceHideLoader
             );
 
-
-            /*
-             * Never keep loader unnecessarily.
-             * If loading took less than 2 sec,
-             * hide immediately.
-             */
 
             const loader =
                 document.getElementById(
