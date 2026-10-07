@@ -2,1213 +2,1083 @@
 <html lang="bn">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<meta name="theme-color" content="#050816">
-
-<title>Payment Gateway - AURA ARMAN TOUR</title>
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="theme-color" content="#07111f">
+<title>Deposit - Aura Skill</title>
 
 <script src="https://cdn.tailwindcss.com"></script>
-
 <link rel="stylesheet"
-href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-
-<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&display=swap"
-rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&display=swap" rel="stylesheet">
 
 <style>
-
 *{
     box-sizing:border-box;
-    -webkit-tap-highlight-color:transparent;
-}
-
-html{
-    scroll-behavior:smooth;
 }
 
 body{
     margin:0;
     min-height:100vh;
     font-family:'Hind Siliguri',sans-serif;
+    color:#fff;
     background:
-        radial-gradient(circle at top left,rgba(16,185,129,.12),transparent 35%),
-        radial-gradient(circle at top right,rgba(59,130,246,.10),transparent 35%),
-        #050816;
-    color:#f8fafc;
+        radial-gradient(circle at 10% 0%,rgba(0,255,170,.12),transparent 30%),
+        radial-gradient(circle at 90% 10%,rgba(0,170,255,.12),transparent 30%),
+        #07111f;
 }
 
-button,
-input{
+button,input{
     font-family:inherit;
 }
 
-button{
-    touch-action:manipulation;
-}
-
-.glass{
-    background:rgba(15,23,42,.78);
-    border:1px solid rgba(148,163,184,.14);
-    box-shadow:
-        0 20px 60px rgba(0,0,0,.25),
-        inset 0 1px 0 rgba(255,255,255,.03);
-    backdrop-filter:blur(18px);
-    -webkit-backdrop-filter:blur(18px);
-}
-
-.payment-card{
-    transition:.2s ease;
-}
-
-.payment-card:active{
-    transform:scale(.985);
-}
-
-.payment-card.selected{
-    border-color:#10b981!important;
-    box-shadow:
-        0 0 0 1px rgba(16,185,129,.25),
-        0 15px 40px rgba(16,185,129,.08);
-}
-
-.gateway-icon{
-    width:52px;
-    height:52px;
-    border-radius:16px;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    font-size:24px;
-    font-weight:800;
-    flex:none;
-}
-
-.bkash-icon{
-    background:linear-gradient(135deg,#e2136e,#a7084d);
-}
-
-.nagad-icon{
-    background:linear-gradient(135deg,#f7931e,#d56600);
-}
-
-.check-circle{
-    width:25px;
-    height:25px;
-    border-radius:50%;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    border:1px solid rgba(148,163,184,.25);
-    color:transparent;
-    flex:none;
-}
-
-.payment-card.selected .check-circle{
-    background:#10b981;
-    border-color:#10b981;
-    color:white;
-}
-
-.step{
-    position:relative;
-    flex:1;
-}
-
-.step:not(:last-child)::after{
-    content:"";
-    position:absolute;
-    top:15px;
-    left:calc(50% + 18px);
-    right:calc(-50% + 18px);
-    height:2px;
-    background:#1e293b;
-    z-index:0;
-}
-
-.step.done:not(:last-child)::after{
-    background:#10b981;
-}
-
-.step-circle{
-    width:31px;
-    height:31px;
-    border-radius:50%;
+.app{
+    width:100%;
+    max-width:620px;
     margin:auto;
-    position:relative;
-    z-index:2;
+    min-height:100vh;
+    padding-bottom:30px;
+}
+
+.topbar{
+    height:72px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 18px;
+    border-bottom:1px solid rgba(255,255,255,.07);
+    background:rgba(7,17,31,.82);
+    backdrop-filter:blur(18px);
+    position:sticky;
+    top:0;
+    z-index:50;
+}
+
+.icon-btn{
+    width:42px;
+    height:42px;
+    border-radius:14px;
+    border:1px solid rgba(255,255,255,.08);
+    background:rgba(255,255,255,.05);
+    color:#fff;
     display:flex;
     align-items:center;
     justify-content:center;
-    background:#111827;
-    border:1px solid #334155;
-    color:#64748b;
-    font-size:12px;
+    cursor:pointer;
+    transition:.2s;
+}
+
+.icon-btn:active{
+    transform:scale(.94);
+}
+
+.brand-title{
+    font-size:18px;
     font-weight:700;
 }
 
-.step.active .step-circle,
-.step.done .step-circle{
-    background:#10b981;
-    border-color:#10b981;
-    color:white;
+.brand-sub{
+    font-size:11px;
+    color:#7f91a7;
+    margin-top:-2px;
 }
 
-.step-text{
-    text-align:center;
-    margin-top:6px;
+.content{
+    padding:18px;
+}
+
+.summary{
+    position:relative;
+    overflow:hidden;
+    border-radius:24px;
+    padding:20px;
+    background:
+        linear-gradient(135deg,#ffffff 0%,#f1f7ff 100%);
+    color:#08111e;
+    box-shadow:0 18px 45px rgba(0,0,0,.25);
+}
+
+.summary:after{
+    content:"";
+    position:absolute;
+    width:160px;
+    height:160px;
+    border-radius:50%;
+    right:-80px;
+    top:-80px;
+    background:rgba(0,184,148,.13);
+}
+
+.summary-label{
+    font-size:12px;
+    color:#68788b;
+}
+
+.summary-user{
+    font-size:17px;
+    font-weight:700;
+}
+
+.amount{
+    font-size:34px;
+    line-height:1;
+    font-weight:800;
+    margin-top:7px;
+}
+
+.invoice{
+    margin-top:14px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+    padding-top:12px;
+    border-top:1px solid #dfe6ee;
+    font-size:12px;
+}
+
+.invoice span:last-child{
+    font-weight:700;
+    word-break:break-all;
+}
+
+.pending-box{
+    margin-top:16px;
+    border:1px solid rgba(245,158,11,.27);
+    background:linear-gradient(135deg,rgba(245,158,11,.11),rgba(255,255,255,.025));
+    border-radius:20px;
+    padding:15px;
+}
+
+.pending-title{
+    color:#fbbf24;
+    font-weight:700;
+    font-size:14px;
+}
+
+.pending-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:9px;
+    margin-top:11px;
+}
+
+.info-mini{
+    padding:9px 10px;
+    border-radius:12px;
+    background:rgba(255,255,255,.045);
+    border:1px solid rgba(255,255,255,.06);
+}
+
+.info-mini small{
+    display:block;
+    color:#718298;
     font-size:10px;
-    color:#64748b;
 }
 
-.step.active .step-text,
-.step.done .step-text{
-    color:#cbd5e1;
+.info-mini b{
+    display:block;
+    font-size:12px;
+    margin-top:2px;
+    word-break:break-word;
 }
 
-.guide-step{
+.section{
+    margin-top:18px;
+}
+
+.section-title{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    margin-bottom:12px;
+}
+
+.section-title h3{
+    margin:0;
+    font-size:17px;
+    font-weight:700;
+}
+
+.section-title span{
+    font-size:11px;
+    color:#718298;
+}
+
+.gateway-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:12px;
+}
+
+.gateway{
+    position:relative;
+    overflow:hidden;
+    min-height:145px;
+    padding:17px;
+    border-radius:21px;
+    border:1px solid rgba(255,255,255,.08);
+    background:linear-gradient(145deg,rgba(255,255,255,.065),rgba(255,255,255,.025));
+    cursor:pointer;
+    transition:.22s;
+}
+
+.gateway:active{
+    transform:scale(.97);
+}
+
+.gateway.disabled{
+    opacity:.48;
+    cursor:not-allowed;
+}
+
+.gateway.selected{
+    border-color:#00e6a8;
+    box-shadow:0 0 0 1px rgba(0,230,168,.18),0 15px 35px rgba(0,230,168,.09);
+}
+
+.gateway-logo{
+    width:52px;
+    height:52px;
+    object-fit:contain;
+    border-radius:14px;
+    background:#fff;
+    padding:7px;
+    box-shadow:0 7px 20px rgba(0,0,0,.2);
+}
+
+.gateway-name{
+    margin-top:13px;
+    font-size:17px;
+    font-weight:700;
+}
+
+.gateway-number{
+    margin-top:1px;
+    font-size:11px;
+    color:#8292a7;
+    min-height:17px;
+}
+
+.status-pill{
+    position:absolute;
+    top:13px;
+    right:12px;
+    font-size:9px;
+    padding:4px 7px;
+    border-radius:99px;
+    background:rgba(0,230,168,.1);
+    color:#00e6a8;
+}
+
+.status-pill.off{
+    background:rgba(255,255,255,.06);
+    color:#7b899b;
+}
+
+.check{
+    position:absolute;
+    right:13px;
+    bottom:13px;
+    width:24px;
+    height:24px;
+    border-radius:50%;
+    background:#00e6a8;
+    color:#04131a;
+    display:none;
+    align-items:center;
+    justify-content:center;
+    font-size:11px;
+}
+
+.gateway.selected .check{
+    display:flex;
+}
+
+.security{
+    display:flex;
+    gap:10px;
+    margin-top:14px;
+    padding:13px;
+    border-radius:16px;
+    background:rgba(0,230,168,.055);
+    border:1px solid rgba(0,230,168,.1);
+    color:#a8b8c9;
+    font-size:11px;
+}
+
+.security i{
+    color:#00e6a8;
+    margin-top:3px;
+}
+
+.instruction{
+    margin-top:18px;
+    display:none;
+}
+
+.instruction.show{
+    display:block;
+}
+
+.back-method{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    border:0;
+    background:none;
+    color:#9bacbf;
+    padding:4px 0 13px;
+    cursor:pointer;
+    font-size:13px;
+}
+
+.instruction-card{
+    border-radius:23px;
+    padding:18px;
+    background:linear-gradient(145deg,rgba(255,255,255,.07),rgba(255,255,255,.025));
+    border:1px solid rgba(255,255,255,.08);
+}
+
+.selected-method{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    padding-bottom:15px;
+    border-bottom:1px solid rgba(255,255,255,.07);
+}
+
+.method-small-logo{
+    width:44px;
+    height:44px;
+    object-fit:contain;
+    background:#fff;
+    border-radius:12px;
+    padding:6px;
+}
+
+.method-title{
+    font-weight:700;
+    font-size:17px;
+}
+
+.method-desc{
+    color:#718298;
+    font-size:11px;
+}
+
+.steps{
+    margin-top:16px;
+}
+
+.step{
     display:flex;
     gap:12px;
-    align-items:flex-start;
+    margin-bottom:13px;
 }
 
-.guide-number{
-    width:30px;
-    height:30px;
+.step-number{
+    flex:0 0 29px;
+    width:29px;
+    height:29px;
     border-radius:10px;
     display:flex;
     align-items:center;
     justify-content:center;
-    background:rgba(16,185,129,.12);
-    border:1px solid rgba(16,185,129,.2);
-    color:#34d399;
+    background:rgba(0,230,168,.1);
+    color:#00e6a8;
     font-weight:700;
-    flex:none;
+    font-size:12px;
 }
 
-.copy-btn:active{
-    transform:scale(.94);
+.step-content{
+    flex:1;
+    padding-top:3px;
+}
+
+.step-content b{
+    display:block;
+    font-size:13px;
+}
+
+.step-content span{
+    color:#77879a;
+    font-size:11px;
+}
+
+.copy-row{
+    display:flex;
+    gap:7px;
+    margin-top:5px;
+}
+
+.copy-value{
+    flex:1;
+    min-width:0;
+    padding:8px 9px;
+    border-radius:9px;
+    background:#07111f;
+    border:1px solid rgba(255,255,255,.07);
+    font-size:11px;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+}
+
+.copy-btn{
+    border:0;
+    border-radius:9px;
+    background:rgba(0,230,168,.1);
+    color:#00e6a8;
+    padding:0 11px;
+    cursor:pointer;
+}
+
+.trx-area{
+    margin-top:17px;
+    padding-top:16px;
+    border-top:1px solid rgba(255,255,255,.07);
+}
+
+.trx-label{
+    font-size:13px;
+    font-weight:600;
+    margin-bottom:7px;
+}
+
+.trx-input{
+    width:100%;
+    height:51px;
+    border-radius:14px;
+    outline:none;
+    border:1px solid rgba(255,255,255,.09);
+    background:#07111f;
+    color:#fff;
+    padding:0 14px;
+    font-size:14px;
+    transition:.2s;
+}
+
+.trx-input:focus{
+    border-color:#00e6a8;
+    box-shadow:0 0 0 3px rgba(0,230,168,.07);
+}
+
+.trx-input::placeholder{
+    color:#536275;
+}
+
+.verify-btn{
+    width:100%;
+    height:52px;
+    border:0;
+    border-radius:15px;
+    margin-top:10px;
+    background:linear-gradient(135deg,#00e6a8,#00b98a);
+    color:#03140f;
+    font-size:15px;
+    font-weight:800;
+    cursor:pointer;
+    box-shadow:0 12px 30px rgba(0,230,168,.13);
+    transition:.2s;
+}
+
+.verify-btn:active{
+    transform:scale(.985);
+}
+
+.verify-btn:disabled{
+    opacity:.38;
+    cursor:not-allowed;
+    box-shadow:none;
+}
+
+.review-note{
+    text-align:center;
+    margin-top:10px;
+    color:#66778c;
+    font-size:10px;
+}
+
+.status-screen{
+    display:none;
+    margin-top:18px;
+    padding:20px;
+    border-radius:24px;
+    background:linear-gradient(145deg,rgba(255,255,255,.075),rgba(255,255,255,.025));
+    border:1px solid rgba(255,255,255,.08);
+    text-align:center;
+}
+
+.status-screen.show{
+    display:block;
+}
+
+.status-icon{
+    width:67px;
+    height:67px;
+    border-radius:50%;
+    margin:0 auto 13px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:27px;
+    background:rgba(245,158,11,.1);
+    color:#fbbf24;
+}
+
+.status-icon.approved{
+    background:rgba(0,230,168,.1);
+    color:#00e6a8;
+}
+
+.status-icon.rejected{
+    background:rgba(239,68,68,.1);
+    color:#ef4444;
+}
+
+.status-heading{
+    font-size:20px;
+    font-weight:800;
+}
+
+.status-message{
+    margin-top:5px;
+    color:#8595a8;
+    font-size:12px;
+}
+
+.status-details{
+    margin-top:16px;
+    text-align:left;
+    display:grid;
+    gap:8px;
+}
+
+.detail-row{
+    display:flex;
+    justify-content:space-between;
+    gap:15px;
+    padding:10px 12px;
+    border-radius:11px;
+    background:rgba(255,255,255,.035);
+    font-size:11px;
+}
+
+.detail-row span{
+    color:#738398;
+}
+
+.detail-row b{
+    text-align:right;
+    word-break:break-word;
+}
+
+.reason{
+    display:none;
+    text-align:left;
+    margin-top:10px;
+    padding:11px 12px;
+    border-radius:12px;
+    background:rgba(239,68,68,.07);
+    border:1px solid rgba(239,68,68,.13);
+    color:#ff9b9b;
+    font-size:11px;
+}
+
+.support-btn{
+    width:100%;
+    height:48px;
+    margin-top:12px;
+    border-radius:14px;
+    border:1px solid rgba(37,211,102,.22);
+    background:rgba(37,211,102,.08);
+    color:#69e98c;
+    font-weight:700;
+    cursor:pointer;
+}
+
+.home-btn{
+    width:100%;
+    height:47px;
+    margin-top:8px;
+    border-radius:14px;
+    border:1px solid rgba(255,255,255,.08);
+    background:rgba(255,255,255,.045);
+    color:#c6d1de;
+    font-weight:600;
+    cursor:pointer;
+}
+
+.toast-container{
+    position:fixed;
+    top:16px;
+    left:50%;
+    transform:translateX(-50%);
+    width:calc(100% - 30px);
+    max-width:440px;
+    z-index:200;
+    pointer-events:none;
+}
+
+.toast{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    padding:12px 14px;
+    border-radius:14px;
+    background:#101b2a;
+    border:1px solid rgba(255,255,255,.08);
+    box-shadow:0 18px 45px rgba(0,0,0,.35);
+    margin-bottom:8px;
+    font-size:12px;
+    animation:toastIn .25s ease;
+}
+
+@keyframes toastIn{
+    from{opacity:0;transform:translateY(-12px)}
+    to{opacity:1;transform:translateY(0)}
 }
 
 .spinner{
-    width:19px;
-    height:19px;
-    border:2px solid rgba(255,255,255,.3);
-    border-top-color:#fff;
+    width:24px;
+    height:24px;
+    border:3px solid rgba(255,255,255,.12);
+    border-top-color:#00e6a8;
     border-radius:50%;
     animation:spin .7s linear infinite;
 }
 
 @keyframes spin{
-    to{
-        transform:rotate(360deg);
-    }
+    to{transform:rotate(360deg)}
 }
 
-.pulse-dot{
-    width:8px;
-    height:8px;
-    border-radius:50%;
-    background:#f59e0b;
-    animation:pulse 1.7s infinite;
+.loading{
+    min-height:110px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    flex-direction:column;
+    gap:9px;
+    color:#718298;
+    font-size:12px;
 }
 
-@keyframes pulse{
-    70%{
-        box-shadow:0 0 0 7px rgba(245,158,11,0);
-    }
+.loading.hide{
+    display:none;
 }
 
-.toast{
-    animation:toastIn .25s ease;
+.no-gateway{
+    display:none;
+    padding:20px;
+    text-align:center;
+    border-radius:18px;
+    background:rgba(255,255,255,.035);
+    color:#78889b;
+    font-size:12px;
 }
 
-@keyframes toastIn{
-    from{
-        opacity:0;
-        transform:translateY(-10px);
-    }
-    to{
-        opacity:1;
-        transform:translateY(0);
-    }
+.footer{
+    text-align:center;
+    margin-top:22px;
+    color:#506075;
+    font-size:10px;
 }
 
-.modal-bg{
-    background:rgba(2,6,23,.78);
-    backdrop-filter:blur(10px);
-}
-
-.success-icon{
-    animation:successPop .35s ease;
-}
-
-@keyframes successPop{
-    0%{
-        transform:scale(.5);
-        opacity:0;
-    }
-    100%{
-        transform:scale(1);
-        opacity:1;
-    }
-}
-
-.status-approved{
-    color:#34d399;
-    background:rgba(16,185,129,.1);
-    border-color:rgba(16,185,129,.2);
-}
-
-.status-rejected{
-    color:#fb7185;
-    background:rgba(244,63,94,.1);
-    border-color:rgba(244,63,94,.2);
-}
-
-.status-pending{
-    color:#fbbf24;
-    background:rgba(245,158,11,.1);
-    border-color:rgba(245,158,11,.2);
-}
-
-.disabled-btn{
-    opacity:.45;
-    cursor:not-allowed;
-}
-
-input::placeholder{
-    color:#64748b;
-}
-
-input:focus{
-    outline:none;
-}
-
-@media(max-width:420px){
-
-    .container-pad{
-        padding-left:12px;
-        padding-right:12px;
+@media(max-width:430px){
+    .content{
+        padding:14px;
     }
 
-}
+    .gateway-grid{
+        gap:9px;
+    }
 
+    .gateway{
+        padding:14px;
+        min-height:137px;
+    }
+
+    .amount{
+        font-size:31px;
+    }
+}
 </style>
 </head>
 
 <body>
 
-<!-- TOAST -->
+<div class="app">
 
-<div id="toastContainer"
-class="fixed top-4 left-3 right-3 z-[100] space-y-2 pointer-events-none">
-</div>
-
-
-<!-- HEADER -->
-
-<header class="sticky top-0 z-40 bg-[#050816]/90 backdrop-blur-xl border-b border-white/5">
-
-    <div class="max-w-xl mx-auto px-4 py-4 flex items-center gap-3">
-
-        <button
-        onclick="history.back()"
-        class="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center">
-
-            <i class="fa-solid fa-arrow-left text-slate-300"></i>
-
+    <!-- TOP BAR -->
+    <header class="topbar">
+        <button class="icon-btn" onclick="goHome()" aria-label="Back">
+            <i class="fa-solid fa-arrow-left"></i>
         </button>
-
-
-        <div class="flex-1">
-
-            <h1 class="text-lg font-bold">
-                Payment Gateway
-            </h1>
-
-            <p class="text-xs text-slate-500">
-                AURA ARMAN TOUR
-            </p>
-
-        </div>
-
-
-        <div class="w-10 h-10 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center">
-
-            <i class="fa-solid fa-shield-halved text-emerald-400"></i>
-
-        </div>
-
-    </div>
-
-</header>
-
-
-<main class="max-w-xl mx-auto px-4 py-5 pb-12 container-pad">
-
-
-<!-- USER -->
-
-<div class="glass rounded-2xl p-4 mb-4">
-
-    <div class="flex items-center gap-3">
-
-        <div class="w-11 h-11 rounded-full bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center">
-
-            <i class="fa-solid fa-user text-emerald-400"></i>
-
-        </div>
-
-
-        <div class="min-w-0 flex-1">
-
-            <p class="text-xs text-slate-500">
-                Paying Account
-            </p>
-
-            <p id="userName"
-            class="font-semibold truncate">
-                Loading...
-            </p>
-
-            <p id="userEmail"
-            class="text-xs text-slate-500 truncate">
-                Loading...
-            </p>
-
-        </div>
-
-    </div>
-
-</div>
-
-
-<!-- PENDING -->
-
-<div id="pendingDepositCard"
-class="hidden glass rounded-2xl p-4 mb-4 border border-amber-500/20 bg-amber-500/[.04]">
-
-    <div class="flex items-start gap-3">
-
-        <div class="w-10 h-10 rounded-xl bg-amber-500/10 flex items-center justify-center">
-
-            <div class="pulse-dot"></div>
-
-        </div>
-
-
-        <div class="flex-1">
-
-            <div class="flex items-center justify-between gap-2">
-
-                <h3 class="font-bold text-amber-300 text-sm">
-                    আপনার একটি Deposit বর্তমানে Under Review আছে।
-                </h3>
-
-                <span class="text-[10px] px-2 py-1 rounded-full border border-amber-500/20 bg-amber-500/10 text-amber-300">
-                    Pending
-                </span>
-
-            </div>
-
-
-            <div class="grid grid-cols-3 gap-2 mt-4">
-
-                <div class="bg-black/20 rounded-xl p-2">
-
-                    <p class="text-[9px] text-slate-500">
-                        Invoice
-                    </p>
-
-                    <p id="pendingInvoice"
-                    class="text-[11px] font-semibold truncate">
-                        —
-                    </p>
-
-                </div>
-
-
-                <div class="bg-black/20 rounded-xl p-2">
-
-                    <p class="text-[9px] text-slate-500">
-                        Amount
-                    </p>
-
-                    <p id="pendingAmount"
-                    class="text-[11px] font-semibold text-emerald-400">
-                        —
-                    </p>
-
-                </div>
-
-
-                <div class="bg-black/20 rounded-xl p-2">
-
-                    <p class="text-[9px] text-slate-500">
-                        TrxID
-                    </p>
-
-                    <p id="pendingTrx"
-                    class="text-[11px] font-semibold truncate">
-                        —
-                    </p>
-
-                </div>
-
-            </div>
-
-
-            <p id="pendingSince"
-            class="text-[10px] text-slate-500 mt-3">
-                Submitted recently
-            </p>
-
-        </div>
-
-    </div>
-
-</div>
-
-
-<!-- AMOUNT -->
-
-<div class="glass rounded-2xl p-4 mb-4">
-
-    <div class="flex items-center justify-between mb-3">
-
-        <label class="font-semibold">
-            Deposit Amount
-        </label>
-
-        <span class="text-[10px] px-2 py-1 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/10">
-            Fixed
-        </span>
-
-    </div>
-
-
-    <div class="relative">
-
-        <span class="absolute left-4 top-1/2 -translate-y-1/2 text-emerald-400 font-bold">
-            ৳
-        </span>
-
-        <input
-        id="amountInput"
-        type="text"
-        readonly
-        class="w-full h-14 rounded-xl bg-black/20 border border-white/10 pl-10 pr-4 text-xl font-bold text-white cursor-not-allowed"
-        value="৳0">
-
-    </div>
-
-
-    <p class="text-[11px] text-slate-500 mt-2">
-
-        <i class="fa-solid fa-lock mr-1"></i>
-
-        Deposit amount এই payment session-এ পরিবর্তন করা যাবে না।
-
-    </p>
-
-</div>
-
-
-<!-- PROGRESS -->
-
-<div class="glass rounded-2xl p-4 mb-4">
-
-    <div class="flex items-start">
-
-        <div id="step1" class="step active">
-
-            <div class="step-circle">
-                1
-            </div>
-
-            <div class="step-text">
-                Method
-            </div>
-
-        </div>
-
-
-        <div id="step2" class="step">
-
-            <div class="step-circle">
-                2
-            </div>
-
-            <div class="step-text">
-                Pay
-            </div>
-
-        </div>
-
-
-        <div id="step3" class="step">
-
-            <div class="step-circle">
-                3
-            </div>
-
-            <div class="step-text">
-                TrxID
-            </div>
-
-        </div>
-
-
-        <div id="step4" class="step">
-
-            <div class="step-circle">
-                4
-            </div>
-
-            <div class="step-text">
-                Verify
-            </div>
-
-        </div>
-
-    </div>
-
-</div>
-
-
-<!-- PAYMENT METHOD -->
-
-<div class="glass rounded-2xl p-4 mb-4">
-
-    <div class="flex items-center justify-between mb-4">
-
-        <div>
-
-            <h2 class="font-bold">
-                Payment Method
-            </h2>
-
-            <p class="text-xs text-slate-500">
-                একটি payment method নির্বাচন করুন
-            </p>
-
-        </div>
-
-        <i class="fa-solid fa-wallet text-slate-500"></i>
-
-    </div>
-
-
-    <div id="gatewayList"
-    class="space-y-3">
-
-
-        <!-- INSTANT STATIC CARDS -->
-
-        <button
-        type="button"
-        data-gateway="Bkash"
-        class="payment-card w-full text-left rounded-2xl border border-white/10 bg-black/10 p-3">
-
-            <div class="flex items-center gap-3">
-
-                <div class="gateway-icon bkash-icon text-white">
-                    <span style="font-size:18px">b</span>
-                </div>
-
-
-                <div class="flex-1 min-w-0">
-
-                    <div class="flex items-center gap-2">
-
-                        <p class="font-bold">
-                            bKash
-                        </p>
-
-                        <span
-                        id="bkashStatus"
-                        class="text-[9px] px-2 py-0.5 rounded-full border border-amber-500/20 bg-amber-500/10 text-amber-300">
-                            Checking...
-                        </span>
-
-                    </div>
-
-                    <p class="text-xs text-slate-500 mt-0.5">
-                        বিকাশ
-                    </p>
-
-                </div>
-
-
-                <div class="check-circle">
-
-                    <i class="fa-solid fa-check text-xs"></i>
-
-                </div>
-
-            </div>
-
-        </button>
-
-
-        <button
-        type="button"
-        data-gateway="Nagad"
-        class="payment-card w-full text-left rounded-2xl border border-white/10 bg-black/10 p-3">
-
-            <div class="flex items-center gap-3">
-
-                <div class="gateway-icon nagad-icon text-white">
-                    <span style="font-size:17px">N</span>
-                </div>
-
-
-                <div class="flex-1 min-w-0">
-
-                    <div class="flex items-center gap-2">
-
-                        <p class="font-bold">
-                            Nagad
-                        </p>
-
-                        <span
-                        id="nagadStatus"
-                        class="text-[9px] px-2 py-0.5 rounded-full border border-amber-500/20 bg-amber-500/10 text-amber-300">
-                            Checking...
-                        </span>
-
-                    </div>
-
-                    <p class="text-xs text-slate-500 mt-0.5">
-                        নগদ
-                    </p>
-
-                </div>
-
-
-                <div class="check-circle">
-
-                    <i class="fa-solid fa-check text-xs"></i>
-
-                </div>
-
-            </div>
-
-        </button>
-
-    </div>
-
-</div>
-
-
-<!-- TIMER -->
-
-<div id="timerCard"
-class="hidden glass rounded-2xl p-4 mb-4 border border-blue-500/20 bg-blue-500/[.03]">
-
-    <div class="flex items-center justify-between">
-
-        <div class="flex items-center gap-3">
-
-            <div class="w-10 h-10 rounded-xl bg-blue-500/10 flex items-center justify-center">
-
-                <i class="fa-solid fa-clock text-blue-400"></i>
-
-            </div>
-
-
-            <div>
-
-                <p class="text-xs text-slate-500">
-                    Payment session
-                </p>
-
-                <p id="timerText"
-                class="font-bold text-blue-300">
-                    10:00
-                </p>
-
-            </div>
-
-        </div>
-
-
-        <span class="text-[10px] text-slate-500">
-            Session
-        </span>
-
-    </div>
-
-</div>
-
-
-<!-- GUIDE -->
-
-<div id="instructionCard"
-class="hidden glass rounded-2xl p-4 mb-4">
-
-    <div class="flex items-center justify-between mb-4">
-
-        <div>
-
-            <h2 id="instructionTitle"
-            class="font-bold">
-                Payment Instructions
-            </h2>
-
-            <p id="instructionSubtitle"
-            class="text-xs text-slate-500">
-                Follow the steps below
-            </p>
-
-        </div>
-
-
-        <div id="instructionIcon"
-        class="w-10 h-10 rounded-xl flex items-center justify-center">
-
-            <i class="fa-solid fa-mobile-screen-button"></i>
-
-        </div>
-
-    </div>
-
-
-    <div id="guideContent"
-    class="space-y-4">
-    </div>
-
-
-    <div class="mt-4 rounded-xl bg-black/20 border border-white/5 p-3">
-
-        <div class="flex items-center justify-between gap-3">
-
-            <div class="min-w-0">
-
-                <p class="text-[10px] text-slate-500">
-                    Payment Number
-                </p>
-
-                <p id="paymentNumber"
-                class="font-bold text-lg truncate">
-                    —
-                </p>
-
-            </div>
-
-
-            <button
-            id="copyNumberBtn"
-            onclick="copyPaymentNumber()"
-            class="copy-btn flex-none px-3 py-2 rounded-lg bg-white/5 border border-white/10 text-xs">
-
-                <i class="fa-regular fa-copy mr-1"></i>
-                Copy
-
-            </button>
-
-        </div>
-
-    </div>
-
-</div>
-
-
-<!-- SECURITY -->
-
-<div class="glass rounded-2xl p-4 mb-4 border border-red-500/10 bg-red-500/[.025]">
-
-    <div class="flex items-start gap-3">
-
-        <div class="w-10 h-10 rounded-xl bg-red-500/10 flex items-center justify-center flex-none">
-
-            <i class="fa-solid fa-shield-halved text-red-400"></i>
-
-        </div>
-
-
-        <div>
-
-            <h3 class="font-semibold text-red-300 text-sm">
-                Security Warning
-            </h3>
-
-            <p class="text-xs text-slate-400 mt-1 leading-5">
-                Never share your PIN or OTP with anyone.
-                AURA ARMAN TOUR will never ask for your PIN.
-            </p>
-
-        </div>
-
-    </div>
-
-</div>
-
-
-<!-- TRX -->
-
-<div id="trxSection"
-class="hidden glass rounded-2xl p-4 mb-4">
-
-    <div class="flex items-center justify-between mb-3">
-
-        <div>
-
-            <h2 class="font-bold">
-                Transaction ID
-            </h2>
-
-            <p class="text-xs text-slate-500">
-                Payment করার পর TrxID দিন
-            </p>
-
-        </div>
-
-        <i class="fa-solid fa-receipt text-slate-500"></i>
-
-    </div>
-
-
-    <div class="relative">
-
-        <input
-        id="trxInput"
-        type="text"
-        maxlength="50"
-        autocomplete="off"
-        autocapitalize="characters"
-        placeholder="যেমন: 8A7B6C5D"
-        class="w-full h-14 rounded-xl bg-black/20 border border-white/10 px-4 pr-16 text-sm font-semibold uppercase">
-
-        <span
-        id="trxCounter"
-        class="absolute right-4 top-1/2 -translate-y-1/2 text-[10px] text-slate-600">
-            0/50
-        </span>
-
-    </div>
-
-
-    <div id="trxError"
-    class="hidden mt-2 text-xs text-red-400">
-    </div>
-
-
-    <div id="trxSuccess"
-    class="hidden mt-2 text-xs text-emerald-400">
-
-        <i class="fa-solid fa-circle-check mr-1"></i>
-        Valid Transaction ID
-
-    </div>
-
-</div>
-
-
-<!-- SUMMARY -->
-
-<div id="summaryCard"
-class="hidden glass rounded-2xl p-4 mb-4">
-
-    <div class="flex items-center gap-2 mb-4">
-
-        <i class="fa-solid fa-file-invoice text-emerald-400"></i>
-
-        <h2 class="font-bold">
-            Payment Confirmation
-        </h2>
-
-    </div>
-
-
-    <div class="space-y-2 text-sm">
-
-        <div class="flex justify-between gap-4">
-
-            <span class="text-slate-500">
-                Invoice
-            </span>
-
-            <span id="summaryInvoice"
-            class="font-semibold text-right">
-                —
-            </span>
-
-        </div>
-
-
-        <div class="flex justify-between gap-4">
-
-            <span class="text-slate-500">
-                Gateway
-            </span>
-
-            <span id="summaryGateway"
-            class="font-semibold">
-                —
-            </span>
-
-        </div>
-
-
-        <div class="flex justify-between gap-4">
-
-            <span class="text-slate-500">
-                Amount
-            </span>
-
-            <span id="summaryAmount"
-            class="font-bold text-emerald-400">
-                —
-            </span>
-
-        </div>
-
-
-        <div class="flex justify-between gap-4">
-
-            <span class="text-slate-500">
-                TrxID
-            </span>
-
-            <span id="summaryTrx"
-            class="font-semibold break-all text-right">
-                —
-            </span>
-
-        </div>
-
-    </div>
-
-</div>
-
-
-<!-- VERIFY -->
-
-<button
-id="verifyBtn"
-disabled
-class="w-full h-14 rounded-2xl bg-emerald-500 text-white font-bold text-base flex items-center justify-center gap-2 disabled-btn">
-
-    <i class="fa-solid fa-circle-check"></i>
-
-    Verify & Submit Deposit
-
-</button>
-
-
-<p class="text-center text-[10px] text-slate-600 mt-3">
-    TrxID সঠিকভাবে দিলে Verify button automatically enabled হবে।
-</p>
-
-
-<!-- REVIEW TIME -->
-
-<div class="mt-5 glass rounded-2xl p-4">
-
-    <div class="flex items-start gap-3">
-
-        <div class="w-10 h-10 rounded-xl bg-blue-500/10 flex items-center justify-center flex-none">
-
-            <i class="fa-solid fa-hourglass-half text-blue-400"></i>
-
-        </div>
-
-
-        <div>
-
-            <h3 class="font-semibold text-sm">
-                🕐 Estimated Review Time
-            </h3>
-
-            <p class="text-xs text-slate-400 mt-1 leading-5">
-                সাধারণত payment review করতে কয়েক মিনিট সময় লাগতে পারে।
-                আনুমানিক সময়
-                <span class="text-blue-300 font-semibold">
-                    ৫ মিনিট
-                </span>।
-            </p>
-
-        </div>
-
-    </div>
-
-</div>
-
-
-<!-- SUPPORT -->
-
-<a
-id="supportBtn"
-href="#"
-target="_blank"
-rel="noopener noreferrer"
-class="mt-4 w-full h-12 rounded-2xl bg-[#25D366]/10 border border-[#25D366]/20 text-[#5ee78b] flex items-center justify-center gap-2 font-semibold text-sm">
-
-    <i class="fa-brands fa-whatsapp text-lg"></i>
-
-    Need Help? Contact Support
-
-</a>
-
-</main>
-
-
-<!-- SUCCESS MODAL -->
-
-<div id="successModal"
-class="hidden fixed inset-0 z-[90] modal-bg items-center justify-center p-4">
-
-    <div class="glass rounded-3xl w-full max-w-md p-5">
 
         <div class="text-center">
-
-            <div class="success-icon w-20 h-20 rounded-full bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center mx-auto">
-
-                <i class="fa-solid fa-check text-4xl text-emerald-400"></i>
-
-            </div>
-
-
-            <h2 class="text-2xl font-bold mt-5">
-                Deposit Request Submitted
-            </h2>
-
-
-            <p class="text-sm text-slate-500 mt-1">
-                আপনার deposit request সফলভাবে submit হয়েছে।
-            </p>
-
+            <div class="brand-title">Add Money</div>
+            <div class="brand-sub">Secure Payment Gateway</div>
         </div>
 
+        <button class="icon-btn" onclick="reloadPage()" aria-label="Refresh">
+            <i class="fa-solid fa-rotate"></i>
+        </button>
+    </header>
 
-        <div class="mt-5 rounded-2xl bg-black/20 border border-white/5 p-4 space-y-3">
+    <main class="content">
 
-            <div class="flex justify-between gap-3">
+        <!-- SUMMARY -->
+        <section class="summary">
 
-                <span class="text-xs text-slate-500">
-                    Invoice
-                </span>
+            <div class="summary-label">Account</div>
+            <div class="summary-user" id="userName">Loading...</div>
 
-                <span id="successInvoice"
-                class="text-xs font-semibold">
-                    —
-                </span>
-
+            <div class="summary-label" style="margin-top:16px;">
+                Deposit Amount
             </div>
 
-
-            <div class="flex justify-between gap-3">
-
-                <span class="text-xs text-slate-500">
-                    Amount
-                </span>
-
-                <span id="successAmount"
-                class="text-sm font-bold text-emerald-400">
-                    —
-                </span>
-
+            <div class="amount" id="amountDisplay">
+                ৳0.00
             </div>
 
-
-            <div class="flex justify-between gap-3">
-
-                <span class="text-xs text-slate-500">
-                    Gateway
-                </span>
-
-                <span id="successGateway"
-                class="text-xs font-semibold">
-                    —
-                </span>
-
+            <div class="invoice">
+                <span>Invoice</span>
+                <span id="invoiceDisplay">---</span>
             </div>
 
+        </section>
 
-            <div class="flex justify-between gap-3">
+        <!-- PREVIOUS PENDING -->
+        <section id="pendingBox" class="pending-box" style="display:none;">
 
-                <span class="text-xs text-slate-500">
-                    TrxID
-                </span>
-
-                <span id="successTrx"
-                class="text-xs font-semibold break-all text-right">
-                    —
-                </span>
-
+            <div class="pending-title">
+                <i class="fa-solid fa-clock"></i>
+                আপনার একটি Deposit বর্তমানে Under Review আছে।
             </div>
 
-
-            <div class="pt-2 border-t border-white/5 flex justify-between gap-3">
-
-                <span class="text-xs text-slate-500">
-                    Status
-                </span>
-
-                <span id="successStatus"
-                class="text-xs px-2 py-1 rounded-full border status-pending">
-                    🟡 Pending
-                </span>
-
+            <div class="text-[10px] text-gray-500 mt-1">
+                আগের request pending থাকলেও আপনি নতুন Deposit করতে পারবেন।
             </div>
 
+            <div class="pending-grid">
 
-            <div id="successReasonBox"
-            class="hidden pt-2 border-t border-white/5">
+                <div class="info-mini">
+                    <small>Invoice</small>
+                    <b id="pendingInvoice">---</b>
+                </div>
 
-                <p class="text-xs text-red-400 font-semibold">
-                    কারণ:
-                </p>
+                <div class="info-mini">
+                    <small>Amount</small>
+                    <b id="pendingAmount">৳0</b>
+                </div>
 
-                <p id="successReason"
-                class="text-xs text-slate-400 mt-1">
-                </p>
+                <div class="info-mini">
+                    <small>TrxID</small>
+                    <b id="pendingTrx">---</b>
+                </div>
+
+                <div class="info-mini">
+                    <small>Submitted</small>
+                    <b id="pendingTime">---</b>
+                </div>
 
             </div>
+        </section>
 
+        <!-- PAYMENT METHOD -->
+        <section class="section" id="methodSection">
+
+            <div class="section-title">
+                <h3>Payment Method</h3>
+                <span>Only bKash & Nagad</span>
+            </div>
+
+            <div id="loadingView" class="loading">
+                <div class="spinner"></div>
+                <span>Payment methods loading...</span>
+            </div>
+
+            <div id="gatewayGrid" class="gateway-grid"></div>
+
+            <div id="noGateway" class="no-gateway">
+                Payment method temporarily unavailable.
+            </div>
+
+        </section>
+
+        <!-- SECURITY -->
+        <div class="security">
+            <i class="fa-solid fa-shield-halved"></i>
+            <div>
+                <b class="text-gray-300">Secure Payment</b>
+                <div>
+                    Never share your OTP, PIN or password with anyone.
+                </div>
+            </div>
         </div>
 
+        <!-- INSTRUCTION -->
+        <section id="instructionView" class="instruction">
 
-        <div id="successMessage"
-        class="mt-4 rounded-xl bg-amber-500/5 border border-amber-500/10 p-3 text-xs text-slate-400 leading-5">
+            <button class="back-method" onclick="goBackToMethods()">
+                <i class="fa-solid fa-chevron-left"></i>
+                Change Payment Method
+            </button>
 
-            🕐 আপনার payment review করা হচ্ছে।
-            সাধারণত প্রায় ৫ মিনিট সময় লাগতে পারে।
+            <div class="instruction-card">
 
-        </div>
+                <div class="selected-method">
 
+                    <img id="selectedLogo"
+                         class="method-small-logo"
+                         src=""
+                         alt="Payment">
 
-        <div class="grid grid-cols-2 gap-3 mt-4">
+                    <div>
+                        <div class="method-title" id="selectedMethod">
+                            Payment
+                        </div>
 
-            <button
-            id="successSupportBtn"
-            class="h-12 rounded-xl bg-[#25D366]/10 border border-[#25D366]/20 text-[#5ee78b] font-semibold text-sm">
+                        <div class="method-desc">
+                            Send Money করে Transaction ID দিন
+                        </div>
+                    </div>
 
+                </div>
+
+                <div class="steps">
+
+                    <!-- STEP 1 -->
+                    <div class="step">
+
+                        <div class="step-number">1</div>
+
+                        <div class="step-content">
+                            <b>Payment App খুলুন</b>
+                            <span>
+                                আপনার payment app খুলে Send Money অপশনে যান।
+                            </span>
+
+                            <div class="copy-row">
+                                <div class="copy-value" id="dialCode">
+                                    *247#
+                                </div>
+
+                                <button class="copy-btn"
+                                        onclick="copyText('dialCode')">
+                                    <i class="fa-regular fa-copy"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- STEP 2 -->
+                    <div class="step">
+
+                        <div class="step-number">2</div>
+
+                        <div class="step-content">
+                            <b>Send Money নির্বাচন করুন</b>
+                            <span>
+                                Send Money অপশনটি নির্বাচন করুন।
+                            </span>
+                        </div>
+
+                    </div>
+
+                    <!-- STEP 3 -->
+                    <div class="step">
+
+                        <div class="step-number">3</div>
+
+                        <div class="step-content">
+                            <b>Payment Number দিন</b>
+                            <span>
+                                নিচের number-এ Send Money করুন।
+                            </span>
+
+                            <div class="copy-row">
+                                <div class="copy-value" id="agentNumber">
+                                    ---
+                                </div>
+
+                                <button class="copy-btn"
+                                        onclick="copyText('agentNumber')">
+                                    <i class="fa-regular fa-copy"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- STEP 4 -->
+                    <div class="step">
+
+                        <div class="step-number">4</div>
+
+                        <div class="step-content">
+                            <b>Deposit Amount দিন</b>
+                            <span>
+                                ঠিক এই amount-টি payment করুন।
+                            </span>
+
+                            <div class="copy-row">
+                                <div class="copy-value" id="paymentAmount">
+                                    ৳0
+                                </div>
+
+                                <button class="copy-btn"
+                                        onclick="copyText('paymentAmount')">
+                                    <i class="fa-regular fa-copy"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- STEP 5 -->
+                    <div class="step">
+
+                        <div class="step-number">5</div>
+
+                        <div class="step-content">
+                            <b>PIN দিয়ে Payment Complete করুন</b>
+                            <span>
+                                নিজের PIN কাউকে দেবেন না।
+                            </span>
+                        </div>
+
+                    </div>
+
+                    <!-- STEP 6 -->
+                    <div class="step">
+
+                        <div class="step-number">6</div>
+
+                        <div class="step-content">
+                            <b>Transaction ID দিন</b>
+                            <span>
+                                Payment complete হওয়ার পর পাওয়া TrxID এখানে দিন।
+                            </span>
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <!-- TRX -->
+                <div class="trx-area">
+
+                    <div class="trx-label">
+                        Transaction ID
+                    </div>
+
+                    <input
+                        id="trxIdInput"
+                        class="trx-input"
+                        type="text"
+                        maxlength="50"
+                        autocomplete="off"
+                        placeholder="আপনার Transaction ID লিখুন"
+                    >
+
+                    <button
+                        id="verifyBtn"
+                        class="verify-btn"
+                        disabled
+                        onclick="verifyTransaction()">
+
+                        <i class="fa-solid fa-shield-check mr-1"></i>
+                        Verify & Submit
+                    </button>
+
+                    <div class="review-note">
+                        <i class="fa-regular fa-clock"></i>
+                        সাধারণত ৫ মিনিটের মধ্যে Deposit Review করা হয়।
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- STATUS -->
+        <section id="statusScreen" class="status-screen">
+
+            <div id="statusIcon" class="status-icon">
+                <i class="fa-solid fa-clock"></i>
+            </div>
+
+            <div id="statusHeading" class="status-heading">
+                Deposit Under Review
+            </div>
+
+            <div id="statusMessage" class="status-message">
+                আপনার payment request review করা হচ্ছে।
+            </div>
+
+            <div class="status-details">
+
+                <div class="detail-row">
+                    <span>Invoice</span>
+                    <b id="statusInvoice">---</b>
+                </div>
+
+                <div class="detail-row">
+                    <span>Gateway</span>
+                    <b id="statusGateway">---</b>
+                </div>
+
+                <div class="detail-row">
+                    <span>Amount</span>
+                    <b id="statusAmount">৳0</b>
+                </div>
+
+                <div class="detail-row">
+                    <span>TrxID</span>
+                    <b id="statusTrx">---</b>
+                </div>
+
+                <div class="detail-row">
+                    <span>Status</span>
+                    <b id="statusValue">Pending</b>
+                </div>
+
+                <div class="detail-row">
+                    <span>Submitted</span>
+                    <b id="statusSubmitted">---</b>
+                </div>
+
+            </div>
+
+            <div id="rejectReason" class="reason"></div>
+
+            <button class="support-btn" onclick="contactSupport()">
                 <i class="fa-brands fa-whatsapp mr-1"></i>
-                Support
-
+                WhatsApp Support
             </button>
 
-
-            <button
-            onclick="goHome()"
-            class="h-12 rounded-xl bg-emerald-500 text-white font-bold text-sm">
-
+            <button class="home-btn" onclick="goHome()">
                 <i class="fa-solid fa-house mr-1"></i>
-                Go to Home
-
+                Back to Home
             </button>
 
+        </section>
+
+        <div class="footer">
+            <i class="fa-solid fa-lock"></i>
+            Secure Payment • Aura Skill
         </div>
 
-    </div>
-
+    </main>
 </div>
 
+<div id="toastContainer" class="toast-container"></div>
 
 <script type="module">
 
@@ -1219,303 +1089,130 @@ import {
 
 import {
     onAuthStateChanged
-} from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
+} from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js';
 
 import {
     collection,
-    query,
-    where,
-    getDocs,
     addDoc,
     doc,
-    onSnapshot,
+    getDoc,
+    getDocs,
+    query,
+    where,
     serverTimestamp,
-    getDoc
-} from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+    onSnapshot
+} from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js';
 
 
 /* =========================================================
    CONFIG
 ========================================================= */
 
-const MIN_AMOUNT = 10;
-
-const REVIEW_TIME_MINUTES = 5;
-
-const SESSION_SECONDS = 600;
+const MIN_DEPOSIT = 10;
 
 const SUPPORT_NUMBER = '8801871132039';
 
+const LOGOS = {
 
-let currentUser = null;
+    Bkash:
+        'https://upload.wikimedia.org/wikipedia/commons/8/86/Bkash_logo.svg',
 
-let currentAmount = 0;
+    Nagad:
+        'https://upload.wikimedia.org/wikipedia/commons/5/5e/Nagad_Logo.svg'
 
-let selectedGateway = null;
+};
 
-let paymentNumberValue = '';
-
-let invoiceNo = '';
-
-let selectedTransactionId = null;
-
-let timerInterval = null;
-
-let remainingSeconds = SESSION_SECONDS;
-
-let submitting = false;
-
-let transactionListener = null;
-
-let paymentSettings = {};
-
-
-/* =========================================================
-   DOM
-========================================================= */
-
-const amountInput =
-    document.getElementById('amountInput');
-
-const gatewayList =
-    document.getElementById('gatewayList');
-
-const timerCard =
-    document.getElementById('timerCard');
-
-const timerText =
-    document.getElementById('timerText');
-
-const instructionCard =
-    document.getElementById('instructionCard');
-
-const instructionTitle =
-    document.getElementById('instructionTitle');
-
-const instructionSubtitle =
-    document.getElementById('instructionSubtitle');
-
-const instructionIcon =
-    document.getElementById('instructionIcon');
-
-const guideContent =
-    document.getElementById('guideContent');
-
-const paymentNumber =
-    document.getElementById('paymentNumber');
-
-const trxSection =
-    document.getElementById('trxSection');
-
-const trxInput =
-    document.getElementById('trxInput');
-
-const trxCounter =
-    document.getElementById('trxCounter');
-
-const trxError =
-    document.getElementById('trxError');
-
-const trxSuccess =
-    document.getElementById('trxSuccess');
-
-const summaryCard =
-    document.getElementById('summaryCard');
-
-const verifyBtn =
-    document.getElementById('verifyBtn');
-
-const pendingDepositCard =
-    document.getElementById('pendingDepositCard');
-
-const successModal =
-    document.getElementById('successModal');
-
-
-/* =========================================================
-   URL AMOUNT
-========================================================= */
-
-const params =
-    new URLSearchParams(location.search);
-
-const rawAmount =
-    parseFloat(
-        params.get('amount') || '0'
-    );
-
-
-if(
-    !Number.isFinite(rawAmount) ||
-    rawAmount < MIN_AMOUNT
-){
-
-    document.body.innerHTML = `
-        <div class="min-h-screen flex items-center justify-center p-5">
-
-            <div class="glass rounded-3xl p-6 text-center max-w-sm w-full">
-
-                <div class="w-16 h-16 rounded-full bg-red-500/10 flex items-center justify-center mx-auto">
-
-                    <i class="fa-solid fa-circle-xmark text-red-400 text-3xl"></i>
-
-                </div>
-
-                <h2 class="font-bold text-xl mt-4">
-                    Invalid Amount
-                </h2>
-
-                <p class="text-sm text-slate-500 mt-2">
-                    ন্যূনতম ডিপোজিট ৳১০ হতে হবে।
-                </p>
-
-                <button
-                onclick="history.back()"
-                class="mt-5 w-full h-12 rounded-xl bg-emerald-500 text-white font-bold">
-
-                    Go Back
-
-                </button>
-
-            </div>
-
-        </div>
-    `;
-
-    throw new Error('Invalid deposit amount');
-
-}
-
-
-currentAmount =
-    Math.round(rawAmount * 100) / 100;
-
-
-amountInput.value =
-    '৳' +
-    currentAmount.toLocaleString('en-US');
-
-
-/* =========================================================
-   INVOICE
-========================================================= */
-
-invoiceNo =
-    'INV' +
-    Math.floor(
-        10000000000 +
-        Math.random() * 90000000000
-    );
-
-
-/* =========================================================
-   CONFIG
-========================================================= */
 
 const configs = {
 
-    Bkash:{
-        label:'bKash',
-        bn:'বিকাশ',
-        color:'#e2136e',
-        code:'*247#'
+    Bkash: {
+        label: 'bKash',
+        bn: 'বিকাশ',
+        code: '*247#',
+        logo: LOGOS.Bkash
     },
 
-    Nagad:{
-        label:'Nagad',
-        bn:'নগদ',
-        color:'#f7931e',
-        code:'*167#'
+    Nagad: {
+        label: 'Nagad',
+        bn: 'নগদ',
+        code: '*167#',
+        logo: LOGOS.Nagad
     }
 
 };
 
 
 /* =========================================================
+   STATE
+========================================================= */
+
+let currentAmount = 0;
+
+let currentUser = null;
+
+let invoiceNo = '';
+
+let paymentSettings = {};
+
+let selectedGateway = '';
+
+let selectedNumber = '';
+
+let submittedTransactionId = '';
+
+let submittedAt = null;
+
+let unsubscribeStatus = null;
+
+let submitting = false;
+
+
+/* =========================================================
+   ELEMENTS
+========================================================= */
+
+const $ = id => document.getElementById(id);
+
+
+/* =========================================================
    TOAST
 ========================================================= */
 
-function showToast(message,type='info'){
+function showToast(message, type = 'info') {
 
-    const container =
-        document.getElementById(
-            'toastContainer'
-        );
+    const box = document.createElement('div');
 
-    const colors = {
+    let icon = 'fa-circle-info';
 
-        success:
-            'border-emerald-500/20 bg-emerald-500/10 text-emerald-300',
+    if(type === 'success'){
+        icon = 'fa-circle-check';
+    }
 
-        error:
-            'border-red-500/20 bg-red-500/10 text-red-300',
+    if(type === 'error'){
+        icon = 'fa-circle-xmark';
+    }
 
-        warning:
-            'border-amber-500/20 bg-amber-500/10 text-amber-300',
+    if(type === 'warning'){
+        icon = 'fa-triangle-exclamation';
+    }
 
-        info:
-            'border-blue-500/20 bg-blue-500/10 text-blue-300'
+    box.className = 'toast';
 
-    };
-
-
-    const icons = {
-
-        success:'fa-circle-check',
-
-        error:'fa-circle-xmark',
-
-        warning:'fa-triangle-exclamation',
-
-        info:'fa-circle-info'
-
-    };
-
-
-    const el =
-        document.createElement('div');
-
-
-    el.className =
-        `toast pointer-events-auto glass rounded-xl border p-3 text-sm ${
-            colors[type] || colors.info
-        }`;
-
-
-    el.innerHTML = `
-
-        <div class="flex items-start gap-2">
-
-            <i class="fa-solid ${
-                icons[type] || icons.info
-            } mt-0.5"></i>
-
-            <div class="flex-1">
-                ${escapeHtml(message)}
-            </div>
-
-        </div>
-
+    box.innerHTML = `
+        <i class="fa-solid ${icon}"></i>
+        <span>${escapeHtml(message)}</span>
     `;
 
-
-    container.appendChild(el);
-
+    $('toastContainer').appendChild(box);
 
     setTimeout(() => {
+        box.style.opacity = '0';
+        box.style.transform = 'translateY(-8px)';
+        box.style.transition = '.25s';
 
-        el.style.opacity = '0';
+        setTimeout(() => box.remove(), 250);
 
-        el.style.transform =
-            'translateY(-8px)';
-
-        setTimeout(
-            () => el.remove(),
-            250
-        );
-
-    },3200);
-
+    }, 3000);
 }
 
 
@@ -1530,1180 +1227,638 @@ function escapeHtml(value){
         .replaceAll('<','&lt;')
         .replaceAll('>','&gt;')
         .replaceAll('"','&quot;')
-        .replaceAll("'",'&#039;');
-
+        .replaceAll("'","&#039;");
 }
 
 
 /* =========================================================
-   PAYMENT SETTINGS HELPERS
+   URL AMOUNT
 ========================================================= */
 
-function getGatewayData(name,data){
+function readAmount(){
 
-    const lower =
-        name.toLowerCase();
+    const params =
+        new URLSearchParams(location.search);
 
-    const upper =
-        name.charAt(0).toUpperCase() +
-        name.slice(1).toLowerCase();
+    const raw =
+        parseFloat(params.get('amount') || '0');
+
+    if(
+        !Number.isFinite(raw) ||
+        raw < MIN_DEPOSIT
+    ){
+
+        showToast(
+            'ন্যূনতম ডিপোজিটের পরিমাণ ৳১০ হতে হবে।',
+            'warning'
+        );
+
+        setTimeout(() => goHome(), 1000);
+
+        return false;
+    }
+
+    currentAmount =
+        Math.round(raw * 100) / 100;
+
+    $('amountDisplay').textContent =
+        `৳${currentAmount.toFixed(2)}`;
+
+    $('paymentAmount').textContent =
+        `৳${formatMoney(currentAmount)}`;
+
+    $('statusAmount').textContent =
+        `৳${formatMoney(currentAmount)}`;
+
+    return true;
+}
 
 
-    return {
+/* =========================================================
+   MONEY
+========================================================= */
 
-        direct:
-            data?.[lower] ||
-            data?.[upper] ||
-            {},
+function formatMoney(value){
 
-        lower,
+    return Number(value || 0)
+        .toLocaleString('en-US', {
+            maximumFractionDigits:2
+        });
+}
 
-        upper
 
-    };
+/* =========================================================
+   INVOICE
+========================================================= */
 
+function generateInvoice(){
+
+    invoiceNo =
+        'INV' +
+        Math.floor(
+            10000000000 +
+            Math.random() * 90000000000
+        );
+
+    $('invoiceDisplay').textContent =
+        invoiceNo;
+
+    $('statusInvoice').textContent =
+        invoiceNo;
+}
+
+
+/* =========================================================
+   SETTINGS HELPERS
+========================================================= */
+
+function enabled(name, data){
+
+    const key =
+        String(name).toLowerCase();
+
+    const obj = data[key];
+
+    if(
+        obj &&
+        typeof obj === 'object'
+    ){
+
+        if(obj.enabled === false ||
+           obj.active === false){
+
+            return false;
+        }
+
+        return !!(
+            obj.number ||
+            obj.phone ||
+            obj.account ||
+            data[key + 'Number']
+        );
+    }
+
+    const enabledKeys = [
+        key + 'Enabled',
+        key + 'enabled',
+        key + '_enabled',
+        name + 'Enabled',
+        name + 'enabled'
+    ];
+
+    for(const k of enabledKeys){
+
+        if(data[k] !== undefined){
+
+            return !!data[k] &&
+                !!numberOf(name,data);
+        }
+    }
+
+    return !!numberOf(name,data);
 }
 
 
 function numberOf(name,data){
 
-    const {
-        direct,
-        lower,
-        upper
-    } =
-        getGatewayData(
-            name,
-            data
-        );
+    const key =
+        String(name).toLowerCase();
 
+    const obj = data[key];
 
-    const result =
+    if(
+        obj &&
+        typeof obj === 'object'
+    ){
 
-        data?.[`${lower}Number`] ||
+        return String(
+            obj.number ||
+            obj.phone ||
+            obj.account ||
+            ''
+        ).trim();
+    }
 
-        data?.[`${lower}number`] ||
+    const candidates = [
 
-        data?.[`${lower}_number`] ||
+        data[key + 'Number'],
 
-        data?.[`${upper}Number`] ||
+        data[key + 'number'],
 
-        data?.[`${upper}number`] ||
+        data[key + '_number'],
 
-        data?.[`${lower}_phone`] ||
+        data[name + 'Number'],
 
-        direct?.number ||
+        data[name + 'number'],
 
-        direct?.phone ||
-
-        direct?.account ||
-
-        direct?.paymentNumber ||
-
-        '';
-
-
-    return String(result || '').trim();
-
-}
-
-
-function enabled(name,data){
-
-    const {
-        direct,
-        lower,
-        upper
-    } =
-        getGatewayData(
-            name,
-            data
-        );
-
-
-    const flags = [
-
-        data?.[`${lower}Enabled`],
-
-        data?.[`${lower}enabled`],
-
-        data?.[`${lower}_enabled`],
-
-        data?.[`${upper}Enabled`],
-
-        data?.[`${upper}enabled`],
-
-        direct?.enabled,
-
-        direct?.active
+        data[key]
 
     ];
 
+    for(const value of candidates){
 
-    if(
-        flags.some(
-            value => value === true
-        )
-    ){
-        return true;
-    }
+        if(
+            value !== undefined &&
+            value !== null &&
+            typeof value !== 'object' &&
+            String(value).trim()
+        ){
 
-
-    if(
-        flags.some(
-            value => value === false
-        )
-    ){
-        return false;
-    }
-
-
-    return !!numberOf(
-        name,
-        data
-    );
-
-}
-
-
-/* =========================================================
-   INSTANT PAYMENT CARDS
-========================================================= */
-
-function setupInstantCards(){
-
-    document
-        .querySelectorAll(
-            '.payment-card'
-        )
-        .forEach(card => {
-
-            card.addEventListener(
-                'click',
-                () => {
-
-                    const gateway =
-                        card.dataset.gateway;
-
-                    if(
-                        !enabled(
-                            gateway,
-                            paymentSettings
-                        )
-                    ){
-
-                        showToast(
-                            `${configs[gateway].label} বর্তমানে available নয়।`,
-                            'warning'
-                        );
-
-                        return;
-                    }
-
-
-                    selectGateway(
-                        gateway
-                    );
-
-                }
-            );
-
-        });
-
-}
-
-
-/* =========================================================
-   RENDER SETTINGS
-========================================================= */
-
-function renderPaymentAvailability(){
-
-    const methods = [
-        'Bkash',
-        'Nagad'
-    ];
-
-
-    methods.forEach(
-        gateway => {
-
-            const lower =
-                gateway.toLowerCase();
-
-            const status =
-                document.getElementById(
-                    `${lower}Status`
-                );
-
-
-            const card =
-                document.querySelector(
-                    `[data-gateway="${gateway}"]`
-                );
-
-
-            const available =
-                enabled(
-                    gateway,
-                    paymentSettings
-                ) &&
-                !!numberOf(
-                    gateway,
-                    paymentSettings
-                );
-
-
-            if(!status || !card){
-                return;
-            }
-
-
-            if(available){
-
-                status.textContent =
-                    'Available';
-
-                status.className =
-                    'text-[9px] px-2 py-0.5 rounded-full border border-emerald-500/20 bg-emerald-500/10 text-emerald-400';
-
-                card.classList.remove(
-                    'opacity-60'
-                );
-
-            }else{
-
-                status.textContent =
-                    'Unavailable';
-
-                status.className =
-                    'text-[9px] px-2 py-0.5 rounded-full border border-red-500/20 bg-red-500/10 text-red-400';
-
-                card.classList.add(
-                    'opacity-60'
-                );
-
-            }
-
+            return String(value).trim();
         }
-    );
+    }
 
+    return '';
 }
 
 
 /* =========================================================
-   LOAD SETTINGS
+   LOAD PAYMENT SETTINGS
 ========================================================= */
 
 async function loadSettings(){
 
     /*
-       Cards already visible.
-       Firebase only updates availability/number.
+      Cards are rendered immediately.
+      Firebase settings update them in background.
     */
 
-    renderPaymentAvailability();
-
+    renderGateways();
 
     try{
 
         const paymentRef =
-            doc(
-                db,
-                'settings',
-                'payment'
-            );
-
+            doc(db,'settings','payment');
 
         const snap =
-            await getDoc(
-                paymentRef
-            );
+            await getDoc(paymentRef);
 
+        if(snap.exists()){
 
-        if(!snap.exists()){
+            paymentSettings =
+                snap.data() || {};
+
+        }else{
 
             paymentSettings = {};
-
-            renderPaymentAvailability();
-
-            console.warn(
-                'settings/payment does not exist'
-            );
-
-            return;
-
         }
-
-
-        paymentSettings =
-            snap.data() || {};
-
-
-        console.log(
-            'Payment settings:',
-            paymentSettings
-        );
-
-
-        renderPaymentAvailability();
-
-
-        /*
-           If selected gateway is already selected,
-           update its number immediately.
-        */
-
-        if(selectedGateway){
-
-            paymentNumberValue =
-                numberOf(
-                    selectedGateway,
-                    paymentSettings
-                );
-
-            paymentNumber.textContent =
-                paymentNumberValue || '—';
-
-        }
-
 
     }catch(error){
 
-        console.error(
-            'Payment settings error:',
+        console.warn(
+            'Payment settings load error:',
             error
         );
 
-
         paymentSettings = {};
 
-        renderPaymentAvailability();
-
-
-        /*
-           Important:
-           এখানে আর পুরো payment section replace
-           করা হচ্ছে না।
-           তাই page blank/loading হবে না।
-        */
-
         showToast(
-            'Payment settings load করা যায়নি।',
+            'Payment settings এখনো configure করা হয়নি।',
             'warning'
         );
-
     }
 
+    renderGateways();
 }
 
 
 /* =========================================================
-   SELECT GATEWAY
+   RENDER GATEWAYS
 ========================================================= */
 
-function selectGateway(key){
+function renderGateways(){
 
-    if(submitting){
-        return;
+    const grid = $('gatewayGrid');
+
+    grid.innerHTML = '';
+
+    let available = 0;
+
+    Object.keys(configs).forEach(name => {
+
+        const cfg = configs[name];
+
+        const isEnabled =
+            enabled(name,paymentSettings);
+
+        const number =
+            numberOf(name,paymentSettings);
+
+        const availableNow =
+            isEnabled && !!number;
+
+        if(availableNow){
+            available++;
+        }
+
+        const card =
+            document.createElement('div');
+
+        card.className =
+            'gateway' +
+            (availableNow ? '' : ' disabled');
+
+        card.dataset.gateway = name;
+
+        card.innerHTML = `
+
+            <span class="status-pill ${availableNow ? '' : 'off'}">
+                ${availableNow ? 'Available' : 'Unavailable'}
+            </span>
+
+            <img
+                class="gateway-logo"
+                src="${cfg.logo}"
+                alt="${escapeHtml(cfg.label)}"
+                onerror="this.style.display='none';"
+            >
+
+            <div class="gateway-name">
+                ${escapeHtml(cfg.label)}
+            </div>
+
+            <div class="gateway-number">
+                ${availableNow
+                    ? escapeHtml(maskNumber(number))
+                    : 'Currently unavailable'}
+            </div>
+
+            <div class="check">
+                <i class="fa-solid fa-check"></i>
+            </div>
+        `;
+
+        if(availableNow){
+
+            card.addEventListener(
+                'click',
+                () => selectMethod(name,number)
+            );
+
+        }
+
+        grid.appendChild(card);
+    });
+
+    $('loadingView').classList.add('hide');
+
+    $('noGateway').style.display =
+        available === 0 ? 'block' : 'none';
+}
+
+
+/* =========================================================
+   MASK NUMBER
+========================================================= */
+
+function maskNumber(number){
+
+    const s = String(number);
+
+    if(s.length < 7){
+        return s;
     }
 
+    return (
+        s.slice(0,3) +
+        '****' +
+        s.slice(-3)
+    );
+}
 
-    const number =
-        numberOf(
-            key,
-            paymentSettings
-        );
 
+/* =========================================================
+   SELECT METHOD
+========================================================= */
+
+function selectMethod(name, number){
 
     if(!number){
-
-        showToast(
-            `${configs[key].label} payment number পাওয়া যায়নি।`,
-            'warning'
-        );
-
         return;
-
     }
 
+    selectedGateway = name;
 
-    selectedGateway =
-        key;
+    selectedNumber = number;
 
-    paymentNumberValue =
-        number;
-
+    const cfg = configs[name];
 
     document
-        .querySelectorAll(
-            '.payment-card'
-        )
+        .querySelectorAll('.gateway')
         .forEach(card => {
 
             card.classList.toggle(
                 'selected',
-                card.dataset.gateway === key
+                card.dataset.gateway === name
             );
-
         });
 
+    $('selectedMethod').textContent =
+        cfg.label;
 
-    const config =
-        configs[key];
+    $('selectedLogo').src =
+        cfg.logo;
 
+    $('dialCode').textContent =
+        cfg.code;
 
-    instructionCard.classList.remove(
-        'hidden'
-    );
+    $('agentNumber').textContent =
+        number;
 
-    timerCard.classList.remove(
-        'hidden'
-    );
+    $('paymentAmount').textContent =
+        `৳${formatMoney(currentAmount)}`;
 
-    trxSection.classList.remove(
-        'hidden'
-    );
+    $('methodSection').style.display =
+        'none';
 
+    $('instructionView').classList.add('show');
 
-    instructionTitle.textContent =
-        `${config.label} Payment Guide`;
-
-
-    instructionSubtitle.textContent =
-        `${config.bn} দিয়ে ৳${currentAmount.toLocaleString('en-US')} payment করুন`;
-
-
-    paymentNumber.textContent =
-        paymentNumberValue;
-
-
-    instructionIcon.style.background =
-        key === 'Bkash'
-        ? 'rgba(226,19,110,.12)'
-        : 'rgba(247,147,30,.12)';
-
-
-    instructionIcon.style.color =
-        config.color;
-
-
-    renderGuide(
-        key
-    );
-
-
-    document.getElementById(
-        'summaryGateway'
-    ).textContent =
-        config.label;
-
-
-    document.getElementById(
-        'summaryAmount'
-    ).textContent =
-        '৳' +
-        currentAmount.toLocaleString('en-US');
-
-
-    document.getElementById(
-        'summaryInvoice'
-    ).textContent =
-        invoiceNo;
-
-
-    startPaymentTimer();
-
-    updateProgress(2);
+    $('statusScreen').classList.remove('show');
 
     validateTrx();
 
+    window.scrollTo({
+        top:0,
+        behavior:'smooth'
+    });
 }
 
 
 /* =========================================================
-   GUIDE
+   BACK TO METHODS
 ========================================================= */
 
-function renderGuide(key){
+window.goBackToMethods = function(){
 
-    const config =
-        configs[key];
+    $('instructionView')
+        .classList.remove('show');
 
+    $('methodSection')
+        .style.display = 'block';
 
-    if(key === 'Bkash'){
+    $('statusScreen')
+        .classList.remove('show');
 
-        guideContent.innerHTML = `
+    selectedGateway = '';
 
-            <div class="guide-step">
+    selectedNumber = '';
 
-                <div class="guide-number">
-                    1
-                </div>
+    $('trxIdInput').value = '';
 
-                <div>
+    validateTrx();
 
-                    <p class="font-semibold text-sm">
-                        bKash App / USSD খুলুন
-                    </p>
-
-                    <p class="text-xs text-slate-500 mt-1">
-                        bKash App ব্যবহার করুন অথবা
-                        <span class="text-pink-300">
-                            ${config.code}
-                        </span>
-                        dial করুন।
-                    </p>
-
-                </div>
-
-            </div>
-
-
-            <div class="guide-step">
-
-                <div class="guide-number">
-                    2
-                </div>
-
-                <div>
-
-                    <p class="font-semibold text-sm">
-                        Send Money করুন
-                    </p>
-
-                    <p class="text-xs text-slate-500 mt-1">
-                        নিচের bKash number-এ payment পাঠান।
-                    </p>
-
-                </div>
-
-            </div>
-
-
-            <div class="guide-step">
-
-                <div class="guide-number">
-                    3
-                </div>
-
-                <div>
-
-                    <p class="font-semibold text-sm">
-                        Amount দিন
-                    </p>
-
-                    <p class="text-xs text-slate-500 mt-1">
-                        ঠিক ৳${currentAmount.toLocaleString('en-US')}
-                        payment করুন।
-                    </p>
-
-                </div>
-
-            </div>
-
-
-            <div class="guide-step">
-
-                <div class="guide-number">
-                    4
-                </div>
-
-                <div>
-
-                    <p class="font-semibold text-sm">
-                        TrxID সংগ্রহ করুন
-                    </p>
-
-                    <p class="text-xs text-slate-500 mt-1">
-                        Payment সফল হলে bKash থেকে পাওয়া TrxID এখানে দিন।
-                    </p>
-
-                </div>
-
-            </div>
-
-        `;
-
-    }else{
-
-        guideContent.innerHTML = `
-
-            <div class="guide-step">
-
-                <div class="guide-number">
-                    1
-                </div>
-
-                <div>
-
-                    <p class="font-semibold text-sm">
-                        Nagad App / USSD খুলুন
-                    </p>
-
-                    <p class="text-xs text-slate-500 mt-1">
-                        Nagad App ব্যবহার করুন অথবা
-                        <span class="text-orange-300">
-                            ${config.code}
-                        </span>
-                        dial করুন।
-                    </p>
-
-                </div>
-
-            </div>
-
-
-            <div class="guide-step">
-
-                <div class="guide-number">
-                    2
-                </div>
-
-                <div>
-
-                    <p class="font-semibold text-sm">
-                        Send Money করুন
-                    </p>
-
-                    <p class="text-xs text-slate-500 mt-1">
-                        নিচের Nagad number-এ payment পাঠান।
-                    </p>
-
-                </div>
-
-            </div>
-
-
-            <div class="guide-step">
-
-                <div class="guide-number">
-                    3
-                </div>
-
-                <div>
-
-                    <p class="font-semibold text-sm">
-                        Amount দিন
-                    </p>
-
-                    <p class="text-xs text-slate-500 mt-1">
-                        ঠিক ৳${currentAmount.toLocaleString('en-US')}
-                        payment করুন।
-                    </p>
-
-                </div>
-
-            </div>
-
-
-            <div class="guide-step">
-
-                <div class="guide-number">
-                    4
-                </div>
-
-                <div>
-
-                    <p class="font-semibold text-sm">
-                        TrxID সংগ্রহ করুন
-                    </p>
-
-                    <p class="text-xs text-slate-500 mt-1">
-                        Payment সফল হলে Nagad থেকে পাওয়া TrxID এখানে দিন।
-                    </p>
-
-                </div>
-
-            </div>
-
-        `;
-
-    }
-
-}
+    window.scrollTo({
+        top:0,
+        behavior:'smooth'
+    });
+};
 
 
 /* =========================================================
-   TIMER
+   COPY
 ========================================================= */
 
-function startPaymentTimer(){
+window.copyText = async function(id){
 
-    clearInterval(
-        timerInterval
-    );
+    const el = $(id);
 
-
-    remainingSeconds =
-        SESSION_SECONDS;
-
-
-    updateTimerUI();
-
-
-    timerInterval =
-        setInterval(
-            () => {
-
-                remainingSeconds--;
-
-                updateTimerUI();
-
-
-                if(
-                    remainingSeconds <= 0
-                ){
-
-                    clearInterval(
-                        timerInterval
-                    );
-
-                    expirePaymentSession();
-
-                }
-
-            },
-            1000
-        );
-
-}
-
-
-function updateTimerUI(){
-
-    const minutes =
-        Math.floor(
-            remainingSeconds / 60
-        );
-
-
-    const seconds =
-        remainingSeconds % 60;
-
-
-    timerText.textContent =
-        `${String(minutes).padStart(2,'0')}:${String(seconds).padStart(2,'0')}`;
-
-}
-
-
-function expirePaymentSession(){
-
-    selectedGateway = null;
-
-    paymentNumberValue = '';
-
-
-    document
-        .querySelectorAll(
-            '.payment-card'
-        )
-        .forEach(card => {
-
-            card.classList.remove(
-                'selected'
-            );
-
-        });
-
-
-    instructionCard.classList.add(
-        'hidden'
-    );
-
-    timerCard.classList.add(
-        'hidden'
-    );
-
-    trxSection.classList.add(
-        'hidden'
-    );
-
-    summaryCard.classList.add(
-        'hidden'
-    );
-
-
-    trxInput.value = '';
-
-    updateTrxCounter();
-
-
-    verifyBtn.disabled = true;
-
-    verifyBtn.classList.add(
-        'disabled-btn'
-    );
-
-
-    updateProgress(1);
-
-
-    showToast(
-        'Payment session শেষ হয়েছে। আবার payment method নির্বাচন করুন।',
-        'warning'
-    );
-
-}
-
-
-/* =========================================================
-   TRX
-========================================================= */
-
-trxInput.addEventListener(
-    'input',
-    () => {
-
-        trxInput.value =
-            trxInput.value
-                .replace(/\s+/g,'')
-                .toUpperCase();
-
-
-        updateTrxCounter();
-
-        validateTrx();
-
-    }
-);
-
-
-function updateTrxCounter(){
-
-    trxCounter.textContent =
-        `${trxInput.value.length}/50`;
-
-}
-
-
-function validateTrx(){
-
-    const trx =
-        trxInput.value.trim();
-
-
-    trxError.classList.add(
-        'hidden'
-    );
-
-    trxSuccess.classList.add(
-        'hidden'
-    );
-
-
-    if(!selectedGateway){
-
-        verifyBtn.disabled = true;
-
-        verifyBtn.classList.add(
-            'disabled-btn'
-        );
-
-        return false;
-
-    }
-
-
-    if(!trx){
-
-        verifyBtn.disabled = true;
-
-        verifyBtn.classList.add(
-            'disabled-btn'
-        );
-
-        updateProgress(2);
-
-        return false;
-
-    }
-
-
-    if(trx.length < 4){
-
-        trxError.textContent =
-            'সঠিক Transaction ID দিন।';
-
-        trxError.classList.remove(
-            'hidden'
-        );
-
-        verifyBtn.disabled = true;
-
-        verifyBtn.classList.add(
-            'disabled-btn'
-        );
-
-        return false;
-
-    }
-
-
-    trxSuccess.classList.remove(
-        'hidden'
-    );
-
-
-    verifyBtn.disabled = false;
-
-    verifyBtn.classList.remove(
-        'disabled-btn'
-    );
-
-
-    summaryCard.classList.remove(
-        'hidden'
-    );
-
-
-    document.getElementById(
-        'summaryTrx'
-    ).textContent =
-        trx;
-
-
-    updateProgress(3);
-
-    return true;
-
-}
-
-
-/* =========================================================
-   PROGRESS
-========================================================= */
-
-function updateProgress(step){
-
-    for(
-        let i = 1;
-        i <= 4;
-        i++
-    ){
-
-        const el =
-            document.getElementById(
-                `step${i}`
-            );
-
-
-        el.classList.remove(
-            'active',
-            'done'
-        );
-
-
-        if(i < step){
-            el.classList.add(
-                'done'
-            );
-        }
-
-
-        if(i === step){
-            el.classList.add(
-                'active'
-            );
-        }
-
-    }
-
-}
-
-
-/* =========================================================
-   COPY NUMBER
-========================================================= */
-
-window.copyPaymentNumber =
-async function(){
-
-    if(!paymentNumberValue){
+    if(!el){
         return;
     }
 
+    const value =
+        el.textContent.trim();
+
+    if(!value || value === '---'){
+        return;
+    }
 
     try{
 
-        await navigator.clipboard.writeText(
-            paymentNumberValue
-        );
-
-
-        const btn =
-            document.getElementById(
-                'copyNumberBtn'
-            );
-
-
-        btn.innerHTML =
-            '<i class="fa-solid fa-check mr-1"></i> Copied';
-
+        await navigator.clipboard.writeText(value);
 
         showToast(
-            'Payment number copied.',
+            'Copied successfully.',
             'success'
         );
 
-
-        setTimeout(
-            () => {
-
-                btn.innerHTML =
-                    '<i class="fa-regular fa-copy mr-1"></i> Copy';
-
-            },
-            1500
-        );
-
-
     }catch(error){
 
+        const textarea =
+            document.createElement('textarea');
+
+        textarea.value = value;
+
+        document.body.appendChild(textarea);
+
+        textarea.select();
+
+        document.execCommand('copy');
+
+        textarea.remove();
+
         showToast(
-            'Number copy করা যায়নি।',
-            'error'
+            'Copied successfully.',
+            'success'
         );
-
     }
-
 };
+
+
+/* =========================================================
+   TRX VALIDATION
+========================================================= */
+
+function validateTrx(){
+
+    const input =
+        $('trxIdInput');
+
+    const button =
+        $('verifyBtn');
+
+    const trx =
+        input.value.trim();
+
+    /*
+      Basic validation:
+      4+ characters
+    */
+
+    const valid =
+        trx.length >= 4 &&
+        trx.length <= 50 &&
+        !!selectedGateway &&
+        !submitting;
+
+    button.disabled = !valid;
+}
+
+
+$('trxIdInput').addEventListener(
+    'input',
+    validateTrx
+);
 
 
 /* =========================================================
    VERIFY
 ========================================================= */
 
-verifyBtn.addEventListener(
-    'click',
-    submitDeposit
-);
-
-
-async function submitDeposit(){
+window.verifyTransaction =
+async function(){
 
     if(submitting){
         return;
     }
 
+    const trx =
+        $('trxIdInput')
+            .value
+            .trim();
 
-    if(!validateTrx()){
+    if(!selectedGateway){
+
+        showToast(
+            'একটি payment method নির্বাচন করুন।',
+            'warning'
+        );
+
         return;
     }
 
+    if(trx.length < 4){
+
+        showToast(
+            'সঠিক Transaction ID দিন।',
+            'warning'
+        );
+
+        return;
+    }
 
     if(!currentUser){
 
         showToast(
-            'আপনার account পাওয়া যায়নি। আবার login করুন।',
+            'অনুগ্রহ করে login করুন।',
             'error'
         );
 
         return;
-
     }
-
-
-    const trx =
-        trxInput.value.trim();
-
 
     submitting = true;
 
+    $('verifyBtn').disabled = true;
 
-    verifyBtn.disabled = true;
-
-    verifyBtn.classList.add(
-        'disabled-btn'
-    );
-
-
-    verifyBtn.innerHTML = `
-
-        <span class="spinner"></span>
-
-        Verifying Transaction...
-
-    `;
-
+    $('verifyBtn').innerHTML =
+        `
+        <i class="fa-solid fa-spinner fa-spin mr-1"></i>
+        Verifying...
+        `;
 
     try{
 
         /*
-           Duplicate check
+          Query only trxId.
+          এতে composite index প্রয়োজন হবে না।
         */
 
-        const q =
+        const trxQuery =
             query(
-                collection(
-                    db,
-                    'transactions'
-                ),
-                where(
-                    'trxId',
-                    '==',
-                    trx
-                )
+                collection(db,'transactions'),
+                where('trxId','==',trx)
             );
 
-
-        const snap =
-            await getDocs(q);
-
+        const trxSnap =
+            await getDocs(trxQuery);
 
         let duplicate = false;
 
+        trxSnap.forEach(item => {
 
-        snap.forEach(
-            item => {
+            const data = item.data() || {};
 
-                const data =
-                    item.data();
+            if(
+                String(data.gateway || '')
+                    .toLowerCase() ===
+                String(selectedGateway)
+                    .toLowerCase()
+            ){
 
-
-                if(
-                    data.trxId === trx ||
-                    data.transactionId === trx
-                ){
-
-                    duplicate = true;
-
-                }
-
+                duplicate = true;
             }
-        );
-
+        });
 
         if(duplicate){
 
             showToast(
-                'এই Transaction ID দিয়ে ইতোমধ্যে একটি Deposit Request পাঠানো হয়েছে।',
+                'এই Transaction ID এই payment method-এ ইতোমধ্যে ব্যবহার করা হয়েছে।',
                 'error'
             );
 
-
             submitting = false;
 
-            restoreVerifyButton();
+            $('verifyBtn').innerHTML =
+                `
+                <i class="fa-solid fa-shield-check mr-1"></i>
+                Verify & Submit
+                `;
+
+            validateTrx();
 
             return;
-
         }
 
 
         /*
-           Add transaction
+          Create transaction
         */
 
-        const docRef =
+        const transactionRef =
             await addDoc(
-                collection(
-                    db,
-                    'transactions'
-                ),
+                collection(db,'transactions'),
                 {
-
                     userId:
                         currentUser.uid,
 
@@ -2739,257 +1894,261 @@ async function submitDeposit(){
 
                     createdAt:
                         serverTimestamp()
-
                 }
             );
 
 
-        selectedTransactionId =
-            docRef.id;
+        submittedTransactionId =
+            transactionRef.id;
 
+        submittedAt =
+            new Date();
 
-        showSuccessModal({
-
-            invoice:
-                invoiceNo,
-
-            amount:
-                currentAmount,
-
-            gateway:
-                selectedGateway,
-
-            trx:
-                trx,
-
-            status:
-                'pending'
-
-        });
-
-
-        listenTransactionStatus(
-            docRef.id
+        showStatusScreen(
+            'pending',
+            {
+                invoice: invoiceNo,
+                gateway: selectedGateway,
+                amount: currentAmount,
+                trxId: trx,
+                createdAt: submittedAt
+            }
         );
 
 
-        submitting = false;
+        /*
+          Live Firebase status listener
+        */
+
+        startStatusListener(
+            submittedTransactionId
+        );
 
 
-        verifyBtn.innerHTML = `
-
-            <i class="fa-solid fa-check"></i>
-
-            Request Submitted
-
-        `;
-
-
-        updateProgress(4);
-
+        /*
+          Refresh pending box
+        */
 
         loadPendingDeposit();
+
+
+        showToast(
+            'Deposit request সফলভাবে submit হয়েছে।',
+            'success'
+        );
 
 
     }catch(error){
 
         console.error(
+            'Deposit submit error:',
             error
         );
 
-
         showToast(
-            'Deposit request submit করা যায়নি। আবার চেষ্টা করুন।',
+            'Deposit submit করা যায়নি। আবার চেষ্টা করুন।',
             'error'
         );
 
-
         submitting = false;
 
-        restoreVerifyButton();
+        $('verifyBtn').innerHTML =
+            `
+            <i class="fa-solid fa-shield-check mr-1"></i>
+            Verify & Submit
+            `;
+
+        validateTrx();
+    }
+};
+
+
+/* =========================================================
+   STATUS SCREEN
+========================================================= */
+
+function showStatusScreen(status,data){
+
+    $('methodSection').style.display =
+        'none';
+
+    $('instructionView')
+        .classList.remove('show');
+
+    $('statusScreen')
+        .classList.add('show');
+
+
+    $('statusInvoice').textContent =
+        data.invoice || '---';
+
+    $('statusGateway').textContent =
+        configs[data.gateway]?.label ||
+        data.gateway ||
+        '---';
+
+    $('statusAmount').textContent =
+        `৳${formatMoney(data.amount)}`;
+
+    $('statusTrx').textContent =
+        data.trxId || '---';
+
+    $('statusSubmitted').textContent =
+        timeAgo(
+            data.createdAt
+        );
+
+
+    updateStatusUI(
+        status,
+        data
+    );
+
+
+    window.scrollTo({
+        top:0,
+        behavior:'smooth'
+    });
+}
+
+
+/* =========================================================
+   STATUS UI
+========================================================= */
+
+function updateStatusUI(status,data){
+
+    const icon =
+        $('statusIcon');
+
+    const heading =
+        $('statusHeading');
+
+    const message =
+        $('statusMessage');
+
+    const statusValue =
+        $('statusValue');
+
+    const reasonBox =
+        $('rejectReason');
+
+
+    icon.className =
+        'status-icon';
+
+    reasonBox.style.display =
+        'none';
+
+    reasonBox.textContent =
+        '';
+
+
+    if(status === 'approved'){
+
+        icon.classList.add('approved');
+
+        icon.innerHTML =
+            '<i class="fa-solid fa-circle-check"></i>';
+
+        heading.textContent =
+            '🟢 Deposit Approved';
+
+        message.textContent =
+            `🟢 Deposit Approved — ৳${formatMoney(data.amount)} balance-এ যোগ হয়েছে।`;
+
+        statusValue.textContent =
+            'Approved';
+
+        statusValue.style.color =
+            '#00e6a8';
 
     }
 
+    else if(status === 'rejected'){
+
+        icon.classList.add('rejected');
+
+        icon.innerHTML =
+            '<i class="fa-solid fa-circle-xmark"></i>';
+
+        heading.textContent =
+            '🔴 Deposit Rejected';
+
+        message.textContent =
+            'আপনার Deposit request reject করা হয়েছে।';
+
+        statusValue.textContent =
+            'Rejected';
+
+        statusValue.style.color =
+            '#ef4444';
+
+
+        const reason =
+            data.reviewReason ||
+            data.rejectReason ||
+            data.rejectionReason ||
+            data.reject_reason ||
+            data.reason ||
+            'কোনো কারণ দেওয়া হয়নি।';
+
+        reasonBox.innerHTML =
+            `
+            <b>কারণ:</b>
+            ${escapeHtml(reason)}
+            `;
+
+        reasonBox.style.display =
+            'block';
+
+    }
+
+    else{
+
+        icon.innerHTML =
+            '<i class="fa-solid fa-clock"></i>';
+
+        heading.textContent =
+            'Deposit Under Review';
+
+        message.textContent =
+            'আপনার payment request review করা হচ্ছে। সাধারণত ৫ মিনিটের মধ্যে status update হয়।';
+
+        statusValue.textContent =
+            'Pending';
+
+        statusValue.style.color =
+            '#fbbf24';
+    }
 }
 
 
 /* =========================================================
-   RESTORE
+   STATUS NORMALIZER
 ========================================================= */
 
-function restoreVerifyButton(){
+function normalizeStatus(status){
 
-    verifyBtn.innerHTML = `
-
-        <i class="fa-solid fa-circle-check"></i>
-
-        Verify & Submit Deposit
-
-    `;
-
-
-    validateTrx();
-
-}
-
-
-/* =========================================================
-   SUCCESS MODAL
-========================================================= */
-
-function showSuccessModal(data){
-
-    document.getElementById(
-        'successInvoice'
-    ).textContent =
-        data.invoice;
-
-
-    document.getElementById(
-        'successAmount'
-    ).textContent =
-        '৳' +
-        Number(
-            data.amount
-        ).toLocaleString('en-US');
-
-
-    document.getElementById(
-        'successGateway'
-    ).textContent =
-        configs[data.gateway]?.label ||
-        data.gateway;
-
-
-    document.getElementById(
-        'successTrx'
-    ).textContent =
-        data.trx;
-
-
-    setSuccessStatus(
-        'pending'
-    );
-
-
-    successModal.classList.remove(
-        'hidden'
-    );
-
-    successModal.classList.add(
-        'flex'
-    );
-
-
-    document.getElementById(
-        'successSupportBtn'
-    ).onclick =
-        () => {
-
-            openSmartSupport({
-
-                invoice:
-                    data.invoice,
-
-                gateway:
-                    data.gateway,
-
-                amount:
-                    data.amount,
-
-                trx:
-                    data.trx,
-
-                status:
-                    getCurrentStatusText(),
-
-                submittedAt:
-                    new Date()
-
-            });
-
-        };
-
-}
-
-
-/* =========================================================
-   STATUS
-========================================================= */
-
-function setSuccessStatus(
-    status,
-    reason=''
-){
-
-    const statusEl =
-        document.getElementById(
-            'successStatus'
-        );
-
-
-    const messageEl =
-        document.getElementById(
-            'successMessage'
-        );
-
-
-    const reasonBox =
-        document.getElementById(
-            'successReasonBox'
-        );
-
-
-    const reasonText =
-        document.getElementById(
-            'successReason'
-        );
-
-
-    statusEl.className =
-        'text-xs px-2 py-1 rounded-full border';
-
-
-    reasonBox.classList.add(
-        'hidden'
-    );
-
-
-    const normalized =
-        String(
-            status || 'pending'
-        )
-        .toLowerCase()
-        .trim();
+    const s =
+        String(status || '')
+            .toLowerCase()
+            .trim()
+            .replaceAll('-','_')
+            .replaceAll(' ','_');
 
 
     if([
         'approved',
+        'approve',
         'success',
+        'successful',
         'completed',
         'complete',
         'paid'
-    ].includes(normalized)){
+    ].includes(s)){
 
-        statusEl.classList.add(
-            'status-approved'
-        );
-
-
-        statusEl.textContent =
-            '🟢 Deposit Approved';
-
-
-        messageEl.className =
-            'mt-4 rounded-xl bg-emerald-500/5 border border-emerald-500/10 p-3 text-xs text-emerald-300 leading-5';
-
-
-        messageEl.innerHTML =
-            `🟢 Deposit Approved — ৳${currentAmount.toLocaleString('en-US')} balance-এ যোগ হয়েছে।`;
-
-
-        return;
-
+        return 'approved';
     }
 
 
@@ -2997,198 +2156,118 @@ function setSuccessStatus(
         'rejected',
         'reject',
         'failed',
+        'failure',
         'declined'
-    ].includes(normalized)){
+    ].includes(s)){
 
-        statusEl.classList.add(
-            'status-rejected'
-        );
-
-
-        statusEl.textContent =
-            '🔴 Deposit Rejected';
-
-
-        messageEl.className =
-            'mt-4 rounded-xl bg-red-500/5 border border-red-500/10 p-3 text-xs text-red-300 leading-5';
-
-
-        messageEl.innerHTML =
-            '🔴 Deposit Rejected';
-
-
-        if(reason){
-
-            reasonBox.classList.remove(
-                'hidden'
-            );
-
-
-            reasonText.textContent =
-                reason;
-
-
-            messageEl.innerHTML =
-                `🔴 Deposit Rejected<br>
-                <span class="text-slate-400">
-                কারণ: ${escapeHtml(reason)}
-                </span>`;
-
-        }
-
-
-        return;
-
+        return 'rejected';
     }
 
 
-    statusEl.classList.add(
-        'status-pending'
-    );
-
-
-    statusEl.textContent =
-        '🟡 Pending';
-
-
-    messageEl.className =
-        'mt-4 rounded-xl bg-amber-500/5 border border-amber-500/10 p-3 text-xs text-slate-400 leading-5';
-
-
-    messageEl.innerHTML =
-        `🕐 আপনার payment review করা হচ্ছে। সাধারণত প্রায় ${REVIEW_TIME_MINUTES} মিনিট সময় লাগতে পারে।`;
-
+    return 'pending';
 }
 
 
 /* =========================================================
-   LIVE STATUS
+   LIVE STATUS LISTENER
 ========================================================= */
 
-function listenTransactionStatus(
-    transactionId
-){
+function startStatusListener(transactionId){
 
-    if(transactionListener){
+    if(unsubscribeStatus){
 
-        transactionListener();
-
-        transactionListener =
-            null;
-
+        try{
+            unsubscribeStatus();
+        }catch(e){}
     }
 
 
-    const ref =
-        doc(
-            db,
-            'transactions',
-            transactionId
-        );
-
-
-    transactionListener =
+    unsubscribeStatus =
         onSnapshot(
-            ref,
-            snapshot => {
+            doc(
+                db,
+                'transactions',
+                transactionId
+            ),
 
-                if(!snapshot.exists()){
+            snap => {
+
+                if(!snap.exists()){
                     return;
                 }
 
-
                 const data =
-                    snapshot.data();
-
+                    snap.data() || {};
 
                 const status =
-                    data.status ||
-                    'pending';
+                    normalizeStatus(
+                        data.status
+                    );
 
 
-                const reason =
-                    data.reviewReason ||
-                    data.rejectReason ||
-                    data.rejectionReason ||
-                    data.reject_reason ||
-                    data.reason ||
-                    '';
+                const createdAt =
+                    data.createdAt?.toDate
+                        ? data.createdAt.toDate()
+                        : submittedAt;
 
 
-                setSuccessStatus(
+                showStatusScreen(
                     status,
-                    reason
+                    {
+                        invoice:
+                            data.invoice ||
+                            invoiceNo,
+
+                        gateway:
+                            data.gateway ||
+                            selectedGateway,
+
+                        amount:
+                            Number(
+                                data.amount ??
+                                currentAmount
+                            ),
+
+                        trxId:
+                            data.trxId ||
+                            data.transactionId ||
+                            $('trxIdInput').value.trim(),
+
+                        createdAt,
+
+                        reviewReason:
+                            data.reviewReason,
+
+                        rejectReason:
+                            data.rejectReason,
+
+                        rejectionReason:
+                            data.rejectionReason,
+
+                        reject_reason:
+                            data.reject_reason,
+
+                        reason:
+                            data.reason
+                    }
                 );
 
-
-                const normalized =
-                    String(
-                        status
-                    )
-                    .toLowerCase()
-                    .trim();
-
-
-                if([
-                    'approved',
-                    'success',
-                    'completed',
-                    'complete',
-                    'paid',
-                    'rejected',
-                    'reject',
-                    'failed',
-                    'declined'
-                ].includes(normalized)){
-
-                    /*
-                       Keep UI updated but stop
-                       unnecessary listener.
-                    */
-
-                    if(transactionListener){
-
-                        transactionListener();
-
-                        transactionListener =
-                            null;
-
-                    }
-
-                }
-
+                loadPendingDeposit();
             },
+
             error => {
 
-                console.error(
+                console.warn(
                     'Status listener error:',
                     error
                 );
-
             }
         );
-
 }
 
 
 /* =========================================================
-   CURRENT STATUS
-========================================================= */
-
-function getCurrentStatusText(){
-
-    return (
-        document.getElementById(
-            'successStatus'
-        )?.textContent ||
-        '🟡 Pending'
-    ).trim();
-
-}
-
-
-/* =========================================================
-   PENDING
+   PENDING DEPOSIT
 ========================================================= */
 
 async function loadPendingDeposit(){
@@ -3197,15 +2276,11 @@ async function loadPendingDeposit(){
         return;
     }
 
-
     try{
 
         const q =
             query(
-                collection(
-                    db,
-                    'transactions'
-                ),
+                collection(db,'transactions'),
                 where(
                     'userId',
                     '==',
@@ -3213,377 +2288,213 @@ async function loadPendingDeposit(){
                 )
             );
 
-
         const snap =
             await getDocs(q);
 
+        let latest = null;
 
-        const pending = [];
+        snap.forEach(item => {
 
+            const data =
+                item.data() || {};
 
-        snap.forEach(
-            item => {
+            const normalized =
+                normalizeStatus(
+                    data.status
+                );
 
-                const data =
-                    item.data();
-
-
-                const status =
-                    String(
-                        data.status || ''
-                    )
-                    .toLowerCase()
-                    .trim();
-
-
-                if([
-                    'pending',
-                    'processing',
-                    'review',
-                    'under_review',
-                    'under review'
-                ].includes(status)){
-
-                    pending.push({
-
-                        id:item.id,
-
-                        ...data
-
-                    });
-
-                }
-
+            if(normalized !== 'pending'){
+                return;
             }
-        );
+
+            const date =
+                data.createdAt?.toDate
+                    ? data.createdAt.toDate()
+                    : new Date(0);
+
+            if(
+                !latest ||
+                date > latest.date
+            ){
+
+                latest = {
+                    id:item.id,
+                    data,
+                    date
+                };
+            }
+        });
 
 
-        pending.sort(
-            (a,b) =>
-                getDateValue(
-                    b.createdAt
-                )
-                -
-                getDateValue(
-                    a.createdAt
-                )
-        );
+        if(!latest){
 
-
-        const item =
-            pending[0];
-
-
-        if(!item){
-
-            pendingDepositCard.classList.add(
-                'hidden'
-            );
+            $('pendingBox').style.display =
+                'none';
 
             return;
-
         }
 
 
-        pendingDepositCard.classList.remove(
-            'hidden'
-        );
+        const d =
+            latest.data;
 
 
-        document.getElementById(
-            'pendingInvoice'
-        ).textContent =
-            item.invoice ||
-            '—';
+        $('pendingBox').style.display =
+            'block';
 
+        $('pendingInvoice').textContent =
+            d.invoice || '---';
 
-        document.getElementById(
-            'pendingAmount'
-        ).textContent =
-            '৳' +
-            Number(
-                item.amount || 0
-            ).toLocaleString('en-US');
+        $('pendingAmount').textContent =
+            `৳${formatMoney(d.amount)}`;
 
+        $('pendingTrx').textContent =
+            d.trxId ||
+            d.transactionId ||
+            '---';
 
-        document.getElementById(
-            'pendingTrx'
-        ).textContent =
-            item.trxId ||
-            item.transactionId ||
-            '—';
-
-
-        const created =
-            getDateValue(
-                item.createdAt
-            );
-
-
-        document.getElementById(
-            'pendingSince'
-        ).textContent =
-            created
-            ? `Submitted ${timeAgo(created)}`
-            : 'Submitted recently';
-
+        $('pendingTime').textContent =
+            timeAgo(latest.date);
 
     }catch(error){
 
-        console.error(
-            'Pending error:',
+        console.warn(
+            'Pending deposit error:',
             error
         );
-
     }
-
 }
 
 
 /* =========================================================
-   DATE
+   TIME AGO
 ========================================================= */
 
-function getDateValue(timestamp){
+function timeAgo(value){
 
-    if(!timestamp){
-        return 0;
+    if(!value){
+        return 'Just now';
     }
 
+    const date =
+        value instanceof Date
+            ? value
+            : (
+                value?.toDate
+                    ? value.toDate()
+                    : new Date(value)
+            );
 
     if(
-        typeof timestamp.toDate ===
-        'function'
+        !date ||
+        Number.isNaN(date.getTime())
     ){
 
-        return timestamp
-            .toDate()
-            .getTime();
-
+        return 'Just now';
     }
 
-
-    if(timestamp instanceof Date){
-
-        return timestamp.getTime();
-
-    }
-
-
-    if(typeof timestamp === 'number'){
-
-        return timestamp;
-
-    }
-
-
-    const parsed =
-        new Date(timestamp)
-            .getTime();
-
-
-    return Number.isFinite(parsed)
-        ? parsed
-        : 0;
-
-}
-
-
-function timeAgo(timestamp){
 
     const diff =
-        Date.now() - timestamp;
-
-
-    if(diff < 0){
-        return 'just now';
-    }
-
+        Math.max(
+            0,
+            Date.now() - date.getTime()
+        );
 
     const seconds =
-        Math.floor(
-            diff / 1000
-        );
-
+        Math.floor(diff / 1000);
 
     if(seconds < 60){
-        return `${seconds} sec ago`;
+        return 'Just now';
     }
 
-
     const minutes =
-        Math.floor(
-            seconds / 60
-        );
-
+        Math.floor(seconds / 60);
 
     if(minutes < 60){
         return `${minutes} min ago`;
     }
 
-
     const hours =
-        Math.floor(
-            minutes / 60
-        );
-
+        Math.floor(minutes / 60);
 
     if(hours < 24){
-        return `${hours} hour ago`;
+        return `${hours} hr ago`;
     }
 
-
     const days =
-        Math.floor(
-            hours / 24
-        );
-
+        Math.floor(hours / 24);
 
     return `${days} day ago`;
-
 }
 
 
 /* =========================================================
-   SMART SUPPORT
+   SMART WHATSAPP SUPPORT
 ========================================================= */
 
-function openSmartSupport(
-    data={}
-){
+window.contactSupport =
+function(){
+
+    const gateway =
+        selectedGateway ||
+        $('statusGateway').textContent ||
+        'Unknown';
+
+    const amount =
+        $('statusAmount').textContent ||
+        `৳${formatMoney(currentAmount)}`;
+
+    const trx =
+        $('statusTrx').textContent ||
+        'Not submitted';
+
+    const invoice =
+        $('statusInvoice').textContent ||
+        invoiceNo;
 
     const uid =
         currentUser?.uid ||
-        'N/A';
+        'Unknown';
 
-
-    const gmail =
+    const email =
         currentUser?.email ||
-        'N/A';
+        'Unknown';
+
+    const status =
+        $('statusValue').textContent ||
+        'Pending';
+
+    const submitted =
+        $('statusSubmitted').textContent ||
+        'Just now';
 
 
-    let submittedAge =
-        'N/A';
+    const text =
 
+`Hello Aura Skill Support,
 
-    if(data.submittedAt){
+I need help regarding my Deposit.
 
-        const timestamp =
-            data.submittedAt instanceof Date
-            ? data.submittedAt.getTime()
-            : getDateValue(
-                data.submittedAt
-            );
-
-
-        if(timestamp){
-
-            submittedAge =
-                timeAgo(timestamp);
-
-        }
-
-    }
-
-
-    const message =
-
-`AURA ARMAN TOUR - Deposit Support
-
-Invoice: ${data.invoice || 'N/A'}
-Gateway: ${configs[data.gateway]?.label || data.gateway || 'N/A'}
-Amount: ৳${Number(data.amount || currentAmount).toLocaleString('en-US')}
-TrxID: ${data.trx || trxInput.value.trim() || 'N/A'}
-
+Invoice: ${invoice}
+Gateway: ${gateway}
+Amount: ${amount}
+TrxID: ${trx}
 UID: ${uid}
-Gmail: ${gmail}
-
-Current Status: ${data.status || getCurrentStatusText()}
-
-Submitted: ${submittedAge}
+Gmail: ${email}
+Current Status: ${status}
+Submitted: ${submitted}
 
 Please check my deposit request.`;
 
-
     const url =
-        `https://wa.me/${SUPPORT_NUMBER}?text=${encodeURIComponent(message)}`;
-
+        `https://wa.me/${SUPPORT_NUMBER}?text=` +
+        encodeURIComponent(text);
 
     window.open(
         url,
         '_blank',
         'noopener,noreferrer'
     );
-
-}
-
-
-/* =========================================================
-   SUPPORT
-========================================================= */
-
-document.getElementById(
-    'supportBtn'
-).addEventListener(
-    'click',
-    event => {
-
-        event.preventDefault();
-
-
-        openSmartSupport({
-
-            invoice:
-                invoiceNo,
-
-            gateway:
-                selectedGateway,
-
-            amount:
-                currentAmount,
-
-            trx:
-                trxInput.value.trim(),
-
-            status:
-                selectedTransactionId
-                ? getCurrentStatusText()
-                : 'No request submitted yet',
-
-            submittedAt:
-                new Date()
-
-        });
-
-    }
-);
-
-
-/* =========================================================
-   HOME
-========================================================= */
-
-window.goHome =
-function(){
-
-    if(transactionListener){
-
-        transactionListener();
-
-        transactionListener =
-            null;
-
-    }
-
-
-    clearInterval(
-        timerInterval
-    );
-
-
-    location.href =
-        'index.html';
-
 };
 
 
@@ -3595,77 +2506,65 @@ onAuthStateChanged(
     auth,
     async user => {
 
-        currentUser =
-            user;
+        currentUser = user;
 
+        if(user){
 
-        if(!user){
+            $('userName').textContent =
+                user.displayName ||
+                user.email?.split('@')[0] ||
+                'User';
 
-            document.getElementById(
-                'userName'
-            ).textContent =
+            await loadPendingDeposit();
+
+        }else{
+
+            $('userName').textContent =
                 'Guest';
 
-
-            document.getElementById(
-                'userEmail'
-            ).textContent =
-                'Login required';
-
-
-            showToast(
-                'Deposit করতে login করতে হবে।',
-                'warning'
-            );
-
-
-            return;
-
+            $('pendingBox').style.display =
+                'none';
         }
-
-
-        document.getElementById(
-            'userName'
-        ).textContent =
-            user.displayName ||
-            user.email?.split('@')[0] ||
-            'User';
-
-
-        document.getElementById(
-            'userEmail'
-        ).textContent =
-            user.email ||
-            '';
-
-
-        /*
-           Pending card
-        */
-
-        loadPendingDeposit();
-
     }
 );
 
 
 /* =========================================================
-   START EVERYTHING IMMEDIATELY
+   NAVIGATION
 ========================================================= */
 
-/*
-   1. Cards immediately ready
-   2. Amount immediately ready
-   3. Firebase settings background update
-*/
+window.goHome =
+function(){
 
-setupInstantCards();
+    location.href =
+        'index.html';
+};
 
-renderPaymentAvailability();
 
-updateTrxCounter();
+window.reloadPage =
+function(){
 
-loadSettings();
+    location.reload();
+};
+
+
+/* =========================================================
+   START
+========================================================= */
+
+if(readAmount()){
+
+    generateInvoice();
+
+    /*
+      Render bKash + Nagad immediately.
+      Settings update happens in background.
+    */
+
+    renderGateways();
+
+    loadSettings();
+}
 
 </script>
 
