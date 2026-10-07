@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Privacy Policy - AURA ARMAN TOUR</title>
+
+    <meta name="theme-color" content="#07130f">
+    <meta name="description" content="AURA ARMAN TOUR Privacy Policy">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&display=swap"
+          rel="stylesheet">
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: 'Hind Siliguri', sans-serif;
+            color: #e5e7eb;
+            background:
+                radial-gradient(circle at 15% 10%, rgba(16,185,129,.14), transparent 28%),
+                radial-gradient(circle at 85% 20%, rgba(34,197,94,.10), transparent 25%),
+                radial-gradient(circle at 50% 90%, rgba(16,185,129,.08), transparent 30%),
+                #050907;
+        }
+
+        .page-bg {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            overflow: hidden;
+            z-index: -1;
+        }
+
+        .orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: .18;
+            animation: floatOrb 8s ease-in-out infinite;
+        }
+
+        .orb.one {
+            width: 180px;
+            height: 180px;
+            background: #10b981;
+            top: 5%;
+            left: -70px;
+        }
+
+        .orb.two {
+            width: 220px;
+            height: 220px;
+            background: #22c55e;
+            right: -100px;
+            top: 35%;
+            animation-delay: 2s;
+        }
+
+        .orb.three {
+            width: 160px;
+            height: 160px;
+            background: #84cc16;
+            left: 35%;
+            bottom: -70px;
+            animation-delay: 4s;
+        }
+
+        @keyframes floatOrb {
+            0%, 100% {
+                transform: translateY(0) scale(1);
+            }
+            50% {
+                transform: translateY(-25px) scale(1.08);
+            }
+        }
+
+        .glass {
+            background: rgba(10, 18, 14, .72);
+            border: 1px solid rgba(52, 211, 153, .14);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            box-shadow:
+                0 20px 60px rgba(0,0,0,.35),
+                inset 0 1px 0 rgba(255,255,255,.025);
+        }
+
+        .header {
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            background: rgba(5, 9, 7, .78);
+            border-bottom: 1px solid rgba(52, 211, 153, .12);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+        }
+
+        .logo {
+            width: 44px;
+            height: 44px;
+            border-radius: 13px;
+            object-fit: cover;
+            border: 1px solid rgba(255,255,255,.12);
+            box-shadow: 0 0 25px rgba(16,185,129,.18);
+        }
+
+        .brand {
+            background: linear-gradient(
+                90deg,
+                #34d399,
+                #86efac,
+                #bef264
+            );
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .back-btn {
+            transition: .25s ease;
+        }
+
+        .back-btn:hover {
+            transform: translateY(-2px);
+            border-color: rgba(52,211,153,.35);
+            background: rgba(16,185,129,.10);
+        }
+
+        .policy-card {
+            border-radius: 24px;
+            padding: 24px;
+            margin-bottom: 16px;
+            transition: .25s ease;
+        }
+
+        .policy-card:hover {
+            border-color: rgba(52,211,153,.23);
+            transform: translateY(-1px);
+        }
+
+        .section-icon {
+            width: 40px;
+            height: 40px;
+            min-width: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 12px;
+            color: #34d399;
+            background: rgba(16,185,129,.10);
+            border: 1px solid rgba(52,211,153,.12);
+        }
+
+        .policy-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #f8fafc;
+        }
+
+        .policy-text {
+            color: #a7b3ad;
+            line-height: 1.85;
+            font-size: 14px;
+        }
+
+        .policy-list {
+            margin-top: 12px;
+            padding-left: 20px;
+            color: #a7b3ad;
+            line-height: 1.9;
+            font-size: 14px;
+        }
+
+        .policy-list li {
+            margin-bottom: 5px;
+        }
+
+        .highlight {
+            color: #6ee7b7;
+            font-weight: 600;
+        }
+
+        .notice {
+            background: rgba(16,185,129,.07);
+            border: 1px solid rgba(52,211,153,.14);
+            border-radius: 18px;
+            padding: 16px;
+            color: #b8c7bf;
+        }
+
+        .footer-link {
+            color: #94a3a8;
+            transition: .2s ease;
+        }
+
+        .footer-link:hover {
+            color: #6ee7b7;
+        }
+
+        .divider {
+            height: 1px;
+            background: linear-gradient(
+                90deg,
+                transparent,
+                rgba(52,211,153,.18),
+                transparent
+            );
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="page-bg">
+    <div class="orb one"></div>
+    <div class="orb two"></div>
+    <div class="orb three"></div>
+</div>
+
+<!-- Header -->
+<header class="header">
+    <div class="max-w-4xl mx-auto px-4 py-3">
+        <div class="flex items-center justify-between gap-3">
+
+            <div class="flex items-center gap-3">
+                <img
+                    src="https://videotourl.com/images/1789792991627-2a906ffa-fbc0-4f79-9d9b-8dddb80ca667.jpg"
+                    alt="AURA ARMAN TOUR"
+                    class="logo"
+                >
+
+                <div>
+                    <h1 class="brand text-lg font-bold leading-tight">
+                        AURA ARMAN TOUR
+                    </h1>
+
+                    <p class="text-[11px] text-slate-500">
+                        Privacy Policy
+                    </p>
+                </div>
+            </div>
+
+            <a
+                href="index.html"
+                class="back-btn glass rounded-xl px-3 py-2 text-xs text-slate-300 flex items-center gap-2"
+            >
+                <i class="fa-solid fa-arrow-left"></i>
+                <span>Back</span>
+            </a>
+
+        </div>
+    </div>
+</header>
+
+
+<!-- Main -->
+<main class="max-w-4xl mx-auto px-4 py-8 md:py-12">
+
+    <!-- Hero -->
+    <section class="glass rounded-3xl p-6 md:p-8 mb-5">
+
+        <div class="flex items-start gap-4">
+
+            <div class="section-icon">
+                <i class="fa-solid fa-shield-halved"></i>
+            </div>
+
+            <div>
+                <h2 class="text-2xl md:text-3xl font-bold text-white">
+                    Privacy Policy
+                </h2>
+
+                <p class="text-slate-400 text-sm mt-2 leading-7">
+                    AURA ARMAN TOUR আপনার ব্যক্তিগত তথ্যের গোপনীয়তা
+                    এবং নিরাপত্তাকে গুরুত্ব দেয়।
+                </p>
+            </div>
+
+        </div>
+
+        <div class="divider my-5"></div>
+
+        <p class="policy-text">
+            এই Privacy Policy-তে ব্যাখ্যা করা হয়েছে যে
+            <span class="highlight">AURA ARMAN TOUR</span>
+            আমাদের website বা service ব্যবহার করার সময় কী ধরনের
+            তথ্য সংগ্রহ, ব্যবহার এবং সুরক্ষিত করতে পারে।
+        </p>
+
+        <p class="text-xs text-slate-500 mt-4">
+            সর্বশেষ আপডেট: ৮ অক্টোবর ২০২৬
+        </p>
+
+    </section>
+
+
+    <!-- 1 -->
+    <section class="glass policy-card">
+
+        <div class="flex items-start gap-4">
+
+            <div class="section-icon">
+                <i class="fa-solid fa-database"></i>
+            </div>
+
+            <div class="flex-1">
+
+                <h3 class="policy-title">
+                    ১. আমরা কোন তথ্য সংগ্রহ করতে পারি
+                </h3>
+
+                <p class="policy-text mt-3">
+                    আপনার account তৈরি বা service ব্যবহার করার সময়
+                    প্রয়োজন অনুযায়ী কিছু তথ্য সংগ্রহ করা হতে পারে।
+                </p>
+
+                <ul class="policy-list list-disc">
+
+                    <li>নাম বা Full Name</li>
+
+                    <li>Username</li>
+
+                    <li>Gmail / Email Address</li>
+
+                    <li>Phone Number</li>
+
+                    <li>Firebase User ID / Account UID</li>
+
+                    <li>Account ও tournament সম্পর্কিত তথ্য</li>
+
+                    <li>Wallet বা transaction সম্পর্কিত তথ্য</li>
+
+                </ul>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- 2 -->
+    <section class="glass policy-card">
+
+        <div class="flex items-start gap-4">
+
+            <div class="section-icon">
+                <i class="fa-solid fa-bullseye"></i>
+            </div>
+
+            <div class="flex-1">
+
+                <h3 class="policy-title">
+                    ২. তথ্য কীভাবে ব্যবহার করা হয়
+                </h3>
+
+                <p class="policy-text mt-3">
+                    সংগৃহীত তথ্য website-এর account ও service পরিচালনা
+                    এবং নিরাপত্তা বজায় রাখার জন্য ব্যবহার করা হতে পারে।
+                </p>
+
+                <ul class="policy-list list-disc">
+
+                    <li>Account তৈরি ও পরিচালনা করতে</li>
+
+                    <li>Login ও authentication সম্পন্ন করতে</li>
+
+                    <li>Tournament registration পরিচালনা করতে</li>
+
+                    <li>Payment ও transaction পরিচালনা করতে</li>
+
+                    <li>Fraud বা unauthorized activity প্রতিরোধ করতে</li>
+
+                    <li>Website-এর performance ও security উন্নত করতে</li>
+
+                    <li>প্রয়োজনীয় service-related notification পাঠাতে</li>
+
+                </ul>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- 3 -->
+    <section class="glass policy-card">
+
+        <div class="flex items-start gap-4">
+
+            <div class="section-icon">
+                <i class="fa-solid fa-lock"></i>
+            </div>
+
+            <div class="flex-1">
+
+                <h3 class="policy-title">
+                    ৩. তথ্যের নিরাপত্তা
+                </h3>
+
+                <p class="policy-text mt-3">
+                    আপনার account information অননুমোদিত access,
+                    পরিবর্তন বা অপব্যবহার থেকে রক্ষা করার জন্য
+                    উপযুক্ত security ব্যবস্থা ব্যবহার করার চেষ্টা করা হয়।
+                </p>
+
+                <div class="notice mt-4">
+                    <i class="fa-solid fa-circle-check text-emerald-400 mr-2"></i>
+                    আপনার password সরাসরি আমাদের কাছে প্রকাশ করা উচিত নয়।
+                    কখনোই আপনার password বা OTP অন্য কারও সাথে share করবেন না।
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- 4 -->
+    <section class="glass policy-card">
+
+        <div class="flex items-start gap-4">
+
+            <div class="section-icon">
+                <i class="fa-solid fa-user-shield"></i>
+            </div>
+
+            <div class="flex-1">
+
+                <h3 class="policy-title">
+                    ৪. আপনার Account Security
+                </h3>
+
+                <p class="policy-text mt-3">
+                    আপনার account-এর security বজায় রাখার জন্য
+                    শক্তিশালী password ব্যবহার করা এবং OTP,
+                    password বা authentication information অন্যের সাথে
+                    share না করা গুরুত্বপূর্ণ।
+                </p>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- 5 -->
+    <section class="glass policy-card">
+
+        <div class="flex items-start gap-4">
+
+            <div class="section-icon">
+                <i class="fa-solid fa-cookie-bite"></i>
+            </div>
+
+            <div class="flex-1">
+
+                <h3 class="policy-title">
+                    ৫. Cookies ও Local Storage
+                </h3>
+
+                <p class="policy-text mt-3">
+                    Website-এর কিছু feature সঠিকভাবে কাজ করার জন্য
+                    browser storage বা local storage ব্যবহার করা হতে পারে।
+                    এগুলো login preference, saved settings বা
+                    user experience উন্নত করার মতো কাজে ব্যবহৃত হতে পারে।
+                </p>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- 6 -->
+    <section class="glass policy-card">
+
+        <div class="flex items-start gap-4">
+
+            <div class="section-icon">
+                <i class="fa-solid fa-credit-card"></i>
+            </div>
+
+            <div class="flex-1">
+
+                <h3 class="policy-title">
+                    ৬. Payment ও Transaction
+                </h3>
+
+                <p class="policy-text mt-3">
+                    Deposit, withdrawal বা অন্যান্য wallet transaction
+                    পরিচালনার জন্য transaction-related তথ্য সংরক্ষণ করা
+                    হতে পারে।
+                </p>
+
+                <p class="policy-text mt-3">
+                    Payment provider বা third-party payment service ব্যবহার
+                    করলে সেই provider-এর নিজস্ব privacy policy ও terms
+                    প্রযোজ্য হতে পারে।
+                </p>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- 7 -->
+    <section class="glass policy-card">
+
+        <div class="flex items-start gap-4">
+
+            <div class="section-icon">
+                <i class="fa-solid fa-share-nodes"></i>
+            </div>
+
+            <div class="flex-1">
+
+                <h3 class="policy-title">
+                    ৭. Third-Party Services
+                </h3>
+
+                <p class="policy-text mt-3">
+                    Website-এর কিছু functionality Firebase বা অন্যান্য
+                    third-party service ব্যবহার করতে পারে।
+                    এসব service তাদের নিজস্ব privacy policy অনুযায়ী
+                    তথ্য পরিচালনা করতে পারে।
+                </p>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- 8 -->
+    <section class="glass policy-card">
+
+        <div class="flex items-start gap-4">
+
+            <div class="section-icon">
+                <i class="fa-solid fa-user-xmark"></i>
+            </div>
+
+            <div class="flex-1">
+
+                <h3 class="policy-title">
+                    ৮. Account Deletion
+                </h3>
+
+                <p class="policy-text mt-3">
+                    আপনি আপনার account বা personal information সম্পর্কে
+                    কোনো পরিবর্তন, correction বা deletion request করতে চাইলে
+                    আমাদের support channel-এর মাধ্যমে যোগাযোগ করতে পারেন।
+                </p>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- 9 -->
+    <section class="glass policy-card">
+
+        <div class="flex items-start gap-4">
+
+            <div class="section-icon">
+                <i class="fa-solid fa-rotate"></i>
+            </div>
+
+            <div class="flex-1">
+
+                <h3 class="policy-title">
+                    ৯. Privacy Policy পরিবর্তন
+                </h3>
+
+                <p class="policy-text mt-3">
+                    প্রয়োজন হলে এই Privacy Policy পরিবর্তন বা update করা
+                    হতে পারে। পরিবর্তন হলে এই page-এ নতুন version প্রকাশ করা হবে।
+                </p>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- 10 -->
+    <section class="glass policy-card">
+
+        <div class="flex items-start gap-4">
+
+            <div class="section-icon">
+                <i class="fa-solid fa-headset"></i>
+            </div>
+
+            <div class="flex-1">
+
+                <h3 class="policy-title">
+                    ১০. Support
+                </h3>
+
+                <p class="policy-text mt-3">
+                    Privacy বা account-related কোনো প্রশ্ন থাকলে
+                    আমাদের support team-এর সাথে যোগাযোগ করতে পারেন।
+                </p>
+
+                <a
+                    href="https://chat.whatsapp.com/DCxfqldDvbl8wOtk7PzCP9?s=cl&p=a&mlu=4&ilr=4"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="inline-flex items-center gap-2 mt-4 px-4 py-2.5 rounded-xl
+                           bg-emerald-500/10 border border-emerald-400/20
+                           text-emerald-300 text-sm hover:bg-emerald-500/15 transition"
+                >
+                    <i class="fa-brands fa-whatsapp"></i>
+                    Contact Support
+                </a>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- Final Notice -->
+    <section class="glass rounded-3xl p-6 mt-5">
+
+        <div class="flex items-start gap-3">
+
+            <i class="fa-solid fa-circle-info text-emerald-400 mt-1"></i>
+
+            <p class="policy-text">
+                AURA ARMAN TOUR ব্যবহার করার মাধ্যমে আপনি এই Privacy Policy
+                পড়েছেন এবং এর সাধারণ শর্তগুলো সম্পর্কে অবগত হয়েছেন।
+            </p>
+
+        </div>
+
+    </section>
+
+</main>
+
+
+<!-- Footer -->
+<footer class="max-w-4xl mx-auto px-4 pb-8">
+
+    <div class="divider mb-5"></div>
+
+    <div class="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-xs">
+
+        <a href="index.html" class="footer-link">
+            <i class="fa-solid fa-house mr-1"></i>
+            Home
+        </a>
+
+        <span class="text-slate-700">•</span>
+
+        <a href="private.html" class="footer-link">
+            <i class="fa-solid fa-shield-halved mr-1"></i>
+            Privacy
+        </a>
+
+        <span class="text-slate-700">•</span>
+
+        <a
+            href="https://chat.whatsapp.com/DCxfqldDvbl8wOtk7PzCP9?s=cl&p=a&mlu=4&ilr=4"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="footer-link"
+        >
+            <i class="fa-brands fa-whatsapp mr-1"></i>
+            Support
+        </a>
+
+    </div>
+
+    <p class="text-center text-[11px] text-slate-600 mt-4">
+        © 2026 AURA ARMAN TOUR. All rights reserved.
+    </p>
+
+</footer>
+
+</body>
+</html>
