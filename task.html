@@ -1,0 +1,1780 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aura Skill - Missions</title>
+
+<script src="https://cdn.tailwindcss.com"></script>
+
+<link rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&display=swap"
+      rel="stylesheet">
+
+<style>
+
+*{
+    box-sizing:border-box;
+    -webkit-tap-highlight-color:transparent;
+}
+
+html,
+body{
+    margin:0;
+    padding:0;
+    min-height:100%;
+    background:#050811;
+    color:#fff;
+    font-family:'Hind Siliguri',sans-serif;
+}
+
+body{
+    overflow-x:hidden;
+}
+
+
+/* =========================================================
+   LOADING SCREEN
+   ========================================================= */
+
+#pageLoader{
+    position:fixed;
+    inset:0;
+    z-index:99999;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    background:
+        radial-gradient(
+            circle at center,
+            rgba(34,197,94,.07),
+            transparent 38%
+        ),
+        #050811;
+
+    opacity:1;
+    visibility:visible;
+
+    transition:
+        opacity .35s ease,
+        visibility .35s ease;
+}
+
+#pageLoader.hide{
+    opacity:0;
+    visibility:hidden;
+    pointer-events:none;
+}
+
+.loader-content{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+}
+
+.loader-logo-wrap{
+    position:relative;
+
+    width:82px;
+    height:82px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+
+.loader-logo-ring{
+    position:absolute;
+    inset:-8px;
+
+    border-radius:50%;
+
+    border:2px solid transparent;
+
+    border-top-color:#22c55e;
+    border-right-color:#84cc16;
+
+    animation:logoSpin .8s linear infinite;
+
+    filter:
+        drop-shadow(0 0 7px rgba(34,197,94,.55))
+        drop-shadow(0 0 15px rgba(132,204,22,.25));
+}
+
+.loader-logo-ring::after{
+    content:"";
+
+    position:absolute;
+    inset:5px;
+
+    border-radius:50%;
+
+    border:1px solid rgba(234,179,8,.5);
+
+    border-left-color:transparent;
+    border-bottom-color:transparent;
+
+    animation:logoSpinReverse .55s linear infinite;
+}
+
+.loader-logo{
+    width:68px;
+    height:68px;
+
+    object-fit:cover;
+
+    border-radius:50%;
+
+    border:2px solid rgba(255,255,255,.12);
+
+    box-shadow:
+        0 0 18px rgba(34,197,94,.30),
+        0 0 35px rgba(34,197,94,.10);
+
+    animation:logoFloat 1.4s ease-in-out infinite;
+}
+
+.loader-title{
+    margin-top:25px;
+
+    font-size:17px;
+    font-weight:700;
+
+    letter-spacing:.5px;
+
+    color:#fff;
+}
+
+.loader-subtitle{
+    margin-top:3px;
+
+    font-size:12px;
+
+    color:#64748b;
+}
+
+.loader-dots{
+    display:flex;
+    gap:5px;
+
+    margin-top:13px;
+}
+
+.loader-dot{
+    width:5px;
+    height:5px;
+
+    border-radius:50%;
+
+    background:#22c55e;
+
+    animation:dotPulse 1s ease-in-out infinite;
+}
+
+.loader-dot:nth-child(2){
+    animation-delay:.15s;
+}
+
+.loader-dot:nth-child(3){
+    animation-delay:.3s;
+}
+
+@keyframes logoSpin{
+    to{
+        transform:rotate(360deg);
+    }
+}
+
+@keyframes logoSpinReverse{
+    to{
+        transform:rotate(-360deg);
+    }
+}
+
+@keyframes logoFloat{
+
+    0%,
+    100%{
+        transform:scale(1);
+    }
+
+    50%{
+        transform:scale(1.035);
+    }
+}
+
+@keyframes dotPulse{
+
+    0%,
+    100%{
+        opacity:.25;
+        transform:scale(.8);
+    }
+
+    50%{
+        opacity:1;
+        transform:scale(1.15);
+    }
+}
+
+
+/* =========================================================
+   MAIN UI
+   ========================================================= */
+
+.glass-card{
+    background:rgba(15,23,42,.72);
+    border:1px solid rgba(148,163,184,.12);
+    backdrop-filter:blur(14px);
+    -webkit-backdrop-filter:blur(14px);
+    box-shadow:0 12px 35px rgba(0,0,0,.20);
+}
+
+.header{
+    position:sticky;
+    top:0;
+    z-index:50;
+
+    background:rgba(5,8,17,.88);
+
+    backdrop-filter:blur(18px);
+    -webkit-backdrop-filter:blur(18px);
+
+    border-bottom:1px solid rgba(148,163,184,.08);
+}
+
+.progress-bar{
+    height:8px;
+
+    border-radius:999px;
+
+    background:#1e293b;
+
+    overflow:hidden;
+}
+
+.progress-fill{
+    height:100%;
+
+    border-radius:999px;
+
+    background:
+        linear-gradient(
+            90deg,
+            #22c55e,
+            #84cc16,
+            #eab308
+        );
+
+    transition:width .35s ease;
+}
+
+.task-card{
+    position:relative;
+
+    overflow:hidden;
+
+    transition:.2s ease;
+}
+
+.task-card:active{
+    transform:scale(.985);
+}
+
+.task-icon{
+    width:48px;
+    height:48px;
+
+    min-width:48px;
+
+    border-radius:15px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    background:rgba(34,197,94,.10);
+
+    border:1px solid rgba(34,197,94,.16);
+
+    color:#4ade80;
+}
+
+.reward{
+    white-space:nowrap;
+
+    color:#facc15;
+
+    background:rgba(234,179,8,.10);
+
+    border:1px solid rgba(234,179,8,.16);
+}
+
+.action-btn{
+    min-width:96px;
+
+    transition:.2s ease;
+}
+
+.action-btn:active{
+    transform:scale(.96);
+}
+
+.claimed{
+    background:rgba(34,197,94,.08)!important;
+
+    border-color:rgba(34,197,94,.18)!important;
+
+    color:#4ade80!important;
+}
+
+.disabled-btn{
+    opacity:.7;
+    cursor:default;
+}
+
+.tab{
+    transition:.2s ease;
+}
+
+.tab.active{
+    background:rgba(34,197,94,.14);
+
+    color:#4ade80;
+
+    border-color:rgba(34,197,94,.20);
+}
+
+.bottom-space{
+    height:90px;
+}
+
+
+/* =========================================================
+   TOAST
+   ========================================================= */
+
+.toast{
+    position:fixed;
+
+    left:50%;
+    bottom:25px;
+
+    transform:translate(-50%,120px);
+
+    z-index:9999;
+
+    padding:12px 18px;
+
+    border-radius:14px;
+
+    background:#111827;
+
+    border:1px solid rgba(148,163,184,.16);
+
+    box-shadow:0 12px 35px rgba(0,0,0,.35);
+
+    transition:.3s ease;
+
+    font-size:14px;
+
+    width:max-content;
+
+    max-width:90%;
+
+    text-align:center;
+}
+
+.toast.show{
+    transform:translate(-50%,0);
+}
+
+.toast.success{
+    border-color:rgba(34,197,94,.25);
+}
+
+.toast.error{
+    border-color:rgba(239,68,68,.25);
+}
+
+</style>
+</head>
+
+
+<body>
+
+
+<!-- =========================================================
+     LOADING SCREEN
+     ========================================================= -->
+
+<div id="pageLoader">
+
+    <div class="loader-content">
+
+        <div class="loader-logo-wrap">
+
+            <div class="loader-logo-ring"></div>
+
+            <img
+                class="loader-logo"
+                src="https://videotourl.com/images/1789792991627-2a906ffa-fbc0-4f79-9d9b-8dddb80ca667.jpg"
+                alt="Aura Skill">
+
+        </div>
+
+
+        <div class="loader-title">
+            AURA SKILL
+        </div>
+
+        <div class="loader-subtitle">
+            Loading Missions...
+        </div>
+
+
+        <div class="loader-dots">
+
+            <span class="loader-dot"></span>
+            <span class="loader-dot"></span>
+            <span class="loader-dot"></span>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<!-- =========================================================
+     HEADER
+     ========================================================= -->
+
+<header class="header">
+
+    <div class="max-w-2xl mx-auto px-4 py-4 flex items-center gap-3">
+
+        <a
+            href="profile.html"
+            class="w-10 h-10 rounded-xl flex items-center justify-center
+                   bg-slate-800/70
+                   border border-slate-700/60
+                   text-slate-300">
+
+            <i class="fa-solid fa-arrow-left"></i>
+
+        </a>
+
+
+        <div class="flex-1">
+
+            <h1 class="text-lg font-bold text-white leading-tight">
+                MISSION / TASKS
+            </h1>
+
+            <p class="text-xs text-slate-400">
+                Complete missions & earn rewards
+            </p>
+
+        </div>
+
+
+        <div
+            class="w-10 h-10 rounded-xl
+                   flex items-center justify-center
+                   bg-green-500/10
+                   border border-green-500/20
+                   text-green-400">
+
+            <i class="fa-solid fa-list-check"></i>
+
+        </div>
+
+    </div>
+
+</header>
+
+
+
+<!-- =========================================================
+     MAIN
+     ========================================================= -->
+
+<main class="max-w-2xl mx-auto px-4 pt-5">
+
+
+    <!-- =====================================================
+         PROGRESS CARD
+         ===================================================== -->
+
+    <section class="glass-card rounded-2xl p-5 mb-5">
+
+        <div class="flex items-center justify-between mb-4">
+
+            <div>
+
+                <p class="text-xs text-slate-400 mb-1">
+                    Mission Progress
+                </p>
+
+                <h2 class="text-xl font-bold">
+
+                    <span id="completedCount">
+                        0
+                    </span>
+
+                    <span class="text-slate-500">
+                        /
+                    </span>
+
+                    <span id="totalCount">
+                        0
+                    </span>
+
+                    <span class="text-sm text-slate-400 font-normal">
+                        Completed
+                    </span>
+
+                </h2>
+
+            </div>
+
+
+            <div
+                class="w-12 h-12 rounded-2xl
+                       bg-green-500/10
+                       border border-green-500/20
+                       flex items-center justify-center
+                       text-green-400 text-lg">
+
+                <i class="fa-solid fa-trophy"></i>
+
+            </div>
+
+        </div>
+
+
+        <div class="progress-bar">
+
+            <div
+                id="overallProgress"
+                class="progress-fill"
+                style="width:0%">
+            </div>
+
+        </div>
+
+
+        <p
+            id="progressText"
+            class="text-xs text-slate-400 mt-3">
+
+            Complete your missions to earn rewards.
+
+        </p>
+
+    </section>
+
+
+
+    <!-- =====================================================
+         FILTER TABS
+         ===================================================== -->
+
+    <div class="flex gap-2 overflow-x-auto pb-2 mb-4">
+
+
+        <button
+            class="tab active whitespace-nowrap
+                   px-4 py-2 rounded-xl
+                   border border-slate-700/60
+                   text-sm text-slate-300"
+            data-filter="all">
+
+            All
+
+        </button>
+
+
+        <button
+            class="tab whitespace-nowrap
+                   px-4 py-2 rounded-xl
+                   border border-slate-700/60
+                   text-sm text-slate-300"
+            data-filter="match">
+
+            Matches
+
+        </button>
+
+
+        <button
+            class="tab whitespace-nowrap
+                   px-4 py-2 rounded-xl
+                   border border-slate-700/60
+                   text-sm text-slate-300"
+            data-filter="referral">
+
+            Referral
+
+        </button>
+
+
+        <button
+            class="tab whitespace-nowrap
+                   px-4 py-2 rounded-xl
+                   border border-slate-700/60
+                   text-sm text-slate-300"
+            data-filter="deposit">
+
+            Deposit
+
+        </button>
+
+
+    </div>
+
+
+
+    <!-- =====================================================
+         TASK LIST
+         ===================================================== -->
+
+    <section
+        id="taskList"
+        class="space-y-3">
+
+    </section>
+
+
+    <div class="bottom-space"></div>
+
+</main>
+
+
+
+<!-- =========================================================
+     TOAST
+     ========================================================= -->
+
+<div id="toast" class="toast"></div>
+
+
+
+<script type="module">
+
+import { auth, db }
+from "./firebase.js";
+
+
+import {
+    onAuthStateChanged
+}
+from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+
+
+import {
+    doc,
+    getDoc,
+    setDoc,
+    serverTimestamp
+}
+from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+
+
+/* =========================================================
+   LOADER
+   ========================================================= */
+
+const pageLoader =
+    document.getElementById("pageLoader");
+
+
+let loaderHidden = false;
+
+
+function hideLoader(){
+
+    if(loaderHidden) return;
+
+    loaderHidden = true;
+
+    pageLoader.classList.add("hide");
+
+}
+
+
+/*
+ * Safety fallback:
+ * Firebase/network slow হলেও loader
+ * indefinite থাকবে না।
+ */
+
+setTimeout(() => {
+
+    hideLoader();
+
+}, 1200);
+
+
+
+/* =========================================================
+   TASK DEFINITIONS
+   ========================================================= */
+
+const TASKS = [
+
+    {
+        id:"play_1",
+        type:"match",
+        icon:"fa-gamepad",
+        title:"Play Your First Match",
+        description:"প্রথম tournament/match join করুন",
+        target:1,
+        reward:2,
+        progressKey:"matches",
+        button:"Play Match",
+        link:"index.html"
+    },
+
+
+    {
+        id:"play_3",
+        type:"match",
+        icon:"fa-fire",
+        title:"Play 3 Matches",
+        description:"মোট ৩টি tournament/match join করুন",
+        target:3,
+        reward:6,
+        progressKey:"matches",
+        button:"Play Match",
+        link:"index.html"
+    },
+
+
+    {
+        id:"win_1",
+        type:"match",
+        icon:"fa-trophy",
+        title:"Win 1 Match",
+        description:"কমপক্ষে ১টি match win করুন",
+        target:1,
+        reward:3,
+        progressKey:"wins",
+        button:"Play Match",
+        link:"index.html"
+    },
+
+
+    {
+        id:"refer_1",
+        type:"referral",
+        icon:"fa-user-plus",
+        title:"Refer 1 Friend",
+        description:"Referral code দিয়ে ১ জন নতুন user invite করুন",
+        target:1,
+        reward:5,
+        progressKey:"referrals",
+        button:"Invite Now",
+        link:"profile.html"
+    },
+
+
+    {
+        id:"refer_5",
+        type:"referral",
+        icon:"fa-users",
+        title:"Refer 5 Friends",
+        description:"Referral code দিয়ে ৫ জন নতুন user invite করুন",
+        target:5,
+        reward:30,
+        progressKey:"referrals",
+        button:"Invite Now",
+        link:"profile.html"
+    },
+
+
+    {
+        id:"first_deposit",
+        type:"deposit",
+        icon:"fa-wallet",
+        title:"Make First Deposit",
+        description:"প্রথম deposit complete করুন",
+        target:1,
+        reward:10,
+        progressKey:"deposits",
+        button:"Deposit",
+        link:"wallet.html"
+    }
+
+];
+
+
+
+/* =========================================================
+   STATE
+   ========================================================= */
+
+let currentUser = null;
+
+let userStats = {
+
+    matches:0,
+
+    wins:0,
+
+    referrals:0,
+
+    deposits:0
+
+};
+
+
+let claimedTasks = {};
+
+let currentFilter = "all";
+
+
+
+/* =========================================================
+   ELEMENTS
+   ========================================================= */
+
+const taskList =
+    document.getElementById("taskList");
+
+const completedCount =
+    document.getElementById("completedCount");
+
+const totalCount =
+    document.getElementById("totalCount");
+
+const overallProgress =
+    document.getElementById("overallProgress");
+
+const progressText =
+    document.getElementById("progressText");
+
+
+
+/* =========================================================
+   INITIAL RENDER
+   ========================================================= */
+
+/*
+ * UI প্রথমেই render হবে।
+ * Firebase-এর জন্য wait করবে না।
+ */
+
+renderTasks();
+
+
+
+/* =========================================================
+   SAFE NUMBER
+   ========================================================= */
+
+function safeNumber(value){
+
+    const number = Number(value);
+
+    if(!Number.isFinite(number)){
+        return 0;
+    }
+
+    return Math.max(0,number);
+
+}
+
+
+
+/* =========================================================
+   TOAST
+   ========================================================= */
+
+let toastTimer = null;
+
+
+function showToast(message,type="success"){
+
+    const toast =
+        document.getElementById("toast");
+
+
+    toast.textContent = message;
+
+
+    toast.className =
+        "toast " + type;
+
+
+    requestAnimationFrame(() => {
+
+        toast.classList.add("show");
+
+    });
+
+
+    clearTimeout(toastTimer);
+
+
+    toastTimer = setTimeout(() => {
+
+        toast.classList.remove("show");
+
+    },2600);
+
+}
+
+
+
+/* =========================================================
+   TASK PROGRESS
+   ========================================================= */
+
+function getTaskProgress(task){
+
+    return Math.min(
+
+        safeNumber(
+            userStats[task.progressKey]
+        ),
+
+        task.target
+
+    );
+
+}
+
+
+
+/* =========================================================
+   TASK COMPLETED
+   ========================================================= */
+
+function isTaskCompleted(task){
+
+    return claimedTasks[task.id] === true;
+
+}
+
+
+
+/* =========================================================
+   CAN CLAIM
+   ========================================================= */
+
+function canClaim(task){
+
+    return (
+
+        getTaskProgress(task) >= task.target
+
+        &&
+
+        !isTaskCompleted(task)
+
+    );
+
+}
+
+
+
+/* =========================================================
+   RENDER TASKS
+   ========================================================= */
+
+function renderTasks(){
+
+    let visibleTasks = TASKS;
+
+
+    if(currentFilter !== "all"){
+
+        visibleTasks =
+            TASKS.filter(
+                task =>
+                    task.type === currentFilter
+            );
+
+    }
+
+
+    if(!visibleTasks.length){
+
+        taskList.innerHTML = `
+
+            <div class="glass-card rounded-2xl p-8 text-center">
+
+                <div
+                    class="w-16 h-16 mx-auto mb-4
+                           rounded-2xl
+                           bg-slate-800
+                           flex items-center justify-center
+                           text-slate-500 text-2xl">
+
+                    <i class="fa-solid fa-list"></i>
+
+                </div>
+
+
+                <h3 class="font-semibold text-white">
+                    No missions found
+                </h3>
+
+            </div>
+
+        `;
+
+        updateOverallProgress();
+
+        return;
+
+    }
+
+
+
+    taskList.innerHTML =
+        visibleTasks.map(task => {
+
+
+        const progress =
+            getTaskProgress(task);
+
+
+        const completed =
+            isTaskCompleted(task);
+
+
+        const ready =
+            canClaim(task);
+
+
+        const percent =
+            Math.min(
+
+                100,
+
+                Math.round(
+                    (progress / task.target) * 100
+                )
+
+            );
+
+
+        let actionButton = "";
+
+
+
+        if(completed){
+
+            actionButton = `
+
+                <button
+                    class="action-btn claimed
+                           px-3 py-2 rounded-xl
+                           border text-xs font-semibold
+                           disabled-btn"
+                    disabled>
+
+                    <i class="fa-solid fa-check mr-1"></i>
+
+                    Completed
+
+                </button>
+
+            `;
+
+        }
+
+        else if(ready){
+
+            actionButton = `
+
+                <button
+                    onclick="claimTask('${task.id}')"
+                    class="action-btn
+                           px-3 py-2 rounded-xl
+                           bg-green-500
+                           hover:bg-green-400
+                           text-black
+                           text-xs
+                           font-bold">
+
+                    <i class="fa-solid fa-gift mr-1"></i>
+
+                    Claim
+
+                </button>
+
+            `;
+
+        }
+
+        else{
+
+            actionButton = `
+
+                <button
+                    onclick="startTask('${task.id}')"
+                    class="action-btn
+                           px-3 py-2 rounded-xl
+                           bg-slate-800
+                           hover:bg-slate-700
+                           border border-slate-700
+                           text-slate-200
+                           text-xs
+                           font-semibold">
+
+                    ${task.button}
+
+                </button>
+
+            `;
+
+        }
+
+
+
+        return `
+
+            <article
+                class="task-card glass-card rounded-2xl p-4">
+
+                <div class="flex items-start gap-3">
+
+
+                    <div class="task-icon">
+
+                        <i class="fa-solid ${task.icon}"></i>
+
+                    </div>
+
+
+
+                    <div class="flex-1 min-w-0">
+
+
+                        <div
+                            class="flex items-start
+                                   justify-between
+                                   gap-2">
+
+
+                            <div class="min-w-0">
+
+                                <h3
+                                    class="font-semibold
+                                           text-white
+                                           text-[15px]">
+
+                                    ${task.title}
+
+                                </h3>
+
+
+                                <p
+                                    class="text-xs
+                                           text-slate-400
+                                           mt-1
+                                           leading-relaxed">
+
+                                    ${task.description}
+
+                                </p>
+
+                            </div>
+
+
+
+                            <span
+                                class="reward
+                                       text-[11px]
+                                       font-semibold
+                                       px-2
+                                       py-1
+                                       rounded-lg">
+
+                                +৳${task.reward}
+
+                            </span>
+
+
+                        </div>
+
+
+
+                        <!-- PROGRESS -->
+
+                        <div class="mt-4">
+
+
+                            <div
+                                class="flex
+                                       items-center
+                                       justify-between
+                                       mb-2">
+
+
+                                <span
+                                    class="text-xs
+                                           text-slate-500">
+
+                                    Progress
+
+                                </span>
+
+
+                                <span
+                                    class="text-xs
+                                           font-semibold
+                                           text-slate-300">
+
+                                    ${progress}/${task.target}
+
+                                </span>
+
+
+                            </div>
+
+
+
+                            <div class="progress-bar">
+
+                                <div
+                                    class="progress-fill"
+                                    style="width:${percent}%">
+
+                                </div>
+
+                            </div>
+
+
+                        </div>
+
+
+
+                        <!-- ACTION -->
+
+                        <div
+                            class="flex
+                                   justify-end
+                                   mt-3">
+
+                            ${actionButton}
+
+                        </div>
+
+
+                    </div>
+
+                </div>
+
+            </article>
+
+        `;
+
+    }).join("");
+
+
+    updateOverallProgress();
+
+}
+
+
+
+/* =========================================================
+   OVERALL PROGRESS
+   ========================================================= */
+
+function updateOverallProgress(){
+
+    totalCount.textContent =
+        TASKS.length;
+
+
+    const completed =
+        TASKS.filter(
+            task => isTaskCompleted(task)
+        ).length;
+
+
+    completedCount.textContent =
+        completed;
+
+
+    const percentage =
+        TASKS.length
+
+        ?
+
+        Math.round(
+            (completed / TASKS.length) * 100
+        )
+
+        :
+
+        0;
+
+
+    overallProgress.style.width =
+        percentage + "%";
+
+
+    if(completed === TASKS.length){
+
+        progressText.textContent =
+            "সব mission completed! 🎉";
+
+    }
+
+    else{
+
+        progressText.textContent =
+            `${completed}টি completed • আরও ${TASKS.length - completed}টি বাকি`;
+
+    }
+
+}
+
+
+
+/* =========================================================
+   START TASK
+   ========================================================= */
+
+window.startTask =
+function(taskId){
+
+    const task =
+        TASKS.find(
+            item => item.id === taskId
+        );
+
+
+    if(!task) return;
+
+
+    window.location.href =
+        task.link;
+
+};
+
+
+
+/* =========================================================
+   CLAIM TASK
+   ========================================================= */
+
+window.claimTask =
+async function(taskId){
+
+
+    if(!currentUser){
+
+        showToast(
+            "প্রথমে login করুন",
+            "error"
+        );
+
+        return;
+
+    }
+
+
+
+    const task =
+        TASKS.find(
+            item => item.id === taskId
+        );
+
+
+    if(!task) return;
+
+
+
+    if(isTaskCompleted(task)){
+
+        showToast(
+            "এই mission ইতিমধ্যে claim করা হয়েছে",
+            "error"
+        );
+
+        return;
+
+    }
+
+
+
+    if(!canClaim(task)){
+
+        showToast(
+            "Mission এখনো complete হয়নি",
+            "error"
+        );
+
+        return;
+
+    }
+
+
+
+    try{
+
+
+        const taskRef =
+            doc(
+                db,
+                "users",
+                currentUser.uid,
+                "claimedTasks",
+                task.id
+            );
+
+
+        const existing =
+            await getDoc(taskRef);
+
+
+
+        if(existing.exists()){
+
+            claimedTasks[task.id] =
+                true;
+
+
+            renderTasks();
+
+
+            showToast(
+                "এই mission ইতিমধ্যে claim করা হয়েছে",
+                "error"
+            );
+
+
+            return;
+
+        }
+
+
+
+        await setDoc(
+            taskRef,
+            {
+
+                taskId:task.id,
+
+                title:task.title,
+
+                reward:task.reward,
+
+                claimed:true,
+
+                claimedAt:
+                    serverTimestamp()
+
+            }
+        );
+
+
+
+        claimedTasks[task.id] =
+            true;
+
+
+        renderTasks();
+
+
+        showToast(
+            `Mission complete! +৳${task.reward}`,
+            "success"
+        );
+
+
+    }
+
+    catch(error){
+
+        console.error(
+            "Claim error:",
+            error
+        );
+
+
+        showToast(
+            "Claim করতে সমস্যা হয়েছে",
+            "error"
+        );
+
+    }
+
+};
+
+
+
+/* =========================================================
+   LOAD CLAIMED TASKS
+   ========================================================= */
+
+async function loadClaimedTasks(){
+
+    if(!currentUser) return;
+
+
+    claimedTasks = {};
+
+
+
+    /*
+     * আলাদা আলাদা task read করা হচ্ছে।
+     * এতে existing structure পরিবর্তন করার দরকার নেই।
+     */
+
+    await Promise.all(
+
+        TASKS.map(
+            async task => {
+
+                try{
+
+                    const taskRef =
+                        doc(
+                            db,
+                            "users",
+                            currentUser.uid,
+                            "claimedTasks",
+                            task.id
+                        );
+
+
+                    const snapshot =
+                        await getDoc(taskRef);
+
+
+                    if(snapshot.exists()){
+
+                        claimedTasks[task.id] =
+                            true;
+
+                    }
+
+                }
+
+                catch(error){
+
+                    console.warn(
+                        "Claim read error:",
+                        task.id,
+                        error
+                    );
+
+                }
+
+            }
+        )
+
+    );
+
+
+
+    renderTasks();
+
+}
+
+
+
+/* =========================================================
+   LOAD USER STATS
+   ========================================================= */
+
+async function loadUserStats(){
+
+    if(!currentUser) return;
+
+
+    try{
+
+        const userRef =
+            doc(
+                db,
+                "users",
+                currentUser.uid
+            );
+
+
+        const snapshot =
+            await getDoc(userRef);
+
+
+
+        if(snapshot.exists()){
+
+            const data =
+                snapshot.data();
+
+
+
+            userStats.matches =
+                safeNumber(
+                    data.matches ??
+                    data.totalMatches ??
+                    0
+                );
+
+
+
+            userStats.wins =
+                safeNumber(
+                    data.wins ??
+                    data.totalWins ??
+                    0
+                );
+
+
+
+            userStats.referrals =
+                safeNumber(
+                    data.referrals ??
+                    data.totalReferrals ??
+                    data.referralCount ??
+                    0
+                );
+
+
+
+            userStats.deposits =
+                safeNumber(
+                    data.deposits ??
+                    data.totalDeposits ??
+                    0
+                );
+
+        }
+
+
+    }
+
+    catch(error){
+
+        console.error(
+            "Stats load error:",
+            error
+        );
+
+    }
+
+}
+
+
+
+/* =========================================================
+   TABS
+   ========================================================= */
+
+document
+.querySelectorAll(".tab")
+.forEach(tab => {
+
+
+    tab.addEventListener(
+        "click",
+        () => {
+
+
+            document
+            .querySelectorAll(".tab")
+            .forEach(item => {
+
+                item.classList.remove(
+                    "active"
+                );
+
+            });
+
+
+
+            tab.classList.add(
+                "active"
+            );
+
+
+
+            currentFilter =
+                tab.dataset.filter;
+
+
+
+            renderTasks();
+
+        }
+    );
+
+});
+
+
+
+/* =========================================================
+   AUTH
+   ========================================================= */
+
+onAuthStateChanged(
+    auth,
+    async user => {
+
+
+        if(!user){
+
+            hideLoader();
+
+            window.location.href =
+                "login.html";
+
+            return;
+
+        }
+
+
+
+        currentUser =
+            user;
+
+
+
+        /*
+         * UI already rendered.
+         * Firebase data background-এ load হবে।
+         */
+
+        hideLoader();
+
+
+        /*
+         * দুটো কাজ parallel-এ করা হচ্ছে,
+         * তাই unnecessary waiting কম।
+         */
+
+        await Promise.all([
+
+            loadUserStats(),
+
+            loadClaimedTasks()
+
+        ]);
+
+
+        renderTasks();
+
+    }
+);
+
+</script>
+
+</body>
+</html>
