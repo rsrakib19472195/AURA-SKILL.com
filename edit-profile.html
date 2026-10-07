@@ -8,18 +8,13 @@
 
     <script src="https://cdn.tailwindcss.com"></script>
 
-    <link
-        rel="stylesheet"
-        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
-    >
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-    <link
-        href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&display=swap"
-        rel="stylesheet"
-    >
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&display=swap"
+          rel="stylesheet">
 
     <style>
-
         body {
             font-family: 'Hind Siliguri', sans-serif;
             background-color: #050811;
@@ -38,41 +33,27 @@
             right: 20px;
             left: 20px;
             z-index: 9999;
-
             display: flex;
             flex-direction: column;
             align-items: flex-end;
             gap: 10px;
-
             pointer-events: none;
         }
 
         .toast {
             background: rgba(15, 23, 42, 0.96);
             backdrop-filter: blur(12px);
-
             border-left: 4px solid #3b82f6;
-
             color: #fff;
-
             padding: 12px 18px;
-
             border-radius: 12px;
-
-            box-shadow:
-                0 10px 25px -5px rgba(0,0,0,0.5);
-
+            box-shadow: 0 10px 25px -5px rgba(0,0,0,0.5);
             font-size: 13px;
             font-weight: 600;
-
             display: flex;
             align-items: center;
             gap: 10px;
-
-            animation:
-                slideIn 0.3s ease,
-                fadeOut 0.3s ease 2.7s forwards;
-
+            animation: slideIn 0.3s ease, fadeOut 0.3s ease 2.7s forwards;
             max-width: 360px;
         }
 
@@ -89,7 +70,6 @@
         }
 
         @keyframes slideIn {
-
             from {
                 transform: translateX(100%);
                 opacity: 0;
@@ -99,11 +79,9 @@
                 transform: translateX(0);
                 opacity: 1;
             }
-
         }
 
         @keyframes fadeOut {
-
             from {
                 opacity: 1;
             }
@@ -112,7 +90,6 @@
                 opacity: 0;
                 transform: translateY(-10px);
             }
-
         }
 
         .locked-field {
@@ -127,6 +104,7 @@
             border-radius: 9999px;
             border: 3px solid rgba(59,130,246,0.35);
             box-shadow: 0 0 25px rgba(59,130,246,0.15);
+            background: #0f172a;
         }
 
         .photo-edit-wrapper {
@@ -164,6 +142,12 @@
             transform: scale(.96);
         }
 
+        .photo-edit-button:disabled {
+            opacity: .55;
+            cursor: not-allowed;
+            transform: none;
+        }
+
         #profile-photo-input {
             display: none;
         }
@@ -185,7 +169,7 @@
             height: 5px;
             border-radius: 999px;
             background: #3b82f6;
-            transition: width .2s ease;
+            transition: width .15s ease;
         }
 
         #upload-progress-track {
@@ -203,821 +187,668 @@
             color: #64748b;
         }
 
+        .input-dark {
+            background: rgba(2, 6, 23, .7);
+            border: 1px solid #1e293b;
+        }
+
+        .input-dark:focus {
+            border-color: #3b82f6;
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(59,130,246,.08);
+        }
+
+        button:disabled {
+            cursor: not-allowed;
+        }
     </style>
 </head>
 
+<body class="min-h-screen">
 
-<body class="min-h-screen flex flex-col pb-24">
-
-
+    <!-- Toast -->
     <div id="toast-container"></div>
 
+    <!-- Header -->
+    <header class="border-b border-slate-800/80 bg-slate-950/70 backdrop-blur-xl">
+        <div class="max-w-md mx-auto px-4 py-4 flex items-center gap-3">
 
-    <header
-        class="px-4 py-3 flex items-center space-x-3 sticky top-0 z-30
-        bg-[#050811]/90 backdrop-blur-md border-b border-slate-900"
-    >
+            <button
+                id="back-button"
+                type="button"
+                class="w-10 h-10 rounded-xl bg-slate-900 border border-slate-800
+                       flex items-center justify-center text-slate-300
+                       hover:text-white hover:border-slate-700 transition">
 
-        <a
-            href="profile.html"
-            class="w-9 h-9 rounded-xl bg-slate-800/80
-            hover:bg-slate-800 text-slate-300
-            flex items-center justify-center text-sm transition"
-        >
-            <i class="fa-solid fa-arrow-left"></i>
-        </a>
+                <i class="fa-solid fa-arrow-left"></i>
+            </button>
 
-        <h1 class="text-sm font-black text-white tracking-wide">
-            Edit Profile
-        </h1>
+            <div>
+                <h1 class="text-lg font-bold text-white">
+                    Edit Profile
+                </h1>
 
+                <p class="text-xs text-slate-500">
+                    Update your profile information
+                </p>
+            </div>
+
+        </div>
     </header>
 
 
-    <main class="max-w-md mx-auto px-4 py-6 w-full space-y-6">
+    <main class="max-w-md mx-auto px-4 py-6 pb-12">
+
+        <!-- Profile Photo -->
+        <section class="glass-card rounded-2xl p-5 mb-5">
+
+            <div class="text-center">
+
+                <div class="photo-edit-wrapper">
+
+                    <img
+                        id="profile-photo"
+                        class="profile-photo"
+                        src="https://videotourl.com/images/1789800604014-b96e1edf-d789-4513-8557-9fb63a327a13.jpg"
+                        alt="Profile Photo"
+                        decoding="async"
+                        loading="eager"
+                        referrerpolicy="no-referrer"
+                    >
+
+                    <button
+                        id="edit-photo-button"
+                        type="button"
+                        class="photo-edit-button"
+                        aria-label="Change profile photo">
+
+                        <i class="fa-solid fa-camera"></i>
+
+                    </button>
+
+                </div>
 
 
-        <!-- PROFILE PREVIEW -->
-
-        <div class="glass-card rounded-3xl p-6 text-center shadow-xl">
-
-            <input
-                type="file"
-                id="profile-photo-input"
-                accept="image/jpeg,image/png,image/webp,image/jpg"
-            >
-
-
-            <div class="photo-edit-wrapper">
-
-                <img
-                    id="profile-photo"
-                    class="profile-photo"
-                    src="https://videotourl.com/images/1789800604014-b96e1edf-d789-4513-8557-9fb63a327a13.jpg"
-                    alt="Profile"
+                <input
+                    id="profile-photo-input"
+                    type="file"
+                    accept="image/jpeg,image/png,image/webp,image/jpg"
                 >
 
 
-                <button
-                    type="button"
-                    id="edit-photo-button"
-                    class="photo-edit-button"
-                    title="Change Profile Picture"
-                >
-                    <i class="fa-solid fa-camera"></i>
-                </button>
+                <div id="upload-progress-wrapper">
 
-            </div>
+                    <div id="upload-progress-track">
+                        <div id="upload-progress-bar"></div>
+                    </div>
 
-
-            <div id="upload-progress-wrapper">
-
-                <div id="upload-progress-track">
-
-                    <div id="upload-progress-bar"></div>
+                    <span id="upload-progress-text">
+                        Preparing photo...
+                    </span>
 
                 </div>
 
-                <span id="upload-progress-text">
-                    Uploading 0%
-                </span>
 
-            </div>
-
-
-            <h2
-                id="profile-display-name"
-                class="text-base font-bold text-white"
-            >
-                Loading...
-            </h2>
-
-            <p
-                id="profile-display-username"
-                class="text-xs text-slate-500 mt-1"
-            >
-                @username
-            </p>
-
-            <p class="photo-hint">
-                Profile picture পরিবর্তন করতে ছবির camera icon-এ চাপ দিন
-            </p>
-
-        </div>
-
-
-        <!-- PERSONAL INFORMATION -->
-
-        <div
-            class="glass-card rounded-3xl p-6 space-y-4
-            border border-slate-800 shadow-xl"
-        >
-
-            <h3
-                class="text-xs font-extrabold text-blue-400
-                uppercase tracking-widest"
-            >
-                Personal Information
-            </h3>
-
-
-            <div class="space-y-1.5">
-
-                <label class="text-[11px] text-slate-400 font-medium">
-                    Full Name
-                </label>
-
-                <div class="relative flex items-center">
-
-                    <i
-                        class="fa-solid fa-user
-                        absolute left-3.5 text-slate-500 text-xs"
-                    ></i>
-
-                    <input
-                        type="text"
-                        id="full-name"
-                        placeholder="Enter full name"
-                        autocomplete="name"
-                        class="w-full bg-[#0b101d]
-                        border border-slate-800
-                        rounded-xl py-3 pl-10 pr-4
-                        text-xs text-white
-                        focus:border-blue-500
-                        outline-none transition"
-                    >
-
-                </div>
-
-            </div>
-
-
-            <div class="space-y-1.5">
-
-                <label class="text-[11px] text-slate-400 font-medium">
-                    Username (Locked)
-                </label>
-
-                <div class="relative flex items-center">
-
-                    <i
-                        class="fa-solid fa-at
-                        absolute left-3.5 text-slate-500 text-xs"
-                    ></i>
-
-                    <input
-                        type="text"
-                        id="username"
-                        disabled
-                        readonly
-                        class="locked-field w-full
-                        bg-[#0b101d]/60
-                        border border-slate-900
-                        rounded-xl py-3 pl-10 pr-10
-                        text-xs text-slate-400"
-                    >
-
-                    <i
-                        class="fa-solid fa-lock
-                        absolute right-3.5 text-slate-600 text-xs"
-                    ></i>
-
-                </div>
-
-            </div>
-
-
-            <div class="space-y-1.5">
-
-                <label class="text-[11px] text-slate-400 font-medium">
-                    Email Address (Locked)
-                </label>
-
-                <div class="relative flex items-center">
-
-                    <i
-                        class="fa-solid fa-envelope
-                        absolute left-3.5 text-slate-500 text-xs"
-                    ></i>
-
-                    <input
-                        type="email"
-                        id="email-address"
-                        disabled
-                        readonly
-                        autocomplete="email"
-                        class="locked-field w-full
-                        bg-[#0b101d]/60
-                        border border-slate-900
-                        rounded-xl py-3 pl-10 pr-10
-                        text-xs text-slate-400"
-                    >
-
-                    <i
-                        class="fa-solid fa-lock
-                        absolute right-3.5 text-slate-600 text-xs"
-                    ></i>
-
-                </div>
-
-            </div>
-
-
-            <div class="space-y-1.5">
-
-                <label class="text-[11px] text-slate-400 font-medium">
-                    WhatsApp Number (Locked)
-                </label>
-
-                <div class="relative flex items-center">
-
-                    <i
-                        class="fa-brands fa-whatsapp
-                        absolute left-3.5 text-slate-500 text-xs"
-                    ></i>
-
-                    <input
-                        type="text"
-                        id="phone-number"
-                        disabled
-                        readonly
-                        autocomplete="tel"
-                        class="locked-field w-full
-                        bg-[#0b101d]/60
-                        border border-slate-900
-                        rounded-xl py-3 pl-10 pr-10
-                        text-xs text-slate-400"
-                    >
-
-                    <i
-                        class="fa-solid fa-lock
-                        absolute right-3.5 text-slate-600 text-xs"
-                    ></i>
-
-                </div>
-
-            </div>
-
-
-            <button
-                id="update-profile-btn"
-                onclick="updateProfileInfo()"
-                class="w-full bg-blue-600
-                hover:bg-blue-500
-                text-white text-xs font-black
-                py-3.5 rounded-xl transition
-                shadow-lg shadow-blue-600/20
-                uppercase tracking-wider mt-2"
-            >
-                Update Profile
-            </button>
-
-        </div>
-
-
-        <!-- SECURITY -->
-
-        <div
-            class="glass-card rounded-3xl p-6 space-y-4
-            border border-slate-800 shadow-xl"
-        >
-
-            <h3
-                class="text-xs font-extrabold text-rose-400
-                uppercase tracking-widest"
-            >
-                Security
-            </h3>
-
-
-            <div class="space-y-1.5">
-
-                <label class="text-[11px] text-slate-400 font-medium">
-                    Current Password
-                </label>
-
-                <div class="relative flex items-center">
-
-                    <i
-                        class="fa-solid fa-lock
-                        absolute left-3.5 text-slate-500 text-xs"
-                    ></i>
-
-                    <input
-                        type="password"
-                        id="current-password"
-                        placeholder="Enter current password"
-                        autocomplete="current-password"
-                        class="w-full bg-[#0b101d]
-                        border border-slate-800
-                        rounded-xl py-3 pl-10 pr-4
-                        text-xs text-white
-                        focus:border-blue-500
-                        outline-none transition"
-                    >
-
-                </div>
-
-            </div>
-
-
-            <div class="space-y-1.5">
-
-                <label class="text-[11px] text-slate-400 font-medium">
-                    New Password
-                </label>
-
-                <div class="relative flex items-center">
-
-                    <i
-                        class="fa-solid fa-key
-                        absolute left-3.5 text-slate-500 text-xs"
-                    ></i>
-
-                    <input
-                        type="password"
-                        id="new-password"
-                        placeholder="Enter new password"
-                        autocomplete="new-password"
-                        class="w-full bg-[#0b101d]
-                        border border-slate-800
-                        rounded-xl py-3 pl-10 pr-4
-                        text-xs text-white
-                        focus:border-blue-500
-                        outline-none transition"
-                    >
-
-                </div>
-
-            </div>
-
-
-            <div class="space-y-1.5">
-
-                <label class="text-[11px] text-slate-400 font-medium">
-                    Confirm New Password
-                </label>
-
-                <div class="relative flex items-center">
-
-                    <i
-                        class="fa-solid fa-key
-                        absolute left-3.5 text-slate-500 text-xs"
-                    ></i>
-
-                    <input
-                        type="password"
-                        id="confirm-password"
-                        placeholder="Confirm new password"
-                        autocomplete="new-password"
-                        class="w-full bg-[#0b101d]
-                        border border-slate-800
-                        rounded-xl py-3 pl-10 pr-4
-                        text-xs text-white
-                        focus:border-blue-500
-                        outline-none transition"
-                    >
-
+                <div
+                    id="display-name"
+                    class="text-base font-bold text-white mt-2">
+                    Loading...
                 </div>
 
                 <div
-                    id="password-status"
-                    class="hidden text-[11px]"
-                ></div>
+                    id="display-username"
+                    class="text-xs text-slate-500 mt-1">
+                    Loading...
+                </div>
+
+                <p class="photo-hint">
+                    JPG, PNG অথবা WEBP • সর্বোচ্চ 10MB
+                </p>
+
+            </div>
+
+        </section>
+
+
+        <!-- Personal Information -->
+        <section class="glass-card rounded-2xl p-5 mb-5">
+
+            <div class="flex items-center gap-3 mb-5">
+
+                <div
+                    class="w-10 h-10 rounded-xl bg-blue-500/10
+                           border border-blue-500/20
+                           flex items-center justify-center text-blue-400">
+
+                    <i class="fa-solid fa-user"></i>
+
+                </div>
+
+                <div>
+
+                    <h2 class="font-bold text-white">
+                        Personal Information
+                    </h2>
+
+                    <p class="text-xs text-slate-500">
+                        Manage your account information
+                    </p>
+
+                </div>
 
             </div>
 
 
+            <!-- Full Name -->
+            <div class="mb-4">
+
+                <label class="block text-xs font-semibold text-slate-400 mb-2">
+                    Full Name
+                </label>
+
+                <div class="relative">
+
+                    <i
+                        class="fa-solid fa-id-card absolute left-3 top-1/2
+                               -translate-y-1/2 text-slate-600 text-sm">
+                    </i>
+
+                    <input
+                        id="full-name"
+                        type="text"
+                        autocomplete="name"
+                        class="input-dark w-full rounded-xl py-3 pl-10 pr-3
+                               text-sm text-white"
+                        placeholder="Enter your full name"
+                    >
+
+                </div>
+
+            </div>
+
+
+            <!-- Username -->
+            <div class="mb-4">
+
+                <label class="block text-xs font-semibold text-slate-400 mb-2">
+                    Username
+                </label>
+
+                <div class="relative">
+
+                    <i
+                        class="fa-solid fa-at absolute left-3 top-1/2
+                               -translate-y-1/2 text-slate-600 text-sm">
+                    </i>
+
+                    <input
+                        id="username"
+                        type="text"
+                        readonly
+                        class="input-dark locked-field w-full rounded-xl py-3 pl-10 pr-3
+                               text-sm text-slate-400"
+                    >
+
+                </div>
+
+            </div>
+
+
+            <!-- Email -->
+            <div class="mb-4">
+
+                <label class="block text-xs font-semibold text-slate-400 mb-2">
+                    Gmail
+                </label>
+
+                <div class="relative">
+
+                    <i
+                        class="fa-solid fa-envelope absolute left-3 top-1/2
+                               -translate-y-1/2 text-slate-600 text-sm">
+                    </i>
+
+                    <input
+                        id="email"
+                        type="email"
+                        readonly
+                        class="input-dark locked-field w-full rounded-xl py-3 pl-10 pr-3
+                               text-sm text-slate-400"
+                    >
+
+                </div>
+
+            </div>
+
+
+            <!-- WhatsApp -->
+            <div class="mb-5">
+
+                <label class="block text-xs font-semibold text-slate-400 mb-2">
+                    WhatsApp Number
+                </label>
+
+                <div class="relative">
+
+                    <i
+                        class="fa-brands fa-whatsapp absolute left-3 top-1/2
+                               -translate-y-1/2 text-slate-600 text-sm">
+                    </i>
+
+                    <input
+                        id="whatsapp"
+                        type="text"
+                        readonly
+                        class="input-dark locked-field w-full rounded-xl py-3 pl-10 pr-3
+                               text-sm text-slate-400"
+                    >
+
+                </div>
+
+            </div>
+
+
+            <!-- Update -->
             <button
-                id="change-password-btn"
-                onclick="changeUserPassword()"
-                class="w-full bg-rose-600
-                hover:bg-rose-500
-                text-white text-xs font-black
-                py-3.5 rounded-xl transition
-                shadow-lg shadow-rose-600/20
-                uppercase tracking-wider mt-2"
-            >
-                Change Password
+                id="update-profile-button"
+                type="button"
+                class="w-full bg-blue-600 hover:bg-blue-500
+                       text-white font-bold rounded-xl py-3
+                       transition flex items-center justify-center gap-2">
+
+                <i class="fa-solid fa-floppy-disk"></i>
+
+                <span>Update Profile</span>
+
             </button>
 
-        </div>
+        </section>
+
+
+        <!-- Security -->
+        <section class="glass-card rounded-2xl p-5">
+
+            <div class="flex items-center gap-3 mb-5">
+
+                <div
+                    class="w-10 h-10 rounded-xl bg-rose-500/10
+                           border border-rose-500/20
+                           flex items-center justify-center text-rose-400">
+
+                    <i class="fa-solid fa-shield-halved"></i>
+
+                </div>
+
+                <div>
+
+                    <h2 class="font-bold text-white">
+                        Security
+                    </h2>
+
+                    <p class="text-xs text-slate-500">
+                        Change your account password
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <!-- Current Password -->
+            <div class="mb-4">
+
+                <label class="block text-xs font-semibold text-slate-400 mb-2">
+                    Current Password
+                </label>
+
+                <div class="relative">
+
+                    <i
+                        class="fa-solid fa-lock absolute left-3 top-1/2
+                               -translate-y-1/2 text-slate-600 text-sm">
+                    </i>
+
+                    <input
+                        id="current-password"
+                        type="password"
+                        autocomplete="current-password"
+                        class="input-dark w-full rounded-xl py-3 pl-10 pr-3
+                               text-sm text-white"
+                        placeholder="Current password"
+                    >
+
+                </div>
+
+            </div>
+
+
+            <!-- New Password -->
+            <div class="mb-4">
+
+                <label class="block text-xs font-semibold text-slate-400 mb-2">
+                    New Password
+                </label>
+
+                <div class="relative">
+
+                    <i
+                        class="fa-solid fa-key absolute left-3 top-1/2
+                               -translate-y-1/2 text-slate-600 text-sm">
+                    </i>
+
+                    <input
+                        id="new-password"
+                        type="password"
+                        autocomplete="new-password"
+                        class="input-dark w-full rounded-xl py-3 pl-10 pr-3
+                               text-sm text-white"
+                        placeholder="New password"
+                    >
+
+                </div>
+
+            </div>
+
+
+            <!-- Confirm Password -->
+            <div class="mb-2">
+
+                <label class="block text-xs font-semibold text-slate-400 mb-2">
+                    Confirm New Password
+                </label>
+
+                <div class="relative">
+
+                    <i
+                        class="fa-solid fa-check-double absolute left-3 top-1/2
+                               -translate-y-1/2 text-slate-600 text-sm">
+                    </i>
+
+                    <input
+                        id="confirm-password"
+                        type="password"
+                        autocomplete="new-password"
+                        class="input-dark w-full rounded-xl py-3 pl-10 pr-3
+                               text-sm text-white"
+                        placeholder="Confirm new password"
+                    >
+
+                </div>
+
+            </div>
+
+
+            <div
+                id="password-status"
+                class="text-xs min-h-[18px] mb-4">
+            </div>
+
+
+            <button
+                id="change-password-button"
+                type="button"
+                class="w-full bg-rose-600 hover:bg-rose-500
+                       text-white font-bold rounded-xl py-3
+                       transition flex items-center justify-center gap-2">
+
+                <i class="fa-solid fa-lock"></i>
+
+                <span>Change Password</span>
+
+            </button>
+
+        </section>
 
     </main>
 
 
+    <script type="module">
 
-<script type="module">
+        /* =========================================================
+           FIREBASE
+        ========================================================= */
 
-import {
-    auth,
-    db,
-    DEFAULT_PROFILE_PHOTO
-} from "./firebase.js";
+        import {
+            auth,
+            db,
+            DEFAULT_PROFILE_PHOTO
+        } from "./firebase.js";
 
+        import {
+            onAuthStateChanged,
+            EmailAuthProvider,
+            reauthenticateWithCredential,
+            updatePassword
+        } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
-import {
-    onAuthStateChanged,
-    EmailAuthProvider,
-    reauthenticateWithCredential,
-    updatePassword
-} from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import {
+            doc,
+            getDoc,
+            setDoc,
+            serverTimestamp
+        } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
 
-import {
-    doc,
-    getDoc,
-    setDoc,
-    serverTimestamp
-} from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        /* =========================================================
+           IMGBB
+        ========================================================= */
 
+        const IMGBB_API_KEY =
+            "8edd89599e2ee6c32e119c6f147ba6f4";
 
-/* =========================================
-   IMGBB API
-========================================= */
+        const IMGBB_UPLOAD_URL =
+            "https://api.imgbb.com/1/upload";
 
-const IMGBB_API_KEY =
-    "8edd89599e2ee6c32e119c6f147ba6f4";
 
+        /* =========================================================
+           FALLBACK
+        ========================================================= */
 
-const IMGBB_UPLOAD_URL =
-    "https://api.imgbb.com/1/upload";
+        const FALLBACK_PROFILE_PHOTO =
+            "https://videotourl.com/images/1789800604014-b96e1edf-d789-4513-8557-9fb63a327a13.jpg";
 
+        const PROFILE_PHOTO =
+            DEFAULT_PROFILE_PHOTO || FALLBACK_PROFILE_PHOTO;
 
-const FALLBACK_PROFILE_PHOTO =
-    "https://videotourl.com/images/1789800604014-b96e1edf-d789-4513-8557-9fb63a327a13.jpg";
 
+        /* =========================================================
+           STATE
+        ========================================================= */
 
-const PROFILE_PHOTO =
-    DEFAULT_PROFILE_PHOTO ||
-    FALLBACK_PROFILE_PHOTO;
+        let currentUser = null;
 
+        let selectedProfileFile = null;
 
-/* =========================================
-   GLOBAL
-========================================= */
+        let activeUpload = false;
 
-let currentUser = null;
+        let previewObjectURL = null;
 
-let selectedProfileFile = null;
 
-let activeUpload = false;
+        /* =========================================================
+           ELEMENTS
+        ========================================================= */
 
+        const profilePhotoInput =
+            document.getElementById("profile-photo-input");
 
-/* =========================================
-   TOAST
-========================================= */
+        const editPhotoButton =
+            document.getElementById("edit-photo-button");
 
-window.showToast = function(
-    message,
-    type = "success"
-){
+        const profilePhoto =
+            document.getElementById("profile-photo");
 
-    const container =
-        document.getElementById(
-            "toast-container"
-        );
+        const displayName =
+            document.getElementById("display-name");
 
+        const displayUsername =
+            document.getElementById("display-username");
 
-    if(!container) return;
+        const fullNameInput =
+            document.getElementById("full-name");
 
+        const usernameInput =
+            document.getElementById("username");
 
-    const toast =
-        document.createElement("div");
+        const emailInput =
+            document.getElementById("email");
 
+        const whatsappInput =
+            document.getElementById("whatsapp");
 
-    toast.className =
-        `toast ${type}`;
+        const updateProfileButton =
+            document.getElementById("update-profile-button");
 
+        const currentPasswordInput =
+            document.getElementById("current-password");
 
-    let icon =
-        "fa-solid fa-circle-check text-emerald-400";
+        const newPasswordInput =
+            document.getElementById("new-password");
 
+        const confirmPasswordInput =
+            document.getElementById("confirm-password");
 
-    if(type === "error"){
+        const passwordStatus =
+            document.getElementById("password-status");
 
-        icon =
-            "fa-solid fa-circle-xmark text-red-400";
+        const changePasswordButton =
+            document.getElementById("change-password-button");
 
-    }
+        const uploadProgressWrapper =
+            document.getElementById("upload-progress-wrapper");
 
+        const uploadProgressBar =
+            document.getElementById("upload-progress-bar");
 
-    if(type === "warning"){
+        const uploadProgressText =
+            document.getElementById("upload-progress-text");
 
-        icon =
-            "fa-solid fa-triangle-exclamation text-amber-400";
+        const backButton =
+            document.getElementById("back-button");
 
-    }
 
+        /* =========================================================
+           TOAST
+        ========================================================= */
 
-    toast.innerHTML = `
-        <i class="${icon}"></i>
-        <span>${message}</span>
-    `;
+        function showToast(message, type = "success") {
 
+            const toast =
+                document.createElement("div");
 
-    container.appendChild(toast);
+            toast.className =
+                `toast ${type}`;
 
+            let icon =
+                "fa-circle-check";
 
-    setTimeout(
-        ()=>{
-            toast.remove();
-        },
-        3000
-    );
+            if (type === "error") {
+                icon = "fa-circle-xmark";
+            }
 
-};
+            if (type === "warning") {
+                icon = "fa-triangle-exclamation";
+            }
 
+            toast.innerHTML = `
+                <i class="fa-solid ${icon}"></i>
+                <span>${escapeHtml(message)}</span>
+            `;
 
-/* =========================================
-   ELEMENTS
-========================================= */
+            document
+                .getElementById("toast-container")
+                .appendChild(toast);
 
-const profilePhotoInput =
-    document.getElementById(
-        "profile-photo-input"
-    );
-
-
-const editPhotoButton =
-    document.getElementById(
-        "edit-photo-button"
-    );
-
-
-const profilePhoto =
-    document.getElementById(
-        "profile-photo"
-    );
-
-
-const uploadProgressWrapper =
-    document.getElementById(
-        "upload-progress-wrapper"
-    );
-
-
-const uploadProgressBar =
-    document.getElementById(
-        "upload-progress-bar"
-    );
-
-
-const uploadProgressText =
-    document.getElementById(
-        "upload-progress-text"
-    );
-
-
-/* =========================================
-   PHOTO BUTTON
-========================================= */
-
-editPhotoButton.addEventListener(
-    "click",
-    function(){
-
-        if(activeUpload){
-
-            showToast(
-                "আগের photo upload হচ্ছে, একটু অপেক্ষা করুন!",
-                "warning"
-            );
-
-            return;
+            setTimeout(() => {
+                toast.remove();
+            }, 3000);
         }
 
 
-        profilePhotoInput.click();
-
-    }
-);
-
-
-/* =========================================
-   IMAGE COMPRESSION
-========================================= */
-
-function compressImage(file){
-
-    return new Promise(
-        (resolve,reject)=>{
-
-            const reader =
-                new FileReader();
-
-
-            reader.onload =
-                function(event){
-
-                    const image =
-                        new Image();
-
-
-                    image.onload =
-                        function(){
-
-                            const MAX_SIZE = 1200;
-
-                            let width =
-                                image.width;
-
-                            let height =
-                                image.height;
-
-
-                            if(
-                                width > MAX_SIZE ||
-                                height > MAX_SIZE
-                            ){
-
-                                if(width > height){
-
-                                    height =
-                                        Math.round(
-                                            height *
-                                            MAX_SIZE /
-                                            width
-                                        );
-
-                                    width =
-                                        MAX_SIZE;
-
-                                }else{
-
-                                    width =
-                                        Math.round(
-                                            width *
-                                            MAX_SIZE /
-                                            height
-                                        );
-
-                                    height =
-                                        MAX_SIZE;
-
-                                }
-
-                            }
-
-
-                            const canvas =
-                                document.createElement(
-                                    "canvas"
-                                );
-
-
-                            canvas.width =
-                                width;
-
-                            canvas.height =
-                                height;
-
-
-                            const ctx =
-                                canvas.getContext(
-                                    "2d"
-                                );
-
-
-                            ctx.drawImage(
-                                image,
-                                0,
-                                0,
-                                width,
-                                height
-                            );
-
-
-                            canvas.toBlob(
-                                function(blob){
-
-                                    if(!blob){
-
-                                        reject(
-                                            new Error(
-                                                "Image compression failed"
-                                            )
-                                        );
-
-                                        return;
-
-                                    }
-
-
-                                    resolve(blob);
-
-                                },
-                                "image/jpeg",
-                                0.82
-                            );
-
-                        };
-
-
-                    image.onerror =
-                        function(){
-
-                            reject(
-                                new Error(
-                                    "Image load failed"
-                                )
-                            );
-
-                        };
-
-
-                    image.src =
-                        event.target.result;
-
-                };
-
-
-            reader.onerror =
-                function(){
-
-                    reject(
-                        new Error(
-                            "File read failed"
-                        )
-                    );
-
-                };
-
-
-            reader.readAsDataURL(file);
-
-        }
-    );
-
-}
-
-
-/* =========================================
-   PHOTO SELECT
-========================================= */
-
-profilePhotoInput.addEventListener(
-    "change",
-    function(){
-
-        const file =
-            this.files &&
-            this.files[0];
-
-
-        if(!file){
-            return;
+        function escapeHtml(value) {
+
+            return String(value ?? "")
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
         }
 
 
-        if(!file.type.startsWith("image/")){
+        /* =========================================================
+           BACK
+        ========================================================= */
 
-            showToast(
-                "শুধু image file নির্বাচন করুন!",
-                "warning"
-            );
+        backButton.addEventListener("click", () => {
 
-            this.value = "";
+            window.location.href = "profile.html";
 
-            return;
-        }
+        });
 
 
-        if(file.size > 10 * 1024 * 1024){
+        /* =========================================================
+           PHOTO SELECT
+        ========================================================= */
 
-            showToast(
-                "ছবির size সর্বোচ্চ 10MB হতে পারবে!",
-                "warning"
-            );
+        editPhotoButton.addEventListener("click", () => {
 
-            this.value = "";
+            if (activeUpload) return;
 
-            return;
-        }
+            profilePhotoInput.click();
 
-
-        selectedProfileFile =
-            file;
+        });
 
 
-        try{
+        profilePhotoInput.addEventListener("change", event => {
 
-            const previewURL =
+            const file =
+                event.target.files?.[0];
+
+            if (!file) return;
+
+
+            if (!file.type.startsWith("image/")) {
+
+                showToast(
+                    "শুধু image file নির্বাচন করুন।",
+                    "error"
+                );
+
+                profilePhotoInput.value = "";
+
+                return;
+            }
+
+
+            if (file.size > 10 * 1024 * 1024) {
+
+                showToast(
+                    "ছবির size সর্বোচ্চ 10MB হতে হবে।",
+                    "error"
+                );
+
+                profilePhotoInput.value = "";
+
+                return;
+            }
+
+
+            selectedProfileFile = file;
+
+
+            /* Instant preview */
+
+            if (previewObjectURL) {
+
+                URL.revokeObjectURL(previewObjectURL);
+
+            }
+
+            previewObjectURL =
                 URL.createObjectURL(file);
 
-
             profilePhoto.src =
-                previewURL;
-
-
-            profilePhoto.onload =
-                function(){
-
-                    URL.revokeObjectURL(
-                        previewURL
-                    );
-
-                };
+                previewObjectURL;
 
 
             showToast(
@@ -1025,1013 +856,1272 @@ profilePhotoInput.addEventListener(
                 "success"
             );
 
-        }catch(error){
+        });
 
-            console.error(error);
 
-            showToast(
-                "ছবির preview দেখানো যায়নি!",
-                "error"
+        /* =========================================================
+           FAST IMAGE COMPRESS
+        ========================================================= */
+
+        async function compressImage(file) {
+
+            /*
+             * ছোট image হলে unnecessary processing না করে
+             * সরাসরি upload করা হবে।
+             */
+
+            if (
+                file.size <= 700 * 1024 &&
+                (
+                    file.type === "image/jpeg" ||
+                    file.type === "image/webp"
+                )
+            ) {
+
+                return file;
+
+            }
+
+
+            const bitmap =
+                await createImageBitmap(file);
+
+
+            const MAX_SIZE = 1000;
+
+
+            let width =
+                bitmap.width;
+
+            let height =
+                bitmap.height;
+
+
+            if (width > MAX_SIZE || height > MAX_SIZE) {
+
+                const ratio =
+                    Math.min(
+                        MAX_SIZE / width,
+                        MAX_SIZE / height
+                    );
+
+                width =
+                    Math.round(width * ratio);
+
+                height =
+                    Math.round(height * ratio);
+
+            }
+
+
+            const canvas =
+                document.createElement("canvas");
+
+            canvas.width =
+                width;
+
+            canvas.height =
+                height;
+
+
+            const ctx =
+                canvas.getContext("2d", {
+                    alpha: false
+                });
+
+
+            ctx.drawImage(
+                bitmap,
+                0,
+                0,
+                width,
+                height
             );
+
+
+            bitmap.close();
+
+
+            const blob =
+                await new Promise(resolve => {
+
+                    canvas.toBlob(
+                        resolve,
+                        "image/jpeg",
+                        0.78
+                    );
+
+                });
+
+
+            if (!blob) {
+
+                throw new Error(
+                    "Image processing failed"
+                );
+
+            }
+
+
+            return blob;
 
         }
 
-    }
-);
+
+        /* =========================================================
+           PROGRESS
+        ========================================================= */
+
+        function setUploadProgress(
+            percent,
+            text
+        ) {
+
+            uploadProgressWrapper.style.display =
+                "block";
+
+            uploadProgressBar.style.width =
+                `${percent}%`;
+
+            uploadProgressText.textContent =
+                text;
+        }
 
 
-/* =========================================
-   LOAD PROFILE
-========================================= */
+        function hideUploadProgress() {
 
-async function loadUserProfile(user){
+            setTimeout(() => {
 
-    const userRef =
-        doc(
-            db,
-            "users",
-            user.uid
-        );
+                if (!activeUpload) {
 
+                    uploadProgressWrapper.style.display =
+                        "none";
 
-    const snapshot =
-        await getDoc(userRef);
+                }
+
+            }, 700);
+
+        }
 
 
-    if(!snapshot.exists()){
+        /* =========================================================
+           IMGBB UPLOAD
+        ========================================================= */
 
-        const defaultName =
-            user.displayName ||
-            user.email?.split("@")[0] ||
-            "User";
+        async function uploadProfilePhoto(file) {
 
+            if (!file) {
 
-        const defaultData = {
+                throw new Error(
+                    "No image selected"
+                );
 
-            uid:
-                user.uid,
-
-            email:
-                user.email || "",
-
-            name:
-                defaultName,
-
-            fullName:
-                defaultName,
-
-            displayName:
-                defaultName,
-
-            showName:
-                defaultName,
-
-            username:
-                "",
-
-            whatsapp:
-                "",
-
-            whatsappNumber:
-                "",
-
-            phone:
-                "",
-
-            photoURL:
-                PROFILE_PHOTO,
-
-            balance:
-                0,
-
-            winnings:
-                0,
-
-            matchesPlayed:
-                0,
-
-            matchesWon:
-                0,
-
-            matchesLost:
-                0,
-
-            totalEarnings:
-                0,
-
-            createdAt:
-                serverTimestamp(),
-
-            updatedAt:
-                serverTimestamp()
-
-        };
-
-
-        await setDoc(
-            userRef,
-            defaultData,
-            {
-                merge:true
             }
-        );
 
 
-        fillProfileForm(
-            defaultData,
+            activeUpload = true;
+
+            editPhotoButton.disabled = true;
+
+            updateProfileButton.disabled = true;
+
+
+            try {
+
+                setUploadProgress(
+                    15,
+                    "ছবি প্রস্তুত হচ্ছে..."
+                );
+
+
+                const imageBlob =
+                    await compressImage(file);
+
+
+                setUploadProgress(
+                    35,
+                    "ImgBB-তে upload হচ্ছে..."
+                );
+
+
+                const formData =
+                    new FormData();
+
+
+                formData.append(
+                    "key",
+                    IMGBB_API_KEY
+                );
+
+
+                formData.append(
+                    "image",
+                    imageBlob,
+                    "profile.jpg"
+                );
+
+
+                /*
+                 * Timeout রাখছি যাতে forever loading না হয়।
+                 */
+
+                const controller =
+                    new AbortController();
+
+                const timeout =
+                    setTimeout(() => {
+
+                        controller.abort();
+
+                    }, 30000);
+
+
+                let response;
+
+                try {
+
+                    response =
+                        await fetch(
+                            IMGBB_UPLOAD_URL,
+                            {
+                                method: "POST",
+                                body: formData,
+                                signal: controller.signal
+                            }
+                        );
+
+                } finally {
+
+                    clearTimeout(timeout);
+
+                }
+
+
+                setUploadProgress(
+                    80,
+                    "ছবি process হচ্ছে..."
+                );
+
+
+                let result;
+
+
+                try {
+
+                    result =
+                        await response.json();
+
+                } catch {
+
+                    throw new Error(
+                        "ImgBB response পাওয়া যায়নি।"
+                    );
+
+                }
+
+
+                console.log(
+                    "ImgBB:",
+                    result
+                );
+
+
+                if (
+                    !response.ok ||
+                    !result ||
+                    !result.success ||
+                    !result.data ||
+                    !result.data.url
+                ) {
+
+                    throw new Error(
+                        result?.error?.message ||
+                        "ImgBB upload failed"
+                    );
+
+                }
+
+
+                const imageURL =
+                    result.data.url;
+
+
+                setUploadProgress(
+                    100,
+                    "Upload complete"
+                );
+
+
+                return imageURL;
+
+            } catch (error) {
+
+                if (
+                    error?.name ===
+                    "AbortError"
+                ) {
+
+                    throw new Error(
+                        "Upload করতে বেশি সময় লাগছে। আবার চেষ্টা করুন।"
+                    );
+
+                }
+
+                throw error;
+
+            } finally {
+
+                activeUpload = false;
+
+                editPhotoButton.disabled =
+                    false;
+
+                updateProfileButton.disabled =
+                    false;
+
+                hideUploadProgress();
+
+            }
+
+        }
+
+
+        /* =========================================================
+           LOAD USER PROFILE
+        ========================================================= */
+
+        async function loadUserProfile(user) {
+
+            try {
+
+                /*
+                 * Firebase Auth data first.
+                 * এতে UI দ্রুত render হবে।
+                 */
+
+                const authName =
+                    user.displayName ||
+                    (
+                        user.email
+                            ? user.email.split("@")[0]
+                            : "User"
+                    );
+
+
+                displayName.textContent =
+                    authName;
+
+                displayUsername.textContent =
+                    user.email || "";
+
+
+                /*
+                 * Firestore data
+                 */
+
+                const userRef =
+                    doc(
+                        db,
+                        "users",
+                        user.uid
+                    );
+
+
+                const snap =
+                    await getDoc(userRef);
+
+
+                if (!snap.exists()) {
+
+                    const defaultData = {
+
+                        uid: user.uid,
+
+                        email:
+                            user.email || "",
+
+                        name:
+                            authName,
+
+                        fullName:
+                            authName,
+
+                        displayName:
+                            authName,
+
+                        showName:
+                            authName,
+
+                        username:
+                            "",
+
+                        whatsapp:
+                            "",
+
+                        whatsappNumber:
+                            "",
+
+                        phone:
+                            "",
+
+                        photoURL:
+                            user.photoURL ||
+                            PROFILE_PHOTO,
+
+                        balance: 0,
+
+                        winnings: 0,
+
+                        totalMatches: 0,
+
+                        totalWins: 0,
+
+                        createdAt:
+                            serverTimestamp(),
+
+                        updatedAt:
+                            serverTimestamp()
+
+                    };
+
+
+                    await setDoc(
+                        userRef,
+                        defaultData,
+                        { merge: true }
+                    );
+
+
+                    fillProfileForm(
+                        defaultData,
+                        user
+                    );
+
+
+                    return;
+
+                }
+
+
+                const data =
+                    snap.data() || {};
+
+
+                fillProfileForm(
+                    data,
+                    user
+                );
+
+            } catch (error) {
+
+                console.error(
+                    "PROFILE LOAD ERROR:",
+                    error
+                );
+
+                /*
+                 * Auth data দিয়ে minimum UI usable রাখা।
+                 */
+
+                fullNameInput.value =
+                    user.displayName ||
+                    (
+                        user.email
+                            ? user.email.split("@")[0]
+                            : ""
+                    );
+
+                usernameInput.value =
+                    "";
+
+                emailInput.value =
+                    user.email || "";
+
+                whatsappInput.value =
+                    "";
+
+                displayName.textContent =
+                    user.displayName ||
+                    (
+                        user.email
+                            ? user.email.split("@")[0]
+                            : "User"
+                    );
+
+                displayUsername.textContent =
+                    user.email || "";
+
+            }
+
+        }
+
+
+        /* =========================================================
+           FILL FORM
+        ========================================================= */
+
+        function fillProfileForm(
+            data,
             user
-        );
+        ) {
+
+            const name =
+                data.showName ||
+                data.name ||
+                data.fullName ||
+                data.displayName ||
+                user.displayName ||
+                (
+                    user.email
+                        ? user.email.split("@")[0]
+                        : "User"
+                );
 
 
-        return;
-
-    }
-
-
-    fillProfileForm(
-        snapshot.data(),
-        user
-    );
-
-}
+            const username =
+                data.username || "";
 
 
-/* =========================================
-   FILL PROFILE
-========================================= */
-
-function fillProfileForm(
-    data,
-    user
-){
-
-    const name =
-        data.showName ||
-        data.name ||
-        data.fullName ||
-        data.displayName ||
-        user.displayName ||
-        (
-            user.email
-                ? user.email.split("@")[0]
-                : "User"
-        );
+            const email =
+                user.email ||
+                data.email ||
+                "";
 
 
-    const username =
-        data.username ||
-        "";
+            const phone =
+                data.whatsapp ||
+                data.whatsappNumber ||
+                data.phone ||
+                "";
 
 
-    const email =
-        user.email ||
-        data.email ||
-        "";
-
-
-    const phone =
-        data.whatsapp ||
-        data.whatsappNumber ||
-        data.phone ||
-        "";
-
-
-    const photo =
-        data.photoURL ||
-        data.profilePhotoURL ||
-        data.avatarURL ||
-        PROFILE_PHOTO;
-
-
-    document.getElementById(
-        "full-name"
-    ).value =
-        name;
-
-
-    document.getElementById(
-        "username"
-    ).value =
-        username
-            ? "@" + username
-            : "";
-
-
-    document.getElementById(
-        "email-address"
-    ).value =
-        email;
-
-
-    document.getElementById(
-        "phone-number"
-    ).value =
-        phone;
-
-
-    profilePhoto.src =
-        photo;
-
-
-    document.getElementById(
-        "profile-display-name"
-    ).textContent =
-        name;
-
-
-    document.getElementById(
-        "profile-display-username"
-    ).textContent =
-        username
-            ? "@" + username
-            : "Username not set";
-
-
-    profilePhoto.onerror =
-        function(){
-
-            this.onerror = null;
-
-            this.src =
+            const photo =
+                data.photoURL ||
+                data.profilePhotoURL ||
+                data.avatarURL ||
+                user.photoURL ||
                 PROFILE_PHOTO;
 
-        };
 
-}
-
-
-/* =========================================
-   AUTH
-========================================= */
-
-onAuthStateChanged(
-    auth,
-    async(user)=>{
-
-        if(!user){
-
-            showToast(
-                "দয়া করে login করুন!",
-                "warning"
-            );
+            fullNameInput.value =
+                name;
 
 
-            setTimeout(
-                ()=>{
-                    window.location.replace(
-                        "login.html"
+            usernameInput.value =
+                username;
+
+
+            emailInput.value =
+                email;
+
+
+            whatsappInput.value =
+                phone;
+
+
+            displayName.textContent =
+                name;
+
+
+            displayUsername.textContent =
+                username
+                    ? `@${username}`
+                    : email;
+
+
+            /*
+             * ImgBB URL directly.
+             */
+
+            if (photo) {
+
+                profilePhoto.src =
+                    photo;
+
+            }
+
+
+            /*
+             * If remote image fails,
+             * fallback image দেখাবে।
+             */
+
+            profilePhoto.onerror = () => {
+
+                if (
+                    profilePhoto.src !==
+                    PROFILE_PHOTO
+                ) {
+
+                    profilePhoto.src =
+                        PROFILE_PHOTO;
+
+                }
+
+            };
+
+        }
+
+
+        /* =========================================================
+           UPDATE PROFILE
+        ========================================================= */
+
+        async function updateProfileInfo() {
+
+            if (!currentUser) {
+
+                showToast(
+                    "User পাওয়া যায়নি।",
+                    "error"
+                );
+
+                return;
+
+            }
+
+
+            if (activeUpload) {
+
+                showToast(
+                    "ছবি upload হচ্ছে, একটু অপেক্ষা করুন।",
+                    "warning"
+                );
+
+                return;
+
+            }
+
+
+            const name =
+                fullNameInput.value.trim();
+
+
+            if (!name) {
+
+                showToast(
+                    "Full Name লিখুন।",
+                    "error"
+                );
+
+                fullNameInput.focus();
+
+                return;
+
+            }
+
+
+            const originalButtonHTML =
+                updateProfileButton.innerHTML;
+
+
+            updateProfileButton.disabled =
+                true;
+
+
+            updateProfileButton.innerHTML = `
+                <i class="fa-solid fa-spinner fa-spin"></i>
+                <span>Updating...</span>
+            `;
+
+
+            try {
+
+                /*
+                 * Existing photo first.
+                 */
+
+                let finalPhotoURL =
+                    profilePhoto.src ||
+                    PROFILE_PHOTO;
+
+
+                /*
+                 * New photo থাকলে শুধু ImgBB-তে upload।
+                 */
+
+                if (selectedProfileFile) {
+
+                    finalPhotoURL =
+                        await uploadProfilePhoto(
+                            selectedProfileFile
+                        );
+
+                }
+
+
+                /*
+                 * Firebase Storage কোথাও ব্যবহার হচ্ছে না।
+                 * Firestore-এ শুধু URL রাখা হচ্ছে।
+                 */
+
+                await setDoc(
+
+                    doc(
+                        db,
+                        "users",
+                        currentUser.uid
+                    ),
+
+                    {
+
+                        uid:
+                            currentUser.uid,
+
+                        name:
+                            name,
+
+                        fullName:
+                            name,
+
+                        showName:
+                            name,
+
+                        displayName:
+                            name,
+
+                        photoURL:
+                            finalPhotoURL,
+
+                        updatedAt:
+                            serverTimestamp()
+
+                    },
+
+                    {
+                        merge: true
+                    }
+
+                );
+
+
+                /*
+                 * Instant UI update
+                 */
+
+                displayName.textContent =
+                    name;
+
+
+                profilePhoto.src =
+                    finalPhotoURL;
+
+
+                selectedProfileFile =
+                    null;
+
+
+                profilePhotoInput.value =
+                    "";
+
+
+                if (previewObjectURL) {
+
+                    URL.revokeObjectURL(
+                        previewObjectURL
                     );
-                },
-                700
-            );
+
+                    previewObjectURL =
+                        null;
+
+                }
 
 
-            return;
+                showToast(
+                    "Profile successfully updated!",
+                    "success"
+                );
+
+
+            } catch (error) {
+
+                console.error(
+                    "UPDATE PROFILE ERROR:",
+                    error
+                );
+
+
+                showToast(
+                    error?.message ||
+                    "Profile update failed.",
+                    "error"
+                );
+
+            } finally {
+
+                updateProfileButton.disabled =
+                    false;
+
+                updateProfileButton.innerHTML =
+                    originalButtonHTML;
+
+            }
 
         }
 
 
-        currentUser =
-            user;
+        updateProfileButton.addEventListener(
+            "click",
+            updateProfileInfo
+        );
 
 
-        try{
+        /* =========================================================
+           PASSWORD VALIDATION
+        ========================================================= */
 
-            await loadUserProfile(
-                user
-            );
+        function checkPasswordMatch() {
 
-        }catch(error){
+            const current =
+                currentPasswordInput.value;
 
-            console.error(
-                "PROFILE LOAD ERROR:",
-                error
-            );
+            const newPass =
+                newPasswordInput.value;
+
+            const confirm =
+                confirmPasswordInput.value;
 
 
-            showToast(
-                "Profile data load করতে সমস্যা হয়েছে!",
-                "error"
-            );
+            if (!newPass && !confirm) {
+
+                passwordStatus.textContent =
+                    "";
+
+                return;
+
+            }
+
+
+            if (newPass.length > 0 && newPass.length < 6) {
+
+                passwordStatus.textContent =
+                    "Password কমপক্ষে 6 characters হতে হবে।";
+
+                passwordStatus.className =
+                    "text-xs min-h-[18px] mb-4 text-amber-400";
+
+                return;
+
+            }
+
+
+            if (confirm && newPass !== confirm) {
+
+                passwordStatus.textContent =
+                    "New password এবং confirm password মিলছে না।";
+
+                passwordStatus.className =
+                    "text-xs min-h-[18px] mb-4 text-rose-400";
+
+                return;
+
+            }
+
+
+            if (
+                current &&
+                newPass &&
+                current === newPass
+            ) {
+
+                passwordStatus.textContent =
+                    "নতুন password আগের password-এর মতো হতে পারবে না।";
+
+                passwordStatus.className =
+                    "text-xs min-h-[18px] mb-4 text-amber-400";
+
+                return;
+
+            }
+
+
+            if (
+                newPass &&
+                confirm &&
+                newPass === confirm
+            ) {
+
+                passwordStatus.textContent =
+                    "Password ঠিক আছে।";
+
+                passwordStatus.className =
+                    "text-xs min-h-[18px] mb-4 text-emerald-400";
+
+                return;
+
+            }
+
+
+            passwordStatus.textContent =
+                "";
 
         }
 
-    }
-);
 
-
-/* =========================================
-   UPLOAD TO IMGBB
-========================================= */
-
-async function uploadProfilePhoto(file){
-
-    if(!file){
-
-        throw new Error(
-            "No image selected"
+        currentPasswordInput.addEventListener(
+            "input",
+            checkPasswordMatch
         );
 
-    }
+        newPasswordInput.addEventListener(
+            "input",
+            checkPasswordMatch
+        );
 
-
-    activeUpload =
-        true;
-
-
-    uploadProgressWrapper.style.display =
-        "block";
-
-
-    uploadProgressBar.style.width =
-        "10%";
-
-
-    uploadProgressText.textContent =
-        "Preparing photo...";
-
-
-    try{
-
-        /*
-         * Compress image before upload
-         */
-
-        const compressedBlob =
-            await compressImage(file);
-
-
-        uploadProgressBar.style.width =
-            "30%";
-
-
-        uploadProgressText.textContent =
-            "Uploading 30%";
-
-
-        /*
-         * ImgBB accepts the image as
-         * multipart/form-data.
-         */
-
-        const formData =
-            new FormData();
-
-
-        formData.append(
-            "key",
-            IMGBB_API_KEY
+        confirmPasswordInput.addEventListener(
+            "input",
+            checkPasswordMatch
         );
 
 
-        formData.append(
-            "image",
-            compressedBlob,
-            "profile.jpg"
+        /* =========================================================
+           CHANGE PASSWORD
+        ========================================================= */
+
+        async function changeUserPassword() {
+
+            if (!currentUser) {
+
+                showToast(
+                    "User পাওয়া যায়নি।",
+                    "error"
+                );
+
+                return;
+
+            }
+
+
+            const currentPassword =
+                currentPasswordInput.value;
+
+            const newPassword =
+                newPasswordInput.value;
+
+            const confirmPassword =
+                confirmPasswordInput.value;
+
+
+            if (!currentPassword) {
+
+                showToast(
+                    "Current password দিন।",
+                    "error"
+                );
+
+                currentPasswordInput.focus();
+
+                return;
+
+            }
+
+
+            if (!newPassword) {
+
+                showToast(
+                    "New password দিন।",
+                    "error"
+                );
+
+                newPasswordInput.focus();
+
+                return;
+
+            }
+
+
+            if (newPassword.length < 6) {
+
+                showToast(
+                    "New password কমপক্ষে 6 characters হতে হবে।",
+                    "error"
+                );
+
+                return;
+
+            }
+
+
+            if (newPassword !== confirmPassword) {
+
+                showToast(
+                    "Password মিলছে না।",
+                    "error"
+                );
+
+                return;
+
+            }
+
+
+            if (currentPassword === newPassword) {
+
+                showToast(
+                    "নতুন password আলাদা হতে হবে।",
+                    "error"
+                );
+
+                return;
+
+            }
+
+
+            const originalHTML =
+                changePasswordButton.innerHTML;
+
+
+            changePasswordButton.disabled =
+                true;
+
+
+            changePasswordButton.innerHTML = `
+                <i class="fa-solid fa-spinner fa-spin"></i>
+                <span>Changing...</span>
+            `;
+
+
+            try {
+
+                if (!currentUser.email) {
+
+                    throw new Error(
+                        "এই account-এর email পাওয়া যায়নি।"
+                    );
+
+                }
+
+
+                const credential =
+                    EmailAuthProvider.credential(
+                        currentUser.email,
+                        currentPassword
+                    );
+
+
+                await reauthenticateWithCredential(
+                    currentUser,
+                    credential
+                );
+
+
+                await updatePassword(
+                    currentUser,
+                    newPassword
+                );
+
+
+                currentPasswordInput.value =
+                    "";
+
+                newPasswordInput.value =
+                    "";
+
+                confirmPasswordInput.value =
+                    "";
+
+                passwordStatus.textContent =
+                    "";
+
+
+                showToast(
+                    "Password successfully changed!",
+                    "success"
+                );
+
+
+            } catch (error) {
+
+                console.error(
+                    "PASSWORD ERROR:",
+                    error
+                );
+
+
+                let message =
+                    "Password change failed.";
+
+
+                if (
+                    error.code ===
+                    "auth/wrong-password" ||
+                    error.code ===
+                    "auth/invalid-credential"
+                ) {
+
+                    message =
+                        "Current password ভুল।";
+
+                } else if (
+                    error.code ===
+                    "auth/too-many-requests"
+                ) {
+
+                    message =
+                        "অনেকবার চেষ্টা করা হয়েছে। পরে আবার চেষ্টা করুন।";
+
+                } else if (
+                    error.code ===
+                    "auth/requires-recent-login"
+                ) {
+
+                    message =
+                        "নিরাপত্তার জন্য আবার login করে চেষ্টা করুন।";
+
+                } else if (error.message) {
+
+                    message =
+                        error.message;
+
+                }
+
+
+                showToast(
+                    message,
+                    "error"
+                );
+
+            } finally {
+
+                changePasswordButton.disabled =
+                    false;
+
+                changePasswordButton.innerHTML =
+                    originalHTML;
+
+            }
+
+        }
+
+
+        changePasswordButton.addEventListener(
+            "click",
+            changeUserPassword
         );
 
 
-        /*
-         * Upload to ImgBB
-         */
+        /* =========================================================
+           LOCKED INPUTS
+        ========================================================= */
 
-        const response =
-            await fetch(
-                IMGBB_UPLOAD_URL,
-                {
-                    method: "POST",
-                    body: formData
+        [
+            usernameInput,
+            emailInput,
+            whatsappInput
+        ].forEach(input => {
+
+            input.addEventListener(
+                "keydown",
+                event => {
+
+                    event.preventDefault();
+
                 }
             );
 
 
-        uploadProgressBar.style.width =
-            "80%";
+            input.addEventListener(
+                "paste",
+                event => {
 
+                    event.preventDefault();
 
-        uploadProgressText.textContent =
-            "Processing 80%";
-
-
-        let result;
-
-
-        try{
-
-            result =
-                await response.json();
-
-        }catch(error){
-
-            throw new Error(
-                "ImgBB response পাওয়া যায়নি"
-            );
-
-        }
-
-
-        console.log(
-            "IMGBB RESPONSE:",
-            result
-        );
-
-
-        if(
-            !response.ok ||
-            !result ||
-            !result.success ||
-            !result.data ||
-            !result.data.url
-        ){
-
-            const errorMessage =
-                result?.error?.message ||
-                "ImgBB upload failed";
-
-            throw new Error(
-                errorMessage
-            );
-
-        }
-
-
-        uploadProgressBar.style.width =
-            "100%";
-
-
-        uploadProgressText.textContent =
-            "Upload complete";
-
-
-        /*
-         * Direct ImgBB image URL
-         */
-
-        return result.data.url;
-
-
-    }finally{
-
-        activeUpload =
-            false;
-
-    }
-
-}
-
-
-/* =========================================
-   UPDATE PROFILE
-========================================= */
-
-window.updateProfileInfo =
-async function(){
-
-    if(!currentUser){
-
-        showToast(
-            "User পাওয়া যায়নি!",
-            "error"
-        );
-
-        return;
-
-    }
-
-
-    if(activeUpload){
-
-        showToast(
-            "Photo upload হচ্ছে। একটু অপেক্ষা করুন!",
-            "warning"
-        );
-
-        return;
-
-    }
-
-
-    const name =
-        document.getElementById(
-            "full-name"
-        ).value.trim();
-
-
-    if(!name){
-
-        showToast(
-            "Full name খালি রাখা যাবে না!",
-            "warning"
-        );
-
-        return;
-
-    }
-
-
-    const button =
-        document.getElementById(
-            "update-profile-btn"
-        );
-
-
-    button.disabled =
-        true;
-
-
-    button.innerText =
-        selectedProfileFile
-            ? "Uploading..."
-            : "Updating...";
-
-
-    try{
-
-        const userRef =
-            doc(
-                db,
-                "users",
-                currentUser.uid
+                }
             );
 
 
-        let finalPhotoURL =
-            profilePhoto.src;
+            input.addEventListener(
+                "cut",
+                event => {
+
+                    event.preventDefault();
+
+                }
+            );
+
+        });
 
 
-        /*
-         * Only upload when a new photo
-         * has actually been selected.
-         */
+        /* =========================================================
+           AUTH
+        ========================================================= */
 
-        if(selectedProfileFile){
+        onAuthStateChanged(
+            auth,
+            async user => {
 
-            finalPhotoURL =
-                await uploadProfilePhoto(
-                    selectedProfileFile
-                );
+                if (!user) {
 
-        }
+                    window.location.href =
+                        "login.html";
 
+                    return;
 
-        button.innerText =
-            "Saving...";
+                }
 
 
-        /*
-         * Save ImgBB URL to Firestore
-         */
+                currentUser =
+                    user;
 
-        await setDoc(
-            userRef,
-            {
 
-                uid:
-                    currentUser.uid,
+                /*
+                 * Auth information immediately visible.
+                 */
 
-                name:
-                    name,
+                const quickName =
+                    user.displayName ||
+                    (
+                        user.email
+                            ? user.email.split("@")[0]
+                            : "User"
+                    );
 
-                fullName:
-                    name,
 
-                showName:
-                    name,
+                displayName.textContent =
+                    quickName;
 
-                photoURL:
-                    finalPhotoURL,
 
-                updatedAt:
-                    serverTimestamp()
+                displayUsername.textContent =
+                    user.email || "";
 
-            },
-            {
-                merge:true
+
+                fullNameInput.value =
+                    quickName;
+
+
+                emailInput.value =
+                    user.email || "";
+
+
+                /*
+                 * Then Firestore profile loads.
+                 */
+
+                loadUserProfile(user);
+
             }
         );
 
 
-        /*
-         * Update current UI
-         */
+        /* =========================================================
+           CLEANUP
+        ========================================================= */
 
-        profilePhoto.src =
-            finalPhotoURL;
+        window.addEventListener(
+            "beforeunload",
+            () => {
 
+                if (previewObjectURL) {
 
-        document.getElementById(
-            "profile-display-name"
-        ).textContent =
-            name;
+                    URL.revokeObjectURL(
+                        previewObjectURL
+                    );
 
+                }
 
-        selectedProfileFile =
-            null;
-
-
-        profilePhotoInput.value =
-            "";
-
-
-        setTimeout(
-            ()=>{
-                uploadProgressWrapper.style.display =
-                    "none";
-            },
-            1000
-        );
-
-
-        showToast(
-            "Profile successfully updated!",
-            "success"
-        );
-
-
-    }catch(error){
-
-        console.error(
-            "PROFILE UPDATE ERROR:",
-            error
-        );
-
-
-        showToast(
-            error?.message
-                ? "Photo/Profile update failed: " +
-                  error.message
-                : "Profile update করা যায়নি!",
-            "error"
-        );
-
-
-    }finally{
-
-        button.disabled =
-            false;
-
-
-        button.innerText =
-            "Update Profile";
-
-    }
-
-};
-
-
-/* =========================================
-   PASSWORD MATCH
-========================================= */
-
-const newPasswordInput =
-    document.getElementById(
-        "new-password"
-    );
-
-
-const confirmPasswordInput =
-    document.getElementById(
-        "confirm-password"
-    );
-
-
-const passwordStatus =
-    document.getElementById(
-        "password-status"
-    );
-
-
-function checkPasswordMatch(){
-
-    const newPass =
-        newPasswordInput.value;
-
-
-    const confirmPass =
-        confirmPasswordInput.value;
-
-
-    if(!confirmPass){
-
-        passwordStatus.classList.add(
-            "hidden"
-        );
-
-        return;
-
-    }
-
-
-    passwordStatus.classList.remove(
-        "hidden"
-    );
-
-
-    if(newPass === confirmPass){
-
-        passwordStatus.className =
-            "text-[11px] text-emerald-400";
-
-
-        passwordStatus.innerHTML =
-            '<i class="fa-solid fa-circle-check mr-1"></i>Password match করছে';
-
-    }else{
-
-        passwordStatus.className =
-            "text-[11px] text-rose-400";
-
-
-        passwordStatus.innerHTML =
-            '<i class="fa-solid fa-circle-xmark mr-1"></i>Password match করছে না';
-
-    }
-
-}
-
-
-newPasswordInput.addEventListener(
-    "input",
-    checkPasswordMatch
-);
-
-
-confirmPasswordInput.addEventListener(
-    "input",
-    checkPasswordMatch
-);
-
-
-/* =========================================
-   CHANGE PASSWORD
-========================================= */
-
-window.changeUserPassword =
-async function(){
-
-    if(!currentUser){
-
-        showToast(
-            "User পাওয়া যায়নি!",
-            "error"
-        );
-
-        return;
-
-    }
-
-
-    const currentPass =
-        document.getElementById(
-            "current-password"
-        ).value;
-
-
-    const newPass =
-        document.getElementById(
-            "new-password"
-        ).value;
-
-
-    const confirmPass =
-        document.getElementById(
-            "confirm-password"
-        ).value;
-
-
-    if(
-        !currentPass ||
-        !newPass ||
-        !confirmPass
-    ){
-
-        showToast(
-            "সব password field পূরণ করুন!",
-            "warning"
-        );
-
-        return;
-
-    }
-
-
-    if(newPass.length < 6){
-
-        showToast(
-            "Password কমপক্ষে 6 characters হতে হবে!",
-            "warning"
-        );
-
-        return;
-
-    }
-
-
-    if(newPass !== confirmPass){
-
-        showToast(
-            "New password match করছে না!",
-            "error"
-        );
-
-        return;
-
-    }
-
-
-    if(currentPass === newPass){
-
-        showToast(
-            "নতুন password আগের password-এর মতো হতে পারবে না!",
-            "warning"
-        );
-
-        return;
-
-    }
-
-
-    const button =
-        document.getElementById(
-            "change-password-btn"
-        );
-
-
-    button.disabled =
-        true;
-
-
-    button.innerText =
-        "Changing...";
-
-
-    try{
-
-        if(!currentUser.email){
-
-            throw new Error(
-                "No email associated with account."
-            );
-
-        }
-
-
-        const credential =
-            EmailAuthProvider.credential(
-                currentUser.email,
-                currentPass
-            );
-
-
-        await reauthenticateWithCredential(
-            currentUser,
-            credential
-        );
-
-
-        await updatePassword(
-            currentUser,
-            newPass
-        );
-
-
-        showToast(
-            "Password successfully changed!",
-            "success"
-        );
-
-
-        document.getElementById(
-            "current-password"
-        ).value = "";
-
-
-        document.getElementById(
-            "new-password"
-        ).value = "";
-
-
-        document.getElementById(
-            "confirm-password"
-        ).value = "";
-
-
-        passwordStatus.classList.add(
-            "hidden"
-        );
-
-
-    }catch(error){
-
-        console.error(
-            "PASSWORD CHANGE ERROR:",
-            error
-        );
-
-
-        if(
-            error.code ===
-            "auth/wrong-password"
-            ||
-            error.code ===
-            "auth/invalid-credential"
-        ){
-
-            showToast(
-                "Current password ভুল!",
-                "error"
-            );
-
-        }
-
-        else if(
-            error.code ===
-            "auth/too-many-requests"
-        ){
-
-            showToast(
-                "অনেকবার চেষ্টা হয়েছে। কিছুক্ষণ পরে আবার চেষ্টা করুন!",
-                "warning"
-            );
-
-        }
-
-        else if(
-            error.code ===
-            "auth/requires-recent-login"
-        ){
-
-            showToast(
-                "Security-এর জন্য আবার login করে চেষ্টা করুন!",
-                "warning"
-            );
-
-        }
-
-        else{
-
-            showToast(
-                "Password change করা যায়নি!",
-                "error"
-            );
-
-        }
-
-    }finally{
-
-        button.disabled =
-            false;
-
-        button.innerText =
-            "Change Password";
-
-    }
-
-};
-
-
-/* =========================================
-   LOCKED FIELDS
-========================================= */
-
-[
-    "username",
-    "email-address",
-    "phone-number"
-].forEach(
-    id=>{
-
-        const element =
-            document.getElementById(id);
-
-
-        element.addEventListener(
-            "keydown",
-            e=>{
-                e.preventDefault();
             }
         );
 
-
-        element.addEventListener(
-            "paste",
-            e=>{
-                e.preventDefault();
-            }
-        );
-
-
-        element.addEventListener(
-            "cut",
-            e=>{
-                e.preventDefault();
-            }
-        );
-
-    }
-);
-
-</script>
+    </script>
 
 </body>
 </html>
