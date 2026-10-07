@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Aura Skill - My Wallet</title>
 
     <script src="https://cdn.tailwindcss.com"></script>
@@ -77,6 +78,7 @@
         }
 
         @keyframes slideIn {
+
             from {
                 transform: translateX(100%);
                 opacity: 0;
@@ -86,9 +88,11 @@
                 transform: translateX(0);
                 opacity: 1;
             }
+
         }
 
         @keyframes fadeOut {
+
             from {
                 opacity: 1;
             }
@@ -97,6 +101,7 @@
                 opacity: 0;
                 transform: translateY(-10px);
             }
+
         }
 
         /* Loading */
@@ -121,16 +126,19 @@
             left: -100%;
             width: 100%;
             height: 100%;
+
             background: linear-gradient(
                 90deg,
                 transparent,
                 rgba(255,255,255,.13),
                 transparent
             );
+
             animation: shimmer 1.35s infinite;
         }
 
         @keyframes loadingPulse {
+
             0%, 100% {
                 opacity: .45;
             }
@@ -138,12 +146,15 @@
             50% {
                 opacity: 1;
             }
+
         }
 
         @keyframes shimmer {
+
             100% {
                 left: 100%;
             }
+
         }
 
     </style>
@@ -596,7 +607,6 @@ function setWalletLoading() {
         balance.className =
             "loading-shimmer loading-text";
 
-
         balance.textContent =
             "Loading...";
 
@@ -608,7 +618,6 @@ function setWalletLoading() {
         winnings.className =
             "loading-shimmer loading-text";
 
-
         winnings.textContent =
             "Loading...";
 
@@ -618,18 +627,12 @@ function setWalletLoading() {
 
 
 /* =========================================
-   REMOVE LOADING EFFECT
+   REMOVE LOADING
 ========================================= */
 
 function removeLoadingEffect(element) {
 
     if (!element) return;
-
-    /*
-     * সবচেয়ে গুরুত্বপূর্ণ fix:
-     * data আসার পরে loading class
-     * পুরোপুরি remove করা হচ্ছে।
-     */
 
     element.classList.remove(
         "loading-shimmer",
@@ -638,21 +641,27 @@ function removeLoadingEffect(element) {
 
     element.style.color = "";
     element.style.opacity = "";
+
 }
 
 
 /* =========================================
-   GET NUMBER
+   NUMBER
 ========================================= */
 
-function getNumber(value, fallback = 0) {
+function getNumber(
+    value,
+    fallback = 0
+) {
 
     if (
         value === undefined ||
         value === null ||
         value === ""
     ) {
+
         return fallback;
+
     }
 
 
@@ -677,59 +686,62 @@ function getWinningBalance(data) {
 
 
     /*
-     * বিভিন্ন existing field support করা হয়েছে।
+     * Winning balance field detection.
      *
-     * Priority:
-     * winningBalance
-     * winnings
-     * winning
-     * totalWinnings
+     * এখানে একাধিক নাম support করা হয়েছে
+     * যাতে তোমার existing Firebase field
+     * যেটাই থাকুক সেটি পাওয়া যায়।
      */
 
-    if (
-        data.winningBalance !== undefined &&
-        data.winningBalance !== null
-    ) {
 
-        return getNumber(
-            data.winningBalance
-        );
+    const fields = [
 
-    }
+        "winningBalance",
 
+        "winnings",
 
-    if (
-        data.winnings !== undefined &&
-        data.winnings !== null
-    ) {
+        "winning",
 
-        return getNumber(
-            data.winnings
-        );
+        "totalWinnings",
 
-    }
+        "totalWinning",
 
+        "winBalance",
 
-    if (
-        data.winning !== undefined &&
-        data.winning !== null
-    ) {
+        "winningAmount",
 
-        return getNumber(
-            data.winning
-        );
+        "totalWinningAmount",
 
-    }
+        "totalEarnings",
+
+        "earnings",
+
+        "prizeMoney"
+
+    ];
 
 
-    if (
-        data.totalWinnings !== undefined &&
-        data.totalWinnings !== null
-    ) {
+    for (const field of fields) {
 
-        return getNumber(
-            data.totalWinnings
-        );
+        if (
+            Object.prototype.hasOwnProperty.call(
+                data,
+                field
+            )
+            &&
+            data[field] !== undefined
+            &&
+            data[field] !== null
+            &&
+            data[field] !== ""
+        ) {
+
+            return getNumber(
+                data[field],
+                0
+            );
+
+        }
 
     }
 
@@ -740,7 +752,7 @@ function getWinningBalance(data) {
 
 
 /* =========================================
-   UPDATE WALLET UI
+   UPDATE WALLET
 ========================================= */
 
 function updateWalletUI(data) {
@@ -773,7 +785,9 @@ function updateWalletUI(data) {
         );
 
 
-    /* Balance */
+    /*
+     * Available Balance
+     */
 
     if (balanceElement) {
 
@@ -781,21 +795,21 @@ function updateWalletUI(data) {
             balanceElement
         );
 
-
         balanceElement.textContent =
             String(balance);
 
     }
 
 
-    /* Winning Balance */
+    /*
+     * Winning Balance
+     */
 
     if (winningsElement) {
 
         removeLoadingEffect(
             winningsElement
         );
-
 
         winningsElement.textContent =
             String(winnings);
@@ -828,8 +842,7 @@ async function loadWallet(user) {
     try {
 
         /*
-         * প্রথমেই শুধু users document
-         * load করা হচ্ছে।
+         * প্রথমে user document load হবে।
          */
 
         const userSnap =
@@ -837,6 +850,11 @@ async function loadWallet(user) {
                 userRef
             );
 
+
+        /*
+         * User document না থাকলে
+         * fake 0 দেখাবে না।
+         */
 
         if (!userSnap.exists()) {
 
@@ -887,23 +905,19 @@ async function loadWallet(user) {
         }
 
 
-        const data =
-            userSnap.data() || {};
-
-
         /*
-         * Firestore data আসার সাথে সাথেই
-         * UI update হবে।
+         * Firebase data পাওয়ার সাথে সাথেই
+         * UI update।
          */
 
         updateWalletUI(
-            data
+            userSnap.data() || {}
         );
 
 
         /*
-         * Referral background-এ চলবে।
-         * Balance display আটকে থাকবে না।
+         * Referral calculation background-এ।
+         * এটা balance display আটকে রাখবে না।
          */
 
         processReferralReward(
@@ -913,6 +927,11 @@ async function loadWallet(user) {
             async () => {
 
                 try {
+
+                    /*
+                     * Referral reward balance-এ
+                     * পরিবর্তন করলে latest data আবার নেওয়া হবে।
+                     */
 
                     const refreshed =
                         await getDoc(
@@ -930,11 +949,11 @@ async function loadWallet(user) {
 
                     }
 
-                } catch (e) {
+                } catch (refreshError) {
 
                     console.warn(
-                        "Wallet refresh:",
-                        e
+                        "Wallet refresh error:",
+                        refreshError
                     );
 
                 }
@@ -942,11 +961,11 @@ async function loadWallet(user) {
             }
         )
         .catch(
-            e => {
+            referralError => {
 
                 console.warn(
                     "Referral check:",
-                    e
+                    referralError
                 );
 
             }
@@ -1309,8 +1328,8 @@ async function() {
 
 
         /*
-         * Gift code সফল হওয়ার পর
-         * latest data load।
+         * Gift code redeem হওয়ার পরে
+         * latest wallet data নেওয়া হবে।
          */
 
         const updatedUserSnap =
@@ -1420,6 +1439,7 @@ function(type) {
 };
 
 </script>
+
 
 </body>
 </html>
