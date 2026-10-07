@@ -4,11 +4,17 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Aura Skill - Profile</title>
+
 <script src="https://cdn.tailwindcss.com"></script>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&display=swap" rel="stylesheet">
+
+<link rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&display=swap"
+      rel="stylesheet">
 
 <style>
+
 body{
     font-family:'Hind Siliguri',sans-serif;
     background:#050811;
@@ -80,6 +86,7 @@ body{
 }
 
 /* Loading state */
+
 .loading-text{
     display:inline-block;
     color:#64748b;
@@ -114,6 +121,7 @@ body{
     0%,100%{
         opacity:.45
     }
+
     50%{
         opacity:1
     }
@@ -124,14 +132,19 @@ body{
         left:100%
     }
 }
+
 </style>
 </head>
 
+
 <body class="min-h-screen flex flex-col pb-28">
+
 
 <div id="toast-container"></div>
 
+
 <!-- Logout Modal -->
+
 <div id="logoutModal"
      class="fixed inset-0 z-[99999] flex items-center justify-center bg-black/80 backdrop-blur-md px-4"
      style="display:none;">
@@ -139,10 +152,14 @@ body{
     <div class="bg-[#0f172a] border border-red-500/40 rounded-3xl p-6 max-w-sm w-full shadow-2xl text-center space-y-4">
 
         <div class="w-16 h-16 bg-red-500/10 border border-red-500/30 rounded-full flex items-center justify-center mx-auto text-red-500 text-2xl shadow-lg shadow-red-500/10">
+
             <i class="fa-solid fa-right-from-bracket"></i>
+
         </div>
 
+
         <div>
+
             <h3 class="text-lg font-bold text-white tracking-wide">
                 লগআউট করতে চান?
             </h3>
@@ -150,38 +167,54 @@ body{
             <p class="text-xs text-slate-400 mt-1">
                 আপনি কি নিশ্চিতভাবে আপনার অ্যাকাউন্ট থেকে বের হয়ে যেতে চান?
             </p>
+
         </div>
+
 
         <div class="grid grid-cols-2 gap-3 pt-2">
 
             <button
                 onclick="closeLogoutModal()"
                 class="py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold text-xs transition border border-slate-700">
+
                 বাতিল
+
             </button>
+
 
             <button
                 onclick="confirmLogout()"
                 class="py-2.5 rounded-xl bg-red-600 hover:bg-red-500 text-white font-bold text-xs transition shadow-lg shadow-red-600/30">
+
                 লগআউট
+
             </button>
 
         </div>
+
     </div>
+
 </div>
 
 
 <!-- Header -->
+
 <header class="px-4 py-3 flex justify-between items-center sticky top-0 z-30 bg-[#050811]/90 backdrop-blur-md">
 
     <div class="flex items-center space-x-2">
+
         <div class="w-8 h-8 rounded-lg bg-blue-600/20 flex items-center justify-center text-blue-400 font-black text-xs">
+
             AS
+
         </div>
+
     </div>
 
-    <a href="wallet.html"
-       class="bg-[#10172a] border border-slate-800 hover:border-blue-500/50 text-slate-200 px-3 py-1.5 rounded-xl text-xs font-semibold flex items-center space-x-1.5 transition">
+
+    <a
+        href="wallet.html"
+        class="bg-[#10172a] border border-slate-800 hover:border-blue-500/50 text-slate-200 px-3 py-1.5 rounded-xl text-xs font-semibold flex items-center space-x-1.5 transition">
 
         <i class="fa-solid fa-wallet text-blue-400 text-[11px]"></i>
 
@@ -196,6 +229,7 @@ body{
 
 
 <!-- Profile Card -->
+
 <div class="glass-card rounded-3xl p-5 space-y-5 shadow-xl border border-slate-800/80">
 
     <div class="flex items-center space-x-4">
@@ -217,23 +251,36 @@ body{
 
         <div>
 
-            <!-- NAME: NO INITIAL 0 -->
             <h2
                 id="user-name"
                 class="text-base font-black text-white tracking-wide">
-                <span class="loading-shimmer loading-text">Loading...</span>
+
+                <span class="loading-shimmer loading-text">
+                    Loading...
+                </span>
+
             </h2>
+
 
             <p
                 id="user-uid"
                 class="text-xs text-blue-400 font-semibold mt-0.5">
-                <span class="loading-text">Loading...</span>
+
+                <span class="loading-text">
+                    Loading...
+                </span>
+
             </p>
+
 
             <p
                 id="user-refer-code"
                 class="text-[11px] text-emerald-400 font-bold mt-1">
-                <span class="loading-text">Loading...</span>
+
+                <span class="loading-text">
+                    Loading...
+                </span>
+
             </p>
 
         </div>
@@ -242,6 +289,7 @@ body{
 
 
     <!-- Balance -->
+
     <div class="bg-[#0b101d] border border-slate-800/90 rounded-2xl p-4 space-y-3">
 
         <div class="flex justify-between items-center">
@@ -252,6 +300,7 @@ body{
                     Available Balance
                 </p>
 
+
                 <h3 class="text-2xl font-black text-white mt-0.5">
 
                     ৳
@@ -259,7 +308,9 @@ body{
                     <span
                         id="wallet-balance"
                         class="loading-shimmer loading-text">
+
                         Loading...
+
                     </span>
 
                 </h3>
@@ -287,7 +338,9 @@ body{
                 <span
                     id="winnings-balance"
                     class="loading-shimmer loading-text">
+
                     Loading...
+
                 </span>
 
             </span>
@@ -298,20 +351,29 @@ body{
 
 
     <!-- Stats -->
+
     <div class="grid grid-cols-3 gap-3 text-center">
 
 
         <div class="bg-[#0b101d]/60 border border-slate-800/60 rounded-xl p-2.5">
 
             <div class="text-blue-400 text-xs mb-1">
+
                 <i class="fa-solid fa-gamepad"></i>
+
             </div>
+
 
             <h4
                 id="stat-matches"
                 class="text-sm font-bold text-white">
-                <span class="loading-text">Loading...</span>
+
+                <span class="loading-text">
+                    Loading...
+                </span>
+
             </h4>
+
 
             <p class="text-[10px] text-slate-400 mt-0.5">
                 Matches
@@ -323,14 +385,22 @@ body{
         <div class="bg-[#0b101d]/60 border border-slate-800/60 rounded-xl p-2.5">
 
             <div class="text-amber-400 text-xs mb-1">
+
                 <i class="fa-solid fa-trophy"></i>
+
             </div>
+
 
             <h4
                 id="stat-wins"
                 class="text-sm font-bold text-white">
-                <span class="loading-text">Loading...</span>
+
+                <span class="loading-text">
+                    Loading...
+                </span>
+
             </h4>
+
 
             <p class="text-[10px] text-slate-400 mt-0.5">
                 Wins
@@ -342,14 +412,22 @@ body{
         <div class="bg-[#0b101d]/60 border border-slate-800/60 rounded-xl p-2.5">
 
             <div class="text-emerald-400 text-xs mb-1">
+
                 <i class="fa-solid fa-coins"></i>
+
             </div>
+
 
             <h4
                 id="stat-earnings"
                 class="text-sm font-bold text-white">
-                <span class="loading-text">Loading...</span>
+
+                <span class="loading-text">
+                    Loading...
+                </span>
+
             </h4>
+
 
             <p class="text-[10px] text-slate-400 mt-0.5">
                 Earnings
@@ -363,11 +441,13 @@ body{
 
 
 <!-- Account -->
+
 <div class="space-y-2">
 
     <p class="text-[11px] font-extrabold text-slate-400 uppercase tracking-widest px-1">
         Account
     </p>
+
 
     <div class="glass-card rounded-2xl overflow-hidden divide-y divide-slate-800/50">
 
@@ -379,12 +459,17 @@ body{
             <div class="flex items-center space-x-3">
 
                 <div class="w-8 h-8 rounded-xl bg-blue-500/10 text-blue-400 flex items-center justify-center text-xs">
+
                     <i class="fa-solid fa-user-pen"></i>
+
                 </div>
 
-                <span>Edit Profile</span>
+                <span>
+                    Edit Profile
+                </span>
 
             </div>
+
 
             <i class="fa-solid fa-chevron-right text-slate-600 text-[10px]"></i>
 
@@ -398,12 +483,17 @@ body{
             <div class="flex items-center space-x-3">
 
                 <div class="w-8 h-8 rounded-xl bg-purple-500/10 text-purple-400 flex items-center justify-center text-xs">
+
                     <i class="fa-solid fa-wallet"></i>
+
                 </div>
 
-                <span>My Wallet</span>
+                <span>
+                    My Wallet
+                </span>
 
             </div>
+
 
             <i class="fa-solid fa-chevron-right text-slate-600 text-[10px]"></i>
 
@@ -417,12 +507,17 @@ body{
             <div class="flex items-center space-x-3">
 
                 <div class="w-8 h-8 rounded-xl bg-indigo-500/10 text-indigo-400 flex items-center justify-center text-xs">
+
                     <i class="fa-solid fa-gamepad"></i>
+
                 </div>
 
-                <span>My Matches</span>
+                <span>
+                    My Matches
+                </span>
 
             </div>
+
 
             <i class="fa-solid fa-chevron-right text-slate-600 text-[10px]"></i>
 
@@ -436,12 +531,17 @@ body{
             <div class="flex items-center space-x-3">
 
                 <div class="w-8 h-8 rounded-xl bg-amber-500/10 text-amber-400 flex items-center justify-center text-xs">
+
                     <i class="fa-solid fa-ranking-star"></i>
+
                 </div>
 
-                <span>Top Players</span>
+                <span>
+                    Top Players
+                </span>
 
             </div>
+
 
             <i class="fa-solid fa-chevron-right text-slate-600 text-[10px]"></i>
 
@@ -457,12 +557,17 @@ body{
             <div class="flex items-center space-x-3">
 
                 <div class="w-8 h-8 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center text-xs">
+
                     <i class="fa-brands fa-whatsapp"></i>
+
                 </div>
 
-                <span>Support</span>
+                <span>
+                    Support
+                </span>
 
             </div>
+
 
             <i class="fa-solid fa-chevron-right text-slate-600 text-[10px]"></i>
 
@@ -474,11 +579,13 @@ body{
 
 
 <!-- More -->
+
 <div class="space-y-2">
 
     <p class="text-[11px] font-extrabold text-slate-400 uppercase tracking-widest px-1">
         More
     </p>
+
 
     <div class="glass-card rounded-2xl overflow-hidden divide-y divide-slate-800/50">
 
@@ -490,12 +597,17 @@ body{
             <div class="flex items-center space-x-3">
 
                 <div class="w-8 h-8 rounded-xl bg-sky-500/10 text-sky-400 flex items-center justify-center text-xs">
+
                     <i class="fa-solid fa-share-nodes"></i>
+
                 </div>
 
-                <span>Share App</span>
+                <span>
+                    Share App
+                </span>
 
             </div>
+
 
             <i class="fa-solid fa-chevron-right text-slate-600 text-[10px]"></i>
 
@@ -509,12 +621,17 @@ body{
             <div class="flex items-center space-x-3">
 
                 <div class="w-8 h-8 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center text-xs">
+
                     <i class="fa-solid fa-book"></i>
+
                 </div>
 
-                <span>Match Rules</span>
+                <span>
+                    Match Rules
+                </span>
 
             </div>
+
 
             <i class="fa-solid fa-chevron-right text-slate-600 text-[10px]"></i>
 
@@ -528,12 +645,17 @@ body{
             <div class="flex items-center space-x-3">
 
                 <div class="w-8 h-8 rounded-xl bg-teal-500/10 text-teal-400 flex items-center justify-center text-xs">
+
                     <i class="fa-solid fa-file-lines"></i>
+
                 </div>
 
-                <span>Terms & Conditions</span>
+                <span>
+                    Terms & Conditions
+                </span>
 
             </div>
+
 
             <i class="fa-solid fa-chevron-right text-slate-600 text-[10px]"></i>
 
@@ -547,12 +669,17 @@ body{
             <div class="flex items-center space-x-3">
 
                 <div class="w-8 h-8 rounded-xl bg-rose-500/10 text-rose-400 flex items-center justify-center text-xs">
+
                     <i class="fa-solid fa-code"></i>
+
                 </div>
 
-                <span>Developer Profile</span>
+                <span>
+                    Developer Profile
+                </span>
 
             </div>
+
 
             <i class="fa-solid fa-chevron-right text-slate-600 text-[10px]"></i>
 
@@ -566,12 +693,17 @@ body{
             <div class="flex items-center space-x-3">
 
                 <div class="w-8 h-8 rounded-xl bg-red-500/10 text-red-400 flex items-center justify-center text-xs">
+
                     <i class="fa-solid fa-right-from-bracket"></i>
+
                 </div>
 
-                <span>Logout</span>
+                <span>
+                    Logout
+                </span>
 
             </div>
+
 
             <i class="fa-solid fa-chevron-right text-slate-600 text-[10px]"></i>
 
@@ -585,7 +717,9 @@ body{
 
 
 <!-- Bottom Navigation -->
+
 <nav class="fixed bottom-0 left-0 right-0 max-w-md mx-auto bg-[#0b0f1a]/95 backdrop-blur-md border-t border-slate-900 px-6 py-2.5 flex justify-around items-center z-40 shadow-2xl">
+
 
     <a
         href="index.html"
@@ -636,10 +770,12 @@ import {
     DEFAULT_PROFILE_PHOTO
 } from "./firebase.js";
 
+
 import {
     onAuthStateChanged,
     signOut
 } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+
 
 import {
     doc,
@@ -651,6 +787,7 @@ import {
     query,
     where
 } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
 
 import {
     processReferralReward
@@ -673,40 +810,31 @@ function safe(value,fallback=0){
 
 
 /* =========================================
-   LOADING HELPERS
+   SET TEXT
 ========================================= */
-
-function setLoading(id){
-
-    const el=document.getElementById(id);
-
-    if(!el)return;
-
-    el.innerHTML='<span class="loading-shimmer loading-text">Loading...</span>';
-
-}
-
 
 function setText(id,value){
 
-    const el=document.getElementById(id);
+    const el=
+        document.getElementById(id);
 
     if(!el)return;
 
-    el.textContent=String(value);
+    el.textContent=
+        String(value);
 
 }
 
 
 /* =========================================
    REAL MATCH STATISTICS
-   Runs in background so profile data
-   does not wait for this.
 ========================================= */
 
 async function getRealMatchStats(uid){
 
-    const byTournament=new Map();
+    const byTournament=
+        new Map();
+
 
     try{
 
@@ -717,13 +845,25 @@ async function getRealMatchStats(uid){
 
             getDocs(
                 query(
-                    collection(db,"matchHistory"),
-                    where("userId","==",uid)
+                    collection(
+                        db,
+                        "matchHistory"
+                    ),
+                    where(
+                        "userId",
+                        "==",
+                        uid
+                    )
                 )
-            ).catch(()=>null),
+            ).catch(
+                ()=>null
+            ),
 
             getDocs(
-                collection(db,"tournaments")
+                collection(
+                    db,
+                    "tournaments"
+                )
             )
 
         ]);
@@ -733,28 +873,38 @@ async function getRealMatchStats(uid){
 
             historySnap.forEach(d=>{
 
-                const h=d.data()||{};
+                const h=
+                    d.data()||{};
 
-                const id=String(
-                    h.tournamentId||d.id
+
+                const id=
+                    String(
+                        h.tournamentId||
+                        d.id
+                    );
+
+
+                byTournament.set(
+                    id,
+                    {
+
+                        result:
+                            String(
+                                h.result||""
+                            ).toLowerCase(),
+
+                        wonAmount:
+                            Number(
+                                h.wonAmount ??
+                                h.winnings ??
+                                h.prizeWon ??
+                                0
+                            )||0,
+
+                        completed:true
+
+                    }
                 );
-
-                byTournament.set(id,{
-
-                    result:String(
-                        h.result||""
-                    ).toLowerCase(),
-
-                    wonAmount:Number(
-                        h.wonAmount ??
-                        h.winnings ??
-                        h.prizeWon ??
-                        0
-                    )||0,
-
-                    completed:true
-
-                });
 
             });
 
@@ -763,29 +913,41 @@ async function getRealMatchStats(uid){
 
         tournamentsSnap.forEach(d=>{
 
-            const t=d.data()||{};
+            const t=
+                d.data()||{};
+
 
             const participants=
-                Array.isArray(t.participants)
+                Array.isArray(
+                    t.participants
+                )
                 ?t.participants
                 :[];
 
-            const entry=participants.find(
-                p=>String(
-                    p?.uid||
-                    p?.userId||
-                    p?.firebaseId||
-                    ""
-                )===uid
-            );
+
+            const entry=
+                participants.find(
+                    p=>
+                        String(
+                            p?.uid||
+                            p?.userId||
+                            p?.firebaseId||
+                            ""
+                        )===uid
+                );
 
 
-            if(!entry || byTournament.has(d.id))
+            if(
+                !entry||
+                byTournament.has(d.id)
+            )
                 return;
 
 
             const status=
-                String(t.status||"").toLowerCase();
+                String(
+                    t.status||""
+                ).toLowerCase();
 
 
             const completed=
@@ -805,38 +967,47 @@ async function getRealMatchStats(uid){
 
 
             const results=
-                Array.isArray(t.results)
+                Array.isArray(
+                    t.results
+                )
                 ?t.results
                 :[];
 
 
-            const result=results.find(
-                r=>String(
-                    r?.userId||
-                    r?.uid||
-                    ""
-                )===uid
-            )||{};
+            const result=
+                results.find(
+                    r=>
+                        String(
+                            r?.userId||
+                            r?.uid||
+                            ""
+                        )===uid
+                )||{};
 
 
-            const perSlot=Math.max(
-                1,
-                Number(
-                    entry.count||
-                    entry.slotCount||
-                    1
-                )
-            );
+            const perSlot=
+                Math.max(
+                    1,
+                    Number(
+                        entry.count||
+                        entry.slotCount||
+                        1
+                    )
+                );
 
 
             const amount=
                 result.winner===true
+
                 ?
+
                 Number(
                     result.prize??
                     t.prize??
                     0
-                )*perSlot+
+                )*
+                perSlot+
+
                 Number(
                     result.kills||0
                 )*
@@ -847,7 +1018,9 @@ async function getRealMatchStats(uid){
                 :
 
                 result.killOnly===true
+
                 ?
+
                 Number(
                     result.kills||0
                 )*
@@ -869,11 +1042,13 @@ async function getRealMatchStats(uid){
                 {
 
                     result:
-                        result.winner===true ||
+                        result.winner===true||
                         amount>0
                         ?"win"
                         :
-                        Object.keys(result).length
+                        Object.keys(
+                            result
+                        ).length
                         ?"loss"
                         :"pending",
 
@@ -897,26 +1072,30 @@ async function getRealMatchStats(uid){
 
         return {
 
-            matches:byTournament.size,
+            matches:
+                byTournament.size,
 
-            wins:entries.filter(
-                x=>
-                    x.result==="win"||
-                    x.result==="won"||
-                    x.wonAmount>0
-            ).length,
+            wins:
+                entries.filter(
+                    x=>
+                        x.result==="win"||
+                        x.result==="won"||
+                        x.wonAmount>0
+                ).length,
 
-            earnings:entries.reduce(
-                (sum,x)=>
-                    sum+
-                    Math.max(
-                        0,
-                        x.wonAmount
-                    ),
-                0
-            )
+            earnings:
+                entries.reduce(
+                    (sum,x)=>
+                        sum+
+                        Math.max(
+                            0,
+                            x.wonAmount
+                        ),
+                    0
+                )
 
         };
+
 
     }catch(e){
 
@@ -924,6 +1103,7 @@ async function getRealMatchStats(uid){
             "Match statistics unavailable:",
             e
         );
+
 
         return null;
 
@@ -936,7 +1116,10 @@ async function getRealMatchStats(uid){
    APPLY PROFILE
 ========================================= */
 
-function applyProfile(user,data){
+function applyProfile(
+    user,
+    data
+){
 
     if(!user)return;
 
@@ -967,6 +1150,10 @@ function applyProfile(user,data){
         DEFAULT_PROFILE_PHOTO;
 
 
+    /* ===============================
+       AVAILABLE BALANCE
+    =============================== */
+
     const balance=
         safe(
             data.balance,
@@ -974,9 +1161,25 @@ function applyProfile(user,data){
         );
 
 
+    /* ===============================
+       WINNINGS
+       
+       Multiple field support.
+       
+       Priority:
+       winnings
+       winningBalance
+       winning
+       totalWinnings
+       =============================== */
+
     const winnings=
         safe(
-            data.winnings,
+            data.winnings ??
+            data.winningBalance ??
+            data.winning ??
+            data.totalWinnings ??
+            0,
             0
         );
 
@@ -1004,12 +1207,15 @@ function applyProfile(user,data){
             data.totalEarnings ??
             data.earnings ??
             data.winnings ??
+            data.winningBalance ??
+            data.winning ??
+            data.totalWinnings ??
             0,
             0
         );
 
 
-    /* Name */
+    /* NAME */
 
     setText(
         "user-name",
@@ -1025,7 +1231,7 @@ function applyProfile(user,data){
     );
 
 
-    /* Refer */
+    /* REFER CODE */
 
     setText(
         "user-refer-code",
@@ -1033,30 +1239,34 @@ function applyProfile(user,data){
     );
 
 
-    /* Same profile photo */
+    /* PHOTO */
 
     const avatar=
         document.getElementById(
             "user-avatar"
         );
 
+
     if(avatar){
 
-        avatar.src=photo;
+        avatar.src=
+            photo;
 
-        avatar.onerror=()=>{
 
-            avatar.onerror=null;
+        avatar.onerror=
+            ()=>{
 
-            avatar.src=
-                DEFAULT_PROFILE_PHOTO;
+                avatar.onerror=null;
 
-        };
+                avatar.src=
+                    DEFAULT_PROFILE_PHOTO;
+
+            };
 
     }
 
 
-    /* Balance */
+    /* BALANCE */
 
     setText(
         "wallet-balance",
@@ -1064,7 +1274,7 @@ function applyProfile(user,data){
     );
 
 
-    /* Winnings */
+    /* WINNINGS */
 
     setText(
         "winnings-balance",
@@ -1072,7 +1282,7 @@ function applyProfile(user,data){
     );
 
 
-    /* Stats */
+    /* STATS */
 
     setText(
         "stat-matches",
@@ -1114,16 +1324,18 @@ async function loadProfile(user){
     try{
 
         /*
-         * First Firestore request only.
-         *
-         * Name / Balance / Winnings are
-         * applied immediately after this
-         * document arrives.
+         * First Firebase request.
          */
 
         const snap=
-            await getDoc(userRef);
+            await getDoc(
+                userRef
+            );
 
+
+        /* =================================
+           USER DOC DOES NOT EXIST
+        ================================= */
 
         if(!snap.exists()){
 
@@ -1139,7 +1351,10 @@ async function loadProfile(user){
                     /[^A-Z0-9]/g,
                     ""
                 )
-                .slice(0,8)+
+                .slice(
+                    0,
+                    8
+                )+
                 "-"+
                 Math.random()
                     .toString(36)
@@ -1149,7 +1364,8 @@ async function loadProfile(user){
 
             const basicData={
 
-                uid:user.uid,
+                uid:
+                    user.uid,
 
                 showName:
                     user.displayName||
@@ -1164,33 +1380,29 @@ async function loadProfile(user){
                     "User",
 
                 username:"",
-
                 usernameLower:"",
 
                 email:
                     user.email||"",
 
                 emailLower:
-                    (user.email||"")
-                    .toLowerCase(),
+                    (
+                        user.email||
+                        ""
+                    ).toLowerCase(),
 
                 whatsapp:"",
-
                 whatsappNumber:"",
-
                 phone:"",
 
                 referCode:
                     generatedReferCode,
 
                 referredByUid:"",
-
                 referredByCode:"",
 
                 referralCount:0,
-
                 successfulReferrals:0,
-
                 referralBonusTotal:0,
 
                 photoURL:
@@ -1201,9 +1413,7 @@ async function loadProfile(user){
                 winnings:0,
 
                 matchesPlayed:0,
-
                 matchesWon:0,
-
                 matchesLost:0,
 
                 totalEarnings:0,
@@ -1219,12 +1429,6 @@ async function loadProfile(user){
             };
 
 
-            /*
-             * IMPORTANT:
-             * UI gets data immediately.
-             * Firestore write happens after.
-             */
-
             applyProfile(
                 user,
                 basicData
@@ -1234,45 +1438,17 @@ async function loadProfile(user){
             setDoc(
                 userRef,
                 basicData,
-                {merge:true}
-            ).catch(
-                e=>console.warn(
-                    "Initial profile save:",
-                    e
-                )
-            );
-
-
-            /*
-             * Statistics run separately.
-             */
-
-            getRealMatchStats(
-                user.uid
+                {
+                    merge:true
+                }
             )
-            .then(realStats=>{
-
-                if(!realStats)return;
-
-                applyProfile(
-                    user,
-                    {
-                        ...basicData,
-
-                        matchesPlayed:
-                            realStats.matches,
-
-                        matchesWon:
-                            realStats.wins,
-
-                        totalEarnings:
-                            realStats.earnings
-
-                    }
-                );
-
-            })
-            .catch(()=>{});
+            .catch(
+                e=>
+                    console.warn(
+                        "Initial profile save:",
+                        e
+                    )
+            );
 
 
             return;
@@ -1280,11 +1456,17 @@ async function loadProfile(user){
         }
 
 
-        let data=snap.data();
+        /* =================================
+           USER DATA EXISTS
+        ================================= */
+
+        let data=
+            snap.data()||{};
 
 
         /*
-         * Generate missing referral code
+         * Make sure missing refer code
+         * doesn't break anything.
          */
 
         if(
@@ -1307,7 +1489,10 @@ async function loadProfile(user){
                     /[^A-Z0-9]/g,
                     ""
                 )
-                .slice(0,8)+
+                .slice(
+                    0,
+                    8
+                )+
                 "-"+
                 Math.random()
                     .toString(36)
@@ -1317,6 +1502,7 @@ async function loadProfile(user){
 
             data={
                 ...data,
+
                 referCode:
                     generatedReferCode
             };
@@ -1329,50 +1515,30 @@ async function loadProfile(user){
                     referCode:
                         generatedReferCode,
 
-                    referredByUid:
-                        data.referredByUid||
-                        "",
-
-                    referredByCode:
-                        data.referredByCode||
-                        "",
-
-                    referralCount:
-                        Number(
-                            data.referralCount||0
-                        ),
-
-                    successfulReferrals:
-                        Number(
-                            data.successfulReferrals||0
-                        ),
-
-                    referralBonusTotal:
-                        Number(
-                            data.referralBonusTotal||0
-                        ),
-
                     updatedAt:
                         serverTimestamp()
 
                 },
-                {merge:true}
+                {
+                    merge:true
+                }
             )
             .catch(
-                e=>console.warn(
-                    "Refer code save:",
-                    e
-                )
+                e=>
+                    console.warn(
+                        "Refer code save:",
+                        e
+                    )
             );
 
         }
 
 
         /*
-         * THIS IS THE IMPORTANT PART:
+         * MAIN PROFILE DATA
          *
-         * Profile data is rendered NOW.
-         * Match statistics do NOT block it.
+         * Balance + Winnings
+         * এখানেই immediately render হবে।
          */
 
         applyProfile(
@@ -1381,57 +1547,145 @@ async function loadProfile(user){
         );
 
 
-        /*
-         * Match statistics run in background.
-         */
+        /* =================================
+           BACKGROUND STATS
+           
+           IMPORTANT:
+           এখানে balance বা winnings
+           আর update করা হচ্ছে না।
+        ================================= */
 
         getRealMatchStats(
             user.uid
         )
-        .then(realStats=>{
+        .then(
+            realStats=>{
 
-            if(!realStats)return;
-
-
-            /*
-             * Only update stats.
-             *
-             * Name / Balance /
-             * Winnings remain from
-             * the main profile data.
-             */
-
-            setText(
-                "stat-matches",
-                realStats.matches
-            );
-
-            setText(
-                "stat-wins",
-                realStats.wins
-            );
-
-            setText(
-                "stat-earnings",
-                `৳${realStats.earnings}`
-            );
-
-        })
-        .catch(()=>{});
+                if(!realStats)
+                    return;
 
 
-        /*
-         * Referral check is also background.
-         */
+                setText(
+                    "stat-matches",
+                    realStats.matches
+                );
+
+
+                setText(
+                    "stat-wins",
+                    realStats.wins
+                );
+
+
+                setText(
+                    "stat-earnings",
+                    `৳${realStats.earnings}`
+                );
+
+            }
+        )
+        .catch(
+            ()=>{}
+        );
+
+
+        /* =================================
+           REFERRAL BACKGROUND
+           
+           Referral আগে balance block করবে না।
+           
+           Reward হলে latest user data
+           আবার load করা হবে।
+        ================================= */
 
         processReferralReward(
             user.uid
         )
+        .then(
+            async ()=>{
+
+                try{
+
+                    const latestSnap=
+                        await getDoc(
+                            userRef
+                        );
+
+
+                    if(
+                        latestSnap.exists()
+                    ){
+
+                        const latestData=
+                            latestSnap.data()||{};
+
+
+                        /*
+                         * Only refresh:
+                         * balance
+                         * winnings
+                         *
+                         * যাতে background stats
+                         * আবার overwrite না করে।
+                         */
+
+                        if(
+                            latestData.balance !==
+                                undefined
+                        ){
+
+                            setText(
+                                "wallet-balance",
+                                safe(
+                                    latestData.balance,
+                                    0
+                                )
+                            );
+
+                        }
+
+
+                        const latestWinnings=
+                            latestData.winnings ??
+                            latestData.winningBalance ??
+                            latestData.winning ??
+                            latestData.totalWinnings;
+
+
+                        if(
+                            latestWinnings !==
+                                undefined
+                        ){
+
+                            setText(
+                                "winnings-balance",
+                                safe(
+                                    latestWinnings,
+                                    0
+                                )
+                            );
+
+                        }
+
+                    }
+
+                }catch(e){
+
+                    console.warn(
+                        "Latest wallet refresh:",
+                        e
+                    );
+
+                }
+
+            }
+        )
         .catch(
-            e=>console.warn(
-                "Referral check:",
-                e
-            )
+            e=>
+                console.warn(
+                    "Referral check:",
+                    e
+                )
         );
 
 
@@ -1444,19 +1698,13 @@ async function loadProfile(user){
 
 
         /*
-         * Never replace loading with 0.
-         * If Firebase is slow/error, user sees
-         * a clear fallback instead.
+         * Error হলে fake 0 দেখাবে না।
          */
-
-        const userName=
-            user.displayName||
-            "User";
-
 
         setText(
             "user-name",
-            userName
+            user.displayName||
+            "User"
         );
 
 
@@ -1516,7 +1764,8 @@ async function loadProfile(user){
    TOAST
 ========================================= */
 
-window.showToast=function(
+window.showToast=
+function(
     message,
     type="success"
 ){
@@ -1544,14 +1793,24 @@ window.showToast=function(
         "fa-solid fa-circle-check text-emerald-400";
 
 
-    if(type==="error")
+    if(
+        type==="error"
+    ){
+
         icon=
             "fa-solid fa-circle-xmark text-red-400";
 
+    }
 
-    if(type==="warning")
+
+    if(
+        type==="warning"
+    ){
+
         icon=
             "fa-solid fa-triangle-exclamation text-amber-400";
+
+    }
 
 
     toast.innerHTML=
@@ -1602,34 +1861,41 @@ onAuthStateChanged(
 
 
         /*
-         * Profile load starts immediately.
+         * Profile immediately starts loading.
          */
 
-        loadProfile(user)
-            .catch(
-                e=>console.error(
+        loadProfile(
+            user
+        )
+        .catch(
+            e=>
+                console.error(
                     "Background profile load:",
                     e
                 )
-            );
+        );
 
     }
 );
 
 
 /* =========================================
-   SHARE
+   SHARE APP
 ========================================= */
 
-window.shareApp=async function(){
+window.shareApp=
+async function(){
 
     try{
 
-        if(navigator.share){
+        if(
+            navigator.share
+        ){
 
             await navigator.share({
 
-                title:"Aura Skill",
+                title:
+                    "Aura Skill",
 
                 text:
                     "Gaming Tournament App",
@@ -1677,7 +1943,8 @@ window.shareApp=async function(){
    LOGOUT
 ========================================= */
 
-window.handleLogout=function(){
+window.handleLogout=
+function(){
 
     const modal=
         document.getElementById(
@@ -1685,13 +1952,18 @@ window.handleLogout=function(){
         );
 
 
-    if(modal)
-        modal.style.display="flex";
+    if(modal){
+
+        modal.style.display=
+            "flex";
+
+    }
 
 };
 
 
-window.closeLogoutModal=function(){
+window.closeLogoutModal=
+function(){
 
     const modal=
         document.getElementById(
@@ -1699,25 +1971,36 @@ window.closeLogoutModal=function(){
         );
 
 
-    if(modal)
-        modal.style.display="none";
+    if(modal){
+
+        modal.style.display=
+            "none";
+
+    }
 
 };
 
 
-window.confirmLogout=async function(){
+window.confirmLogout=
+async function(){
 
     try{
 
-        await signOut(auth);
+        await signOut(
+            auth
+        );
+
 
         window.location.replace(
             "login.html"
         );
 
+
     }catch(error){
 
-        console.error(error);
+        console.error(
+            error
+        );
 
 
         showToast(
