@@ -61,16 +61,28 @@ body{
     max-width:calc(100vw - 40px);
 }
 
-.toast.success{border-left-color:#10b981}
-.toast.error{border-left-color:#ef4444}
-.toast.warning{border-left-color:#f59e0b}
-.toast.info{border-left-color:#3b82f6}
+.toast.success{
+    border-left-color:#10b981;
+}
+
+.toast.error{
+    border-left-color:#ef4444;
+}
+
+.toast.warning{
+    border-left-color:#f59e0b;
+}
+
+.toast.info{
+    border-left-color:#3b82f6;
+}
 
 @keyframes slideIn{
     from{
         transform:translateX(100%);
         opacity:0;
     }
+
     to{
         transform:translateX(0);
         opacity:1;
@@ -81,6 +93,7 @@ body{
     from{
         opacity:1;
     }
+
     to{
         opacity:0;
         transform:translateY(-10px);
@@ -107,22 +120,35 @@ body{
     left:-100%;
     width:100%;
     height:100%;
+
     background:linear-gradient(
         90deg,
         transparent,
         rgba(255,255,255,.13),
         transparent
     );
+
     animation:shimmer 1.35s infinite;
 }
 
 @keyframes loadingPulse{
-    0%,100%{opacity:.45}
-    50%{opacity:1}
+
+    0%,100%{
+        opacity:.45;
+    }
+
+    50%{
+        opacity:1;
+    }
+
 }
 
 @keyframes shimmer{
-    100%{left:100%}
+
+    100%{
+        left:100%;
+    }
+
 }
 
 .refresh-spin{
@@ -130,17 +156,15 @@ body{
 }
 
 @keyframes refreshSpin{
-    from{transform:rotate(0deg)}
-    to{transform:rotate(360deg)}
-}
 
-.alert-pulse{
-    animation:alertPulse 1.8s ease-in-out infinite;
-}
+    from{
+        transform:rotate(0deg);
+    }
 
-@keyframes alertPulse{
-    0%,100%{opacity:1}
-    50%{opacity:.72}
+    to{
+        transform:rotate(360deg);
+    }
+
 }
 
 .balance-hidden{
@@ -151,35 +175,35 @@ body{
     min-width:0;
 }
 
-.no-scrollbar::-webkit-scrollbar{
-    display:none;
-}
-
-.no-scrollbar{
-    -ms-overflow-style:none;
-    scrollbar-width:none;
-}
-
 </style>
 </head>
 
+
 <body class="min-h-screen flex flex-col pb-24">
+
 
 <div id="toast-container"></div>
 
-<!-- Header -->
+
+<!-- =========================================
+     HEADER
+========================================= -->
+
 <header class="px-4 py-3 flex items-center space-x-3 sticky top-0 z-30 bg-[#050811]/90 backdrop-blur-md border-b border-slate-900">
 
-    <a href="profile.html"
-       class="w-9 h-9 rounded-xl bg-slate-800/80 hover:bg-slate-800 text-slate-300 flex items-center justify-center text-sm transition">
+    <a
+        href="profile.html"
+        class="w-9 h-9 rounded-xl bg-slate-800/80 hover:bg-slate-800 text-slate-300 flex items-center justify-center text-sm transition">
 
         <i class="fa-solid fa-arrow-left"></i>
 
     </a>
 
+
     <h1 class="text-sm font-black text-white tracking-wide">
         My Wallet
     </h1>
+
 
     <div class="ml-auto">
 
@@ -188,8 +212,10 @@ body{
             onclick="refreshWallet()"
             class="w-9 h-9 rounded-xl bg-slate-800/80 hover:bg-slate-800 text-slate-300 flex items-center justify-center transition">
 
-            <i id="header-refresh-icon"
-               class="fa-solid fa-rotate-right text-xs"></i>
+            <i
+                id="header-refresh-icon"
+                class="fa-solid fa-rotate-right text-xs">
+            </i>
 
         </button>
 
@@ -202,19 +228,11 @@ body{
 
 
 <!-- =========================================
-     SMART ALERTS
-========================================= -->
-
-<div id="wallet-alerts"
-     class="space-y-2 hidden">
-</div>
-
-
-<!-- =========================================
-     WALLET BALANCE
+     WALLET BALANCE CARD
 ========================================= -->
 
 <div class="glass-card rounded-3xl p-6 text-center space-y-6 border border-slate-800 shadow-xl">
+
 
     <div>
 
@@ -224,23 +242,33 @@ body{
                 Available Balance
             </p>
 
+
+            <!-- HIDE / SHOW -->
+
             <button
                 id="balance-eye-btn"
                 onclick="toggleBalanceVisibility()"
                 class="w-7 h-7 rounded-lg bg-slate-800/80 hover:bg-slate-700 text-slate-400 hover:text-white flex items-center justify-center transition">
 
-                <i id="balance-eye-icon"
-                   class="fa-solid fa-eye text-[10px]"></i>
+                <i
+                    id="balance-eye-icon"
+                    class="fa-solid fa-eye text-[10px]">
+                </i>
 
             </button>
+
+
+            <!-- REFRESH -->
 
             <button
                 id="balance-refresh-btn"
                 onclick="refreshWallet()"
                 class="w-7 h-7 rounded-lg bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 flex items-center justify-center transition">
 
-                <i id="balance-refresh-icon"
-                   class="fa-solid fa-rotate-right text-[10px]"></i>
+                <i
+                    id="balance-refresh-icon"
+                    class="fa-solid fa-rotate-right text-[10px]">
+                </i>
 
             </button>
 
@@ -264,36 +292,10 @@ body{
     </div>
 
 
-    <button
-        onclick="showWinningDetails()"
-        class="inline-flex items-center space-x-2 bg-[#0b101d] border border-slate-800/80 px-4 py-2 rounded-xl hover:border-emerald-500/30 transition">
-
-        <i class="fa-solid fa-trophy text-amber-400 text-xs"></i>
-
-        <span class="text-xs text-slate-400 font-medium">
-            Winning Balance
-        </span>
-
-        <span class="text-xs font-bold text-white">
-
-            ৳
-
-            <span
-                id="winning-balance"
-                class="loading-shimmer loading-text">
-
-                Loading...
-
-            </span>
-
-        </span>
-
-        <i class="fa-solid fa-chevron-right text-[9px] text-slate-600"></i>
-
-    </button>
-
+    <!-- ACTION BUTTONS -->
 
     <div class="grid grid-cols-2 gap-3 pt-2">
+
 
         <a
             href="add-money.html"
@@ -336,70 +338,77 @@ body{
     </p>
 
 
-    <div class="grid grid-cols-3 gap-2.5">
+    <div class="grid grid-cols-2 gap-3">
 
-        <div class="stat-card glass-card rounded-2xl p-3 border border-slate-800">
 
-            <div class="w-8 h-8 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center mb-2">
+        <!-- TOTAL DEPOSIT -->
 
-                <i class="fa-solid fa-arrow-down text-xs"></i>
+        <div
+            class="stat-card glass-card rounded-2xl p-4 border border-slate-800">
+
+            <div class="flex items-center justify-between">
+
+                <div>
+
+                    <p class="text-[10px] text-slate-500 font-semibold">
+                        Total Deposit
+                    </p>
+
+                    <p
+                        id="total-deposit"
+                        class="text-base font-black text-white mt-1">
+
+                        ৳0
+
+                    </p>
+
+                </div>
+
+
+                <div
+                    class="w-9 h-9 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center">
+
+                    <i class="fa-solid fa-arrow-down text-xs"></i>
+
+                </div>
 
             </div>
-
-            <p class="text-[9px] text-slate-500 font-semibold">
-                Total Deposit
-            </p>
-
-            <p id="total-deposit"
-               class="text-sm font-black text-white mt-0.5">
-
-                ৳0
-
-            </p>
 
         </div>
 
 
-        <div class="stat-card glass-card rounded-2xl p-3 border border-slate-800">
+        <!-- TOTAL WITHDRAW -->
 
-            <div class="w-8 h-8 rounded-xl bg-red-500/10 text-red-400 flex items-center justify-center mb-2">
+        <div
+            class="stat-card glass-card rounded-2xl p-4 border border-slate-800">
 
-                <i class="fa-solid fa-arrow-up text-xs"></i>
+            <div class="flex items-center justify-between">
+
+                <div>
+
+                    <p class="text-[10px] text-slate-500 font-semibold">
+                        Total Withdraw
+                    </p>
+
+                    <p
+                        id="total-withdraw"
+                        class="text-base font-black text-white mt-1">
+
+                        ৳0
+
+                    </p>
+
+                </div>
+
+
+                <div
+                    class="w-9 h-9 rounded-xl bg-red-500/10 text-red-400 flex items-center justify-center">
+
+                    <i class="fa-solid fa-arrow-up text-xs"></i>
+
+                </div>
 
             </div>
-
-            <p class="text-[9px] text-slate-500 font-semibold">
-                Total Withdraw
-            </p>
-
-            <p id="total-withdraw"
-               class="text-sm font-black text-white mt-0.5">
-
-                ৳0
-
-            </p>
-
-        </div>
-
-
-        <div class="stat-card glass-card rounded-2xl p-3 border border-slate-800">
-
-            <div class="w-8 h-8 rounded-xl bg-amber-500/10 text-amber-400 flex items-center justify-center mb-2">
-
-                <i class="fa-solid fa-trophy text-xs"></i>
-
-            </div>
-
-            <p class="text-[9px] text-slate-500 font-semibold">
-                Total Winning
-            </p>
-
-            <p id="total-winning"
-               class="text-sm font-black text-white mt-0.5">
-
-                ৳0
-
-            </p>
 
         </div>
 
@@ -421,11 +430,13 @@ body{
 
     <div class="glass-card rounded-3xl p-5 space-y-4 border border-slate-800 shadow-xl">
 
+
         <div class="space-y-1.5">
 
             <label class="text-[11px] font-bold text-slate-300 block">
                 Enter Gift Code
             </label>
+
 
             <input
                 type="text"
@@ -461,41 +472,11 @@ body{
 
 
 <!-- =========================================
-     GIFT CODE HISTORY
-========================================= -->
-
-<div class="space-y-2">
-
-    <div class="flex items-center justify-between px-1">
-
-        <p class="text-[11px] font-extrabold text-slate-400 uppercase tracking-widest">
-            Gift Code History
-        </p>
-
-    </div>
-
-
-    <div class="glass-card rounded-2xl overflow-hidden border border-slate-800">
-
-        <div id="gift-history"
-             class="divide-y divide-slate-800/50">
-
-            <div class="p-5 text-center text-xs text-slate-500">
-                Gift code history loading...
-            </div>
-
-        </div>
-
-    </div>
-
-</div>
-
-
-<!-- =========================================
      RECENT TRANSACTIONS
 ========================================= -->
 
 <div class="space-y-2">
+
 
     <div class="flex items-center justify-between px-1">
 
@@ -503,8 +484,10 @@ body{
             Recent Transactions
         </p>
 
-        <a href="transactions.html"
-           class="text-[10px] font-bold text-blue-400 hover:text-blue-300">
+
+        <a
+            href="transactions.html"
+            class="text-[10px] font-bold text-blue-400 hover:text-blue-300">
 
             View All
 
@@ -515,12 +498,15 @@ body{
     </div>
 
 
-    <div class="glass-card rounded-2xl overflow-hidden border border-slate-800">
+    <div
+        class="glass-card rounded-2xl overflow-hidden border border-slate-800">
 
         <div id="recent-transactions">
 
             <div class="p-5 text-center text-xs text-slate-500">
+
                 Transactions loading...
+
             </div>
 
         </div>
@@ -547,9 +533,12 @@ body{
             href="transactions.html"
             class="menu-item p-4 flex items-center justify-between text-xs font-semibold text-slate-200">
 
+
             <div class="flex items-center space-x-3.5">
 
-                <div class="w-9 h-9 rounded-xl bg-blue-500/10 text-blue-400 flex items-center justify-center text-sm">
+
+                <div
+                    class="w-9 h-9 rounded-xl bg-blue-500/10 text-blue-400 flex items-center justify-center text-sm">
 
                     <i class="fa-solid fa-wallet"></i>
 
@@ -571,7 +560,9 @@ body{
             </div>
 
 
-            <i class="fa-solid fa-chevron-right text-slate-600 text-[10px]"></i>
+            <i
+                class="fa-solid fa-chevron-right text-slate-600 text-[10px]">
+            </i>
 
         </a>
 
@@ -591,21 +582,28 @@ body{
     </p>
 
 
-    <div class="glass-card rounded-2xl overflow-hidden divide-y divide-slate-800/50">
+    <div
+        class="glass-card rounded-2xl overflow-hidden divide-y divide-slate-800/50">
 
+
+        <!-- ADD MONEY -->
 
         <a
             href="#"
             onclick="showGuide('add-money'); return false;"
             class="menu-item p-4 flex items-center justify-between text-xs font-semibold text-slate-200">
 
+
             <div class="flex items-center space-x-3.5">
 
-                <div class="w-9 h-9 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center text-sm">
+
+                <div
+                    class="w-9 h-9 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center text-sm">
 
                     <i class="fa-solid fa-credit-card"></i>
 
                 </div>
+
 
                 <span class="font-bold text-white">
                     How to Add Money?
@@ -614,7 +612,8 @@ body{
             </div>
 
 
-            <span class="bg-blue-600/20 text-blue-400 text-[10px] font-bold px-2.5 py-1 rounded-lg flex items-center space-x-1">
+            <span
+                class="bg-blue-600/20 text-blue-400 text-[10px] font-bold px-2.5 py-1 rounded-lg flex items-center space-x-1">
 
                 <i class="fa-solid fa-play text-[8px]"></i>
 
@@ -627,18 +626,24 @@ body{
         </a>
 
 
+        <!-- JOIN MATCH -->
+
         <a
             href="#"
             onclick="showGuide('join-match'); return false;"
             class="menu-item p-4 flex items-center justify-between text-xs font-semibold text-slate-200">
 
+
             <div class="flex items-center space-x-3.5">
 
-                <div class="w-9 h-9 rounded-xl bg-purple-500/10 text-purple-400 flex items-center justify-center text-sm">
+
+                <div
+                    class="w-9 h-9 rounded-xl bg-purple-500/10 text-purple-400 flex items-center justify-center text-sm">
 
                     <i class="fa-solid fa-gamepad"></i>
 
                 </div>
+
 
                 <span class="font-bold text-white">
                     How to Join a Match?
@@ -647,7 +652,8 @@ body{
             </div>
 
 
-            <span class="bg-blue-600/20 text-blue-400 text-[10px] font-bold px-2.5 py-1 rounded-lg flex items-center space-x-1">
+            <span
+                class="bg-blue-600/20 text-blue-400 text-[10px] font-bold px-2.5 py-1 rounded-lg flex items-center space-x-1">
 
                 <i class="fa-solid fa-play text-[8px]"></i>
 
@@ -660,18 +666,24 @@ body{
         </a>
 
 
+        <!-- WITHDRAW -->
+
         <a
             href="#"
             onclick="showGuide('withdraw'); return false;"
             class="menu-item p-4 flex items-center justify-between text-xs font-semibold text-slate-200">
 
+
             <div class="flex items-center space-x-3.5">
 
-                <div class="w-9 h-9 rounded-xl bg-amber-500/10 text-amber-400 flex items-center justify-center text-sm">
+
+                <div
+                    class="w-9 h-9 rounded-xl bg-amber-500/10 text-amber-400 flex items-center justify-center text-sm">
 
                     <i class="fa-solid fa-landmark"></i>
 
                 </div>
+
 
                 <span class="font-bold text-white">
                     How to Withdraw?
@@ -680,7 +692,8 @@ body{
             </div>
 
 
-            <span class="bg-blue-600/20 text-blue-400 text-[10px] font-bold px-2.5 py-1 rounded-lg flex items-center space-x-1">
+            <span
+                class="bg-blue-600/20 text-blue-400 text-[10px] font-bold px-2.5 py-1 rounded-lg flex items-center space-x-1">
 
                 <i class="fa-solid fa-play text-[8px]"></i>
 
@@ -691,126 +704,6 @@ body{
             </span>
 
         </a>
-
-    </div>
-
-</div>
-
-
-<!-- =========================================
-     WALLET SECURITY
-========================================= -->
-
-<div class="space-y-2">
-
-    <p class="text-[11px] font-extrabold text-slate-400 uppercase tracking-widest px-1">
-        Wallet Security
-    </p>
-
-
-    <div class="glass-card rounded-2xl p-4 border border-slate-800">
-
-        <div class="flex items-center gap-3 mb-4">
-
-            <div class="w-10 h-10 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center">
-
-                <i class="fa-solid fa-shield-halved"></i>
-
-            </div>
-
-            <div>
-
-                <p class="text-xs font-black text-white">
-                    Wallet Secured
-                </p>
-
-                <p class="text-[10px] text-emerald-400 font-semibold">
-                    Your wallet is protected
-                </p>
-
-            </div>
-
-            <i class="fa-solid fa-circle-check text-emerald-400 ml-auto"></i>
-
-        </div>
-
-
-        <div class="space-y-3">
-
-            <div class="bg-[#050811] border border-slate-800 rounded-xl p-3">
-
-                <div class="flex items-center justify-between gap-3">
-
-                    <div class="min-w-0">
-
-                        <p class="text-[9px] text-slate-500 uppercase tracking-wider font-bold">
-                            Account UID
-                        </p>
-
-                        <p id="account-uid"
-                           class="text-[10px] text-slate-300 font-mono mt-1 truncate">
-
-                            Loading...
-
-                        </p>
-
-                    </div>
-
-
-                    <button
-                        onclick="copyAccountUID()"
-                        class="shrink-0 w-8 h-8 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 flex items-center justify-center transition">
-
-                        <i class="fa-solid fa-copy text-[10px]"></i>
-
-                    </button>
-
-                </div>
-
-            </div>
-
-
-            <div class="flex items-center justify-between">
-
-                <div class="flex items-center gap-2">
-
-                    <i class="fa-solid fa-lock text-emerald-400 text-xs"></i>
-
-                    <span class="text-[10px] text-slate-400 font-semibold">
-                        Wallet Status
-                    </span>
-
-                </div>
-
-                <span class="text-[10px] font-bold text-emerald-400">
-                    Secured
-                </span>
-
-            </div>
-
-
-            <div class="flex items-center justify-between">
-
-                <div class="flex items-center gap-2">
-
-                    <i class="fa-solid fa-clock text-blue-400 text-xs"></i>
-
-                    <span class="text-[10px] text-slate-400 font-semibold">
-                        Last Wallet Update
-                    </span>
-
-                </div>
-
-                <span id="last-wallet-update"
-                      class="text-[10px] font-bold text-slate-300 text-right">
-
-                    Loading...
-
-                </span>
-
-            </div>
-
-        </div>
 
     </div>
 
@@ -820,78 +713,6 @@ body{
 </main>
 
 
-<!-- =========================================
-     WINNING DETAILS MODAL
-========================================= -->
-
-<div id="winning-modal"
-     class="fixed inset-0 bg-black/70 backdrop-blur-sm z-[100] hidden items-center justify-center px-4">
-
-    <div class="glass-card w-full max-w-sm rounded-3xl p-5 border border-slate-700 shadow-2xl">
-
-        <div class="flex items-center justify-between mb-5">
-
-            <div class="flex items-center gap-3">
-
-                <div class="w-10 h-10 rounded-xl bg-amber-500/10 text-amber-400 flex items-center justify-center">
-
-                    <i class="fa-solid fa-trophy"></i>
-
-                </div>
-
-                <div>
-
-                    <h3 class="text-sm font-black text-white">
-                        Winning Balance
-                    </h3>
-
-                    <p class="text-[10px] text-slate-500">
-                        Your winning details
-                    </p>
-
-                </div>
-
-            </div>
-
-
-            <button
-                onclick="closeWinningDetails()"
-                class="w-8 h-8 rounded-lg bg-slate-800 text-slate-400 hover:text-white flex items-center justify-center">
-
-                <i class="fa-solid fa-xmark text-xs"></i>
-
-            </button>
-
-        </div>
-
-
-        <div class="space-y-2">
-
-            <div class="flex items-center justify-between bg-[#050811] rounded-xl p-3">
-
-                <span class="text-xs text-slate-400">
-                    Total Winning
-                </span>
-
-                <span id="modal-total-winning"
-                      class="text-sm font-black text-amber-400">
-                    ৳0
-                </span>
-
-            </div>
-
-
-            <div class="text-[10px] text-slate-500 text-center pt-2">
-                Winning balance Firebase account data অনুযায়ী দেখানো হচ্ছে।
-            </div>
-
-        </div>
-
-    </div>
-
-</div>
-
-
 <script type="module">
 
 import {
@@ -899,9 +720,11 @@ import {
     db
 } from "./firebase.js";
 
+
 import {
     onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+
 
 import {
     collection,
@@ -913,64 +736,93 @@ import {
     runTransaction
 } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
+
 import {
     processReferralReward
 } from "./referral.js";
 
 
 let currentUserId = null;
+
 let currentUser = null;
-let currentUserData = {};
+
 let balanceVisible = true;
+
 let currentBalance = 0;
-let currentWinningBalance = 0;
 
 
 /* =========================================
    TOAST
 ========================================= */
 
-window.showToast = function(message,type="success"){
+window.showToast =
+function(
+    message,
+    type = "success"
+){
 
     const container =
-        document.getElementById("toast-container");
+        document.getElementById(
+            "toast-container"
+        );
+
 
     if(!container) return;
 
+
     const toast =
-        document.createElement("div");
+        document.createElement(
+            "div"
+        );
+
 
     toast.className =
         `toast ${type}`;
 
+
     let iconClass =
         "fa-solid fa-circle-check text-emerald-400";
 
-    if(type==="error"){
+
+    if(type === "error"){
+
         iconClass =
             "fa-solid fa-circle-xmark text-red-400";
+
     }
 
-    if(type==="warning"){
+
+    if(type === "warning"){
+
         iconClass =
             "fa-solid fa-triangle-exclamation text-amber-400";
+
     }
 
-    if(type==="info"){
+
+    if(type === "info"){
+
         iconClass =
             "fa-solid fa-circle-info text-blue-400";
+
     }
+
 
     toast.innerHTML =
         `<i class="${iconClass}"></i>
          <span>${escapeHtml(message)}</span>`;
 
-    container.appendChild(toast);
+
+    container.appendChild(
+        toast
+    );
+
 
     setTimeout(
-        ()=>toast.remove(),
+        () => toast.remove(),
         3000
     );
+
 };
 
 
@@ -994,22 +846,30 @@ function escapeHtml(value){
    NUMBER
 ========================================= */
 
-function getNumber(value,fallback=0){
+function getNumber(
+    value,
+    fallback = 0
+){
 
     if(
-        value===undefined ||
-        value===null ||
-        value===""
+        value === undefined ||
+        value === null ||
+        value === ""
     ){
+
         return fallback;
+
     }
+
 
     const number =
         Number(value);
 
+
     return Number.isFinite(number)
         ? number
         : fallback;
+
 }
 
 
@@ -1017,52 +877,86 @@ function getNumber(value,fallback=0){
    TIME
 ========================================= */
 
-function getTimeValue(item={}){
+function getTimeValue(item = {}){
 
     const values = [
+
         item.timestamp,
+
         item.createdAt,
+
         item.updatedAt,
-        item.redeemedAt,
-        item.rejectedAt
+
+        item.redeemedAt
+
     ];
 
-    for(const value of values){
 
-        if(value?.toMillis){
+    for(
+        const value of values
+    ){
+
+        if(
+            value?.toMillis
+        ){
+
             return value.toMillis();
+
         }
 
-        if(typeof value==="number"){
+
+        if(
+            typeof value === "number"
+        ){
+
             return value;
+
         }
 
-        if(typeof value==="string"){
+
+        if(
+            typeof value === "string"
+        ){
 
             const parsed =
                 Number(value);
 
-            if(Number.isFinite(parsed)){
+
+            if(
+                Number.isFinite(parsed)
+            ){
+
                 return parsed;
+
             }
+
 
             const date =
                 new Date(value);
 
-            if(!Number.isNaN(date.getTime())){
+
+            if(
+                !Number.isNaN(
+                    date.getTime()
+                )
+            ){
+
                 return date.getTime();
+
             }
 
         }
 
     }
 
+
     return 0;
+
 }
 
 
 /* =========================================
-   DATE
+   FORMAT DATE
 ========================================= */
 
 function formatDate(item){
@@ -1070,69 +964,26 @@ function formatDate(item){
     const time =
         getTimeValue(item);
 
-    if(!time) return "সময় পাওয়া যায়নি";
 
-    return new Date(time)
-        .toLocaleString("bn-BD",{
-            day:"2-digit",
-            month:"short",
-            year:"numeric",
-            hour:"2-digit",
-            minute:"2-digit"
-        });
+    if(!time){
 
-}
-
-
-/* =========================================
-   WINNING BALANCE
-========================================= */
-
-function getWinningBalance(data){
-
-    if(!data) return 0;
-
-    const fields = [
-
-        "winningBalance",
-        "winnings",
-        "winning",
-        "totalWinnings",
-        "totalWinning",
-        "winBalance",
-        "winningAmount",
-        "totalWinningAmount",
-        "totalEarnings",
-        "earnings",
-        "prizeMoney"
-
-    ];
-
-    for(const field of fields){
-
-        if(
-            Object.prototype.hasOwnProperty.call(
-                data,
-                field
-            )
-            &&
-            data[field]!==undefined
-            &&
-            data[field]!==null
-            &&
-            data[field]!==""
-        ){
-
-            return getNumber(
-                data[field],
-                0
-            );
-
-        }
+        return "সময় পাওয়া যায়নি";
 
     }
 
-    return 0;
+
+    return new Date(time)
+        .toLocaleString(
+            "bn-BD",
+            {
+                day:"2-digit",
+                month:"short",
+                year:"numeric",
+                hour:"2-digit",
+                minute:"2-digit"
+            }
+        );
+
 }
 
 
@@ -1147,66 +998,35 @@ function displayBalance(){
             "wallet-balance"
         );
 
-    const winningElement =
-        document.getElementById(
-            "winning-balance"
-        );
 
-    if(balanceElement){
+    if(!balanceElement) return;
+
+
+    balanceElement.classList.remove(
+        "loading-shimmer",
+        "loading-text"
+    );
+
+
+    if(balanceVisible){
+
+        balanceElement.textContent =
+            currentBalance.toLocaleString(
+                "en-US"
+            );
 
         balanceElement.classList.remove(
-            "loading-shimmer",
-            "loading-text"
+            "balance-hidden"
         );
 
-        if(balanceVisible){
+    }else{
 
-            balanceElement.textContent =
-                currentBalance.toLocaleString("en-US");
+        balanceElement.textContent =
+            "••••";
 
-            balanceElement.classList.remove(
-                "balance-hidden"
-            );
-
-        }else{
-
-            balanceElement.textContent =
-                "••••";
-
-            balanceElement.classList.add(
-                "balance-hidden"
-            );
-
-        }
-
-    }
-
-    if(winningElement){
-
-        winningElement.classList.remove(
-            "loading-shimmer",
-            "loading-text"
+        balanceElement.classList.add(
+            "balance-hidden"
         );
-
-        if(balanceVisible){
-
-            winningElement.textContent =
-                currentWinningBalance.toLocaleString("en-US");
-
-            winningElement.classList.remove(
-                "balance-hidden"
-            );
-
-        }else{
-
-            winningElement.textContent =
-                "••••";
-
-            winningElement.classList.add(
-                "balance-hidden"
-            );
-
-        }
 
     }
 
@@ -1223,10 +1043,12 @@ function(){
     balanceVisible =
         !balanceVisible;
 
+
     const icon =
         document.getElementById(
             "balance-eye-icon"
         );
+
 
     if(icon){
 
@@ -1236,6 +1058,7 @@ function(){
             : "fa-solid fa-eye-slash text-[10px]";
 
     }
+
 
     displayBalance();
 
@@ -1251,8 +1074,6 @@ function updateWalletUI(data){
     data =
         data || {};
 
-    currentUserData =
-        data;
 
     currentBalance =
         getNumber(
@@ -1260,85 +1081,8 @@ function updateWalletUI(data){
             0
         );
 
-    currentWinningBalance =
-        getWinningBalance(
-            data
-        );
 
     displayBalance();
-
-    const totalWinning =
-        document.getElementById(
-            "total-winning"
-        );
-
-    if(totalWinning){
-
-        totalWinning.textContent =
-            "৳" +
-            currentWinningBalance.toLocaleString("en-US");
-
-    }
-
-    const modalWinning =
-        document.getElementById(
-            "modal-total-winning"
-        );
-
-    if(modalWinning){
-
-        modalWinning.textContent =
-            "৳" +
-            currentWinningBalance.toLocaleString("en-US");
-
-    }
-
-    const lastUpdate =
-        document.getElementById(
-            "last-wallet-update"
-        );
-
-    if(lastUpdate){
-
-        const updatedAt =
-            data.updatedAt;
-
-        if(updatedAt?.toMillis){
-
-            lastUpdate.textContent =
-                formatDate({
-                    timestamp:
-                        updatedAt.toMillis()
-                });
-
-        }else if(updatedAt){
-
-            lastUpdate.textContent =
-                formatDate({
-                    timestamp:
-                        updatedAt
-                });
-
-        }else{
-
-            lastUpdate.textContent =
-                "Just now";
-
-        }
-
-    }
-
-    const uidElement =
-        document.getElementById(
-            "account-uid"
-        );
-
-    if(uidElement){
-
-        uidElement.textContent =
-            currentUserId || "—";
-
-    }
 
 }
 
@@ -1347,9 +1091,12 @@ function updateWalletUI(data){
    LOAD WALLET
 ========================================= */
 
-async function loadWallet(user){
+async function loadWallet(
+    user
+){
 
     if(!user) return;
+
 
     const userRef =
         doc(
@@ -1358,6 +1105,7 @@ async function loadWallet(user){
             user.uid
         );
 
+
     try{
 
         const userSnap =
@@ -1365,20 +1113,45 @@ async function loadWallet(user){
                 userRef
             );
 
-        if(!userSnap.exists()){
+
+        if(
+            !userSnap.exists()
+        ){
+
+            const balanceElement =
+                document.getElementById(
+                    "wallet-balance"
+                );
+
+
+            if(balanceElement){
+
+                balanceElement.classList.remove(
+                    "loading-shimmer",
+                    "loading-text"
+                );
+
+                balanceElement.textContent =
+                    "—";
+
+            }
+
 
             showToast(
                 "Wallet data পাওয়া যায়নি।",
                 "warning"
             );
 
+
             return;
 
         }
 
+
         updateWalletUI(
             userSnap.data() || {}
         );
+
 
     }catch(error){
 
@@ -1386,6 +1159,26 @@ async function loadWallet(user){
             "Wallet loading error:",
             error
         );
+
+
+        const balanceElement =
+            document.getElementById(
+                "wallet-balance"
+            );
+
+
+        if(balanceElement){
+
+            balanceElement.classList.remove(
+                "loading-shimmer",
+                "loading-text"
+            );
+
+            balanceElement.textContent =
+                "—";
+
+        }
+
 
         showToast(
             "ওয়ালেট ব্যালেন্স লোড করতে সমস্যা হয়েছে।",
@@ -1415,24 +1208,34 @@ async function(){
 
     }
 
+
     const icons = [
+
         document.getElementById(
             "header-refresh-icon"
         ),
+
         document.getElementById(
             "balance-refresh-icon"
         )
+
     ];
 
-    icons.forEach(icon=>{
 
-        if(icon){
-            icon.classList.add(
-                "refresh-spin"
-            );
+    icons.forEach(
+        icon => {
+
+            if(icon){
+
+                icon.classList.add(
+                    "refresh-spin"
+                );
+
+            }
+
         }
+    );
 
-    });
 
     try{
 
@@ -1443,12 +1246,16 @@ async function(){
                 currentUserId
             );
 
+
         const userSnap =
             await getDoc(
                 userRef
             );
 
-        if(userSnap.exists()){
+
+        if(
+            userSnap.exists()
+        ){
 
             updateWalletUI(
                 userSnap.data() || {}
@@ -1456,18 +1263,21 @@ async function(){
 
         }
 
+
         await Promise.all([
+
             loadWalletActivity(),
-            loadRecentTransactions(),
-            loadGiftHistory()
+
+            loadRecentTransactions()
+
         ]);
 
-        updateAlerts();
 
         showToast(
             "Wallet successfully updated.",
             "success"
         );
+
 
     }catch(error){
 
@@ -1476,26 +1286,35 @@ async function(){
             error
         );
 
+
         showToast(
             "Wallet refresh করতে সমস্যা হয়েছে।",
             "error"
         );
 
+
     }finally{
 
-        setTimeout(()=>{
+        setTimeout(
+            () => {
 
-            icons.forEach(icon=>{
+                icons.forEach(
+                    icon => {
 
-                if(icon){
-                    icon.classList.remove(
-                        "refresh-spin"
-                    );
-                }
+                        if(icon){
 
-            });
+                            icon.classList.remove(
+                                "refresh-spin"
+                            );
 
-        },500);
+                        }
+
+                    }
+                );
+
+            },
+            500
+        );
 
     }
 
@@ -1503,14 +1322,13 @@ async function(){
 
 
 /* =========================================
-   GET TRANSACTION STATUS
+   STATUS
 ========================================= */
 
 function getStatus(item){
 
     return String(
-        item?.status ||
-        ""
+        item?.status || ""
     )
     .trim()
     .toLowerCase();
@@ -1519,43 +1337,7 @@ function getStatus(item){
 
 
 /* =========================================
-   REJECT REASON
-========================================= */
-
-function getRejectionReason(item){
-
-    return String(
-        item?.rejectReason ||
-        item?.reviewReason ||
-        item?.rejectionReason ||
-        item?.reason ||
-        ""
-    ).trim();
-
-}
-
-
-/* =========================================
-   IS REJECTED
-========================================= */
-
-function isRejected(item){
-
-    const status =
-        getStatus(item);
-
-    return [
-        "rejected",
-        "reject",
-        "failed",
-        "declined"
-    ].includes(status);
-
-}
-
-
-/* =========================================
-   IS SUCCESS
+   SUCCESS
 ========================================= */
 
 function isSuccess(item){
@@ -1563,13 +1345,18 @@ function isSuccess(item){
     const status =
         getStatus(item);
 
+
     return [
+
         "success",
         "approved",
         "completed",
         "complete",
         "paid"
-    ].includes(status);
+
+    ].includes(
+        status
+    );
 
 }
 
@@ -1581,6 +1368,7 @@ function isSuccess(item){
 async function loadWalletActivity(){
 
     if(!currentUserId) return;
+
 
     try{
 
@@ -1597,6 +1385,7 @@ async function loadWalletActivity(){
                 )
             );
 
+
         const wdQuery =
             query(
                 collection(
@@ -1610,47 +1399,65 @@ async function loadWalletActivity(){
                 )
             );
 
+
         const [
             txSnap,
             wdSnap
         ] =
             await Promise.all([
+
                 getDocs(txQuery),
+
                 getDocs(wdQuery)
+
             ]);
 
+
         let totalDeposit = 0;
+
         let totalWithdraw = 0;
 
+
         txSnap.forEach(
-            docSnap=>{
+            docSnap => {
 
                 const data =
                     docSnap.data() || {};
 
+
                 if(
-                    isSuccess(data)
+                    !isSuccess(data)
                 ){
 
-                    const type =
-                        String(
-                            data.type ||
-                            data.transactionType ||
-                            "deposit"
-                        ).toLowerCase();
+                    return;
 
-                    if(
-                        type.includes("deposit") ||
-                        type.includes("add")
-                    ){
+                }
 
-                        totalDeposit +=
-                            getNumber(
-                                data.amount,
-                                0
-                            );
 
-                    }
+                const type =
+                    String(
+                        data.type ||
+                        data.transactionType ||
+                        "deposit"
+                    )
+                    .toLowerCase();
+
+
+                if(
+
+                    type.includes("deposit") ||
+
+                    type.includes("add") ||
+
+                    type.includes("recharge")
+
+                ){
+
+                    totalDeposit +=
+                        getNumber(
+                            data.amount,
+                            0
+                        );
 
                 }
 
@@ -1659,10 +1466,11 @@ async function loadWalletActivity(){
 
 
         wdSnap.forEach(
-            docSnap=>{
+            docSnap => {
 
                 const data =
                     docSnap.data() || {};
+
 
                 if(
                     isSuccess(data)
@@ -1685,26 +1493,34 @@ async function loadWalletActivity(){
                 "total-deposit"
             );
 
+
         const withdrawElement =
             document.getElementById(
                 "total-withdraw"
             );
 
+
         if(depositElement){
 
             depositElement.textContent =
                 "৳" +
-                totalDeposit.toLocaleString("en-US");
+                totalDeposit.toLocaleString(
+                    "en-US"
+                );
 
         }
+
 
         if(withdrawElement){
 
             withdrawElement.textContent =
                 "৳" +
-                totalWithdraw.toLocaleString("en-US");
+                totalWithdraw.toLocaleString(
+                    "en-US"
+                );
 
         }
+
 
     }catch(error){
 
@@ -1719,19 +1535,22 @@ async function loadWalletActivity(){
 
 
 /* =========================================
-   LOAD RECENT TRANSACTIONS
+   RECENT TRANSACTIONS
 ========================================= */
 
 async function loadRecentTransactions(){
 
     if(!currentUserId) return;
 
+
     const list =
         document.getElementById(
             "recent-transactions"
         );
 
+
     if(!list) return;
+
 
     try{
 
@@ -1748,6 +1567,7 @@ async function loadRecentTransactions(){
                 )
             );
 
+
         const wdQuery =
             query(
                 collection(
@@ -1761,36 +1581,55 @@ async function loadRecentTransactions(){
                 )
             );
 
+
         const [
             txSnap,
             wdSnap
         ] =
             await Promise.all([
+
                 getDocs(txQuery),
+
                 getDocs(wdQuery)
+
             ]);
+
 
         let items = [];
 
+
         txSnap.forEach(
-            docSnap=>{
+            docSnap => {
 
                 items.push({
-                    id:docSnap.id,
-                    source:"deposit",
+
+                    id:
+                        docSnap.id,
+
+                    source:
+                        "deposit",
+
                     ...docSnap.data()
+
                 });
 
             }
         );
 
+
         wdSnap.forEach(
-            docSnap=>{
+            docSnap => {
 
                 items.push({
-                    id:docSnap.id,
-                    source:"withdraw",
+
+                    id:
+                        docSnap.id,
+
+                    source:
+                        "withdraw",
+
                     ...docSnap.data()
+
                 });
 
             }
@@ -1798,25 +1637,33 @@ async function loadRecentTransactions(){
 
 
         items.sort(
-            (a,b)=>
+            (a,b) =>
                 getTimeValue(b) -
                 getTimeValue(a)
         );
 
 
         const recent =
-            items.slice(0,3);
+            items.slice(
+                0,
+                3
+            );
 
 
         if(!recent.length){
 
             list.innerHTML =
-                `<div class="p-5 text-center">
+                `
+                <div class="p-5 text-center">
+
                     <i class="fa-solid fa-receipt text-slate-700 text-xl mb-2"></i>
+
                     <p class="text-xs text-slate-500">
                         কোনো transaction পাওয়া যায়নি।
                     </p>
-                </div>`;
+
+                </div>
+                `;
 
             return;
 
@@ -1824,98 +1671,110 @@ async function loadRecentTransactions(){
 
 
         list.innerHTML =
-            recent.map(
-                item=>{
+            recent
+            .map(
+                item => {
 
-                    const rejected =
-                        isRejected(item);
+                    const status =
+                        getStatus(item);
+
 
                     const success =
                         isSuccess(item);
 
+
+                    const rejected =
+                        [
+                            "rejected",
+                            "reject",
+                            "failed",
+                            "declined"
+                        ].includes(
+                            status
+                        );
+
+
                     let title =
-                        item.source==="withdraw"
+                        item.source === "withdraw"
+
                         ? `Withdraw (${escapeHtml(item.method || "Wallet")})`
+
                         : escapeHtml(
                             item.type ||
                             "Deposit"
                           );
 
+
                     let icon =
-                        item.source==="withdraw"
+                        item.source === "withdraw"
+
                         ? "fa-arrow-up"
+
                         : "fa-arrow-down";
 
+
                     let iconColor =
-                        item.source==="withdraw"
+                        item.source === "withdraw"
+
                         ? "text-red-400 bg-red-500/10"
+
                         : "text-emerald-400 bg-emerald-500/10";
+
 
                     let statusText =
                         "Pending";
 
+
                     let statusClass =
                         "text-amber-400 bg-amber-500/10 border-amber-500/20";
+
 
                     if(success){
 
                         statusText =
                             "Success";
 
+
                         statusClass =
                             "text-emerald-400 bg-emerald-500/10 border-emerald-500/20";
 
                     }
+
 
                     if(rejected){
 
                         statusText =
                             "Rejected";
 
+
                         statusClass =
                             "text-red-400 bg-red-500/10 border-red-500/20";
 
                     }
 
-                    const reason =
-                        getRejectionReason(item);
-
-
-                    let reasonHTML = "";
-
-                    if(
-                        rejected &&
-                        reason
-                    ){
-
-                        reasonHTML =
-                            `<div class="mt-2 rounded-lg bg-red-500/5 border border-red-500/10 px-2.5 py-2">
-                                <p class="text-[9px] text-red-400 font-bold">
-                                    Rejection Reason
-                                </p>
-                                <p class="text-[10px] text-slate-400 mt-0.5">
-                                    ${escapeHtml(reason)}
-                                </p>
-                            </div>`;
-
-                    }
-
 
                     return `
+
                     <div class="p-4 border-b border-slate-800/50 last:border-b-0">
 
                         <div class="flex items-start gap-3">
 
-                            <div class="w-9 h-9 rounded-xl ${iconColor} flex items-center justify-center shrink-0">
 
-                                <i class="fa-solid ${icon} text-xs"></i>
+                            <div
+                                class="w-9 h-9 rounded-xl ${iconColor} flex items-center justify-center shrink-0">
+
+                                <i
+                                    class="fa-solid ${icon} text-xs">
+                                </i>
 
                             </div>
 
 
                             <div class="min-w-0 flex-1">
 
+
                                 <div class="flex items-start justify-between gap-2">
+
 
                                     <div>
 
@@ -1923,8 +1782,11 @@ async function loadRecentTransactions(){
                                             ${title}
                                         </p>
 
+
                                         <p class="text-[9px] text-slate-500 mt-0.5">
-                                            ${escapeHtml(formatDate(item))}
+                                            ${escapeHtml(
+                                                formatDate(item)
+                                            )}
                                         </p>
 
                                     </div>
@@ -1932,7 +1794,10 @@ async function loadRecentTransactions(){
 
                                     <p class="text-xs font-black text-white whitespace-nowrap">
 
-                                        ৳${getNumber(item.amount,0).toLocaleString("en-US")}
+                                        ৳${getNumber(
+                                            item.amount,
+                                            0
+                                        ).toLocaleString("en-US")}
 
                                     </p>
 
@@ -1941,7 +1806,8 @@ async function loadRecentTransactions(){
 
                                 <div class="mt-2">
 
-                                    <span class="inline-flex text-[9px] font-bold px-2 py-1 rounded-lg border ${statusClass}">
+                                    <span
+                                        class="inline-flex text-[9px] font-bold px-2 py-1 rounded-lg border ${statusClass}">
 
                                         ${statusText}
 
@@ -1949,17 +1815,18 @@ async function loadRecentTransactions(){
 
                                 </div>
 
-                                ${reasonHTML}
 
                             </div>
 
                         </div>
 
                     </div>
+
                     `;
 
                 }
-            ).join("");
+            )
+            .join("");
 
 
     }catch(error){
@@ -1969,756 +1836,17 @@ async function loadRecentTransactions(){
             error
         );
 
+
         list.innerHTML =
-            `<div class="p-5 text-center text-xs text-slate-500">
+            `
+            <div class="p-5 text-center text-xs text-slate-500">
                 Transaction load করা যায়নি।
-            </div>`;
+            </div>
+            `;
 
     }
 
 }
-
-
-/* =========================================
-   LOAD GIFT HISTORY
-========================================= */
-
-async function loadGiftHistory(){
-
-    if(!currentUserId) return;
-
-    const container =
-        document.getElementById(
-            "gift-history"
-        );
-
-    if(!container) return;
-
-    try{
-
-        const giftQuery =
-            query(
-                collection(
-                    db,
-                    "giftCodes"
-                ),
-                where(
-                    "usedBy",
-                    "array-contains",
-                    currentUserId
-                )
-            );
-
-        const giftSnap =
-            await getDocs(
-                giftQuery
-            );
-
-        let items = [];
-
-        giftSnap.forEach(
-            docSnap=>{
-
-                const data =
-                    docSnap.data() || {};
-
-                items.push({
-                    id:docSnap.id,
-                    ...data
-                });
-
-            }
-        );
-
-
-        /*
-         * যদি usedBy না থাকে,
-         * claimedUsers দিয়েও চেষ্টা করা হবে।
-         */
-
-        if(!items.length){
-
-            const claimedQuery =
-                query(
-                    collection(
-                        db,
-                        "giftCodes"
-                    ),
-                    where(
-                        "claimedUsers",
-                        "array-contains",
-                        currentUserId
-                    )
-                );
-
-            const claimedSnap =
-                await getDocs(
-                    claimedQuery
-                );
-
-            claimedSnap.forEach(
-                docSnap=>{
-
-                    const data =
-                        docSnap.data() || {};
-
-                    items.push({
-                        id:docSnap.id,
-                        ...data
-                    });
-
-                }
-            );
-
-        }
-
-
-        items.sort(
-            (a,b)=>
-                getTimeValue(b) -
-                getTimeValue(a)
-        );
-
-
-        const recent =
-            items.slice(0,5);
-
-
-        if(!recent.length){
-
-            container.innerHTML =
-                `<div class="p-5 text-center">
-
-                    <div class="w-10 h-10 rounded-xl bg-blue-500/10 text-blue-400 flex items-center justify-center mx-auto mb-2">
-
-                        <i class="fa-solid fa-gift text-sm"></i>
-
-                    </div>
-
-                    <p class="text-xs text-slate-500">
-                        এখনো কোনো gift code redeem করা হয়নি।
-                    </p>
-
-                </div>`;
-
-            return;
-
-        }
-
-
-        container.innerHTML =
-            recent.map(
-                item=>{
-
-                    const amount =
-                        getNumber(
-                            item.amount,
-                            0
-                        );
-
-                    const code =
-                        item.code ||
-                        item.giftCode ||
-                        item.id ||
-                        "Gift Code";
-
-                    return `
-                    <div class="p-4 flex items-center gap-3">
-
-                        <div class="w-9 h-9 rounded-xl bg-blue-500/10 text-blue-400 flex items-center justify-center shrink-0">
-
-                            <i class="fa-solid fa-gift text-xs"></i>
-
-                        </div>
-
-
-                        <div class="min-w-0 flex-1">
-
-                            <p class="text-xs font-bold text-white truncate">
-                                ${escapeHtml(code)}
-                            </p>
-
-                            <p class="text-[9px] text-slate-500 mt-0.5">
-                                ${escapeHtml(formatDate(item))}
-                            </p>
-
-                        </div>
-
-
-                        <div class="text-right">
-
-                            <p class="text-xs font-black text-emerald-400">
-                                +৳${amount.toLocaleString("en-US")}
-                            </p>
-
-                            <p class="text-[9px] text-emerald-500/70 mt-0.5">
-                                Redeemed
-                            </p>
-
-                        </div>
-
-                    </div>
-                    `;
-
-                }
-            ).join("");
-
-
-    }catch(error){
-
-        console.error(
-            "Gift history error:",
-            error
-        );
-
-        container.innerHTML =
-            `<div class="p-5 text-center text-xs text-slate-500">
-                Gift history load করা যায়নি।
-            </div>`;
-
-    }
-
-}
-
-
-/* =========================================
-   LOAD ALERTS
-========================================= */
-
-async function updateAlerts(){
-
-    if(!currentUserId) return;
-
-    const container =
-        document.getElementById(
-            "wallet-alerts"
-        );
-
-    if(!container) return;
-
-    try{
-
-        const wdQuery =
-            query(
-                collection(
-                    db,
-                    "withdraws"
-                ),
-                where(
-                    "uid",
-                    "==",
-                    currentUserId
-                )
-            );
-
-        const txQuery =
-            query(
-                collection(
-                    db,
-                    "transactions"
-                ),
-                where(
-                    "userId",
-                    "==",
-                    currentUserId
-                )
-            );
-
-        const [
-            wdSnap,
-            txSnap
-        ] =
-            await Promise.all([
-                getDocs(wdQuery),
-                getDocs(txQuery)
-            ]);
-
-
-        let withdraws = [];
-
-        let transactions = [];
-
-
-        wdSnap.forEach(
-            docSnap=>{
-
-                withdraws.push({
-                    source:"withdraw",
-                    ...docSnap.data()
-                });
-
-            }
-        );
-
-
-        txSnap.forEach(
-            docSnap=>{
-
-                transactions.push({
-                    source:"deposit",
-                    ...docSnap.data()
-                });
-
-            }
-        );
-
-
-        withdraws.sort(
-            (a,b)=>
-                getTimeValue(b) -
-                getTimeValue(a)
-        );
-
-
-        transactions.sort(
-            (a,b)=>
-                getTimeValue(b) -
-                getTimeValue(a)
-        );
-
-
-        const pendingWithdraw =
-            withdraws.find(
-                item =>
-                    [
-                        "pending",
-                        "processing",
-                        "review"
-                    ].includes(
-                        getStatus(item)
-                    )
-            );
-
-
-        const rejectedWithdraw =
-            withdraws.find(
-                item =>
-                    isRejected(item)
-            );
-
-
-        const rejectedDeposit =
-            transactions.find(
-                item =>
-                    isRejected(item)
-            );
-
-
-        let html = "";
-
-
-        if(pendingWithdraw){
-
-            const amount =
-                getNumber(
-                    pendingWithdraw.amount,
-                    0
-                );
-
-            html +=
-                `<div class="glass-card rounded-2xl p-3.5 border border-amber-500/20 bg-amber-500/5 alert-pulse">
-
-                    <div class="flex items-start gap-3">
-
-                        <div class="w-9 h-9 rounded-xl bg-amber-500/10 text-amber-400 flex items-center justify-center shrink-0">
-
-                            <i class="fa-solid fa-clock text-xs"></i>
-
-                        </div>
-
-                        <div class="min-w-0">
-
-                            <p class="text-xs font-black text-amber-300">
-                                Withdraw যাচাই করা হচ্ছে
-                            </p>
-
-                            <p class="text-[10px] text-slate-400 mt-0.5">
-                                আপনার ৳${amount.toLocaleString("en-US")} Withdraw বর্তমানে যাচাই করা হচ্ছে।
-                            </p>
-
-                        </div>
-
-                    </div>
-
-                </div>`;
-
-        }
-
-
-        if(rejectedWithdraw){
-
-            const amount =
-                getNumber(
-                    rejectedWithdraw.amount,
-                    0
-                );
-
-            const reason =
-                getRejectionReason(
-                    rejectedWithdraw
-                );
-
-
-            html +=
-                `<div class="glass-card rounded-2xl p-3.5 border border-red-500/20 bg-red-500/5">
-
-                    <div class="flex items-start gap-3">
-
-                        <div class="w-9 h-9 rounded-xl bg-red-500/10 text-red-400 flex items-center justify-center shrink-0">
-
-                            <i class="fa-solid fa-circle-xmark text-xs"></i>
-
-                        </div>
-
-                        <div class="min-w-0">
-
-                            <p class="text-xs font-black text-red-300">
-                                Withdraw Rejected
-                            </p>
-
-                            <p class="text-[10px] text-slate-400 mt-0.5">
-                                ৳${amount.toLocaleString("en-US")} Withdraw reject করা হয়েছে।
-                            </p>
-
-                            ${
-                                reason
-                                ? `
-                                <p class="text-[10px] text-red-300/80 mt-1">
-                                    কারণ: ${escapeHtml(reason)}
-                                </p>
-                                `
-                                : ""
-                            }
-
-                        </div>
-
-                    </div>
-
-                </div>`;
-
-        }
-
-
-        if(rejectedDeposit){
-
-            const amount =
-                getNumber(
-                    rejectedDeposit.amount,
-                    0
-                );
-
-            const reason =
-                getRejectionReason(
-                    rejectedDeposit
-                );
-
-
-            html +=
-                `<div class="glass-card rounded-2xl p-3.5 border border-red-500/20 bg-red-500/5">
-
-                    <div class="flex items-start gap-3">
-
-                        <div class="w-9 h-9 rounded-xl bg-red-500/10 text-red-400 flex items-center justify-center shrink-0">
-
-                            <i class="fa-solid fa-wallet text-xs"></i>
-
-                        </div>
-
-                        <div class="min-w-0">
-
-                            <p class="text-xs font-black text-red-300">
-                                Deposit Rejected
-                            </p>
-
-                            <p class="text-[10px] text-slate-400 mt-0.5">
-                                ৳${amount.toLocaleString("en-US")} Deposit reject করা হয়েছে।
-                            </p>
-
-                            ${
-                                reason
-                                ? `
-                                <p class="text-[10px] text-red-300/80 mt-1">
-                                    কারণ: ${escapeHtml(reason)}
-                                </p>
-                                `
-                                : ""
-                            }
-
-                        </div>
-
-                    </div>
-
-                </div>`;
-
-        }
-
-
-        if(html){
-
-            container.innerHTML =
-                html;
-
-            container.classList.remove(
-                "hidden"
-            );
-
-        }else{
-
-            container.innerHTML =
-                "";
-
-            container.classList.add(
-                "hidden"
-            );
-
-        }
-
-
-    }catch(error){
-
-        console.error(
-            "Wallet alert error:",
-            error
-        );
-
-    }
-
-}
-
-
-/* =========================================
-   COPY UID
-========================================= */
-
-window.copyAccountUID =
-async function(){
-
-    if(!currentUserId){
-
-        showToast(
-            "UID পাওয়া যায়নি।",
-            "error"
-        );
-
-        return;
-
-    }
-
-    try{
-
-        await navigator.clipboard.writeText(
-            currentUserId
-        );
-
-        showToast(
-            "Account UID copied.",
-            "success"
-        );
-
-    }catch(error){
-
-        console.error(
-            "Copy UID error:",
-            error
-        );
-
-        showToast(
-            "UID copy করা যায়নি।",
-            "error"
-        );
-
-    }
-
-};
-
-
-/* =========================================
-   WINNING MODAL
-========================================= */
-
-window.showWinningDetails =
-function(){
-
-    const modal =
-        document.getElementById(
-            "winning-modal"
-        );
-
-    if(!modal) return;
-
-    const total =
-        document.getElementById(
-            "modal-total-winning"
-        );
-
-    if(total){
-
-        total.textContent =
-            balanceVisible
-            ? "৳" +
-              currentWinningBalance.toLocaleString("en-US")
-            : "৳••••";
-
-    }
-
-    modal.classList.remove(
-        "hidden"
-    );
-
-    modal.classList.add(
-        "flex"
-    );
-
-};
-
-
-window.closeWinningDetails =
-function(){
-
-    const modal =
-        document.getElementById(
-            "winning-modal"
-        );
-
-    if(!modal) return;
-
-    modal.classList.add(
-        "hidden"
-    );
-
-    modal.classList.remove(
-        "flex"
-    );
-
-};
-
-
-document.getElementById(
-    "winning-modal"
-)?.addEventListener(
-    "click",
-    function(event){
-
-        if(
-            event.target === this
-        ){
-
-            closeWinningDetails();
-
-        }
-
-    }
-);
-
-
-/* =========================================
-   AUTH
-========================================= */
-
-onAuthStateChanged(
-    auth,
-    async user=>{
-
-        if(!user){
-
-            showToast(
-                "অনুগ্রহ করে আগে লগইন করুন।",
-                "warning"
-            );
-
-            setTimeout(
-                ()=>{
-                    window.location.replace(
-                        "login.html"
-                    );
-                },
-                700
-            );
-
-            return;
-
-        }
-
-
-        currentUser =
-            user;
-
-        currentUserId =
-            user.uid;
-
-
-        const uidElement =
-            document.getElementById(
-                "account-uid"
-            );
-
-        if(uidElement){
-
-            uidElement.textContent =
-                user.uid;
-
-        }
-
-
-        /*
-         * Wallet + history
-         * parallel load
-         */
-
-        await Promise.all([
-            loadWallet(user),
-            loadWalletActivity(),
-            loadRecentTransactions(),
-            loadGiftHistory()
-        ]);
-
-
-        /*
-         * Alerts আলাদাভাবে load
-         */
-
-        updateAlerts();
-
-
-        /*
-         * Referral reward background-এ
-         */
-
-        processReferralReward(
-            user.uid
-        )
-        .then(
-            async ()=>{
-
-                try{
-
-                    await loadWallet(user);
-                    await loadWalletActivity();
-
-                }catch(error){
-
-                    console.warn(
-                        "Referral wallet refresh:",
-                        error
-                    );
-
-                }
-
-            }
-        )
-        .catch(
-            error=>{
-
-                console.warn(
-                    "Referral check:",
-                    error
-                );
-
-            }
-        );
-
-    }
-);
 
 
 /* =========================================
@@ -2733,10 +1861,12 @@ async function(){
             "gift-code-input"
         );
 
+
     const applyBtn =
         document.getElementById(
             "apply-gift-btn"
         );
+
 
     const code =
         codeInput
@@ -2771,9 +1901,16 @@ async function(){
     applyBtn.disabled =
         true;
 
+
     applyBtn.innerHTML =
-        `<i class="fa-solid fa-spinner fa-spin text-[11px]"></i>
-         <span>Applying...</span>`;
+        `
+        <i class="fa-solid fa-spinner fa-spin text-[11px]"></i>
+
+        <span>
+            Applying...
+        </span>
+        `;
+
 
     applyBtn.classList.add(
         "opacity-75",
@@ -2801,7 +1938,8 @@ async function(){
 
         await runTransaction(
             db,
-            async transaction=>{
+            async transaction => {
+
 
                 const giftSnap =
                     await transaction.get(
@@ -2809,7 +1947,9 @@ async function(){
                     );
 
 
-                if(!giftSnap.exists()){
+                if(
+                    !giftSnap.exists()
+                ){
 
                     throw new Error(
                         "গিফট কোডটি ভুল অথবা আর ব্যবহারযোগ্য নেই।"
@@ -2844,7 +1984,9 @@ async function(){
                     Array.isArray(
                         giftData.usedBy
                     )
+
                     ? [...giftData.usedBy]
+
                     : [];
 
 
@@ -2852,18 +1994,24 @@ async function(){
                     Array.isArray(
                         giftData.claimedUsers
                     )
+
                     ? [...giftData.claimedUsers]
+
                     : [];
 
 
                 if(
+
                     usedBy.includes(
                         currentUserId
                     )
+
                     ||
+
                     claimedUsers.includes(
                         currentUserId
                     )
+
                 ){
 
                     throw new Error(
@@ -2881,17 +2029,24 @@ async function(){
 
                 const currentUses =
                     Math.max(
+
                         Number(
                             giftData.usedCount || 0
                         ),
+
                         usedBy.length,
+
                         claimedUsers.length
+
                     );
 
 
                 if(
+
                     maxUses > 0 &&
+
                     currentUses >= maxUses
+
                 ){
 
                     throw new Error(
@@ -2907,7 +2062,9 @@ async function(){
                     );
 
 
-                if(!userSnap.exists()){
+                if(
+                    !userSnap.exists()
+                ){
 
                     throw new Error(
                         "ইউজার ডাটা পাওয়া যায়নি।"
@@ -2930,6 +2087,7 @@ async function(){
                     currentUserId
                 );
 
+
                 claimedUsers.push(
                     currentUserId
                 );
@@ -2938,6 +2096,7 @@ async function(){
                 transaction.update(
                     giftRef,
                     {
+
                         usedBy:
                             usedBy,
 
@@ -2949,6 +2108,7 @@ async function(){
 
                         used:
                             true
+
                     }
                 );
 
@@ -2977,7 +2137,9 @@ async function(){
             );
 
 
-        if(updatedUserSnap.exists()){
+        if(
+            updatedUserSnap.exists()
+        ){
 
             updateWalletUI(
                 updatedUserSnap.data() || {}
@@ -2991,9 +2153,11 @@ async function(){
 
 
         await Promise.all([
+
             loadWalletActivity(),
-            loadRecentTransactions(),
-            loadGiftHistory()
+
+            loadRecentTransactions()
+
         ]);
 
 
@@ -3010,20 +2174,29 @@ async function(){
             error
         );
 
+
         showToast(
             error.message ||
             "গিফট কোড রিডিম করতে সমস্যা হয়েছে।",
             "error"
         );
 
+
     }finally{
 
         applyBtn.disabled =
             false;
 
+
         applyBtn.innerHTML =
-            `<i class="fa-solid fa-gift text-[11px]"></i>
-             <span>Apply Gift Code</span>`;
+            `
+            <i class="fa-solid fa-gift text-[11px]"></i>
+
+            <span>
+                Apply Gift Code
+            </span>
+            `;
+
 
         applyBtn.classList.remove(
             "opacity-75",
@@ -3042,7 +2215,9 @@ async function(){
 window.showGuide =
 function(type){
 
-    if(type==="add-money"){
+    if(
+        type === "add-money"
+    ){
 
         showToast(
             "Add Money-এর নির্দেশনামূলক ভিডিও শীঘ্রই আসছে।",
@@ -3051,7 +2226,10 @@ function(type){
 
     }
 
-    else if(type==="join-match"){
+
+    else if(
+        type === "join-match"
+    ){
 
         showToast(
             "Match Join-এর নির্দেশনামূলক ভিডিও শীঘ্রই আসছে।",
@@ -3060,7 +2238,10 @@ function(type){
 
     }
 
-    else if(type==="withdraw"){
+
+    else if(
+        type === "withdraw"
+    ){
 
         showToast(
             "Withdraw-এর নির্দেশনামূলক ভিডিও শীঘ্রই আসছে।",
@@ -3070,6 +2251,109 @@ function(type){
     }
 
 };
+
+
+/* =========================================
+   AUTH
+========================================= */
+
+onAuthStateChanged(
+    auth,
+    async user => {
+
+
+        if(!user){
+
+            showToast(
+                "অনুগ্রহ করে আগে লগইন করুন।",
+                "warning"
+            );
+
+
+            setTimeout(
+                () => {
+
+                    window.location.replace(
+                        "login.html"
+                    );
+
+                },
+                700
+            );
+
+
+            return;
+
+        }
+
+
+        currentUser =
+            user;
+
+
+        currentUserId =
+            user.uid;
+
+
+        /*
+         * Wallet এবং History
+         * একসাথে load হবে।
+         */
+
+        await Promise.all([
+
+            loadWallet(user),
+
+            loadWalletActivity(),
+
+            loadRecentTransactions()
+
+        ]);
+
+
+        /*
+         * Referral reward
+         * background-এ process হবে।
+         */
+
+        processReferralReward(
+            user.uid
+        )
+        .then(
+            async () => {
+
+                try{
+
+                    await loadWallet(
+                        user
+                    );
+
+                    await loadWalletActivity();
+
+                }catch(error){
+
+                    console.warn(
+                        "Referral wallet refresh:",
+                        error
+                    );
+
+                }
+
+            }
+        )
+        .catch(
+            error => {
+
+                console.warn(
+                    "Referral check:",
+                    error
+                );
+
+            }
+        );
+
+    }
+);
 
 </script>
 
