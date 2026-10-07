@@ -85,7 +85,10 @@ body{
     }
 }
 
-/* Loading state */
+
+/* =========================================
+   LOADING STATE
+========================================= */
 
 .loading-text{
     display:inline-block;
@@ -1164,13 +1167,9 @@ function applyProfile(
     /* ===============================
        WINNINGS
        
-       Multiple field support.
-       
-       Priority:
-       winnings
-       winningBalance
-       winning
-       totalWinnings
+       Initial profile data only.
+       Real calculated earnings will
+       be applied after background stats.
        =============================== */
 
     const winnings=
@@ -1551,8 +1550,7 @@ async function loadProfile(user){
            BACKGROUND STATS
            
            IMPORTANT:
-           এখানে balance বা winnings
-           আর update করা হচ্ছে না।
+           এখানে balance block হবে না।
         ================================= */
 
         getRealMatchStats(
@@ -1565,11 +1563,15 @@ async function loadProfile(user){
                     return;
 
 
+                /* MATCHES */
+
                 setText(
                     "stat-matches",
                     realStats.matches
                 );
 
+
+                /* WINS */
 
                 setText(
                     "stat-wins",
@@ -1577,9 +1579,28 @@ async function loadProfile(user){
                 );
 
 
+                /* EARNINGS */
+
                 setText(
                     "stat-earnings",
                     `৳${realStats.earnings}`
+                );
+
+
+                /*
+                 * IMPORTANT:
+                 *
+                 * Real match earnings-কে
+                 * Winnings হিসেবে দেখানো হচ্ছে।
+                 *
+                 * Example:
+                 * Earnings = ৳50
+                 * Winnings = ৳50
+                 */
+
+                setText(
+                    "winnings-balance",
+                    realStats.earnings
                 );
 
             }
@@ -1623,10 +1644,9 @@ async function loadProfile(user){
                         /*
                          * Only refresh:
                          * balance
-                         * winnings
                          *
-                         * যাতে background stats
-                         * আবার overwrite না করে।
+                         * Winnings will remain
+                         * calculated from real stats.
                          */
 
                         if(
@@ -1638,29 +1658,6 @@ async function loadProfile(user){
                                 "wallet-balance",
                                 safe(
                                     latestData.balance,
-                                    0
-                                )
-                            );
-
-                        }
-
-
-                        const latestWinnings=
-                            latestData.winnings ??
-                            latestData.winningBalance ??
-                            latestData.winning ??
-                            latestData.totalWinnings;
-
-
-                        if(
-                            latestWinnings !==
-                                undefined
-                        ){
-
-                            setText(
-                                "winnings-balance",
-                                safe(
-                                    latestWinnings,
                                     0
                                 )
                             );
