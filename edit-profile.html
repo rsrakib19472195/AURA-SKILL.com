@@ -129,6 +129,51 @@
             box-shadow: 0 0 25px rgba(59,130,246,0.15);
         }
 
+        .photo-edit-wrapper {
+            position: relative;
+            width: 82px;
+            height: 82px;
+            margin: 0 auto 12px;
+        }
+
+        .photo-edit-button {
+            position: absolute;
+            right: -3px;
+            bottom: -3px;
+            width: 30px;
+            height: 30px;
+            border-radius: 9999px;
+            background: #2563eb;
+            color: white;
+            border: 3px solid #0f172a;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(37,99,235,.35);
+            transition: .2s ease;
+        }
+
+        .photo-edit-button:hover {
+            background: #3b82f6;
+            transform: scale(1.06);
+        }
+
+        .photo-edit-button:active {
+            transform: scale(.96);
+        }
+
+        #profile-photo-input {
+            display: none;
+        }
+
+        .photo-hint {
+            font-size: 10px;
+            color: #64748b;
+            margin-top: 4px;
+        }
+
     </style>
 </head>
 
@@ -169,12 +214,40 @@
 
         <div class="glass-card rounded-3xl p-6 text-center shadow-xl">
 
-            <img
-                id="profile-photo"
-                class="profile-photo mx-auto mb-3"
-                src="https://videotourl.com/images/1789800604014-b96e1edf-d789-4513-8557-9fb63a327a13.jpg"
-                alt="Profile"
+            <!-- Hidden file input -->
+
+            <input
+                type="file"
+                id="profile-photo-input"
+                accept="image/jpeg,image/png,image/webp,image/jpg"
             >
+
+
+            <!-- Photo -->
+
+            <div class="photo-edit-wrapper">
+
+                <img
+                    id="profile-photo"
+                    class="profile-photo"
+                    src="https://videotourl.com/images/1789800604014-b96e1edf-d789-4513-8557-9fb63a327a13.jpg"
+                    alt="Profile"
+                >
+
+
+                <!-- Edit Photo Button -->
+
+                <button
+                    type="button"
+                    id="edit-photo-button"
+                    class="photo-edit-button"
+                    title="Change Profile Picture"
+                >
+                    <i class="fa-solid fa-camera"></i>
+                </button>
+
+            </div>
+
 
             <h2
                 id="profile-display-name"
@@ -188,6 +261,10 @@
                 class="text-xs text-slate-500 mt-1"
             >
                 @username
+            </p>
+
+            <p class="photo-hint">
+                Profile picture পরিবর্তন করতে ছবির camera icon-এ চাপ দিন
             </p>
 
         </div>
@@ -552,6 +629,13 @@ import {
 } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
 
+import {
+    getStorage,
+    ref,
+    uploadBytes,
+    getDownloadURL
+} from "https://www.gstatic.com/firebasejs/10.8.0/firebase-storage.js";
+
 
 const FALLBACK_PROFILE_PHOTO =
     "https://videotourl.com/images/1789800604014-b96e1edf-d789-4513-8557-9fb63a327a13.jpg";
@@ -562,8 +646,32 @@ const PROFILE_PHOTO =
     FALLBACK_PROFILE_PHOTO;
 
 
+/*
+ * Firebase Storage
+ *
+ * auth.app থেকে একই Firebase project-এর
+ * Storage instance নেওয়া হচ্ছে।
+ */
+
+const storage =
+    getStorage(
+        auth.app
+    );
+
+
 let currentUser = null;
 
+
+/*
+ * Selected new profile image
+ */
+
+let selectedProfileFile = null;
+
+
+/* =========================================
+   TOAST
+========================================= */
 
 window.showToast = function(
     message,
@@ -625,6 +733,137 @@ window.showToast = function(
 };
 
 
+/* =========================================
+   PROFILE PHOTO SELECT
+========================================= */
+
+const profilePhotoInput =
+    document.getElementById(
+        "profile-photo-input"
+    );
+
+
+const editPhotoButton =
+    document.getElementById(
+        "edit-photo-button"
+    );
+
+
+const profilePhoto =
+    document.getElementById(
+        "profile-photo"
+    );
+
+
+/*
+ * Camera/Edit button click
+ */
+
+editPhotoButton.addEventListener(
+    "click",
+    function(){
+
+        profilePhotoInput.click();
+
+    }
+);
+
+
+/*
+ * Image selected
+ */
+
+profilePhotoInput.addEventListener(
+    "change",
+    function(){
+
+        const file =
+            this.files &&
+            this.files[0];
+
+
+        if(!file){
+
+            return;
+
+        }
+
+
+        /*
+         * Only image files
+         */
+
+        if(!file.type.startsWith("image/")){
+
+            showToast(
+                "শুধু image file নির্বাচন করুন!",
+                "warning"
+            );
+
+            this.value = "";
+
+            return;
+
+        }
+
+
+        /*
+         * Maximum 5 MB
+         */
+
+        if(file.size > 5 * 1024 * 1024){
+
+            showToast(
+                "ছবির size সর্বোচ্চ 5MB হতে পারবে!",
+                "warning"
+            );
+
+            this.value = "";
+
+            return;
+
+        }
+
+
+        selectedProfileFile =
+            file;
+
+
+        /*
+         * Instant preview
+         */
+
+        const reader =
+            new FileReader();
+
+
+        reader.onload =
+            function(event){
+
+                profilePhoto.src =
+                    event.target.result;
+
+            };
+
+
+        reader.readAsDataURL(
+            file
+        );
+
+
+        showToast(
+            "ছবি নির্বাচন করা হয়েছে। এখন Update Profile চাপুন।",
+            "success"
+        );
+
+    }
+);
+
+
+/* =========================================
+   LOAD USER PROFILE
+========================================= */
+
 async function loadUserProfile(user){
 
     const userRef =
@@ -637,6 +876,7 @@ async function loadUserProfile(user){
 
     const snapshot =
         await getDoc(userRef);
+
 
     if(!snapshot.exists()){
 
@@ -725,6 +965,7 @@ async function loadUserProfile(user){
     const data =
         snapshot.data();
 
+
     fillProfileForm(
         data,
         user
@@ -733,12 +974,17 @@ async function loadUserProfile(user){
 }
 
 
+/* =========================================
+   FILL PROFILE FORM
+========================================= */
+
 function fillProfileForm(
     data,
     user
 ){
 
     const name =
+        data.showName ||
         data.name ||
         data.fullName ||
         data.displayName ||
@@ -817,8 +1063,29 @@ function fillProfileForm(
         ? "@" + username
         : "Username not set";
 
+
+    /*
+     * Broken image fallback
+     */
+
+    document.getElementById(
+        "profile-photo"
+    ).onerror =
+        function(){
+
+            this.onerror = null;
+
+            this.src =
+                PROFILE_PHOTO;
+
+        };
+
 }
 
+
+/* =========================================
+   AUTH
+========================================= */
 
 onAuthStateChanged(
     auth,
@@ -875,6 +1142,10 @@ onAuthStateChanged(
 );
 
 
+/* =========================================
+   UPDATE PROFILE
+========================================= */
+
 window.updateProfileInfo =
 async function(){
 
@@ -919,7 +1190,9 @@ async function(){
         true;
 
     button.innerText =
-        "Updating...";
+        selectedProfileFile
+            ? "Uploading..."
+            : "Updating...";
 
 
     try{
@@ -930,6 +1203,75 @@ async function(){
                 "users",
                 currentUser.uid
             );
+
+
+        let finalPhotoURL =
+            document.getElementById(
+                "profile-photo"
+            ).src;
+
+
+        /*
+         * =================================
+         * UPLOAD NEW PROFILE PHOTO
+         * =================================
+         */
+
+        if(selectedProfileFile){
+
+            /*
+             * Unique filename
+             */
+
+            const extension =
+                selectedProfileFile.name
+                .split(".")
+                .pop()
+                .toLowerCase();
+
+
+            const filePath =
+                `profilePhotos/${currentUser.uid}/profile_${Date.now()}.${extension}`;
+
+
+            const storageRef =
+                ref(
+                    storage,
+                    filePath
+                );
+
+
+            /*
+             * Upload
+             */
+
+            await uploadBytes(
+                storageRef,
+                selectedProfileFile,
+                {
+                    contentType:
+                        selectedProfileFile.type
+                }
+            );
+
+
+            /*
+             * Get public download URL
+             */
+
+            finalPhotoURL =
+                await getDownloadURL(
+                    storageRef
+                );
+
+        }
+
+
+        /*
+         * =================================
+         * SAVE PROFILE DATA
+         * =================================
+         */
 
         await setDoc(
             userRef,
@@ -944,8 +1286,11 @@ async function(){
                 fullName:
                     name,
 
+                showName:
+                    name,
+
                 photoURL:
-                    PROFILE_PHOTO,
+                    finalPhotoURL,
 
                 updatedAt:
                     serverTimestamp()
@@ -957,6 +1302,10 @@ async function(){
         );
 
 
+        /*
+         * Update preview
+         */
+
         document.getElementById(
             "profile-display-name"
         ).textContent =
@@ -966,7 +1315,19 @@ async function(){
         document.getElementById(
             "profile-photo"
         ).src =
-            PROFILE_PHOTO;
+            finalPhotoURL;
+
+
+        /*
+         * Clear selected file
+         */
+
+        selectedProfileFile =
+            null;
+
+
+        profilePhotoInput.value =
+            "";
 
 
         showToast(
@@ -983,10 +1344,50 @@ async function(){
         );
 
 
-        showToast(
-            "Profile update করা যায়নি!",
-            "error"
-        );
+        if(
+            error?.code ===
+            "storage/unauthorized"
+        ){
+
+            showToast(
+                "Profile photo upload permission নেই!",
+                "error"
+            );
+
+        }
+
+        else if(
+            error?.code ===
+            "storage/quota-exceeded"
+        ){
+
+            showToast(
+                "Storage limit পূর্ণ হয়ে গেছে!",
+                "error"
+            );
+
+        }
+
+        else if(
+            error?.code ===
+            "storage/canceled"
+        ){
+
+            showToast(
+                "Photo upload বাতিল হয়েছে!",
+                "warning"
+            );
+
+        }
+
+        else{
+
+            showToast(
+                "Profile update করা যায়নি!",
+                "error"
+            );
+
+        }
 
     }finally{
 
@@ -1000,6 +1401,10 @@ async function(){
 
 };
 
+
+/* =========================================
+   PASSWORD MATCH
+========================================= */
 
 const newPasswordInput =
     document.getElementById(
@@ -1078,6 +1483,10 @@ confirmPasswordInput.addEventListener(
     checkPasswordMatch
 );
 
+
+/* =========================================
+   CHANGE PASSWORD
+========================================= */
 
 window.changeUserPassword =
 async function(){
@@ -1195,10 +1604,12 @@ async function(){
                 currentPass
             );
 
+
         await reauthenticateWithCredential(
             currentUser,
             credential
         );
+
 
         await updatePassword(
             currentUser,
@@ -1300,6 +1711,10 @@ async function(){
 
 };
 
+
+/* =========================================
+   LOCKED FIELDS
+========================================= */
 
 [
     "username",
