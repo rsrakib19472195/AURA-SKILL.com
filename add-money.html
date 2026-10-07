@@ -4,184 +4,2203 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AURA ARMAN TOUR - Add Money</title>
+
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&display=swap"
+          rel="stylesheet">
+
     <style>
-        body { font-family: 'Hind Siliguri', sans-serif; background-color: #050811; color: #f8fafc; }
-        .glass-card { background: rgba(15, 23, 42, 0.75); backdrop-filter: blur(12px); border: 1px solid rgba(30, 41, 59, 0.8); }
-        #toast-container { position: fixed; top: 20px; right: 20px; z-index: 9999; display: flex; flex-direction: column; gap: 10px; }
+
+        body {
+            font-family: 'Hind Siliguri', sans-serif;
+            background-color: #050811;
+            color: #f8fafc;
+        }
+
+        .glass-card {
+            background: rgba(15, 23, 42, 0.75);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(30, 41, 59, 0.8);
+        }
+
+        #toast-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
         .toast {
-            background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(12px); border-left: 4px solid #3b82f6;
-            color: #fff; padding: 12px 20px; border-radius: 12px; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
-            font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 10px;
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(12px);
+            border-left: 4px solid #3b82f6;
+            color: #fff;
+            padding: 12px 20px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
+            font-size: 13px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
             animation: slideIn 0.3s ease, fadeOut 0.3s ease 2.7s forwards;
         }
-        .toast.success { border-left-color: #10b981; }
-        .toast.error { border-left-color: #ef4444; }
-        .toast.warning { border-left-color: #f59e0b; }
-        @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
-        @keyframes fadeOut { from { opacity: 1; } to { opacity: 0; transform: translateY(-10px); } }
+
+        .toast.success {
+            border-left-color: #10b981;
+        }
+
+        .toast.error {
+            border-left-color: #ef4444;
+        }
+
+        .toast.warning {
+            border-left-color: #f59e0b;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes fadeOut {
+            from {
+                opacity: 1;
+            }
+
+            to {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+        }
+
+        .reason-box {
+            animation: reasonIn 0.25s ease;
+        }
+
+        @keyframes reasonIn {
+            from {
+                opacity: 0;
+                transform: translateY(-4px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .quick-amount {
+            transition:
+                transform .15s ease,
+                border-color .2s ease,
+                background .2s ease;
+        }
+
+        .quick-amount:active {
+            transform: scale(.96);
+        }
+
+        .quick-amount.active {
+            background: rgba(16, 185, 129, .15);
+            border-color: rgba(16, 185, 129, .45);
+            color: #34d399;
+        }
+
+        .deposit-btn-disabled {
+            opacity: .45 !important;
+            cursor: not-allowed !important;
+            box-shadow: none !important;
+        }
+
+        .summary-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+        }
+
+        .pending-card {
+            animation: pendingPulse 2.5s ease-in-out infinite;
+        }
+
+        @keyframes pendingPulse {
+
+            0%, 100% {
+                border-color: rgba(245, 158, 11, .18);
+            }
+
+            50% {
+                border-color: rgba(245, 158, 11, .38);
+            }
+
+        }
+
+        .status-badge {
+            white-space: nowrap;
+        }
+
+        @media (max-width: 420px) {
+
+            #toast-container {
+                left: 12px;
+                right: 12px;
+                top: 15px;
+            }
+
+            .toast {
+                width: 100%;
+                padding: 11px 14px;
+            }
+
+        }
+
     </style>
 </head>
+
+
 <body class="min-h-screen flex flex-col pb-24">
+
+
+    <!-- TOAST -->
 
     <div id="toast-container"></div>
 
-    <header class="px-4 py-3 flex items-center space-x-3 sticky top-0 z-30 bg-[#050811]/90 backdrop-blur-md border-b border-slate-900">
-        <a href="wallet.html" class="w-9 h-9 rounded-xl bg-slate-800/85 hover:bg-slate-800 text-slate-300 flex items-center justify-center text-sm transition">
+
+    <!-- HEADER -->
+
+    <header
+        class="px-4 py-3 flex items-center space-x-3 sticky top-0 z-30
+               bg-[#050811]/90 backdrop-blur-md border-b border-slate-900">
+
+        <a
+            href="wallet.html"
+            class="w-9 h-9 rounded-xl bg-slate-800/85 hover:bg-slate-800
+                   text-slate-300 flex items-center justify-center
+                   text-sm transition">
+
             <i class="fa-solid fa-arrow-left"></i>
+
         </a>
-        <h1 class="text-sm font-black text-white tracking-wide">Add Money</h1>
+
+
+        <h1 class="text-sm font-black text-white tracking-wide">
+            Add Money
+        </h1>
+
     </header>
+
+
+    <!-- MAIN -->
 
     <main class="max-w-md mx-auto px-4 py-6 w-full space-y-6">
 
-        <div class="glass-card rounded-2xl p-4 flex items-center justify-between border border-slate-800">
+
+        <!-- ADD MONEY STATUS -->
+
+        <div
+            class="glass-card rounded-2xl p-4 flex items-center justify-between
+                   border border-slate-800">
+
             <div class="flex items-center space-x-3">
-                <div class="w-10 h-10 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center text-base">
+
+                <div
+                    class="w-10 h-10 rounded-xl bg-emerald-500/10
+                           text-emerald-400 flex items-center
+                           justify-center text-base">
+
                     <i class="fa-solid fa-wallet"></i>
+
                 </div>
+
+
                 <div>
-                    <h4 class="text-xs font-bold text-white">Add Money</h4>
-                    <p class="text-[10px] text-slate-400">Secure payment via gateway</p>
+
+                    <h4 class="text-xs font-bold text-white">
+                        Add Money
+                    </h4>
+
+                    <p class="text-[10px] text-slate-400">
+                        Secure payment via gateway
+                    </p>
+
                 </div>
+
             </div>
-            <span class="bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-[10px] font-bold px-2.5 py-1 rounded-lg">Active</span>
+
+
+            <span
+                class="bg-emerald-500/10 text-emerald-400
+                       border border-emerald-500/20
+                       text-[10px] font-bold px-2.5 py-1 rounded-lg">
+
+                Active
+
+            </span>
+
         </div>
 
-        <div class="glass-card rounded-3xl p-6 space-y-4 border border-slate-800 shadow-xl">
-            <p class="text-[11px] font-extrabold text-slate-400 uppercase tracking-widest">Enter Amount</p>
 
-            <div class="relative flex items-center">
-                <span class="absolute left-4 text-base font-black text-slate-400">৳</span>
-                <input type="number" id="deposit-amount" placeholder="Amount" class="w-full bg-[#0b101d] border border-slate-800 rounded-2xl py-3.5 pl-10 pr-4 text-sm font-bold text-white focus:border-emerald-500 outline-none transition">
+        <!-- PENDING DEPOSIT -->
+
+        <div
+            id="pending-deposit-card"
+            class="hidden glass-card rounded-2xl p-4
+                   bg-amber-500/[.04]
+                   border border-amber-500/20
+                   pending-card">
+
+            <div class="flex items-start gap-3">
+
+                <div
+                    class="w-9 h-9 rounded-xl
+                           bg-amber-500/10
+                           text-amber-400
+                           flex items-center justify-center
+                           flex-shrink-0">
+
+                    <i class="fa-solid fa-clock"></i>
+
+                </div>
+
+
+                <div class="flex-1 min-w-0">
+
+                    <div
+                        class="flex items-center justify-between
+                               gap-2">
+
+                        <h3
+                            class="text-xs font-bold text-amber-300">
+
+                            Deposit Pending
+
+                        </h3>
+
+
+                        <span
+                            class="text-[9px] font-bold
+                                   px-2 py-1 rounded-lg
+                                   bg-amber-500/10
+                                   border border-amber-500/20
+                                   text-amber-400">
+
+                            Under Review
+
+                        </span>
+
+                    </div>
+
+
+                    <p
+                        id="pending-deposit-info"
+                        class="text-[10px] text-slate-400 mt-2
+                               leading-relaxed">
+
+                        আপনার একটি deposit এখনো review হচ্ছে।
+
+                    </p>
+
+
+                    <p
+                        id="pending-deposit-id"
+                        class="text-[9px] text-slate-600 mt-1
+                               break-all">
+
+                    </p>
+
+                </div>
+
             </div>
 
-            <button type="button" onclick="proceedToDeposit()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-slate-950 text-xs font-extrabold py-4 rounded-2xl transition shadow-lg shadow-emerald-600/20 uppercase tracking-wider">
-                <i class="fa-solid fa-lock mr-1.5 text-[10px]"></i> Proceed to Payment
-            </button>
         </div>
 
-        <div class="glass-card rounded-2xl p-4 space-y-3 border border-slate-800/80 text-[11px] text-slate-400">
-            <div class="flex items-center space-x-2.5">
-                <i class="fa-solid fa-shield-halved text-blue-400"></i>
-                <span>Secure payment powered by our gateway</span>
-            </div>
-            <div class="flex items-center space-x-2.5">
-                <i class="fa-solid fa-bolt text-amber-400"></i>
-                <span>Balance is credited after admin review</span>
-            </div>
-            <div class="flex items-center space-x-2.5">
-                <i class="fa-solid fa-headset text-emerald-400"></i>
-                <span>Contact support if payment is not reflected</span>
-            </div>
-        </div>
 
-        <div class="glass-card rounded-2xl p-4 bg-gradient-to-r from-blue-950/40 to-slate-900/60 border border-blue-500/20 text-center space-y-3">
-            <p class="text-xs text-slate-300 font-semibold leading-relaxed">
-                ৫ মিনিটের ভিতরে যদি আপনার ব্যালেন্স add না হয়, তাহলে নিচে deposit admin-কে মেসেজ দিন।
+        <!-- AMOUNT CARD -->
+
+        <div
+            class="glass-card rounded-3xl p-6 space-y-4
+                   border border-slate-800 shadow-xl">
+
+
+            <p
+                class="text-[11px] font-extrabold text-slate-400
+                       uppercase tracking-widest">
+
+                Enter Amount
+
             </p>
-            <button onclick="contactAdminWhatsApp()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs py-3 rounded-xl transition shadow-lg shadow-emerald-600/20 flex items-center justify-center space-x-2">
-                <i class="fa-brands fa-whatsapp text-sm"></i>
-                <span>Deposit Admin Contact (WhatsApp)</span>
+
+
+            <!-- AMOUNT INPUT -->
+
+            <div>
+
+                <div class="relative flex items-center">
+
+                    <span
+                        class="absolute left-4 text-base
+                               font-black text-slate-400">
+
+                        ৳
+
+                    </span>
+
+
+                    <input
+                        type="number"
+                        id="deposit-amount"
+                        placeholder="Amount"
+                        min="10"
+                        max="10000000"
+                        inputmode="decimal"
+                        autocomplete="off"
+                        class="w-full bg-[#0b101d]
+                               border border-slate-800
+                               rounded-2xl py-3.5 pl-10 pr-4
+                               text-sm font-bold text-white
+                               focus:border-emerald-500
+                               outline-none transition">
+
+                </div>
+
+
+                <!-- INPUT MESSAGE -->
+
+                <p
+                    id="amount-message"
+                    class="text-[10px] text-slate-500 mt-2">
+
+                    Minimum deposit: ৳10
+
+                </p>
+
+            </div>
+
+
+            <!-- QUICK AMOUNT -->
+
+            <div>
+
+                <p
+                    class="text-[10px] font-bold
+                           text-slate-500 mb-2">
+
+                    Quick Amount
+
+                </p>
+
+
+                <div
+                    class="grid grid-cols-3 gap-2">
+
+                    <button
+                        type="button"
+                        class="quick-amount
+                               h-10 rounded-xl
+                               border border-slate-800
+                               bg-slate-900/70
+                               text-slate-300
+                               text-[11px] font-bold"
+                        data-amount="50">
+
+                        ৳50
+
+                    </button>
+
+
+                    <button
+                        type="button"
+                        class="quick-amount
+                               h-10 rounded-xl
+                               border border-slate-800
+                               bg-slate-900/70
+                               text-slate-300
+                               text-[11px] font-bold"
+                        data-amount="100">
+
+                        ৳100
+
+                    </button>
+
+
+                    <button
+                        type="button"
+                        class="quick-amount
+                               h-10 rounded-xl
+                               border border-slate-800
+                               bg-slate-900/70
+                               text-slate-300
+                               text-[11px] font-bold"
+                        data-amount="200">
+
+                        ৳200
+
+                    </button>
+
+
+                    <button
+                        type="button"
+                        class="quick-amount
+                               h-10 rounded-xl
+                               border border-slate-800
+                               bg-slate-900/70
+                               text-slate-300
+                               text-[11px] font-bold"
+                        data-amount="500">
+
+                        ৳500
+
+                    </button>
+
+
+                    <button
+                        type="button"
+                        class="quick-amount
+                               h-10 rounded-xl
+                               border border-slate-800
+                               bg-slate-900/70
+                               text-slate-300
+                               text-[11px] font-bold"
+                        data-amount="1000">
+
+                        ৳1000
+
+                    </button>
+
+
+                    <button
+                        type="button"
+                        class="quick-amount
+                               h-10 rounded-xl
+                               border border-slate-800
+                               bg-slate-900/70
+                               text-slate-300
+                               text-[11px] font-bold"
+                        data-amount="5000">
+
+                        ৳5000
+
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <!-- SUMMARY -->
+
+            <div
+                id="amount-summary"
+                class="hidden rounded-2xl
+                       bg-slate-950/50
+                       border border-slate-800
+                       p-4 space-y-2.5">
+
+                <div class="summary-row">
+
+                    <span
+                        class="text-[11px] text-slate-400">
+
+                        Deposit Amount
+
+                    </span>
+
+
+                    <span
+                        id="summary-amount"
+                        class="text-xs font-bold text-white">
+
+                        ৳0
+
+                    </span>
+
+                </div>
+
+
+                <div class="summary-row">
+
+                    <span
+                        class="text-[11px] text-slate-400">
+
+                        Payment Fee
+
+                    </span>
+
+
+                    <span
+                        class="text-xs font-bold text-emerald-400">
+
+                        ৳0
+
+                    </span>
+
+                </div>
+
+
+                <div
+                    class="border-t border-slate-800
+                           pt-2.5 mt-1">
+
+                    <div class="summary-row">
+
+                        <span
+                            class="text-xs font-bold text-slate-300">
+
+                            Total Payable
+
+                        </span>
+
+
+                        <span
+                            id="summary-total"
+                            class="text-base font-black
+                                   text-emerald-400">
+
+                            ৳0
+
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- PROCEED -->
+
+            <button
+                type="button"
+                id="proceed-payment-btn"
+                onclick="proceedToDeposit()"
+                disabled
+                class="w-full bg-emerald-600
+                       hover:bg-emerald-500
+                       text-slate-950 text-xs
+                       font-extrabold py-4 rounded-2xl
+                       transition shadow-lg
+                       shadow-emerald-600/20
+                       uppercase tracking-wider
+                       deposit-btn-disabled">
+
+                <i
+                    class="fa-solid fa-lock mr-1.5
+                           text-[10px]">
+                </i>
+
+                Proceed to Payment
+
             </button>
+
+
         </div>
+
+
+        <!-- SECURITY NOTICE -->
+
+        <div
+            class="glass-card rounded-2xl p-4
+                   bg-rose-500/[.025]
+                   border border-rose-500/10">
+
+            <div class="flex items-start gap-3">
+
+                <div
+                    class="w-8 h-8 rounded-lg
+                           bg-rose-500/10
+                           text-rose-400
+                           flex items-center justify-center
+                           flex-shrink-0">
+
+                    <i class="fa-solid fa-shield-halved text-xs"></i>
+
+                </div>
+
+
+                <div>
+
+                    <p
+                        class="text-[11px] font-bold text-slate-300">
+
+                        Payment Security
+
+                    </p>
+
+
+                    <p
+                        class="text-[10px] text-slate-500
+                               mt-1 leading-relaxed">
+
+                        🔒 Never share your OTP or payment PIN
+                        with anyone.
+
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- INFORMATION -->
+
+        <div
+            class="glass-card rounded-2xl p-4 space-y-3
+                   border border-slate-800/80
+                   text-[11px] text-slate-400">
+
+
+            <div class="flex items-center space-x-2.5">
+
+                <i class="fa-solid fa-shield-halved text-blue-400"></i>
+
+                <span>
+                    Secure payment powered by our gateway
+                </span>
+
+            </div>
+
+
+            <div class="flex items-center space-x-2.5">
+
+                <i class="fa-solid fa-bolt text-amber-400"></i>
+
+                <span>
+                    Balance is credited after admin review
+                </span>
+
+            </div>
+
+
+            <div class="flex items-center space-x-2.5">
+
+                <i class="fa-solid fa-headset text-emerald-400"></i>
+
+                <span>
+                    Contact support if payment is not reflected
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <!-- WHATSAPP SUPPORT -->
+
+        <div
+            class="glass-card rounded-2xl p-4
+                   bg-gradient-to-r
+                   from-blue-950/40
+                   to-slate-900/60
+                   border border-blue-500/20
+                   text-center space-y-3">
+
+
+            <p
+                class="text-xs text-slate-300
+                       font-semibold leading-relaxed">
+
+                ৫ মিনিটের ভিতরে যদি আপনার ব্যালেন্স add না হয়,
+                তাহলে নিচে deposit admin-কে মেসেজ দিন।
+
+            </p>
+
+
+            <button
+                onclick="contactAdminWhatsApp()"
+                class="w-full bg-emerald-600
+                       hover:bg-emerald-500
+                       text-white font-bold text-xs
+                       py-3 rounded-xl transition
+                       shadow-lg shadow-emerald-600/20
+                       flex items-center justify-center
+                       space-x-2">
+
+                <i class="fa-brands fa-whatsapp text-sm"></i>
+
+                <span>
+                    Deposit Admin Contact (WhatsApp)
+                </span>
+
+            </button>
+
+        </div>
+
+
+        <!-- RECENT DEPOSITS -->
+
+        <div>
+
+            <div
+                class="flex items-center justify-between
+                       mb-3 px-1">
+
+                <h3
+                    class="text-xs font-black text-white">
+
+                    Recent Deposit History
+
+                </h3>
+
+
+                <span
+                    class="text-[9px] text-slate-600">
+
+                    Last 3
+
+                </span>
+
+            </div>
+
+
+            <div
+                id="recent-deposits"
+                class="space-y-3">
+
+                <div
+                    class="glass-card rounded-2xl p-5
+                           text-center text-slate-500
+                           text-[10px]">
+
+                    <i
+                        class="fa-solid fa-spinner fa-spin mr-1">
+                    </i>
+
+                    Deposit history loading...
+
+                </div>
+
+            </div>
+
+        </div>
+
 
     </main>
 
+
+    <!-- FIREBASE -->
+
     <script type="module">
+
         import { auth, db } from "./firebase.js";
-        import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-        import { doc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        import {
+            onAuthStateChanged
+        } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+
+        import {
+            collection,
+            query,
+            where,
+            getDocs,
+            doc,
+            getDoc
+        } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+
+        /* =========================================================
+           GLOBAL STATE
+        ========================================================= */
 
         let currentUser = null;
+
         let currentUserData = null;
 
-        window.showToast = function(message, type = 'success') {
-            const container = document.getElementById('toast-container');
+        let latestPendingDeposit = null;
+
+
+        const MIN_DEPOSIT = 10;
+
+        const MAX_DEPOSIT = 10000000;
+
+        const PAYMENT_FEE = 0;
+
+
+        /* =========================================================
+           ELEMENTS
+        ========================================================= */
+
+        const amountInput =
+            document.getElementById(
+                'deposit-amount'
+            );
+
+        const amountMessage =
+            document.getElementById(
+                'amount-message'
+            );
+
+        const proceedButton =
+            document.getElementById(
+                'proceed-payment-btn'
+            );
+
+        const amountSummary =
+            document.getElementById(
+                'amount-summary'
+            );
+
+        const summaryAmount =
+            document.getElementById(
+                'summary-amount'
+            );
+
+        const summaryTotal =
+            document.getElementById(
+                'summary-total'
+            );
+
+        const pendingCard =
+            document.getElementById(
+                'pending-deposit-card'
+            );
+
+        const pendingInfo =
+            document.getElementById(
+                'pending-deposit-info'
+            );
+
+        const pendingId =
+            document.getElementById(
+                'pending-deposit-id'
+            );
+
+        const recentDeposits =
+            document.getElementById(
+                'recent-deposits'
+            );
+
+
+        /* =========================================================
+           TOAST
+        ========================================================= */
+
+        window.showToast = function(
+            message,
+            type = 'success'
+        ) {
+
+            const container =
+                document.getElementById(
+                    'toast-container'
+                );
+
             if (!container) return;
-            const toast = document.createElement('div');
-            toast.className = `toast ${type}`;
 
-            let iconClass = "fa-solid fa-circle-check text-emerald-400";
-            if (type === 'error') iconClass = "fa-solid fa-circle-xmark text-red-400";
-            if (type === 'warning') iconClass = "fa-solid fa-triangle-exclamation text-amber-400";
 
-            toast.innerHTML = `<i class="${iconClass}"></i> <span>${message}</span>`;
-            container.appendChild(toast);
-            setTimeout(() => toast.remove(), 3000);
-        };
+            const toast =
+                document.createElement(
+                    'div'
+                );
 
-        onAuthStateChanged(auth, async (user) => {
-            if (!user) {
-                showToast("দয়া করে লগইন করুন!", "warning");
-                setTimeout(() => { window.location.href = 'login.html'; }, 1000);
-                return;
+            toast.className =
+                `toast ${type}`;
+
+
+            let iconClass =
+                "fa-solid fa-circle-check text-emerald-400";
+
+
+            if (type === 'error') {
+
+                iconClass =
+                    "fa-solid fa-circle-xmark text-red-400";
+
             }
 
-            currentUser = user;
+
+            if (type === 'warning') {
+
+                iconClass =
+                    "fa-solid fa-triangle-exclamation text-amber-400";
+
+            }
+
+
+            toast.innerHTML = `
+                <i class="${iconClass}"></i>
+                <span>${escapeHtml(message)}</span>
+            `;
+
+
+            container.appendChild(
+                toast
+            );
+
+
+            setTimeout(() => {
+
+                toast.remove();
+
+            }, 3000);
+
+        };
+
+
+        /* =========================================================
+           ESCAPE HTML
+        ========================================================= */
+
+        function escapeHtml(value) {
+
+            if (
+                value === null ||
+                value === undefined
+            ) {
+
+                return '';
+
+            }
+
+
+            return String(value)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#039;');
+
+        }
+
+
+        /* =========================================================
+           NORMALIZE STATUS
+        ========================================================= */
+
+        function normalizeStatus(status) {
+
+            return String(
+                status || 'pending'
+            )
+            .trim()
+            .toLowerCase();
+
+        }
+
+
+        /* =========================================================
+           STATUS HELPERS
+        ========================================================= */
+
+        function isPendingStatus(status) {
+
+            const value =
+                normalizeStatus(status);
+
+
+            return (
+                value === 'pending' ||
+                value === 'processing' ||
+                value === 'review' ||
+                value === 'under_review' ||
+                value === 'under review'
+            );
+
+        }
+
+
+        function isApprovedStatus(status) {
+
+            const value =
+                normalizeStatus(status);
+
+
+            return (
+                value === 'success' ||
+                value === 'approved' ||
+                value === 'completed' ||
+                value === 'complete' ||
+                value === 'paid'
+            );
+
+        }
+
+
+        function isRejectedStatus(status) {
+
+            const value =
+                normalizeStatus(status);
+
+
+            return (
+                value === 'rejected' ||
+                value === 'reject' ||
+                value === 'failed' ||
+                value === 'declined'
+            );
+
+        }
+
+
+        /* =========================================================
+           TIME VALUE
+        ========================================================= */
+
+        function getTimeValue(item) {
+
+            if (!item) return 0;
+
+
+            if (
+                typeof item.timestamp === 'number'
+            ) {
+
+                return item.timestamp;
+
+            }
+
+
+            if (
+                typeof item.createdAt === 'number'
+            ) {
+
+                return item.createdAt;
+
+            }
+
+
+            if (
+                item.timestamp &&
+                typeof item.timestamp.toMillis === 'function'
+            ) {
+
+                return item.timestamp.toMillis();
+
+            }
+
+
+            if (
+                item.createdAt &&
+                typeof item.createdAt.toMillis === 'function'
+            ) {
+
+                return item.createdAt.toMillis();
+
+            }
+
+
+            if (
+                item.timestamp &&
+                item.timestamp.seconds
+            ) {
+
+                return Number(
+                    item.timestamp.seconds
+                ) * 1000;
+
+            }
+
+
+            if (
+                item.createdAt &&
+                item.createdAt.seconds
+            ) {
+
+                return Number(
+                    item.createdAt.seconds
+                ) * 1000;
+
+            }
+
+
+            return 0;
+
+        }
+
+
+        /* =========================================================
+           DATE FORMAT
+        ========================================================= */
+
+        function formatDate(item) {
+
+            const time =
+                getTimeValue(item);
+
+
+            if (!time) return '';
+
 
             try {
-                const userSnap = await getDoc(doc(db, "users", user.uid));
-                if (userSnap.exists()) {
-                    currentUserData = userSnap.data();
+
+                return new Date(time)
+                    .toLocaleString('bn-BD');
+
+            } catch {
+
+                return '';
+
+            }
+
+        }
+
+
+        /* =========================================================
+           REJECT REASON
+        ========================================================= */
+
+        function getRejectReason(tx) {
+
+            if (!tx) return '';
+
+
+            return String(
+                tx.reviewReason ||
+                tx.rejectReason ||
+                tx.rejectionReason ||
+                tx.reject_reason ||
+                tx.reason ||
+                ''
+            ).trim();
+
+        }
+
+
+        /* =========================================================
+           AUTH
+        ========================================================= */
+
+        onAuthStateChanged(
+            auth,
+            async user => {
+
+                if (!user) {
+
+                    showToast(
+                        "দয়া করে লগইন করুন!",
+                        "warning"
+                    );
+
+
+                    setTimeout(() => {
+
+                        window.location.href =
+                            'login.html';
+
+                    }, 1000);
+
+
+                    return;
+
                 }
-            } catch (error) {
-                console.error("User data load failed:", error);
+
+
+                currentUser =
+                    user;
+
+
+                /* USER PROFILE */
+
+                try {
+
+                    const userSnap =
+                        await getDoc(
+                            doc(
+                                db,
+                                "users",
+                                user.uid
+                            )
+                        );
+
+
+                    if (
+                        userSnap.exists()
+                    ) {
+
+                        currentUserData =
+                            userSnap.data();
+
+                    }
+
+                } catch (error) {
+
+                    console.error(
+                        "User data load failed:",
+                        error
+                    );
+
+                }
+
+
+                /* LOAD DEPOSITS */
+
+                await loadDepositHistory(
+                    user.uid
+                );
+
             }
-        });
+        );
 
-        window.proceedToDeposit = function() {
-            const input = document.getElementById('deposit-amount');
-            const amountInput = input ? input.value.trim() : '';
-            const amount = Number(amountInput);
 
-            if (!amountInput || !Number.isFinite(amount)) {
-                showToast("দয়া করে একটি Amount লিখুন!", "warning");
-                if (input) input.focus();
+        /* =========================================================
+           AMOUNT VALIDATION
+        ========================================================= */
+
+        function validateAmount() {
+
+            if (!amountInput) return false;
+
+
+            const raw =
+                amountInput.value.trim();
+
+
+            const amount =
+                Number(raw);
+
+
+            amountInput.classList.remove(
+                'border-red-500',
+                'border-emerald-500'
+            );
+
+
+            if (!raw) {
+
+                amountMessage.textContent =
+                    `Minimum deposit: ৳${MIN_DEPOSIT}`;
+
+                amountMessage.className =
+                    "text-[10px] text-slate-500 mt-2";
+
+
+                disableProceed();
+
+                hideSummary();
+
+                clearQuickAmountActive();
+
                 return false;
+
             }
 
-            if (amount < 10) {
-                showToast("Minimum Deposit Amount ৳10!", "warning");
-                if (input) input.focus();
+
+            if (
+                !Number.isFinite(amount)
+            ) {
+
+                showAmountError(
+                    "সঠিক Amount লিখুন।"
+                );
+
                 return false;
+
             }
 
-            if (amount > 10000000) {
-                showToast("Amount অনেক বেশি হয়েছে!", "warning");
-                if (input) input.focus();
+
+            if (
+                amount < MIN_DEPOSIT
+            ) {
+
+                showAmountError(
+                    `Minimum deposit: ৳${MIN_DEPOSIT}`
+                );
+
                 return false;
+
             }
 
-            window.location.href = 'deposit.html?amount=' + encodeURIComponent(amount.toFixed(2));
+
+            if (
+                amount > MAX_DEPOSIT
+            ) {
+
+                showAmountError(
+                    "Amount অনেক বেশি হয়েছে।"
+                );
+
+                return false;
+
+            }
+
+
+            amountMessage.textContent =
+                "Amount ঠিক আছে ✓";
+
+            amountMessage.className =
+                "text-[10px] text-emerald-400 mt-2";
+
+
+            amountInput.classList.add(
+                'border-emerald-500'
+            );
+
+
+            enableProceed();
+
+
+            updateSummary(
+                amount
+            );
+
+
+            updateQuickAmountActive(
+                amount
+            );
+
+
             return true;
-        };
 
-        window.contactAdminWhatsApp = function() {
-            let email = "Not Found";
-            let uid = "Not Found";
+        }
 
-            const user = auth.currentUser;
 
-            if (user) {
-                email = user.email || "Not Found";
-                uid = user.uid || "Not Found";
-            } else if (currentUser) {
-                email = currentUser.email || "Not Found";
-                uid = currentUser.uid || "Not Found";
+        function showAmountError(
+            message
+        ) {
+
+            amountMessage.textContent =
+                message;
+
+            amountMessage.className =
+                "text-[10px] text-rose-400 mt-2";
+
+
+            amountInput.classList.add(
+                'border-red-500'
+            );
+
+
+            disableProceed();
+
+            hideSummary();
+
+            clearQuickAmountActive();
+
+        }
+
+
+        function enableProceed() {
+
+            proceedButton.disabled =
+                false;
+
+            proceedButton.classList.remove(
+                'deposit-btn-disabled'
+            );
+
+        }
+
+
+        function disableProceed() {
+
+            proceedButton.disabled =
+                true;
+
+            proceedButton.classList.add(
+                'deposit-btn-disabled'
+            );
+
+        }
+
+
+        /* =========================================================
+           SUMMARY
+        ========================================================= */
+
+        function updateSummary(
+            amount
+        ) {
+
+            const fixedAmount =
+                Number(amount).toFixed(2);
+
+
+            summaryAmount.textContent =
+                `৳${fixedAmount}`;
+
+
+            summaryTotal.textContent =
+                `৳${(
+                    Number(amount) +
+                    PAYMENT_FEE
+                ).toFixed(2)}`;
+
+
+            amountSummary.classList.remove(
+                'hidden'
+            );
+
+        }
+
+
+        function hideSummary() {
+
+            amountSummary.classList.add(
+                'hidden'
+            );
+
+        }
+
+
+        /* =========================================================
+           QUICK AMOUNT
+        ========================================================= */
+
+        function clearQuickAmountActive() {
+
+            document
+                .querySelectorAll(
+                    '.quick-amount'
+                )
+                .forEach(button => {
+
+                    button.classList.remove(
+                        'active'
+                    );
+
+                });
+
+        }
+
+
+        function updateQuickAmountActive(
+            amount
+        ) {
+
+            clearQuickAmountActive();
+
+
+            document
+                .querySelectorAll(
+                    '.quick-amount'
+                )
+                .forEach(button => {
+
+                    const buttonAmount =
+                        Number(
+                            button.dataset.amount
+                        );
+
+
+                    if (
+                        buttonAmount ===
+                        Number(amount)
+                    ) {
+
+                        button.classList.add(
+                            'active'
+                        );
+
+                    }
+
+                });
+
+        }
+
+
+        document
+            .querySelectorAll(
+                '.quick-amount'
+            )
+            .forEach(button => {
+
+                button.addEventListener(
+                    'click',
+                    () => {
+
+                        const value =
+                            button.dataset.amount;
+
+
+                        amountInput.value =
+                            value;
+
+
+                        validateAmount();
+
+                    }
+                );
+
+            });
+
+
+        amountInput.addEventListener(
+            'input',
+            validateAmount
+        );
+
+
+        /* =========================================================
+           PROCEED TO PAYMENT
+        ========================================================= */
+
+        window.proceedToDeposit =
+            function() {
+
+                if (!validateAmount()) {
+
+                    if (
+                        amountInput
+                    ) {
+
+                        amountInput.focus();
+
+                    }
+
+                    return false;
+
+                }
+
+
+                const amount =
+                    Number(
+                        amountInput.value.trim()
+                    );
+
+
+                if (
+                    !Number.isFinite(amount)
+                ) {
+
+                    return false;
+
+                }
+
+
+                window.location.href =
+                    'deposit.html?amount=' +
+                    encodeURIComponent(
+                        amount.toFixed(2)
+                    );
+
+
+                return true;
+
+            };
+
+
+        /* =========================================================
+           LOAD DEPOSIT HISTORY
+        ========================================================= */
+
+        async function loadDepositHistory(
+            uid
+        ) {
+
+            try {
+
+                const qTx =
+                    query(
+                        collection(
+                            db,
+                            "transactions"
+                        ),
+
+                        where(
+                            "userId",
+                            "==",
+                            uid
+                        )
+                    );
+
+
+                const snap =
+                    await getDocs(qTx);
+
+
+                let deposits = [];
+
+
+                snap.forEach(
+                    docSnap => {
+
+                        const data =
+                            docSnap.data() ||
+                            {};
+
+
+                        /*
+                         * transactions collection
+                         * থেকে deposit records নেওয়া হচ্ছে।
+                         *
+                         * Withdraw records থাকলে source/type
+                         * দেখে বাদ দেওয়া হবে।
+                         */
+
+                        const source =
+                            String(
+                                data.source ||
+                                ''
+                            )
+                            .toLowerCase();
+
+
+                        const type =
+                            String(
+                                data.type ||
+                                ''
+                            )
+                            .toLowerCase();
+
+
+                        const method =
+                            String(
+                                data.method ||
+                                ''
+                            )
+                            .toLowerCase();
+
+
+                        const isWithdraw =
+                            source === 'withdraw' ||
+                            type === 'withdraw' ||
+                            method === 'bkash' &&
+                            (
+                                data.receiveAmount !== undefined ||
+                                data.fee !== undefined
+                            );
+
+
+                        if (
+                            isWithdraw
+                        ) {
+
+                            return;
+
+                        }
+
+
+                        deposits.push({
+
+                            id:
+                                docSnap.id,
+
+                            ...data
+
+                        });
+
+                    }
+                );
+
+
+                /* SORT NEWEST FIRST */
+
+                deposits.sort(
+                    (a, b) =>
+                        getTimeValue(b) -
+                        getTimeValue(a)
+                );
+
+
+                /* PENDING */
+
+                const pending =
+                    deposits.find(
+                        item =>
+                            isPendingStatus(
+                                item.status
+                            )
+                    );
+
+
+                latestPendingDeposit =
+                    pending || null;
+
+
+                renderPendingDeposit(
+                    pending
+                );
+
+
+                /* RECENT 3 */
+
+                const recent =
+                    deposits.slice(
+                        0,
+                        3
+                    );
+
+
+                renderRecentDeposits(
+                    recent
+                );
+
+
+            } catch (error) {
+
+                console.error(
+                    "Deposit history error:",
+                    error
+                );
+
+
+                renderRecentDeposits(
+                    []
+                );
+
             }
 
-            const text = `আসসালামু আলাইকুম। আমি AURA ARMAN TOUR অ্যাপ থেকে সাপোর্টের জন্য যোগাযোগ করছি।
+        }
+
+
+        /* =========================================================
+           PENDING DEPOSIT RENDER
+        ========================================================= */
+
+        function renderPendingDeposit(
+            deposit
+        ) {
+
+            if (!deposit) {
+
+                pendingCard.classList.add(
+                    'hidden'
+                );
+
+                return;
+
+            }
+
+
+            const amount =
+                Number(
+                    deposit.amount || 0
+                );
+
+
+            pendingInfo.innerHTML = `
+                <span class="text-white font-bold">
+                    ৳${escapeHtml(
+                        amount.toFixed(2)
+                    )}
+                </span>
+                — Under Review
+            `;
+
+
+            pendingId.textContent =
+                deposit.id
+                    ? `Transaction ID: ${deposit.id}`
+                    : '';
+
+
+            pendingCard.classList.remove(
+                'hidden'
+            );
+
+        }
+
+
+        /* =========================================================
+           RECENT DEPOSIT HISTORY
+        ========================================================= */
+
+        function renderRecentDeposits(
+            deposits
+        ) {
+
+            if (!recentDeposits) return;
+
+
+            if (
+                deposits.length === 0
+            ) {
+
+                recentDeposits.innerHTML = `
+
+                    <div
+                        class="glass-card rounded-2xl
+                               p-5 text-center
+                               text-slate-500
+                               text-[10px]">
+
+                        কোনো deposit history পাওয়া যায়নি।
+
+                    </div>
+
+                `;
+
+                return;
+
+            }
+
+
+            recentDeposits.innerHTML =
+                deposits
+                    .map(
+                        renderDepositCard
+                    )
+                    .join('');
+
+        }
+
+
+        /* =========================================================
+           DEPOSIT CARD
+        ========================================================= */
+
+        function renderDepositCard(
+            deposit
+        ) {
+
+            const status =
+                normalizeStatus(
+                    deposit.status
+                );
+
+
+            const amount =
+                Number(
+                    deposit.amount || 0
+                );
+
+
+            let statusText =
+                'Pending';
+
+
+            let statusClass =
+                'text-amber-400 bg-amber-500/10 border-amber-500/20';
+
+
+            let icon =
+                'fa-clock';
+
+
+            let iconClass =
+                'bg-amber-500/10 text-amber-400';
+
+
+            if (
+                isApprovedStatus(status)
+            ) {
+
+                statusText =
+                    'Approved';
+
+                statusClass =
+                    'text-emerald-400 bg-emerald-500/10 border-emerald-500/20';
+
+                icon =
+                    'fa-circle-check';
+
+                iconClass =
+                    'bg-emerald-500/10 text-emerald-400';
+
+            }
+
+
+            else if (
+                isRejectedStatus(status)
+            ) {
+
+                statusText =
+                    'Rejected';
+
+                statusClass =
+                    'text-rose-400 bg-rose-500/10 border-rose-500/20';
+
+                icon =
+                    'fa-circle-xmark';
+
+                iconClass =
+                    'bg-rose-500/10 text-rose-400';
+
+            }
+
+
+            const reason =
+                isRejectedStatus(status)
+                    ? getRejectReason(
+                        deposit
+                    )
+                    : '';
+
+
+            const reasonHtml =
+                reason
+                    ? `
+                        <div
+                            class="reason-box mt-3
+                                   p-2.5 rounded-xl
+                                   bg-rose-500/10
+                                   border border-rose-500/20">
+
+                            <div
+                                class="flex items-center gap-1.5">
+
+                                <i
+                                    class="fa-solid
+                                           fa-circle-exclamation
+                                           text-rose-400
+                                           text-[9px]">
+                                </i>
+
+                                <p
+                                    class="text-[9px]
+                                           text-rose-300
+                                           font-bold">
+
+                                    Reject Reason
+
+                                </p>
+
+                            </div>
+
+                            <p
+                                class="text-[10px]
+                                       text-slate-300
+                                       mt-1 leading-relaxed
+                                       break-words">
+
+                                ${escapeHtml(reason)}
+
+                            </p>
+
+                        </div>
+                    `
+                    : '';
+
+
+            const date =
+                formatDate(
+                    deposit
+                );
+
+
+            const trxHtml =
+                deposit.trxId
+                    ? `
+                        <p
+                            class="text-[9px]
+                                   text-slate-600
+                                   mt-1 break-all">
+
+                            TrxID:
+                            ${escapeHtml(
+                                deposit.trxId
+                            )}
+
+                        </p>
+                    `
+                    : '';
+
+
+            return `
+
+                <div
+                    class="glass-card rounded-2xl
+                           p-4 border border-slate-800
+                           shadow-lg">
+
+                    <div
+                        class="flex items-start
+                               justify-between
+                               gap-3">
+
+                        <div
+                            class="flex items-center
+                                   gap-3 min-w-0">
+
+                            <div
+                                class="w-9 h-9 rounded-xl
+                                       ${iconClass}
+                                       flex items-center
+                                       justify-center
+                                       flex-shrink-0">
+
+                                <i
+                                    class="fa-solid
+                                           ${icon}
+                                           text-xs">
+                                </i>
+
+                            </div>
+
+
+                            <div
+                                class="min-w-0">
+
+                                <h4
+                                    class="text-xs
+                                           font-bold
+                                           text-white">
+
+                                    Deposit
+
+                                </h4>
+
+
+                                <p
+                                    class="text-[10px]
+                                           text-slate-400
+                                           mt-0.5">
+
+                                    Amount:
+
+                                    <b
+                                        class="text-white">
+
+                                        ৳${escapeHtml(
+                                            amount.toFixed(2)
+                                        )}
+
+                                    </b>
+
+                                </p>
+
+
+                                ${
+                                    date
+                                        ? `
+                                            <p
+                                                class="text-[9px]
+                                                       text-slate-600
+                                                       mt-0.5">
+
+                                                ${escapeHtml(date)}
+
+                                            </p>
+                                          `
+                                        : ''
+                                }
+
+
+                                ${trxHtml}
+
+                            </div>
+
+                        </div>
+
+
+                        <span
+                            class="status-badge
+                                   text-[9px]
+                                   font-bold
+                                   px-2.5 py-1
+                                   rounded-lg
+                                   border
+                                   ${statusClass}">
+
+                            ${statusText}
+
+                        </span>
+
+                    </div>
+
+
+                    ${reasonHtml}
+
+                </div>
+
+            `;
+
+        }
+
+
+        /* =========================================================
+           SMART WHATSAPP SUPPORT
+        ========================================================= */
+
+        window.contactAdminWhatsApp =
+            function() {
+
+                let email =
+                    "Not Found";
+
+
+                let uid =
+                    "Not Found";
+
+
+                let amount =
+                    amountInput &&
+                    amountInput.value.trim()
+                        ? amountInput.value.trim()
+                        : "Not Selected";
+
+
+                let pendingTransactionId =
+                    latestPendingDeposit &&
+                    latestPendingDeposit.id
+                        ? latestPendingDeposit.id
+                        : "None";
+
+
+                const user =
+                    auth.currentUser;
+
+
+                if (user) {
+
+                    email =
+                        user.email ||
+                        "Not Found";
+
+
+                    uid =
+                        user.uid ||
+                        "Not Found";
+
+                }
+
+
+                else if (
+                    currentUser
+                ) {
+
+                    email =
+                        currentUser.email ||
+                        "Not Found";
+
+
+                    uid =
+                        currentUser.uid ||
+                        "Not Found";
+
+                }
+
+
+                const text =
+`আসসালামু আলাইকুম। আমি AURA ARMAN TOUR থেকে Deposit Support-এর জন্য যোগাযোগ করছি।
+
 আমার Gmail: ${email}
 আমার UID: ${uid}
+Deposit Amount: ৳${amount}
+Pending Transaction ID: ${pendingTransactionId}
 
-আমি Deposit করেছি, কিন্তু এখনো আমার ব্যালেন্সে টাকা যোগ হয়নি। অনুগ্রহ করে বিষয়টি একটু চেক করে যত দ্রুত সম্ভব আমার ব্যালেন্সটি যোগ করে দেওয়ার ব্যবস্থা করবেন। ধন্যবাদ। ❤️`;
-            const encodedText = encodeURIComponent(text);
+আমি Deposit করেছি, কিন্তু এখনো আমার ব্যালেন্সে টাকা যোগ হয়নি। অনুগ্রহ করে বিষয়টি একটু চেক করে যত দ্রুত সম্ভব আমার Deposit status/balance সম্পর্কে সাহায্য করবেন।
 
-            window.open(`https://wa.me/8801871132039?text=${encodedText}`, '_blank');
-        };
+ধন্যবাদ। ❤️`;
+
+
+                const encodedText =
+                    encodeURIComponent(
+                        text
+                    );
+
+
+                window.open(
+                    `https://wa.me/8801871132039?text=${encodedText}`,
+                    '_blank'
+                );
+
+            };
+
+
+        /* =========================================================
+           INITIAL STATE
+        ========================================================= */
+
+        disableProceed();
+
     </script>
+
 </body>
 </html>
