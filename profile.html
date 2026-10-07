@@ -814,16 +814,31 @@ function safe(value,fallback=0){
 
 /* =========================================
    SET TEXT
+   FIXED LOADING ISSUE
 ========================================= */
 
 function setText(id,value){
 
-    const el=
+    const el =
         document.getElementById(id);
 
-    if(!el)return;
+    if(!el) return;
 
-    el.textContent=
+
+    /*
+     * IMPORTANT:
+     * Firebase data আসার পর loading
+     * animation/shimmer সম্পূর্ণ remove
+     * করা হবে।
+     */
+
+    el.classList.remove(
+        "loading-text",
+        "loading-shimmer"
+    );
+
+
+    el.textContent =
         String(value);
 
 }
@@ -835,7 +850,7 @@ function setText(id,value){
 
 async function getRealMatchStats(uid){
 
-    const byTournament=
+    const byTournament =
         new Map();
 
 
@@ -844,7 +859,7 @@ async function getRealMatchStats(uid){
         const [
             historySnap,
             tournamentsSnap
-        ]=await Promise.all([
+        ] = await Promise.all([
 
             getDocs(
                 query(
@@ -876,13 +891,13 @@ async function getRealMatchStats(uid){
 
             historySnap.forEach(d=>{
 
-                const h=
-                    d.data()||{};
+                const h =
+                    d.data() || {};
 
 
-                const id=
+                const id =
                     String(
-                        h.tournamentId||
+                        h.tournamentId ||
                         d.id
                     );
 
@@ -893,7 +908,7 @@ async function getRealMatchStats(uid){
 
                         result:
                             String(
-                                h.result||""
+                                h.result || ""
                             ).toLowerCase(),
 
                         wonAmount:
@@ -902,7 +917,7 @@ async function getRealMatchStats(uid){
                                 h.winnings ??
                                 h.prizeWon ??
                                 0
-                            )||0,
+                            ) || 0,
 
                         completed:true
 
@@ -916,44 +931,44 @@ async function getRealMatchStats(uid){
 
         tournamentsSnap.forEach(d=>{
 
-            const t=
-                d.data()||{};
+            const t =
+                d.data() || {};
 
 
-            const participants=
+            const participants =
                 Array.isArray(
                     t.participants
                 )
-                ?t.participants
-                :[];
+                ? t.participants
+                : [];
 
 
-            const entry=
+            const entry =
                 participants.find(
-                    p=>
+                    p =>
                         String(
-                            p?.uid||
-                            p?.userId||
-                            p?.firebaseId||
+                            p?.uid ||
+                            p?.userId ||
+                            p?.firebaseId ||
                             ""
-                        )===uid
+                        ) === uid
                 );
 
 
             if(
-                !entry||
+                !entry ||
                 byTournament.has(d.id)
             )
                 return;
 
 
-            const status=
+            const status =
                 String(
-                    t.status||""
+                    t.status || ""
                 ).toLowerCase();
 
 
-            const completed=
+            const completed =
                 [
                     "complete",
                     "completed",
@@ -962,80 +977,80 @@ async function getRealMatchStats(uid){
                     "result"
                 ].includes(status)
                 ||
-                t.completed===true
+                t.completed === true
                 ||
-                t.isCompleted===true
+                t.isCompleted === true
                 ||
-                t.resultPublished===true;
+                t.resultPublished === true;
 
 
-            const results=
+            const results =
                 Array.isArray(
                     t.results
                 )
-                ?t.results
-                :[];
+                ? t.results
+                : [];
 
 
-            const result=
+            const result =
                 results.find(
-                    r=>
+                    r =>
                         String(
-                            r?.userId||
-                            r?.uid||
+                            r?.userId ||
+                            r?.uid ||
                             ""
-                        )===uid
-                )||{};
+                        ) === uid
+                ) || {};
 
 
-            const perSlot=
+            const perSlot =
                 Math.max(
                     1,
                     Number(
-                        entry.count||
-                        entry.slotCount||
+                        entry.count ||
+                        entry.slotCount ||
                         1
                     )
                 );
 
 
-            const amount=
-                result.winner===true
+            const amount =
+                result.winner === true
 
                 ?
 
                 Number(
-                    result.prize??
-                    t.prize??
+                    result.prize ??
+                    t.prize ??
                     0
-                )*
-                perSlot+
+                ) *
+                perSlot +
 
                 Number(
-                    result.kills||0
-                )*
+                    result.kills || 0
+                ) *
                 Number(
-                    t.perKill||0
+                    t.perKill || 0
                 )
 
                 :
 
-                result.killOnly===true
+                result.killOnly === true
 
                 ?
 
                 Number(
-                    result.kills||0
-                )*
+                    result.kills || 0
+                ) *
                 Number(
-                    t.perKill||0
+                    t.perKill || 0
                 )
 
                 :
 
                 Number(
-                    result.wonAmount??
-                    result.winnings??
+                    result.wonAmount ??
+                    result.winnings ??
                     0
                 );
 
@@ -1045,20 +1060,20 @@ async function getRealMatchStats(uid){
                 {
 
                     result:
-                        result.winner===true||
-                        amount>0
-                        ?"win"
+                        result.winner === true ||
+                        amount > 0
+                        ? "win"
                         :
                         Object.keys(
                             result
                         ).length
-                        ?"loss"
-                        :"pending",
+                        ? "loss"
+                        : "pending",
 
                     wonAmount:
                         Number.isFinite(amount)
-                        ?amount
-                        :0,
+                        ? amount
+                        : 0,
 
                     completed
 
@@ -1068,7 +1083,7 @@ async function getRealMatchStats(uid){
         });
 
 
-        const entries=[
+        const entries = [
             ...byTournament.values()
         ];
 
@@ -1080,16 +1095,16 @@ async function getRealMatchStats(uid){
 
             wins:
                 entries.filter(
-                    x=>
-                        x.result==="win"||
-                        x.result==="won"||
-                        x.wonAmount>0
+                    x =>
+                        x.result === "win" ||
+                        x.result === "won" ||
+                        x.wonAmount > 0
                 ).length,
 
             earnings:
                 entries.reduce(
-                    (sum,x)=>
-                        sum+
+                    (sum,x) =>
+                        sum +
                         Math.max(
                             0,
                             x.wonAmount
@@ -1124,32 +1139,32 @@ function applyProfile(
     data
 ){
 
-    if(!user)return;
+    if(!user) return;
 
 
-    const name=
-        data.showName||
-        data.name||
-        data.fullName||
-        data.username||
-        user.displayName||
+    const name =
+        data.showName ||
+        data.name ||
+        data.fullName ||
+        data.username ||
+        user.displayName ||
         "User";
 
 
-    const uid=
-        data.uid||
+    const uid =
+        data.uid ||
         user.uid;
 
 
-    const referCode=
+    const referCode =
         String(
-            data.referCode||""
-        ).trim()||
+            data.referCode || ""
+        ).trim() ||
         "—";
 
 
-    const photo=
-        data.photoURL||
+    const photo =
+        data.photoURL ||
         DEFAULT_PROFILE_PHOTO;
 
 
@@ -1157,7 +1172,7 @@ function applyProfile(
        AVAILABLE BALANCE
     =============================== */
 
-    const balance=
+    const balance =
         safe(
             data.balance,
             0
@@ -1166,13 +1181,9 @@ function applyProfile(
 
     /* ===============================
        WINNINGS
-       
-       Initial profile data only.
-       Real calculated earnings will
-       be applied after background stats.
-       =============================== */
+    =============================== */
 
-    const winnings=
+    const winnings =
         safe(
             data.winnings ??
             data.winningBalance ??
@@ -1183,7 +1194,7 @@ function applyProfile(
         );
 
 
-    const matches=
+    const matches =
         safe(
             data.matchesPlayed ??
             data.matches ??
@@ -1192,7 +1203,7 @@ function applyProfile(
         );
 
 
-    const wins=
+    const wins =
         safe(
             data.matchesWon ??
             data.wins ??
@@ -1201,7 +1212,7 @@ function applyProfile(
         );
 
 
-    const earnings=
+    const earnings =
         safe(
             data.totalEarnings ??
             data.earnings ??
@@ -1240,7 +1251,7 @@ function applyProfile(
 
     /* PHOTO */
 
-    const avatar=
+    const avatar =
         document.getElementById(
             "user-avatar"
         );
@@ -1248,16 +1259,16 @@ function applyProfile(
 
     if(avatar){
 
-        avatar.src=
+        avatar.src =
             photo;
 
 
-        avatar.onerror=
+        avatar.onerror =
             ()=>{
 
-                avatar.onerror=null;
+                avatar.onerror = null;
 
-                avatar.src=
+                avatar.src =
                     DEFAULT_PROFILE_PHOTO;
 
             };
@@ -1309,10 +1320,10 @@ function applyProfile(
 
 async function loadProfile(user){
 
-    if(!user)return;
+    if(!user) return;
 
 
-    const userRef=
+    const userRef =
         doc(
             db,
             "users",
@@ -1326,7 +1337,7 @@ async function loadProfile(user){
          * First Firebase request.
          */
 
-        const snap=
+        const snap =
             await getDoc(
                 userRef
             );
@@ -1338,11 +1349,11 @@ async function loadProfile(user){
 
         if(!snap.exists()){
 
-            const generatedReferCode=
-                "PT-"+
+            const generatedReferCode =
+                "PT-" +
                 String(
-                    user.displayName||
-                    user.email||
+                    user.displayName ||
+                    user.email ||
                     "USER"
                 )
                 .toUpperCase()
@@ -1353,40 +1364,40 @@ async function loadProfile(user){
                 .slice(
                     0,
                     8
-                )+
-                "-"+
+                ) +
+                "-" +
                 Math.random()
                     .toString(36)
                     .slice(2,6)
                     .toUpperCase();
 
 
-            const basicData={
+            const basicData = {
 
                 uid:
                     user.uid,
 
                 showName:
-                    user.displayName||
+                    user.displayName ||
                     "User",
 
                 name:
-                    user.displayName||
+                    user.displayName ||
                     "User",
 
                 fullName:
-                    user.displayName||
+                    user.displayName ||
                     "User",
 
                 username:"",
                 usernameLower:"",
 
                 email:
-                    user.email||"",
+                    user.email || "",
 
                 emailLower:
                     (
-                        user.email||
+                        user.email ||
                         ""
                     ).toLowerCase(),
 
@@ -1442,7 +1453,7 @@ async function loadProfile(user){
                 }
             )
             .catch(
-                e=>
+                e =>
                     console.warn(
                         "Initial profile save:",
                         e
@@ -1459,8 +1470,8 @@ async function loadProfile(user){
            USER DATA EXISTS
         ================================= */
 
-        let data=
-            snap.data()||{};
+        let data =
+            snap.data() || {};
 
 
         /*
@@ -1470,17 +1481,17 @@ async function loadProfile(user){
 
         if(
             !String(
-                data.referCode||""
+                data.referCode || ""
             ).trim()
         ){
 
-            const generatedReferCode=
-                "PT-"+
+            const generatedReferCode =
+                "PT-" +
                 String(
-                    data.showName||
-                    data.username||
-                    data.name||
-                    user.email||
+                    data.showName ||
+                    data.username ||
+                    data.name ||
+                    user.email ||
                     "USER"
                 )
                 .toUpperCase()
@@ -1491,15 +1502,15 @@ async function loadProfile(user){
                 .slice(
                     0,
                     8
-                )+
-                "-"+
+                ) +
+                "-" +
                 Math.random()
                     .toString(36)
                     .slice(2,6)
                     .toUpperCase();
 
 
-            data={
+            data = {
                 ...data,
 
                 referCode:
@@ -1523,7 +1534,7 @@ async function loadProfile(user){
                 }
             )
             .catch(
-                e=>
+                e =>
                     console.warn(
                         "Refer code save:",
                         e
@@ -1537,7 +1548,7 @@ async function loadProfile(user){
          * MAIN PROFILE DATA
          *
          * Balance + Winnings
-         * এখানেই immediately render হবে।
+         * immediately render হবে।
          */
 
         applyProfile(
@@ -1548,16 +1559,13 @@ async function loadProfile(user){
 
         /* =================================
            BACKGROUND STATS
-           
-           IMPORTANT:
-           এখানে balance block হবে না।
         ================================= */
 
         getRealMatchStats(
             user.uid
         )
         .then(
-            realStats=>{
+            realStats => {
 
                 if(!realStats)
                     return;
@@ -1588,14 +1596,8 @@ async function loadProfile(user){
 
 
                 /*
-                 * IMPORTANT:
-                 *
-                 * Real match earnings-কে
+                 * Real match earnings
                  * Winnings হিসেবে দেখানো হচ্ছে।
-                 *
-                 * Example:
-                 * Earnings = ৳50
-                 * Winnings = ৳50
                  */
 
                 setText(
@@ -1612,11 +1614,6 @@ async function loadProfile(user){
 
         /* =================================
            REFERRAL BACKGROUND
-           
-           Referral আগে balance block করবে না।
-           
-           Reward হলে latest user data
-           আবার load করা হবে।
         ================================= */
 
         processReferralReward(
@@ -1627,7 +1624,7 @@ async function loadProfile(user){
 
                 try{
 
-                    const latestSnap=
+                    const latestSnap =
                         await getDoc(
                             userRef
                         );
@@ -1637,21 +1634,13 @@ async function loadProfile(user){
                         latestSnap.exists()
                     ){
 
-                        const latestData=
-                            latestSnap.data()||{};
+                        const latestData =
+                            latestSnap.data() || {};
 
-
-                        /*
-                         * Only refresh:
-                         * balance
-                         *
-                         * Winnings will remain
-                         * calculated from real stats.
-                         */
 
                         if(
                             latestData.balance !==
-                                undefined
+                            undefined
                         ){
 
                             setText(
@@ -1678,7 +1667,7 @@ async function loadProfile(user){
             }
         )
         .catch(
-            e=>
+            e =>
                 console.warn(
                     "Referral check:",
                     e
@@ -1700,7 +1689,7 @@ async function loadProfile(user){
 
         setText(
             "user-name",
-            user.displayName||
+            user.displayName ||
             "User"
         );
 
@@ -1761,56 +1750,56 @@ async function loadProfile(user){
    TOAST
 ========================================= */
 
-window.showToast=
+window.showToast =
 function(
     message,
     type="success"
 ){
 
-    const container=
+    const container =
         document.getElementById(
             "toast-container"
         );
 
 
-    if(!container)return;
+    if(!container) return;
 
 
-    const toast=
+    const toast =
         document.createElement(
             "div"
         );
 
 
-    toast.className=
+    toast.className =
         `toast ${type}`;
 
 
-    let icon=
+    let icon =
         "fa-solid fa-circle-check text-emerald-400";
 
 
     if(
-        type==="error"
+        type === "error"
     ){
 
-        icon=
+        icon =
             "fa-solid fa-circle-xmark text-red-400";
 
     }
 
 
     if(
-        type==="warning"
+        type === "warning"
     ){
 
-        icon=
+        icon =
             "fa-solid fa-triangle-exclamation text-amber-400";
 
     }
 
 
-    toast.innerHTML=
+    toast.innerHTML =
         `<i class="${icon}"></i>
          <span>${message}</span>`;
 
@@ -1834,7 +1823,7 @@ function(
 
 onAuthStateChanged(
     auth,
-    user=>{
+    user => {
 
         if(!user){
 
@@ -1865,7 +1854,7 @@ onAuthStateChanged(
             user
         )
         .catch(
-            e=>
+            e =>
                 console.error(
                     "Background profile load:",
                     e
@@ -1880,7 +1869,7 @@ onAuthStateChanged(
    SHARE APP
 ========================================= */
 
-window.shareApp=
+window.shareApp =
 async function(){
 
     try{
@@ -1921,7 +1910,7 @@ async function(){
     }catch(error){
 
         if(
-            error?.name!=="AbortError"
+            error?.name !== "AbortError"
         ){
 
             showToast(
@@ -1940,10 +1929,10 @@ async function(){
    LOGOUT
 ========================================= */
 
-window.handleLogout=
+window.handleLogout =
 function(){
 
-    const modal=
+    const modal =
         document.getElementById(
             "logoutModal"
         );
@@ -1951,7 +1940,7 @@ function(){
 
     if(modal){
 
-        modal.style.display=
+        modal.style.display =
             "flex";
 
     }
@@ -1959,10 +1948,10 @@ function(){
 };
 
 
-window.closeLogoutModal=
+window.closeLogoutModal =
 function(){
 
-    const modal=
+    const modal =
         document.getElementById(
             "logoutModal"
         );
@@ -1970,7 +1959,7 @@ function(){
 
     if(modal){
 
-        modal.style.display=
+        modal.style.display =
             "none";
 
     }
@@ -1978,7 +1967,7 @@ function(){
 };
 
 
-window.confirmLogout=
+window.confirmLogout =
 async function(){
 
     try{
