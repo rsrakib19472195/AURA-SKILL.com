@@ -8,663 +8,473 @@
 <script src="https://cdn.tailwindcss.com"></script>
 
 <link rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&display=swap"
-      rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&display=swap" rel="stylesheet">
 
 <style>
-
 *{
     box-sizing:border-box;
-    -webkit-tap-highlight-color:transparent;
 }
 
-html,
-body{
+html,body{
     margin:0;
     padding:0;
-    min-height:100%;
-    background:#050811;
+    background:#080b12;
     color:#fff;
     font-family:'Hind Siliguri',sans-serif;
 }
 
 body{
-    overflow-x:hidden;
+    min-height:100vh;
 }
 
+::-webkit-scrollbar{
+    width:4px;
+}
 
-/* =========================================================
-   LOADING SCREEN
-   ========================================================= */
+::-webkit-scrollbar-track{
+    background:#080b12;
+}
+
+::-webkit-scrollbar-thumb{
+    background:#273244;
+    border-radius:10px;
+}
 
 #pageLoader{
     position:fixed;
     inset:0;
     z-index:99999;
-
-    display:flex;
-    align-items:center;
-    justify-content:center;
-
-    background:
-        radial-gradient(
-            circle at center,
-            rgba(34,197,94,.07),
-            transparent 38%
-        ),
-        #050811;
-
-    opacity:1;
-    visibility:visible;
-
-    transition:
-        opacity .35s ease,
-        visibility .35s ease;
-}
-
-#pageLoader.hide{
-    opacity:0;
-    visibility:hidden;
-    pointer-events:none;
-}
-
-.loader-content{
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    justify-content:center;
-}
-
-.loader-logo-wrap{
-    position:relative;
-
-    width:82px;
-    height:82px;
-
+    background:#080b12;
     display:flex;
     align-items:center;
     justify-content:center;
 }
 
-.loader-logo-ring{
-    position:absolute;
-    inset:-8px;
-
-    border-radius:50%;
-
-    border:2px solid transparent;
-
-    border-top-color:#22c55e;
-    border-right-color:#84cc16;
-
-    animation:logoSpin .8s linear infinite;
-
-    filter:
-        drop-shadow(0 0 7px rgba(34,197,94,.55))
-        drop-shadow(0 0 15px rgba(132,204,22,.25));
+.loaderBox{
+    text-align:center;
 }
 
-.loader-logo-ring::after{
-    content:"";
-
-    position:absolute;
-    inset:5px;
-
-    border-radius:50%;
-
-    border:1px solid rgba(234,179,8,.5);
-
-    border-left-color:transparent;
-    border-bottom-color:transparent;
-
-    animation:logoSpinReverse .55s linear infinite;
-}
-
-.loader-logo{
-    width:68px;
-    height:68px;
-
+.loaderLogo{
+    width:62px;
+    height:62px;
+    border-radius:18px;
     object-fit:cover;
+    margin:auto;
+    box-shadow:0 10px 35px rgba(0,0,0,.4);
+}
 
+.loaderSpinner{
+    width:28px;
+    height:28px;
+    border:3px solid rgba(255,255,255,.12);
+    border-top-color:#22c55e;
     border-radius:50%;
-
-    border:2px solid rgba(255,255,255,.12);
-
-    box-shadow:
-        0 0 18px rgba(34,197,94,.30),
-        0 0 35px rgba(34,197,94,.10);
-
-    animation:logoFloat 1.4s ease-in-out infinite;
+    animation:spin .7s linear infinite;
+    margin:18px auto 0;
 }
 
-.loader-title{
-    margin-top:25px;
-
-    font-size:17px;
-    font-weight:700;
-
-    letter-spacing:.5px;
-
-    color:#fff;
-}
-
-.loader-subtitle{
-    margin-top:3px;
-
-    font-size:12px;
-
-    color:#64748b;
-}
-
-.loader-dots{
-    display:flex;
-    gap:5px;
-
-    margin-top:13px;
-}
-
-.loader-dot{
-    width:5px;
-    height:5px;
-
-    border-radius:50%;
-
-    background:#22c55e;
-
-    animation:dotPulse 1s ease-in-out infinite;
-}
-
-.loader-dot:nth-child(2){
-    animation-delay:.15s;
-}
-
-.loader-dot:nth-child(3){
-    animation-delay:.3s;
-}
-
-@keyframes logoSpin{
+@keyframes spin{
     to{
         transform:rotate(360deg);
     }
 }
 
-@keyframes logoSpinReverse{
-    to{
-        transform:rotate(-360deg);
-    }
+.mainWrap{
+    width:100%;
+    max-width:620px;
+    margin:auto;
+    padding:16px;
 }
 
-@keyframes logoFloat{
-
-    0%,
-    100%{
-        transform:scale(1);
-    }
-
-    50%{
-        transform:scale(1.035);
-    }
-}
-
-@keyframes dotPulse{
-
-    0%,
-    100%{
-        opacity:.25;
-        transform:scale(.8);
-    }
-
-    50%{
-        opacity:1;
-        transform:scale(1.15);
-    }
-}
-
-
-/* =========================================================
-   MAIN UI
-   ========================================================= */
-
-.glass-card{
-    background:rgba(15,23,42,.72);
-    border:1px solid rgba(148,163,184,.12);
-    backdrop-filter:blur(14px);
-    -webkit-backdrop-filter:blur(14px);
-    box-shadow:0 12px 35px rgba(0,0,0,.20);
+.glass{
+    background:rgba(18,24,38,.88);
+    border:1px solid rgba(255,255,255,.06);
+    box-shadow:0 15px 45px rgba(0,0,0,.22);
+    backdrop-filter:blur(16px);
 }
 
 .header{
-    position:sticky;
-    top:0;
-    z-index:50;
-
-    background:rgba(5,8,17,.88);
-
-    backdrop-filter:blur(18px);
-    -webkit-backdrop-filter:blur(18px);
-
-    border-bottom:1px solid rgba(148,163,184,.08);
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    margin-bottom:18px;
 }
 
-.progress-bar{
-    height:8px;
-
-    border-radius:999px;
-
-    background:#1e293b;
-
-    overflow:hidden;
-}
-
-.progress-fill{
-    height:100%;
-
-    border-radius:999px;
-
-    background:
-        linear-gradient(
-            90deg,
-            #22c55e,
-            #84cc16,
-            #eab308
-        );
-
-    transition:width .35s ease;
-}
-
-.task-card{
-    position:relative;
-
-    overflow:hidden;
-
-    transition:.2s ease;
-}
-
-.task-card:active{
-    transform:scale(.985);
-}
-
-.task-icon{
-    width:48px;
-    height:48px;
-
-    min-width:48px;
-
-    border-radius:15px;
-
+.backBtn{
+    width:40px;
+    height:40px;
+    border-radius:12px;
+    background:#121826;
+    border:1px solid #202a3a;
     display:flex;
     align-items:center;
     justify-content:center;
+    color:#fff;
+}
 
-    background:rgba(34,197,94,.10);
+.headerTitle{
+    flex:1;
+    margin-left:12px;
+}
 
-    border:1px solid rgba(34,197,94,.16);
+.headerTitle h1{
+    margin:0;
+    font-size:19px;
+    font-weight:700;
+}
 
+.headerTitle p{
+    margin:2px 0 0;
+    color:#7f8da3;
+    font-size:12px;
+}
+
+.refreshBtn{
+    width:40px;
+    height:40px;
+    border-radius:12px;
+    background:#121826;
+    border:1px solid #202a3a;
+    color:#aab5c5;
+}
+
+.progressCard{
+    border-radius:20px;
+    padding:18px;
+    margin-bottom:16px;
+    background:
+        radial-gradient(circle at top right,rgba(34,197,94,.16),transparent 35%),
+        #111827;
+    border:1px solid rgba(34,197,94,.12);
+}
+
+.progressTop{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+}
+
+.progressLabel{
+    color:#91a0b5;
+    font-size:12px;
+}
+
+.progressValue{
+    font-size:18px;
+    font-weight:700;
+}
+
+.progressBar{
+    width:100%;
+    height:7px;
+    background:#202a38;
+    border-radius:20px;
+    overflow:hidden;
+    margin-top:12px;
+}
+
+.progressFill{
+    height:100%;
+    width:0%;
+    border-radius:20px;
+    background:linear-gradient(90deg,#22c55e,#84cc16);
+    transition:width .35s ease;
+}
+
+.tabs{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:7px;
+    margin-bottom:16px;
+}
+
+.tabBtn{
+    border:1px solid #202a38;
+    background:#111827;
+    color:#8794a8;
+    padding:9px 5px;
+    border-radius:11px;
+    font-size:11px;
+    font-weight:600;
+}
+
+.tabBtn.active{
+    background:#163321;
     color:#4ade80;
+    border-color:#245c35;
+}
+
+.taskList{
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+}
+
+.taskCard{
+    background:#111827;
+    border:1px solid #202a38;
+    border-radius:17px;
+    padding:14px;
+    display:flex;
+    align-items:center;
+    gap:12px;
+    transition:.2s ease;
+}
+
+.taskCard.completed{
+    border-color:rgba(34,197,94,.25);
+    background:
+        linear-gradient(90deg,rgba(34,197,94,.055),transparent),
+        #111827;
+}
+
+.taskIcon{
+    width:45px;
+    height:45px;
+    min-width:45px;
+    border-radius:14px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:#172033;
+    color:#4ade80;
+    font-size:17px;
+}
+
+.taskContent{
+    min-width:0;
+    flex:1;
+}
+
+.taskTitle{
+    font-size:14px;
+    font-weight:700;
+    color:#fff;
+}
+
+.taskDesc{
+    color:#7f8da3;
+    font-size:11px;
+    margin-top:2px;
+}
+
+.taskProgress{
+    margin-top:7px;
+    color:#9ca8b9;
+    font-size:11px;
 }
 
 .reward{
-    white-space:nowrap;
-
     color:#facc15;
-
-    background:rgba(234,179,8,.10);
-
-    border:1px solid rgba(234,179,8,.16);
+    font-weight:700;
 }
 
-.action-btn{
-    min-width:96px;
-
-    transition:.2s ease;
+.claimBtn{
+    min-width:68px;
+    border:0;
+    border-radius:10px;
+    padding:8px 8px;
+    font-size:11px;
+    font-weight:700;
+    background:#22c55e;
+    color:#06100a;
 }
 
-.action-btn:active{
-    transform:scale(.96);
+.claimBtn:disabled{
+    opacity:.45;
+    cursor:not-allowed;
 }
 
-.claimed{
-    background:rgba(34,197,94,.08)!important;
-
-    border-color:rgba(34,197,94,.18)!important;
-
-    color:#4ade80!important;
+.claimBtn.claimed{
+    background:#1f2937;
+    color:#7f8da3;
 }
 
-.disabled-btn{
-    opacity:.7;
-    cursor:default;
+.empty{
+    text-align:center;
+    padding:35px 15px;
+    color:#68768b;
+    font-size:13px;
 }
 
-.tab{
-    transition:.2s ease;
+#toast-container{
+    position:fixed;
+    top:18px;
+    left:16px;
+    right:16px;
+    z-index:100000;
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+    pointer-events:none;
 }
-
-.tab.active{
-    background:rgba(34,197,94,.14);
-
-    color:#4ade80;
-
-    border-color:rgba(34,197,94,.20);
-}
-
-.bottom-space{
-    height:90px;
-}
-
-
-/* =========================================================
-   TOAST
-   ========================================================= */
 
 .toast{
-    position:fixed;
-
-    left:50%;
-    bottom:25px;
-
-    transform:translate(-50%,120px);
-
-    z-index:9999;
-
-    padding:12px 18px;
-
-    border-radius:14px;
-
-    background:#111827;
-
-    border:1px solid rgba(148,163,184,.16);
-
-    box-shadow:0 12px 35px rgba(0,0,0,.35);
-
-    transition:.3s ease;
-
-    font-size:14px;
-
-    width:max-content;
-
-    max-width:90%;
-
-    text-align:center;
-}
-
-.toast.show{
-    transform:translate(-50%,0);
+    width:100%;
+    max-width:450px;
+    margin:auto;
+    padding:12px 14px;
+    border-radius:13px;
+    background:rgba(17,24,39,.97);
+    border:1px solid #263246;
+    box-shadow:0 12px 30px rgba(0,0,0,.35);
+    display:flex;
+    align-items:center;
+    gap:9px;
+    font-size:12px;
+    font-weight:600;
+    animation:toastIn .22s ease;
 }
 
 .toast.success{
-    border-color:rgba(34,197,94,.25);
+    border-color:rgba(34,197,94,.35);
 }
 
 .toast.error{
-    border-color:rgba(239,68,68,.25);
+    border-color:rgba(239,68,68,.35);
 }
 
+.toast.warning{
+    border-color:rgba(245,158,11,.35);
+}
+
+@keyframes toastIn{
+    from{
+        opacity:0;
+        transform:translateY(-8px);
+    }
+    to{
+        opacity:1;
+        transform:translateY(0);
+    }
+}
+
+.hidden{
+    display:none !important;
+}
 </style>
 </head>
 
-
 <body>
 
-
-<!-- =========================================================
-     LOADING SCREEN
-     ========================================================= -->
-
 <div id="pageLoader">
+    <div class="loaderBox">
+        <img
+            class="loaderLogo"
+            src="https://videotourl.com/images/1789792991627-2a906ffa-fbc0-4f79-9d9b-8dddb80ca667.jpg"
+            alt="Aura Skill">
+        <div class="loaderSpinner"></div>
+    </div>
+</div>
 
-    <div class="loader-content">
+<div id="toast-container"></div>
 
-        <div class="loader-logo-wrap">
+<div class="mainWrap">
 
-            <div class="loader-logo-ring"></div>
+    <div class="header">
 
-            <img
-                class="loader-logo"
-                src="https://videotourl.com/images/1789792991627-2a906ffa-fbc0-4f79-9d9b-8dddb80ca667.jpg"
-                alt="Aura Skill">
+        <button
+            class="backBtn"
+            onclick="history.back()">
+            <i class="fa-solid fa-arrow-left"></i>
+        </button>
+
+        <div class="headerTitle">
+            <h1>Mission</h1>
+            <p>Complete missions and earn rewards</p>
+        </div>
+
+        <button
+            class="refreshBtn"
+            onclick="location.reload()">
+            <i class="fa-solid fa-rotate-right"></i>
+        </button>
+
+    </div>
+
+
+    <div class="progressCard">
+
+        <div class="progressTop">
+
+            <div>
+                <div class="progressLabel">
+                    Mission Progress
+                </div>
+
+                <div class="progressValue">
+                    <span id="completedCount">0</span>
+                    /
+                    <span id="totalCount">0</span>
+                </div>
+            </div>
+
+            <div class="reward">
+                ৳<span id="totalReward">0</span>
+            </div>
 
         </div>
 
-
-        <div class="loader-title">
-            AURA SKILL
+        <div class="progressBar">
+            <div
+                id="progressFill"
+                class="progressFill">
+            </div>
         </div>
 
-        <div class="loader-subtitle">
-            Loading Missions...
-        </div>
+    </div>
 
 
-        <div class="loader-dots">
+    <div class="tabs">
 
-            <span class="loader-dot"></span>
-            <span class="loader-dot"></span>
-            <span class="loader-dot"></span>
+        <button
+            class="tabBtn active"
+            data-tab="all">
+            All
+        </button>
 
-        </div>
+        <button
+            class="tabBtn"
+            data-tab="match">
+            Match
+        </button>
 
+        <button
+            class="tabBtn"
+            data-tab="referral">
+            Referral
+        </button>
+
+        <button
+            class="tabBtn"
+            data-tab="deposit">
+            Deposit
+        </button>
+
+    </div>
+
+
+    <div
+        id="taskList"
+        class="taskList">
     </div>
 
 </div>
 
 
-
-<!-- =========================================================
-     HEADER
-     ========================================================= -->
-
-<header class="header">
-
-    <div class="max-w-2xl mx-auto px-4 py-4 flex items-center gap-3">
-
-        <a
-            href="profile.html"
-            class="w-10 h-10 rounded-xl flex items-center justify-center
-                   bg-slate-800/70
-                   border border-slate-700/60
-                   text-slate-300">
-
-            <i class="fa-solid fa-arrow-left"></i>
-
-        </a>
-
-
-        <div class="flex-1">
-
-            <h1 class="text-lg font-bold text-white leading-tight">
-                MISSION / TASKS
-            </h1>
-
-            <p class="text-xs text-slate-400">
-                Complete missions & earn rewards
-            </p>
-
-        </div>
-
-
-        <div
-            class="w-10 h-10 rounded-xl
-                   flex items-center justify-center
-                   bg-green-500/10
-                   border border-green-500/20
-                   text-green-400">
-
-            <i class="fa-solid fa-list-check"></i>
-
-        </div>
-
-    </div>
-
-</header>
-
-
-
-<!-- =========================================================
-     MAIN
-     ========================================================= -->
-
-<main class="max-w-2xl mx-auto px-4 pt-5">
-
-
-    <!-- =====================================================
-         PROGRESS CARD
-         ===================================================== -->
-
-    <section class="glass-card rounded-2xl p-5 mb-5">
-
-        <div class="flex items-center justify-between mb-4">
-
-            <div>
-
-                <p class="text-xs text-slate-400 mb-1">
-                    Mission Progress
-                </p>
-
-                <h2 class="text-xl font-bold">
-
-                    <span id="completedCount">
-                        0
-                    </span>
-
-                    <span class="text-slate-500">
-                        /
-                    </span>
-
-                    <span id="totalCount">
-                        0
-                    </span>
-
-                    <span class="text-sm text-slate-400 font-normal">
-                        Completed
-                    </span>
-
-                </h2>
-
-            </div>
-
-
-            <div
-                class="w-12 h-12 rounded-2xl
-                       bg-green-500/10
-                       border border-green-500/20
-                       flex items-center justify-center
-                       text-green-400 text-lg">
-
-                <i class="fa-solid fa-trophy"></i>
-
-            </div>
-
-        </div>
-
-
-        <div class="progress-bar">
-
-            <div
-                id="overallProgress"
-                class="progress-fill"
-                style="width:0%">
-            </div>
-
-        </div>
-
-
-        <p
-            id="progressText"
-            class="text-xs text-slate-400 mt-3">
-
-            Complete your missions to earn rewards.
-
-        </p>
-
-    </section>
-
-
-
-    <!-- =====================================================
-         FILTER TABS
-         ===================================================== -->
-
-    <div class="flex gap-2 overflow-x-auto pb-2 mb-4">
-
-
-        <button
-            class="tab active whitespace-nowrap
-                   px-4 py-2 rounded-xl
-                   border border-slate-700/60
-                   text-sm text-slate-300"
-            data-filter="all">
-
-            All
-
-        </button>
-
-
-        <button
-            class="tab whitespace-nowrap
-                   px-4 py-2 rounded-xl
-                   border border-slate-700/60
-                   text-sm text-slate-300"
-            data-filter="match">
-
-            Matches
-
-        </button>
-
-
-        <button
-            class="tab whitespace-nowrap
-                   px-4 py-2 rounded-xl
-                   border border-slate-700/60
-                   text-sm text-slate-300"
-            data-filter="referral">
-
-            Referral
-
-        </button>
-
-
-    </div>
-
-
-
-    <!-- =====================================================
-         TASK LIST
-         ===================================================== -->
-
-    <section
-        id="taskList"
-        class="space-y-3">
-
-    </section>
-
-
-    <div class="bottom-space"></div>
-
-</main>
-
-
-
-<!-- =========================================================
-     TOAST
-     ========================================================= -->
-
-<div id="toast" class="toast"></div>
-
-
-
 <script type="module">
 
-import { auth, db }
-from "./firebase.js";
+import {
+    auth,
+    db
+} from "./firebase.js";
 
 
 import {
     onAuthStateChanged
-}
-from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+} from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
 
 import {
@@ -676,470 +486,388 @@ import {
     getDocs,
     query,
     where
-}
-from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+} from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
 
-
-/* =========================================================
-   LOADER
-   ========================================================= */
-
-const pageLoader =
-    document.getElementById("pageLoader");
-
-
-let loaderHidden = false;
-
-
-function hideLoader(){
-
-    if(loaderHidden) return;
-
-    loaderHidden = true;
-
-    pageLoader.classList.add("hide");
-
-}
-
-
-setTimeout(() => {
-
-    hideLoader();
-
-},1200);
-
-
-
-/* =========================================================
-   TASK DEFINITIONS
-   ========================================================= */
+/* =========================
+   DATA
+========================= */
 
 const TASKS = [
 
     {
-        id:"play_1",
-        type:"match",
-        icon:"fa-gamepad",
-        title:"Play Your First Match",
-        description:"প্রথম tournament/match join করুন",
-        target:1,
-        reward:2,
-        progressKey:"matches",
-        button:"Play Match",
-        link:"index.html"
+        id: "play_1",
+        type: "match",
+        icon: "fa-gamepad",
+        title: "Play 1 Match",
+        desc: "Join and complete 1 match",
+        target: 1,
+        reward: 2,
+        progressKey: "matches",
+        button: "Play Match",
+        link: "index.html"
     },
 
-
     {
-        id:"play_3",
-        type:"match",
-        icon:"fa-fire",
-        title:"Play 3 Matches",
-        description:"মোট ৩টি tournament/match join করুন",
-        target:3,
-        reward:6,
-        progressKey:"matches",
-        button:"Play Match",
-        link:"index.html"
+        id: "play_3",
+        type: "match",
+        icon: "fa-fire",
+        title: "Play 3 Matches",
+        desc: "Join and complete 3 matches",
+        target: 3,
+        reward: 6,
+        progressKey: "matches",
+        button: "Play Match",
+        link: "index.html"
     },
 
-
     {
-        id:"win_1",
-        type:"match",
-        icon:"fa-trophy",
-        title:"Win 1 Match",
-        description:"কমপক্ষে ১টি match win করুন",
-        target:1,
-        reward:3,
-        progressKey:"wins",
-        button:"Play Match",
-        link:"index.html"
+        id: "win_1",
+        type: "match",
+        icon: "fa-trophy",
+        title: "Win 1 Match",
+        desc: "Win any completed match",
+        target: 1,
+        reward: 3,
+        progressKey: "wins",
+        button: "Play Match",
+        link: "index.html"
     },
 
-
     {
-        id:"refer_1",
-        type:"referral",
-        icon:"fa-user-plus",
-        title:"Refer 1 Friend",
-        description:"Referral code দিয়ে ১ জন নতুন user invite করুন",
-        target:1,
-        reward:5,
-        progressKey:"referrals",
-        button:"Invite Now",
-        link:"profile.html"
+        id: "refer_1",
+        type: "referral",
+        icon: "fa-user-plus",
+        title: "Refer 1 Friend",
+        desc: "Invite 1 friend to Aura Skill",
+        target: 1,
+        reward: 5,
+        progressKey: "referrals",
+        button: "Refer",
+        link: "referral.html"
     },
 
+    {
+        id: "refer_5",
+        type: "referral",
+        icon: "fa-users",
+        title: "Refer 5 Friends",
+        desc: "Invite 5 friends to Aura Skill",
+        target: 5,
+        reward: 30,
+        progressKey: "referrals",
+        button: "Refer",
+        link: "referral.html"
+    },
 
     {
-        id:"refer_5",
-        type:"referral",
-        icon:"fa-users",
-        title:"Refer 5 Friends",
-        description:"Referral code দিয়ে ৫ জন নতুন user invite করুন",
-        target:5,
-        reward:30,
-        progressKey:"referrals",
-        button:"Invite Now",
-        link:"profile.html"
+        id: "first_deposit",
+        type: "deposit",
+        icon: "fa-wallet",
+        title: "First Deposit",
+        desc: "Complete your first successful deposit",
+        target: 1,
+        reward: 5,
+        progressKey: "deposits",
+        button: "Deposit",
+        link: "wallet.html"
     }
 
 ];
 
 
-
-/* =========================================================
+/* =========================
    STATE
-   ========================================================= */
+========================= */
 
 let currentUser = null;
 
+let activeTab = "all";
+
+let claimedTasks = new Set();
+
 let userStats = {
-
-    matches:0,
-
-    wins:0,
-
-    referrals:0
-
+    matches: 0,
+    wins: 0,
+    referrals: 0,
+    deposits: 0
 };
 
 
-let claimedTasks = {};
-
-let currentFilter = "all";
-
-
-
-/* =========================================================
-   ELEMENTS
-   ========================================================= */
-
-const taskList =
-    document.getElementById("taskList");
-
-const completedCount =
-    document.getElementById("completedCount");
-
-const totalCount =
-    document.getElementById("totalCount");
-
-const overallProgress =
-    document.getElementById("overallProgress");
-
-const progressText =
-    document.getElementById("progressText");
-
-
-
-/* =========================================================
-   INITIAL RENDER
-   ========================================================= */
-
-renderTasks();
-
-
-
-/* =========================================================
-   SAFE NUMBER
-   ========================================================= */
+/* =========================
+   HELPERS
+========================= */
 
 function safeNumber(value){
 
-    const number = Number(value);
+    const n = Number(value);
 
-    if(!Number.isFinite(number)){
-        return 0;
-    }
-
-    return Math.max(0,number);
+    return Number.isFinite(n)
+        ? n
+        : 0;
 
 }
 
-
-
-/* =========================================================
-   TOAST
-   ========================================================= */
-
-let toastTimer = null;
-
-
-function showToast(message,type="success"){
-
-    const toast =
-        document.getElementById("toast");
-
-
-    toast.textContent =
-        message;
-
-
-    toast.className =
-        "toast " + type;
-
-
-    requestAnimationFrame(() => {
-
-        toast.classList.add("show");
-
-    });
-
-
-    clearTimeout(toastTimer);
-
-
-    toastTimer =
-        setTimeout(() => {
-
-            toast.classList.remove("show");
-
-        },2600);
-
-}
-
-
-
-/* =========================================================
-   NORMALIZE STATUS
-   ========================================================= */
 
 function normalizeText(value){
 
-    return String(
-        value ?? ""
-    )
-    .trim()
-    .toLowerCase();
+    return String(value ?? "")
+        .trim()
+        .toLowerCase();
 
 }
 
-
-
-/* =========================================================
-   CANCELLED / REFUNDED MATCH
-   ========================================================= */
 
 function isCancelledMatch(data){
 
-    if(!data) return false;
-
-
-    if(
-        data.cancelled === true ||
-        data.canceled === true
-    ){
-        return true;
-    }
-
-
     const status =
-        normalizeText(
-            data.status
-        );
+        normalizeText(data?.status);
 
+    const result =
+        normalizeText(data?.result);
 
-    return [
-        "cancelled",
-        "canceled",
-        "cancel",
-        "refunded",
-        "refund"
-    ].includes(status);
+    const matchResult =
+        normalizeText(data?.matchResult);
+
+    const values = [
+        status,
+        result,
+        matchResult
+    ];
+
+    return values.some(v =>
+        [
+            "cancelled",
+            "canceled",
+            "cancel",
+            "refunded",
+            "refund"
+        ].includes(v)
+    );
 
 }
 
-
-
-/* =========================================================
-   COMPLETED MATCH
-   ========================================================= */
 
 function isCompletedMatch(data){
 
-    if(!data) return false;
-
-
-    if(
-        data.completed === true ||
-        data.isCompleted === true
-    ){
-        return true;
-    }
-
-
-    const status =
-        normalizeText(
-            data.status
-        );
-
-
-    return [
-        "complete",
-        "completed",
-        "finished",
-        "finish",
-        "result"
-    ].includes(status);
-
-}
-
-
-
-/* =========================================================
-   FIND USER PARTICIPANT
-   ========================================================= */
-
-function findUserParticipant(data,uid){
-
-    if(!data || !uid){
-        return null;
-    }
-
-
-    const participants =
-        Array.isArray(data.participants)
-        ? data.participants
-        : [];
-
-
-    return participants.find(
-        participant => {
-
-            if(!participant){
-                return false;
-            }
-
-
-            return (
-                participant.uid === uid ||
-                participant.userId === uid ||
-                participant.userUID === uid ||
-                participant.id === uid
-            );
-
-        }
-    ) || null;
-
-}
-
-
-
-/* =========================================================
-   WIN DETECTION
-   ========================================================= */
-
-function isWinnerRecord(data,uid){
-
-    if(!data || !uid){
+    if(isCancelledMatch(data)){
         return false;
     }
 
+    const status =
+        normalizeText(data?.status);
 
-    const userResult =
-        data.userResult ||
-        data.resultData ||
-        data.resultInfo ||
-        {};
+    const result =
+        normalizeText(data?.result);
 
-
-    const userEntry =
-        data.userEntry ||
-        findUserParticipant(data,uid) ||
-        {};
-
-
-    const outcome =
-        normalizeText(
-            userResult.result ??
-            userResult.outcome ??
-            userResult.matchResult ??
-            userEntry.result ??
-            userEntry.outcome ??
-            data.result ??
-            data.outcome ??
-            data.matchResult
-        );
-
-
-    const winnerUid =
-        data.winnerUid ??
-        data.winnerUserId ??
-        data.winnerId ??
-        "";
-
-
-    const winnerUids =
-        Array.isArray(data.winnerUids)
-        ? data.winnerUids
-        : [];
-
-
-    const wonAmount =
-        safeNumber(
-            userResult.amount ??
-            userResult.prize ??
-            userEntry.wonAmount ??
-            userEntry.winnings ??
-            userEntry.prizeWon ??
-            userEntry.winAmount ??
-            data.wonAmount ??
-            data.winnings ??
-            data.prizeWon
-        );
-
+    const matchResult =
+        normalizeText(data?.matchResult);
 
     if(
-        userResult.winner === true ||
-        userResult.isWinner === true ||
-        userEntry.isWinner === true ||
-        userEntry.winner === true
+        status === "completed" ||
+        status === "complete" ||
+        status === "finished" ||
+        status === "finish"
     ){
-        return true;
-    }
 
+        return true;
+
+    }
 
     if(
-        winnerUid &&
-        String(winnerUid) === String(uid)
+        result === "completed" ||
+        result === "complete" ||
+        result === "finished" ||
+        result === "finish"
     ){
-        return true;
-    }
 
+        return true;
+
+    }
 
     if(
-        winnerUids.includes(uid)
+        matchResult === "completed" ||
+        matchResult === "complete" ||
+        matchResult === "finished" ||
+        matchResult === "finish"
     ){
+
         return true;
+
     }
 
+    /*
+       Some tournament records do not have
+       a status but have completedAt.
+    */
 
-    if([
-        "win",
-        "won",
-        "winner",
-        "victory"
-    ].includes(outcome)){
+    if(data?.completedAt){
         return true;
     }
-
-
-    if(wonAmount > 0){
-        return true;
-    }
-
 
     return false;
 
 }
 
 
+function findUserParticipant(data, uid){
 
-/* =========================================================
-   MATCH DATA LOAD
-   ========================================================= */
+    const participants =
+        Array.isArray(data?.participants)
+        ? data.participants
+        : [];
+
+    return participants.find(p =>
+        p &&
+        (
+            p.uid === uid ||
+            p.userId === uid ||
+            p.firebaseUid === uid
+        )
+    ) || null;
+
+}
+
+
+function isWinnerRecord(data, userEntry = null, uid = ""){
+
+    const objects = [];
+
+    if(data){
+        objects.push(data);
+    }
+
+    if(userEntry){
+        objects.push(userEntry);
+    }
+
+
+    for(const obj of objects){
+
+        if(!obj){
+            continue;
+        }
+
+
+        if(
+            obj.isWinner === true ||
+            obj.winner === true
+        ){
+
+            return true;
+
+        }
+
+
+        if(
+            typeof obj.isWinner === "string" &&
+            [
+                "true",
+                "yes",
+                "winner",
+                "won",
+                "1"
+            ].includes(
+                normalizeText(obj.isWinner)
+            )
+        ){
+
+            return true;
+
+        }
+
+
+        if(
+            typeof obj.winner === "string" &&
+            [
+                "true",
+                "yes",
+                "winner",
+                "won",
+                "1"
+            ].includes(
+                normalizeText(obj.winner)
+            )
+        ){
+
+            return true;
+
+        }
+
+
+        const winnerUid =
+            obj.winnerUid;
+
+        if(
+            winnerUid &&
+            String(winnerUid) === String(uid)
+        ){
+
+            return true;
+
+        }
+
+
+        const winnerUids =
+            Array.isArray(obj.winnerUids)
+            ? obj.winnerUids
+            : [];
+
+        if(
+            winnerUids.some(
+                x => String(x) === String(uid)
+            )
+        ){
+
+            return true;
+
+        }
+
+
+        const wonAmount =
+            safeNumber(
+                obj.wonAmount ??
+                obj.winnings ??
+                obj.prizeWon
+            );
+
+        if(wonAmount > 0){
+
+            return true;
+
+        }
+
+
+        const result =
+            normalizeText(
+                obj.result ??
+                obj.matchResult
+            );
+
+        if(
+            [
+                "winner",
+                "won",
+                "win",
+                "1st",
+                "first"
+            ].includes(result)
+        ){
+
+            return true;
+
+        }
+
+    }
+
+    return false;
+
+}
+
+
+/* =========================
+   MATCH STATS
+========================= */
 
 async function loadActualMatchStats(){
 
@@ -1147,28 +875,21 @@ async function loadActualMatchStats(){
         return;
     }
 
-
     const uid =
         currentUser.uid;
 
-
-    let matchIds =
+    const matchIds =
         new Set();
 
-
-    let winIds =
+    const winIds =
         new Set();
-
 
 
     try{
 
-        /* =====================================================
-           1. MATCH HISTORY
-           ===================================================== */
-
-        let historyDocs = [];
-
+        /*
+           1. Match History
+        */
 
         try{
 
@@ -1186,184 +907,181 @@ async function loadActualMatchStats(){
                 );
 
 
-            const historySnapshot =
+            const historySnap =
                 await getDocs(
                     historyQuery
                 );
 
 
-            historyDocs =
-                historySnapshot.docs;
+            historySnap.forEach(
+                snap => {
 
-        }
+                    const data =
+                        snap.data() || {};
 
-        catch(error){
+
+                    if(
+                        isCancelledMatch(data)
+                    ){
+
+                        return;
+
+                    }
+
+
+                    if(
+                        !isCompletedMatch(data)
+                    ){
+
+                        return;
+
+                    }
+
+
+                    const matchId =
+                        data.tournamentId ??
+                        data.matchId ??
+                        data.tournamentID ??
+                        snap.id;
+
+
+                    matchIds.add(
+                        String(matchId)
+                    );
+
+
+                    if(
+                        isWinnerRecord(
+                            data,
+                            null,
+                            uid
+                        )
+                    ){
+
+                        winIds.add(
+                            String(matchId)
+                        );
+
+                    }
+
+                }
+            );
+
+        }catch(e){
 
             console.warn(
-                "matchHistory query error:",
-                error
+                "matchHistory load error:",
+                e
             );
 
         }
 
 
+        /*
+           2. Tournaments
+        */
 
-        historyDocs.forEach(
-            historyDoc => {
+        try{
 
-                const data =
-                    historyDoc.data() || {};
-
-
-                if(
-                    isCancelledMatch(data)
-                ){
-                    return;
-                }
+            const tournamentsSnap =
+                await getDocs(
+                    collection(
+                        db,
+                        "tournaments"
+                    )
+                );
 
 
-                const historyId =
-                    String(
+            tournamentsSnap.forEach(
+                snap => {
+
+                    const data =
+                        snap.data() || {};
+
+
+                    const participant =
+                        findUserParticipant(
+                            data,
+                            uid
+                        );
+
+
+                    if(!participant){
+                        return;
+                    }
+
+
+                    if(
+                        isCancelledMatch(data) ||
+                        isCancelledMatch(participant)
+                    ){
+
+                        return;
+
+                    }
+
+
+                    if(
+                        !isCompletedMatch(data)
+                    ){
+
+                        return;
+
+                    }
+
+
+                    const matchId =
                         data.tournamentId ??
                         data.matchId ??
-                        historyDoc.id
-                    );
+                        snap.id;
 
 
-                if(
-                    historyId
-                ){
                     matchIds.add(
-                        historyId
-                    );
-                }
-
-
-                if(
-                    isWinnerRecord(
-                        data,
-                        uid
-                    )
-                ){
-
-                    winIds.add(
-                        historyId
+                        String(matchId)
                     );
 
+
+                    if(
+                        isWinnerRecord(
+                            data,
+                            participant,
+                            uid
+                        )
+                    ){
+
+                        winIds.add(
+                            String(matchId)
+                        );
+
+                    }
+
                 }
-
-            }
-        );
-
-
-
-        /* =====================================================
-           2. TOURNAMENTS
-           ===================================================== */
-
-        const tournamentSnapshot =
-            await getDocs(
-                collection(
-                    db,
-                    "tournaments"
-                )
             );
 
+        }catch(e){
 
-        tournamentSnapshot.forEach(
-            tournamentDoc => {
+            console.warn(
+                "tournaments load error:",
+                e
+            );
 
-                const data =
-                    tournamentDoc.data() || {};
-
-
-                if(
-                    isCancelledMatch(data)
-                ){
-                    return;
-                }
-
-
-                const participant =
-                    findUserParticipant(
-                        data,
-                        uid
-                    );
-
-
-                if(!participant){
-                    return;
-                }
-
-
-                const tournamentId =
-                    String(
-                        data.tournamentId ??
-                        data.matchId ??
-                        tournamentDoc.id
-                    );
-
-
-                if(
-                    tournamentId
-                ){
-                    matchIds.add(
-                        tournamentId
-                    );
-                }
-
-
-
-                /* =================================================
-                   WIN DETECTION FROM TOURNAMENT
-                   ================================================= */
-
-                const combinedData = {
-
-                    ...data,
-
-                    userEntry:
-                        participant
-
-                };
-
-
-                if(
-                    isWinnerRecord(
-                        combinedData,
-                        uid
-                    )
-                ){
-
-                    winIds.add(
-                        tournamentId
-                    );
-
-                }
-
-            }
-        );
-
+        }
 
 
         userStats.matches =
             matchIds.size;
 
-
         userStats.wins =
             winIds.size;
 
 
-
         renderTasks();
 
-    }
-
-    catch(error){
+    }catch(e){
 
         console.error(
-            "Actual match stats error:",
-            error
+            "Match stats error:",
+            e
         );
 
     }
@@ -1371,114 +1089,305 @@ async function loadActualMatchStats(){
 }
 
 
+/* =========================
+   REFERRAL STATS
+========================= */
 
-/* =========================================================
-   TASK PROGRESS
-   ========================================================= */
+async function loadReferralStats(){
+
+    if(!currentUser){
+        return;
+    }
+
+    try{
+
+        const snap =
+            await getDoc(
+                doc(
+                    db,
+                    "users",
+                    currentUser.uid
+                )
+            );
+
+
+        if(!snap.exists()){
+            return;
+        }
+
+
+        const data =
+            snap.data() || {};
+
+
+        userStats.referrals =
+            safeNumber(
+                data.referrals ??
+                data.totalReferrals ??
+                data.referralCount ??
+                0
+            );
+
+
+        renderTasks();
+
+    }catch(e){
+
+        console.warn(
+            "Referral stats error:",
+            e
+        );
+
+    }
+
+}
+
+
+/* =========================
+   SUCCESSFUL DEPOSIT STATS
+========================= */
+
+async function loadDepositStats(){
+
+    if(!currentUser){
+        return;
+    }
+
+    const uid =
+        currentUser.uid;
+
+
+    userStats.deposits = 0;
+
+
+    try{
+
+        /*
+           Deposit requests are stored in:
+
+           transactions
+
+           Fields:
+           userId
+           amount
+           gateway
+           trxId
+           status
+
+           Only APPROVED deposits count.
+        */
+
+        const q =
+            query(
+                collection(
+                    db,
+                    "transactions"
+                ),
+                where(
+                    "userId",
+                    "==",
+                    uid
+                )
+            );
+
+
+        const snap =
+            await getDocs(q);
+
+
+        let approvedCount = 0;
+
+
+        snap.forEach(
+            item => {
+
+                const data =
+                    item.data() || {};
+
+
+                const status =
+                    normalizeText(
+                        data.status
+                    );
+
+
+                /*
+                   Only successful/approved
+                   deposits are counted.
+                */
+
+                if(
+                    status !== "approved" &&
+                    status !== "success" &&
+                    status !== "successful" &&
+                    status !== "completed"
+                ){
+
+                    return;
+
+                }
+
+
+                const amount =
+                    safeNumber(
+                        data.amount
+                    );
+
+
+                /*
+                   Invalid/zero amount is not
+                   considered a successful deposit.
+                */
+
+                if(amount <= 0){
+                    return;
+                }
+
+
+                approvedCount++;
+
+            }
+        );
+
+
+        /*
+           First successful deposit mission
+           only needs 1.
+        */
+
+        userStats.deposits =
+            approvedCount > 0
+            ? 1
+            : 0;
+
+
+        renderTasks();
+
+    }catch(e){
+
+        console.error(
+            "Deposit stats error:",
+            e
+        );
+
+        userStats.deposits = 0;
+
+        renderTasks();
+
+    }
+
+}
+
+
+/* =========================
+   CLAIMED TASKS
+========================= */
+
+async function loadClaimedTasks(){
+
+    if(!currentUser){
+        return;
+    }
+
+    try{
+
+        const snap =
+            await getDocs(
+                collection(
+                    db,
+                    "users",
+                    currentUser.uid,
+                    "claimedTasks"
+                )
+            );
+
+
+        claimedTasks =
+            new Set(
+                snap.docs.map(
+                    d => d.id
+                )
+            );
+
+
+    }catch(e){
+
+        console.warn(
+            "Claimed tasks load error:",
+            e
+        );
+
+        claimedTasks =
+            new Set();
+
+    }
+
+}
+
+
+/* =========================
+   PROGRESS
+========================= */
 
 function getTaskProgress(task){
 
     return Math.min(
-
         safeNumber(
             userStats[
                 task.progressKey
             ]
         ),
-
         task.target
-
     );
 
 }
 
 
-
-/* =========================================================
-   TASK COMPLETED
-   ========================================================= */
-
-function isTaskCompleted(task){
-
-    return claimedTasks[
-        task.id
-    ] === true;
-
-}
-
-
-
-/* =========================================================
-   CAN CLAIM
-   ========================================================= */
-
-function canClaim(task){
+function isTaskComplete(task){
 
     return (
-
         getTaskProgress(task) >=
         task.target
-
-        &&
-
-        !isTaskCompleted(task)
-
     );
 
 }
 
 
-
-/* =========================================================
-   RENDER TASKS
-   ========================================================= */
+/* =========================
+   RENDER
+========================= */
 
 function renderTasks(){
 
-    let visibleTasks =
-        TASKS;
+    const list =
+        document.getElementById(
+            "taskList"
+        );
 
 
-    if(
-        currentFilter !== "all"
-    ){
-
-        visibleTasks =
-            TASKS.filter(
-                task =>
-                    task.type ===
-                    currentFilter
-            );
-
+    if(!list){
+        return;
     }
+
+
+    let visibleTasks =
+        TASKS.filter(
+            task =>
+                activeTab === "all" ||
+                task.type === activeTab
+        );
+
+
+    list.innerHTML = "";
 
 
     if(!visibleTasks.length){
 
-        taskList.innerHTML = `
-
-            <div class="glass-card rounded-2xl p-8 text-center">
-
-                <div
-                    class="w-16 h-16 mx-auto mb-4
-                           rounded-2xl
-                           bg-slate-800
-                           flex items-center justify-center
-                           text-slate-500 text-2xl">
-
-                    <i class="fa-solid fa-list"></i>
-
-                </div>
-
-
-                <h3 class="font-semibold text-white">
-                    No missions found
-                </h3>
-
+        list.innerHTML = `
+            <div class="empty">
+                কোনো mission পাওয়া যায়নি।
             </div>
-
         `;
-
 
         updateOverallProgress();
 
@@ -1487,256 +1396,134 @@ function renderTasks(){
     }
 
 
+    visibleTasks.forEach(
+        task => {
 
-    taskList.innerHTML =
-        visibleTasks.map(task => {
+            const progress =
+                getTaskProgress(task);
 
+            const complete =
+                isTaskComplete(task);
 
-        const progress =
-            getTaskProgress(
-                task
-            );
-
-
-        const completed =
-            isTaskCompleted(
-                task
-            );
+            const claimed =
+                claimedTasks.has(
+                    task.id
+                );
 
 
-        const ready =
-            canClaim(
-                task
-            );
+            const card =
+                document.createElement(
+                    "div"
+                );
 
 
-        const percent =
-            Math.min(
-
-                100,
-
-                Math.round(
-                    (
-                        progress /
-                        task.target
-                    ) * 100
-                )
-
-            );
+            card.className =
+                "taskCard" +
+                (
+                    complete
+                    ? " completed"
+                    : ""
+                );
 
 
-        let actionButton = "";
+            let buttonText =
+                task.button;
 
 
+            if(claimed){
 
-        if(completed){
+                buttonText =
+                    "Claimed";
 
-            actionButton = `
+            }else if(complete){
 
-                <button
-                    class="action-btn claimed
-                           px-3 py-2 rounded-xl
-                           border text-xs font-semibold
-                           disabled-btn"
-                    disabled>
+                buttonText =
+                    "Claim";
 
-                    <i class="fa-solid fa-check mr-1"></i>
-
-                    Completed
-
-                </button>
-
-            `;
-
-        }
-
-        else if(ready){
-
-            actionButton = `
-
-                <button
-                    onclick="claimTask('${task.id}')"
-                    class="action-btn
-                           px-3 py-2 rounded-xl
-                           bg-green-500
-                           hover:bg-green-400
-                           text-black
-                           text-xs
-                           font-bold">
-
-                    <i class="fa-solid fa-gift mr-1"></i>
-
-                    Claim
-
-                </button>
-
-            `;
-
-        }
-
-        else{
-
-            actionButton = `
-
-                <button
-                    onclick="startTask('${task.id}')"
-                    class="action-btn
-                           px-3 py-2 rounded-xl
-                           bg-slate-800
-                           hover:bg-slate-700
-                           border border-slate-700
-                           text-slate-200
-                           text-xs
-                           font-semibold">
-
-                    ${task.button}
-
-                </button>
-
-            `;
-
-        }
+            }
 
 
+            card.innerHTML = `
 
-        return `
+                <div class="taskIcon">
+                    <i class="fa-solid ${task.icon}"></i>
+                </div>
 
-            <article
-                class="task-card glass-card rounded-2xl p-4">
+                <div class="taskContent">
 
-                <div class="flex items-start gap-3">
-
-
-                    <div class="task-icon">
-
-                        <i class="fa-solid ${task.icon}"></i>
-
+                    <div class="taskTitle">
+                        ${task.title}
                     </div>
 
+                    <div class="taskDesc">
+                        ${task.desc}
+                    </div>
 
+                    <div class="taskProgress">
 
-                    <div class="flex-1 min-w-0">
+                        ${progress}/${task.target}
 
-
-                        <div
-                            class="flex items-start
-                                   justify-between
-                                   gap-2">
-
-
-                            <div class="min-w-0">
-
-                                <h3
-                                    class="font-semibold
-                                           text-white
-                                           text-[15px]">
-
-                                    ${task.title}
-
-                                </h3>
-
-
-                                <p
-                                    class="text-xs
-                                           text-slate-400
-                                           mt-1
-                                           leading-relaxed">
-
-                                    ${task.description}
-
-                                </p>
-
-                            </div>
-
-
-
-                            <span
-                                class="reward
-                                       text-[11px]
-                                       font-semibold
-                                       px-2
-                                       py-1
-                                       rounded-lg">
-
-                                +৳${task.reward}
-
+                        <span style="margin-left:5px;">
+                            • Reward
+                            <span class="reward">
+                                ৳${task.reward}
                             </span>
-
-
-                        </div>
-
-
-
-                        <!-- PROGRESS -->
-
-                        <div class="mt-4">
-
-
-                            <div
-                                class="flex
-                                       items-center
-                                       justify-between
-                                       mb-2">
-
-
-                                <span
-                                    class="text-xs
-                                           text-slate-500">
-
-                                    Progress
-
-                                </span>
-
-
-                                <span
-                                    class="text-xs
-                                           font-semibold
-                                           text-slate-300">
-
-                                    ${progress}/${task.target}
-
-                                </span>
-
-                            </div>
-
-
-
-                            <div class="progress-bar">
-
-                                <div
-                                    class="progress-fill"
-                                    style="width:${percent}%">
-
-                                </div>
-
-                            </div>
-
-
-                        </div>
-
-
-
-                        <!-- ACTION -->
-
-                        <div
-                            class="flex
-                                   justify-end
-                                   mt-3">
-
-                            ${actionButton}
-
-                        </div>
-
+                        </span>
 
                     </div>
 
                 </div>
 
-            </article>
+                <button
+                    class="claimBtn ${
+                        claimed
+                        ? "claimed"
+                        : ""
+                    }"
+                    data-id="${task.id}"
+                    ${claimed ? "disabled" : ""}
+                >
+                    ${buttonText}
+                </button>
 
-        `;
+            `;
 
-    }).join("");
+
+            const btn =
+                card.querySelector(
+                    ".claimBtn"
+                );
+
+
+            if(!claimed){
+
+                btn.addEventListener(
+                    "click",
+                    () => {
+
+                        if(complete){
+
+                            claimTask(task);
+
+                        }else{
+
+                            location.href =
+                                task.link;
+
+                        }
+
+                    }
+                );
+
+            }
+
+
+            list.appendChild(
+                card
+            );
+
+        }
+    );
 
 
     updateOverallProgress();
@@ -1744,160 +1531,123 @@ function renderTasks(){
 }
 
 
-
-/* =========================================================
+/* =========================
    OVERALL PROGRESS
-   ========================================================= */
+========================= */
 
 function updateOverallProgress(){
 
-    totalCount.textContent =
+    const total =
         TASKS.length;
 
 
     const completed =
         TASKS.filter(
             task =>
-                isTaskCompleted(task)
+                isTaskComplete(task)
         ).length;
 
 
-    completedCount.textContent =
-        completed;
+    const claimedReward =
+        TASKS
+            .filter(
+                task =>
+                    claimedTasks.has(
+                        task.id
+                    )
+            )
+            .reduce(
+                (sum, task) =>
+                    sum + safeNumber(
+                        task.reward
+                    ),
+                0
+            );
 
 
     const percentage =
-        TASKS.length
-
-        ?
-
-        Math.round(
+        total > 0
+        ? Math.round(
             (
                 completed /
-                TASKS.length
+                total
             ) * 100
         )
-
-        :
-
-        0;
+        : 0;
 
 
-    overallProgress.style.width =
+    document.getElementById(
+        "completedCount"
+    ).innerText =
+        completed;
+
+
+    document.getElementById(
+        "totalCount"
+    ).innerText =
+        total;
+
+
+    document.getElementById(
+        "totalReward"
+    ).innerText =
+        claimedReward;
+
+
+    document.getElementById(
+        "progressFill"
+    ).style.width =
         percentage + "%";
-
-
-    if(
-        completed ===
-        TASKS.length
-    ){
-
-        progressText.textContent =
-            "সব mission completed! 🎉";
-
-    }
-
-    else{
-
-        progressText.textContent =
-            `${completed}টি completed • আরও ${TASKS.length - completed}টি বাকি`;
-
-    }
 
 }
 
 
-
-/* =========================================================
-   START TASK
-   ========================================================= */
-
-window.startTask =
-function(taskId){
-
-    const task =
-        TASKS.find(
-            item =>
-                item.id ===
-                taskId
-        );
-
-
-    if(!task) return;
-
-
-    window.location.href =
-        task.link;
-
-};
-
-
-
-/* =========================================================
+/* =========================
    CLAIM TASK
-   ========================================================= */
+========================= */
 
-window.claimTask =
-async function(taskId){
+async function claimTask(task){
 
     if(!currentUser){
 
         showToast(
-            "প্রথমে login করুন",
-            "error"
+            "অনুগ্রহ করে আগে Login করুন।",
+            "warning"
         );
 
         return;
 
     }
-
-
-
-    const task =
-        TASKS.find(
-            item =>
-                item.id ===
-                taskId
-        );
-
-
-    if(!task) return;
-
 
 
     if(
-        isTaskCompleted(task)
+        claimedTasks.has(
+            task.id
+        )
     ){
-
-        showToast(
-            "এই mission ইতিমধ্যে claim করা হয়েছে",
-            "error"
-        );
 
         return;
 
     }
-
 
 
     if(
-        !canClaim(task)
+        !isTaskComplete(task)
     ){
-
-        showToast(
-            "Mission এখনো complete হয়নি",
-            "error"
-        );
 
         return;
 
     }
-
 
 
     try{
 
-        const taskRef =
+        /*
+           Prevent duplicate claim
+           by checking Firestore again.
+        */
+
+        const claimRef =
             doc(
                 db,
                 "users",
@@ -1909,38 +1659,31 @@ async function(taskId){
 
         const existing =
             await getDoc(
-                taskRef
+                claimRef
             );
 
 
-        if(
-            existing.exists()
-        ){
+        if(existing.exists()){
 
-            claimedTasks[
+            claimedTasks.add(
                 task.id
-            ] = true;
-
+            );
 
             renderTasks();
 
-
             showToast(
-                "এই mission ইতিমধ্যে claim করা হয়েছে",
-                "error"
+                "এই mission-এর reward ইতোমধ্যে claimed হয়েছে।",
+                "warning"
             );
-
 
             return;
 
         }
 
 
-
         await setDoc(
-            taskRef,
+            claimRef,
             {
-
                 taskId:
                     task.id,
 
@@ -1955,15 +1698,13 @@ async function(taskId){
 
                 claimedAt:
                     serverTimestamp()
-
             }
         );
 
 
-
-        claimedTasks[
+        claimedTasks.add(
             task.id
-        ] = true;
+        );
 
 
         renderTasks();
@@ -1974,202 +1715,156 @@ async function(taskId){
             "success"
         );
 
-    }
 
-    catch(error){
+    }catch(e){
 
         console.error(
-            "Claim error:",
-            error
+            "Claim task error:",
+            e
         );
 
 
         showToast(
-            "Claim করতে সমস্যা হয়েছে",
+            "Reward claim করতে সমস্যা হয়েছে। আবার চেষ্টা করুন।",
             "error"
         );
 
     }
 
-};
-
-
-
-/* =========================================================
-   LOAD CLAIMED TASKS
-   ========================================================= */
-
-async function loadClaimedTasks(){
-
-    if(!currentUser) return;
-
-
-    claimedTasks = {};
-
-
-
-    await Promise.all(
-
-        TASKS.map(
-            async task => {
-
-                try{
-
-                    const taskRef =
-                        doc(
-                            db,
-                            "users",
-                            currentUser.uid,
-                            "claimedTasks",
-                            task.id
-                        );
-
-
-                    const snapshot =
-                        await getDoc(
-                            taskRef
-                        );
-
-
-                    if(
-                        snapshot.exists()
-                    ){
-
-                        claimedTasks[
-                            task.id
-                        ] = true;
-
-                    }
-
-                }
-
-                catch(error){
-
-                    console.warn(
-                        "Claim read error:",
-                        task.id,
-                        error
-                    );
-
-                }
-
-            }
-        )
-
-    );
-
-
-
-    renderTasks();
-
 }
 
 
+/* =========================
+   TABS
+========================= */
 
-/* =========================================================
-   LOAD REFERRAL DATA
-   ========================================================= */
+document
+    .querySelectorAll(
+        ".tabBtn"
+    )
+    .forEach(
+        btn => {
 
-async function loadReferralStats(){
+            btn.addEventListener(
+                "click",
+                () => {
 
-    if(!currentUser){
+                    document
+                        .querySelectorAll(
+                            ".tabBtn"
+                        )
+                        .forEach(
+                            b =>
+                                b.classList.remove(
+                                    "active"
+                                )
+                        );
+
+
+                    btn.classList.add(
+                        "active"
+                    );
+
+
+                    activeTab =
+                        btn.dataset.tab;
+
+
+                    renderTasks();
+
+                }
+            );
+
+        }
+    );
+
+
+/* =========================
+   TOAST
+========================= */
+
+function showToast(
+    message,
+    type = "success"
+){
+
+    const container =
+        document.getElementById(
+            "toast-container"
+        );
+
+
+    if(!container){
         return;
     }
 
 
-    try{
-
-        const userRef =
-            doc(
-                db,
-                "users",
-                currentUser.uid
-            );
-
-
-        const snapshot =
-            await getDoc(
-                userRef
-            );
-
-
-        if(
-            snapshot.exists()
-        ){
-
-            const data =
-                snapshot.data();
-
-
-            userStats.referrals =
-                safeNumber(
-                    data.referrals ??
-                    data.totalReferrals ??
-                    data.referralCount ??
-                    0
-                );
-
-        }
-
-    }
-
-    catch(error){
-
-        console.error(
-            "Referral stats error:",
-            error
+    const toast =
+        document.createElement(
+            "div"
         );
 
+
+    toast.className =
+        `toast ${type}`;
+
+
+    let icon =
+        "fa-circle-check";
+
+
+    if(type === "error"){
+        icon =
+            "fa-circle-xmark";
     }
+
+
+    if(type === "warning"){
+        icon =
+            "fa-triangle-exclamation";
+    }
+
+
+    toast.innerHTML = `
+        <i class="fa-solid ${icon}"></i>
+        <span>${message}</span>
+    `;
+
+
+    container.appendChild(
+        toast
+    );
+
+
+    setTimeout(
+        () => {
+
+            toast.style.opacity =
+                "0";
+
+            toast.style.transform =
+                "translateY(-8px)";
+
+            setTimeout(
+                () =>
+                    toast.remove(),
+                250
+            );
+
+        },
+        2800
+    );
 
 }
 
 
-
-/* =========================================================
-   TABS
-   ========================================================= */
-
-document
-.querySelectorAll(".tab")
-.forEach(tab => {
-
-    tab.addEventListener(
-        "click",
-        () => {
-
-            document
-            .querySelectorAll(".tab")
-            .forEach(item => {
-
-                item.classList.remove(
-                    "active"
-                );
-
-            });
+window.showToast =
+    showToast;
 
 
-            tab.classList.add(
-                "active"
-            );
-
-
-            currentFilter =
-                tab.dataset.filter;
-
-
-            renderTasks();
-
-        }
-    );
-
-});
-
-
-
-/* =========================================================
-   AUTH
-   ========================================================= */
+/* =========================
+   AUTH START
+========================= */
 
 onAuthStateChanged(
     auth,
@@ -2177,10 +1872,27 @@ onAuthStateChanged(
 
         if(!user){
 
-            hideLoader();
+            currentUser = null;
 
-            window.location.href =
-                "login.html";
+            document.getElementById(
+                "pageLoader"
+            ).style.display =
+                "none";
+
+
+            showToast(
+                "Mission দেখতে Login করুন।",
+                "warning"
+            );
+
+
+            setTimeout(
+                () => {
+                    location.href =
+                        "login.html";
+                },
+                700
+            );
 
             return;
 
@@ -2191,30 +1903,40 @@ onAuthStateChanged(
             user;
 
 
+        try{
+
+            /*
+               Load independent data
+               together for faster response.
+            */
+
+            await Promise.all([
+                loadClaimedTasks(),
+                loadReferralStats(),
+                loadActualMatchStats(),
+                loadDepositStats()
+            ]);
+
+
+            renderTasks();
+
+
+        }catch(e){
+
+            console.error(e);
+
+        }
+
+
         /*
-         * Loader দ্রুত hide হবে।
-         */
+           Remove loader quickly after
+           initial data is ready.
+        */
 
-        hideLoader();
-
-
-        /*
-         * Claim + referral + actual match
-         * data parallel-এ load হবে।
-         */
-
-        await Promise.all([
-
-            loadClaimedTasks(),
-
-            loadReferralStats(),
-
-            loadActualMatchStats()
-
-        ]);
-
-
-        renderTasks();
+        document.getElementById(
+            "pageLoader"
+        ).style.display =
+            "none";
 
     }
 );
