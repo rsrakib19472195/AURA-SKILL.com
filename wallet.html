@@ -1,174 +1,173 @@
 <!DOCTYPE html>
 <html lang="bn">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Aura Skill - My Wallet</title>
+<title>Aura Skill - My Wallet</title>
 
-    <script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.tailwindcss.com"></script>
 
-    <link rel="stylesheet"
-          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&display=swap"
-          rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&display=swap"
+      rel="stylesheet">
 
-    <style>
+<style>
 
-        body {
-            font-family: 'Hind Siliguri', sans-serif;
-            background-color: #050811;
-            color: #f8fafc;
-        }
+body{
+    font-family:'Hind Siliguri',sans-serif;
+    background-color:#050811;
+    color:#f8fafc;
+}
 
-        .glass-card {
-            background: rgba(15, 23, 42, 0.75);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(30, 41, 59, 0.8);
-        }
+.glass-card{
+    background:rgba(15,23,42,.75);
+    backdrop-filter:blur(12px);
+    border:1px solid rgba(30,41,59,.8);
+}
 
-        .menu-item:hover {
-            background: rgba(30, 41, 59, 0.5);
-            transition: all 0.2s ease;
-        }
+.menu-item:hover{
+    background:rgba(30,41,59,.5);
+    transition:all .2s ease;
+}
 
-        #toast-container {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            z-index: 9999;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
+#toast-container{
+    position:fixed;
+    top:20px;
+    right:20px;
+    z-index:9999;
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+}
 
-        .toast {
-            background: rgba(15, 23, 42, 0.95);
-            backdrop-filter: blur(12px);
-            border-left: 4px solid #3b82f6;
-            color: #fff;
-            padding: 12px 20px;
-            border-radius: 12px;
-            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
-            font-size: 13px;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            animation: slideIn 0.3s ease,
-                       fadeOut 0.3s ease 2.7s forwards;
-            max-width: calc(100vw - 40px);
-        }
+.toast{
+    background:rgba(15,23,42,.95);
+    backdrop-filter:blur(12px);
+    border-left:4px solid #3b82f6;
+    color:#fff;
+    padding:12px 20px;
+    border-radius:12px;
+    box-shadow:0 10px 25px -5px rgba(0,0,0,.5);
+    font-size:13px;
+    font-weight:600;
+    display:flex;
+    align-items:center;
+    gap:10px;
+    animation:slideIn .3s ease,
+              fadeOut .3s ease 2.7s forwards;
+    max-width:calc(100vw - 40px);
+}
 
-        .toast.success {
-            border-left-color: #10b981;
-        }
+.toast.success{border-left-color:#10b981}
+.toast.error{border-left-color:#ef4444}
+.toast.warning{border-left-color:#f59e0b}
+.toast.info{border-left-color:#3b82f6}
 
-        .toast.error {
-            border-left-color: #ef4444;
-        }
+@keyframes slideIn{
+    from{
+        transform:translateX(100%);
+        opacity:0;
+    }
+    to{
+        transform:translateX(0);
+        opacity:1;
+    }
+}
 
-        .toast.warning {
-            border-left-color: #f59e0b;
-        }
+@keyframes fadeOut{
+    from{
+        opacity:1;
+    }
+    to{
+        opacity:0;
+        transform:translateY(-10px);
+    }
+}
 
-        .toast.info {
-            border-left-color: #3b82f6;
-        }
+.loading-text{
+    display:inline-block;
+    color:#64748b;
+    font-weight:600;
+    animation:loadingPulse 1.15s ease-in-out infinite;
+}
 
-        @keyframes slideIn {
+.loading-shimmer{
+    display:inline-block;
+    position:relative;
+    overflow:hidden;
+}
 
-            from {
-                transform: translateX(100%);
-                opacity: 0;
-            }
+.loading-shimmer::after{
+    content:"";
+    position:absolute;
+    top:0;
+    left:-100%;
+    width:100%;
+    height:100%;
+    background:linear-gradient(
+        90deg,
+        transparent,
+        rgba(255,255,255,.13),
+        transparent
+    );
+    animation:shimmer 1.35s infinite;
+}
 
-            to {
-                transform: translateX(0);
-                opacity: 1;
-            }
+@keyframes loadingPulse{
+    0%,100%{opacity:.45}
+    50%{opacity:1}
+}
 
-        }
+@keyframes shimmer{
+    100%{left:100%}
+}
 
-        @keyframes fadeOut {
+.refresh-spin{
+    animation:refreshSpin .65s linear infinite;
+}
 
-            from {
-                opacity: 1;
-            }
+@keyframes refreshSpin{
+    from{transform:rotate(0deg)}
+    to{transform:rotate(360deg)}
+}
 
-            to {
-                opacity: 0;
-                transform: translateY(-10px);
-            }
+.alert-pulse{
+    animation:alertPulse 1.8s ease-in-out infinite;
+}
 
-        }
+@keyframes alertPulse{
+    0%,100%{opacity:1}
+    50%{opacity:.72}
+}
 
-        /* Loading */
+.balance-hidden{
+    letter-spacing:4px;
+}
 
-        .loading-text {
-            display: inline-block;
-            color: #64748b;
-            font-weight: 600;
-            animation: loadingPulse 1.15s ease-in-out infinite;
-        }
+.stat-card{
+    min-width:0;
+}
 
-        .loading-shimmer {
-            display: inline-block;
-            position: relative;
-            overflow: hidden;
-        }
+.no-scrollbar::-webkit-scrollbar{
+    display:none;
+}
 
-        .loading-shimmer::after {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
+.no-scrollbar{
+    -ms-overflow-style:none;
+    scrollbar-width:none;
+}
 
-            background: linear-gradient(
-                90deg,
-                transparent,
-                rgba(255,255,255,.13),
-                transparent
-            );
-
-            animation: shimmer 1.35s infinite;
-        }
-
-        @keyframes loadingPulse {
-
-            0%, 100% {
-                opacity: .45;
-            }
-
-            50% {
-                opacity: 1;
-            }
-
-        }
-
-        @keyframes shimmer {
-
-            100% {
-                left: 100%;
-            }
-
-        }
-
-    </style>
+</style>
 </head>
-
 
 <body class="min-h-screen flex flex-col pb-24">
 
-
 <div id="toast-container"></div>
 
-
 <!-- Header -->
-
 <header class="px-4 py-3 flex items-center space-x-3 sticky top-0 z-30 bg-[#050811]/90 backdrop-blur-md border-b border-slate-900">
 
     <a href="profile.html"
@@ -182,21 +181,71 @@
         My Wallet
     </h1>
 
+    <div class="ml-auto">
+
+        <button
+            id="header-refresh-btn"
+            onclick="refreshWallet()"
+            class="w-9 h-9 rounded-xl bg-slate-800/80 hover:bg-slate-800 text-slate-300 flex items-center justify-center transition">
+
+            <i id="header-refresh-icon"
+               class="fa-solid fa-rotate-right text-xs"></i>
+
+        </button>
+
+    </div>
+
 </header>
 
 
 <main class="max-w-md mx-auto px-4 py-6 w-full space-y-6">
 
 
-<!-- Wallet Balance Card -->
+<!-- =========================================
+     SMART ALERTS
+========================================= -->
+
+<div id="wallet-alerts"
+     class="space-y-2 hidden">
+</div>
+
+
+<!-- =========================================
+     WALLET BALANCE
+========================================= -->
 
 <div class="glass-card rounded-3xl p-6 text-center space-y-6 border border-slate-800 shadow-xl">
 
     <div>
 
-        <p class="text-xs text-slate-400 font-medium">
-            Available Balance
-        </p>
+        <div class="flex items-center justify-center gap-2">
+
+            <p class="text-xs text-slate-400 font-medium">
+                Available Balance
+            </p>
+
+            <button
+                id="balance-eye-btn"
+                onclick="toggleBalanceVisibility()"
+                class="w-7 h-7 rounded-lg bg-slate-800/80 hover:bg-slate-700 text-slate-400 hover:text-white flex items-center justify-center transition">
+
+                <i id="balance-eye-icon"
+                   class="fa-solid fa-eye text-[10px]"></i>
+
+            </button>
+
+            <button
+                id="balance-refresh-btn"
+                onclick="refreshWallet()"
+                class="w-7 h-7 rounded-lg bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 flex items-center justify-center transition">
+
+                <i id="balance-refresh-icon"
+                   class="fa-solid fa-rotate-right text-[10px]"></i>
+
+            </button>
+
+        </div>
+
 
         <h2 class="text-4xl font-black text-white mt-1">
 
@@ -215,9 +264,11 @@
     </div>
 
 
-    <div class="inline-flex items-center space-x-2 bg-[#0b101d] border border-slate-800/80 px-4 py-2 rounded-xl">
+    <button
+        onclick="showWinningDetails()"
+        class="inline-flex items-center space-x-2 bg-[#0b101d] border border-slate-800/80 px-4 py-2 rounded-xl hover:border-emerald-500/30 transition">
 
-        <i class="fa-solid fa-chart-line text-emerald-400 text-xs"></i>
+        <i class="fa-solid fa-trophy text-amber-400 text-xs"></i>
 
         <span class="text-xs text-slate-400 font-medium">
             Winning Balance
@@ -237,7 +288,9 @@
 
         </span>
 
-    </div>
+        <i class="fa-solid fa-chevron-right text-[9px] text-slate-600"></i>
+
+    </button>
 
 
     <div class="grid grid-cols-2 gap-3 pt-2">
@@ -272,7 +325,92 @@
 </div>
 
 
-<!-- Gift Code Redeem Section -->
+<!-- =========================================
+     WALLET ACTIVITY SUMMARY
+========================================= -->
+
+<div class="space-y-2">
+
+    <p class="text-[11px] font-extrabold text-slate-400 uppercase tracking-widest px-1">
+        Wallet Activity
+    </p>
+
+
+    <div class="grid grid-cols-3 gap-2.5">
+
+        <div class="stat-card glass-card rounded-2xl p-3 border border-slate-800">
+
+            <div class="w-8 h-8 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center mb-2">
+
+                <i class="fa-solid fa-arrow-down text-xs"></i>
+
+            </div>
+
+            <p class="text-[9px] text-slate-500 font-semibold">
+                Total Deposit
+            </p>
+
+            <p id="total-deposit"
+               class="text-sm font-black text-white mt-0.5">
+
+                ৳0
+
+            </p>
+
+        </div>
+
+
+        <div class="stat-card glass-card rounded-2xl p-3 border border-slate-800">
+
+            <div class="w-8 h-8 rounded-xl bg-red-500/10 text-red-400 flex items-center justify-center mb-2">
+
+                <i class="fa-solid fa-arrow-up text-xs"></i>
+
+            </div>
+
+            <p class="text-[9px] text-slate-500 font-semibold">
+                Total Withdraw
+            </p>
+
+            <p id="total-withdraw"
+               class="text-sm font-black text-white mt-0.5">
+
+                ৳0
+
+            </p>
+
+        </div>
+
+
+        <div class="stat-card glass-card rounded-2xl p-3 border border-slate-800">
+
+            <div class="w-8 h-8 rounded-xl bg-amber-500/10 text-amber-400 flex items-center justify-center mb-2">
+
+                <i class="fa-solid fa-trophy text-xs"></i>
+
+            </div>
+
+            <p class="text-[9px] text-slate-500 font-semibold">
+                Total Winning
+            </p>
+
+            <p id="total-winning"
+               class="text-sm font-black text-white mt-0.5">
+
+                ৳0
+
+            </p>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =========================================
+     GIFT CODE
+========================================= -->
 
 <div class="space-y-2">
 
@@ -293,6 +431,7 @@
                 type="text"
                 id="gift-code-input"
                 placeholder="যেমন: GC-XYZ123"
+                autocomplete="off"
                 class="w-full bg-[#050811] border border-slate-800 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-blue-500 transition">
 
         </div>
@@ -321,7 +460,79 @@
 </div>
 
 
-<!-- Quick Actions -->
+<!-- =========================================
+     GIFT CODE HISTORY
+========================================= -->
+
+<div class="space-y-2">
+
+    <div class="flex items-center justify-between px-1">
+
+        <p class="text-[11px] font-extrabold text-slate-400 uppercase tracking-widest">
+            Gift Code History
+        </p>
+
+    </div>
+
+
+    <div class="glass-card rounded-2xl overflow-hidden border border-slate-800">
+
+        <div id="gift-history"
+             class="divide-y divide-slate-800/50">
+
+            <div class="p-5 text-center text-xs text-slate-500">
+                Gift code history loading...
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =========================================
+     RECENT TRANSACTIONS
+========================================= -->
+
+<div class="space-y-2">
+
+    <div class="flex items-center justify-between px-1">
+
+        <p class="text-[11px] font-extrabold text-slate-400 uppercase tracking-widest">
+            Recent Transactions
+        </p>
+
+        <a href="transactions.html"
+           class="text-[10px] font-bold text-blue-400 hover:text-blue-300">
+
+            View All
+
+            <i class="fa-solid fa-chevron-right text-[8px] ml-1"></i>
+
+        </a>
+
+    </div>
+
+
+    <div class="glass-card rounded-2xl overflow-hidden border border-slate-800">
+
+        <div id="recent-transactions">
+
+            <div class="p-5 text-center text-xs text-slate-500">
+                Transactions loading...
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =========================================
+     QUICK ACTIONS
+========================================= -->
 
 <div class="space-y-2">
 
@@ -369,7 +580,9 @@
 </div>
 
 
-<!-- How to Guide -->
+<!-- =========================================
+     HOW TO GUIDE
+========================================= -->
 
 <div class="space-y-2">
 
@@ -484,7 +697,199 @@
 </div>
 
 
+<!-- =========================================
+     WALLET SECURITY
+========================================= -->
+
+<div class="space-y-2">
+
+    <p class="text-[11px] font-extrabold text-slate-400 uppercase tracking-widest px-1">
+        Wallet Security
+    </p>
+
+
+    <div class="glass-card rounded-2xl p-4 border border-slate-800">
+
+        <div class="flex items-center gap-3 mb-4">
+
+            <div class="w-10 h-10 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center">
+
+                <i class="fa-solid fa-shield-halved"></i>
+
+            </div>
+
+            <div>
+
+                <p class="text-xs font-black text-white">
+                    Wallet Secured
+                </p>
+
+                <p class="text-[10px] text-emerald-400 font-semibold">
+                    Your wallet is protected
+                </p>
+
+            </div>
+
+            <i class="fa-solid fa-circle-check text-emerald-400 ml-auto"></i>
+
+        </div>
+
+
+        <div class="space-y-3">
+
+            <div class="bg-[#050811] border border-slate-800 rounded-xl p-3">
+
+                <div class="flex items-center justify-between gap-3">
+
+                    <div class="min-w-0">
+
+                        <p class="text-[9px] text-slate-500 uppercase tracking-wider font-bold">
+                            Account UID
+                        </p>
+
+                        <p id="account-uid"
+                           class="text-[10px] text-slate-300 font-mono mt-1 truncate">
+
+                            Loading...
+
+                        </p>
+
+                    </div>
+
+
+                    <button
+                        onclick="copyAccountUID()"
+                        class="shrink-0 w-8 h-8 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 flex items-center justify-center transition">
+
+                        <i class="fa-solid fa-copy text-[10px]"></i>
+
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <div class="flex items-center justify-between">
+
+                <div class="flex items-center gap-2">
+
+                    <i class="fa-solid fa-lock text-emerald-400 text-xs"></i>
+
+                    <span class="text-[10px] text-slate-400 font-semibold">
+                        Wallet Status
+                    </span>
+
+                </div>
+
+                <span class="text-[10px] font-bold text-emerald-400">
+                    Secured
+                </span>
+
+            </div>
+
+
+            <div class="flex items-center justify-between">
+
+                <div class="flex items-center gap-2">
+
+                    <i class="fa-solid fa-clock text-blue-400 text-xs"></i>
+
+                    <span class="text-[10px] text-slate-400 font-semibold">
+                        Last Wallet Update
+                    </span>
+
+                </div>
+
+                <span id="last-wallet-update"
+                      class="text-[10px] font-bold text-slate-300 text-right">
+
+                    Loading...
+
+                </span>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
 </main>
+
+
+<!-- =========================================
+     WINNING DETAILS MODAL
+========================================= -->
+
+<div id="winning-modal"
+     class="fixed inset-0 bg-black/70 backdrop-blur-sm z-[100] hidden items-center justify-center px-4">
+
+    <div class="glass-card w-full max-w-sm rounded-3xl p-5 border border-slate-700 shadow-2xl">
+
+        <div class="flex items-center justify-between mb-5">
+
+            <div class="flex items-center gap-3">
+
+                <div class="w-10 h-10 rounded-xl bg-amber-500/10 text-amber-400 flex items-center justify-center">
+
+                    <i class="fa-solid fa-trophy"></i>
+
+                </div>
+
+                <div>
+
+                    <h3 class="text-sm font-black text-white">
+                        Winning Balance
+                    </h3>
+
+                    <p class="text-[10px] text-slate-500">
+                        Your winning details
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <button
+                onclick="closeWinningDetails()"
+                class="w-8 h-8 rounded-lg bg-slate-800 text-slate-400 hover:text-white flex items-center justify-center">
+
+                <i class="fa-solid fa-xmark text-xs"></i>
+
+            </button>
+
+        </div>
+
+
+        <div class="space-y-2">
+
+            <div class="flex items-center justify-between bg-[#050811] rounded-xl p-3">
+
+                <span class="text-xs text-slate-400">
+                    Total Winning
+                </span>
+
+                <span id="modal-total-winning"
+                      class="text-sm font-black text-amber-400">
+                    ৳0
+                </span>
+
+            </div>
+
+
+            <div class="text-[10px] text-slate-500 text-center pt-2">
+                Winning balance Firebase account data অনুযায়ী দেখানো হচ্ছে।
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
 
 
 <script type="module">
@@ -494,18 +899,19 @@ import {
     db
 } from "./firebase.js";
 
-
 import {
     onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
-
 import {
+    collection,
     doc,
     getDoc,
+    getDocs,
+    query,
+    where,
     runTransaction
 } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-
 
 import {
     processReferralReward
@@ -513,134 +919,73 @@ import {
 
 
 let currentUserId = null;
+let currentUser = null;
+let currentUserData = {};
+let balanceVisible = true;
+let currentBalance = 0;
+let currentWinningBalance = 0;
 
 
 /* =========================================
    TOAST
 ========================================= */
 
-window.showToast = function(
-    message,
-    type = "success"
-) {
+window.showToast = function(message,type="success"){
 
     const container =
-        document.getElementById(
-            "toast-container"
-        );
+        document.getElementById("toast-container");
 
-    if (!container) return;
-
+    if(!container) return;
 
     const toast =
         document.createElement("div");
 
-
     toast.className =
         `toast ${type}`;
-
 
     let iconClass =
         "fa-solid fa-circle-check text-emerald-400";
 
-
-    if (type === "error") {
-
+    if(type==="error"){
         iconClass =
             "fa-solid fa-circle-xmark text-red-400";
-
     }
 
-
-    if (type === "warning") {
-
+    if(type==="warning"){
         iconClass =
             "fa-solid fa-triangle-exclamation text-amber-400";
-
     }
 
-
-    if (type === "info") {
-
+    if(type==="info"){
         iconClass =
             "fa-solid fa-circle-info text-blue-400";
-
     }
-
 
     toast.innerHTML =
         `<i class="${iconClass}"></i>
-         <span>${message}</span>`;
-
+         <span>${escapeHtml(message)}</span>`;
 
     container.appendChild(toast);
 
-
     setTimeout(
-        () => toast.remove(),
+        ()=>toast.remove(),
         3000
     );
-
 };
 
 
 /* =========================================
-   LOADING
+   ESCAPE HTML
 ========================================= */
 
-function setWalletLoading() {
+function escapeHtml(value){
 
-    const balance =
-        document.getElementById(
-            "wallet-balance"
-        );
-
-
-    const winnings =
-        document.getElementById(
-            "winning-balance"
-        );
-
-
-    if (balance) {
-
-        balance.className =
-            "loading-shimmer loading-text";
-
-        balance.textContent =
-            "Loading...";
-
-    }
-
-
-    if (winnings) {
-
-        winnings.className =
-            "loading-shimmer loading-text";
-
-        winnings.textContent =
-            "Loading...";
-
-    }
-
-}
-
-
-/* =========================================
-   REMOVE LOADING
-========================================= */
-
-function removeLoadingEffect(element) {
-
-    if (!element) return;
-
-    element.classList.remove(
-        "loading-shimmer",
-        "loading-text"
-    );
-
-    element.style.color = "";
-    element.style.opacity = "";
+    return String(value ?? "")
+        .replace(/&/g,"&amp;")
+        .replace(/</g,"&lt;")
+        .replace(/>/g,"&gt;")
+        .replace(/"/g,"&quot;")
+        .replace(/'/g,"&#039;");
 
 }
 
@@ -649,29 +994,92 @@ function removeLoadingEffect(element) {
    NUMBER
 ========================================= */
 
-function getNumber(
-    value,
-    fallback = 0
-) {
+function getNumber(value,fallback=0){
 
-    if (
-        value === undefined ||
-        value === null ||
-        value === ""
-    ) {
-
+    if(
+        value===undefined ||
+        value===null ||
+        value===""
+    ){
         return fallback;
-
     }
-
 
     const number =
         Number(value);
 
-
     return Number.isFinite(number)
         ? number
         : fallback;
+}
+
+
+/* =========================================
+   TIME
+========================================= */
+
+function getTimeValue(item={}){
+
+    const values = [
+        item.timestamp,
+        item.createdAt,
+        item.updatedAt,
+        item.redeemedAt,
+        item.rejectedAt
+    ];
+
+    for(const value of values){
+
+        if(value?.toMillis){
+            return value.toMillis();
+        }
+
+        if(typeof value==="number"){
+            return value;
+        }
+
+        if(typeof value==="string"){
+
+            const parsed =
+                Number(value);
+
+            if(Number.isFinite(parsed)){
+                return parsed;
+            }
+
+            const date =
+                new Date(value);
+
+            if(!Number.isNaN(date.getTime())){
+                return date.getTime();
+            }
+
+        }
+
+    }
+
+    return 0;
+}
+
+
+/* =========================================
+   DATE
+========================================= */
+
+function formatDate(item){
+
+    const time =
+        getTimeValue(item);
+
+    if(!time) return "সময় পাওয়া যায়নি";
+
+    return new Date(time)
+        .toLocaleString("bn-BD",{
+            day:"2-digit",
+            month:"short",
+            year:"numeric",
+            hour:"2-digit",
+            minute:"2-digit"
+        });
 
 }
 
@@ -680,61 +1088,40 @@ function getNumber(
    WINNING BALANCE
 ========================================= */
 
-function getWinningBalance(data) {
+function getWinningBalance(data){
 
-    if (!data) return 0;
-
-
-    /*
-     * Winning balance field detection.
-     *
-     * এখানে একাধিক নাম support করা হয়েছে
-     * যাতে তোমার existing Firebase field
-     * যেটাই থাকুক সেটি পাওয়া যায়।
-     */
-
+    if(!data) return 0;
 
     const fields = [
 
         "winningBalance",
-
         "winnings",
-
         "winning",
-
         "totalWinnings",
-
         "totalWinning",
-
         "winBalance",
-
         "winningAmount",
-
         "totalWinningAmount",
-
         "totalEarnings",
-
         "earnings",
-
         "prizeMoney"
 
     ];
 
+    for(const field of fields){
 
-    for (const field of fields) {
-
-        if (
+        if(
             Object.prototype.hasOwnProperty.call(
                 data,
                 field
             )
             &&
-            data[field] !== undefined
+            data[field]!==undefined
             &&
-            data[field] !== null
+            data[field]!==null
             &&
-            data[field] !== ""
-        ) {
+            data[field]!==""
+        ){
 
             return getNumber(
                 data[field],
@@ -745,74 +1132,211 @@ function getWinningBalance(data) {
 
     }
 
-
     return 0;
-
 }
 
 
 /* =========================================
-   UPDATE WALLET
+   DISPLAY BALANCE
 ========================================= */
 
-function updateWalletUI(data) {
-
-    data = data || {};
-
-
-    const balance =
-        getNumber(
-            data.balance,
-            0
-        );
-
-
-    const winnings =
-        getWinningBalance(
-            data
-        );
-
+function displayBalance(){
 
     const balanceElement =
         document.getElementById(
             "wallet-balance"
         );
 
-
-    const winningsElement =
+    const winningElement =
         document.getElementById(
             "winning-balance"
         );
 
+    if(balanceElement){
 
-    /*
-     * Available Balance
-     */
-
-    if (balanceElement) {
-
-        removeLoadingEffect(
-            balanceElement
+        balanceElement.classList.remove(
+            "loading-shimmer",
+            "loading-text"
         );
 
-        balanceElement.textContent =
-            String(balance);
+        if(balanceVisible){
+
+            balanceElement.textContent =
+                currentBalance.toLocaleString("en-US");
+
+            balanceElement.classList.remove(
+                "balance-hidden"
+            );
+
+        }else{
+
+            balanceElement.textContent =
+                "••••";
+
+            balanceElement.classList.add(
+                "balance-hidden"
+            );
+
+        }
 
     }
 
+    if(winningElement){
 
-    /*
-     * Winning Balance
-     */
-
-    if (winningsElement) {
-
-        removeLoadingEffect(
-            winningsElement
+        winningElement.classList.remove(
+            "loading-shimmer",
+            "loading-text"
         );
 
-        winningsElement.textContent =
-            String(winnings);
+        if(balanceVisible){
+
+            winningElement.textContent =
+                currentWinningBalance.toLocaleString("en-US");
+
+            winningElement.classList.remove(
+                "balance-hidden"
+            );
+
+        }else{
+
+            winningElement.textContent =
+                "••••";
+
+            winningElement.classList.add(
+                "balance-hidden"
+            );
+
+        }
+
+    }
+
+}
+
+
+/* =========================================
+   TOGGLE BALANCE
+========================================= */
+
+window.toggleBalanceVisibility =
+function(){
+
+    balanceVisible =
+        !balanceVisible;
+
+    const icon =
+        document.getElementById(
+            "balance-eye-icon"
+        );
+
+    if(icon){
+
+        icon.className =
+            balanceVisible
+            ? "fa-solid fa-eye text-[10px]"
+            : "fa-solid fa-eye-slash text-[10px]";
+
+    }
+
+    displayBalance();
+
+};
+
+
+/* =========================================
+   UPDATE WALLET UI
+========================================= */
+
+function updateWalletUI(data){
+
+    data =
+        data || {};
+
+    currentUserData =
+        data;
+
+    currentBalance =
+        getNumber(
+            data.balance,
+            0
+        );
+
+    currentWinningBalance =
+        getWinningBalance(
+            data
+        );
+
+    displayBalance();
+
+    const totalWinning =
+        document.getElementById(
+            "total-winning"
+        );
+
+    if(totalWinning){
+
+        totalWinning.textContent =
+            "৳" +
+            currentWinningBalance.toLocaleString("en-US");
+
+    }
+
+    const modalWinning =
+        document.getElementById(
+            "modal-total-winning"
+        );
+
+    if(modalWinning){
+
+        modalWinning.textContent =
+            "৳" +
+            currentWinningBalance.toLocaleString("en-US");
+
+    }
+
+    const lastUpdate =
+        document.getElementById(
+            "last-wallet-update"
+        );
+
+    if(lastUpdate){
+
+        const updatedAt =
+            data.updatedAt;
+
+        if(updatedAt?.toMillis){
+
+            lastUpdate.textContent =
+                formatDate({
+                    timestamp:
+                        updatedAt.toMillis()
+                });
+
+        }else if(updatedAt){
+
+            lastUpdate.textContent =
+                formatDate({
+                    timestamp:
+                        updatedAt
+                });
+
+        }else{
+
+            lastUpdate.textContent =
+                "Just now";
+
+        }
+
+    }
+
+    const uidElement =
+        document.getElementById(
+            "account-uid"
+        );
+
+    if(uidElement){
+
+        uidElement.textContent =
+            currentUserId || "—";
 
     }
 
@@ -823,10 +1347,9 @@ function updateWalletUI(data) {
    LOAD WALLET
 ========================================= */
 
-async function loadWallet(user) {
+async function loadWallet(user){
 
-    if (!user) return;
-
+    if(!user) return;
 
     const userRef =
         doc(
@@ -835,186 +1358,34 @@ async function loadWallet(user) {
             user.uid
         );
 
-
-    setWalletLoading();
-
-
-    try {
-
-        /*
-         * প্রথমে user document load হবে।
-         */
+    try{
 
         const userSnap =
             await getDoc(
                 userRef
             );
 
-
-        /*
-         * User document না থাকলে
-         * fake 0 দেখাবে না।
-         */
-
-        if (!userSnap.exists()) {
-
-            const balanceElement =
-                document.getElementById(
-                    "wallet-balance"
-                );
-
-
-            const winningsElement =
-                document.getElementById(
-                    "winning-balance"
-                );
-
-
-            if (balanceElement) {
-
-                removeLoadingEffect(
-                    balanceElement
-                );
-
-                balanceElement.textContent =
-                    "—";
-
-            }
-
-
-            if (winningsElement) {
-
-                removeLoadingEffect(
-                    winningsElement
-                );
-
-                winningsElement.textContent =
-                    "—";
-
-            }
-
+        if(!userSnap.exists()){
 
             showToast(
                 "Wallet data পাওয়া যায়নি।",
                 "warning"
             );
 
-
             return;
 
         }
-
-
-        /*
-         * Firebase data পাওয়ার সাথে সাথেই
-         * UI update।
-         */
 
         updateWalletUI(
             userSnap.data() || {}
         );
 
-
-        /*
-         * Referral calculation background-এ।
-         * এটা balance display আটকে রাখবে না।
-         */
-
-        processReferralReward(
-            user.uid
-        )
-        .then(
-            async () => {
-
-                try {
-
-                    /*
-                     * Referral reward balance-এ
-                     * পরিবর্তন করলে latest data আবার নেওয়া হবে।
-                     */
-
-                    const refreshed =
-                        await getDoc(
-                            userRef
-                        );
-
-
-                    if (
-                        refreshed.exists()
-                    ) {
-
-                        updateWalletUI(
-                            refreshed.data() || {}
-                        );
-
-                    }
-
-                } catch (refreshError) {
-
-                    console.warn(
-                        "Wallet refresh error:",
-                        refreshError
-                    );
-
-                }
-
-            }
-        )
-        .catch(
-            referralError => {
-
-                console.warn(
-                    "Referral check:",
-                    referralError
-                );
-
-            }
-        );
-
-
-    } catch (error) {
+    }catch(error){
 
         console.error(
             "Wallet loading error:",
             error
         );
-
-
-        const balanceElement =
-            document.getElementById(
-                "wallet-balance"
-            );
-
-
-        const winningsElement =
-            document.getElementById(
-                "winning-balance"
-            );
-
-
-        if (balanceElement) {
-
-            removeLoadingEffect(
-                balanceElement
-            );
-
-            balanceElement.textContent =
-                "—";
-
-        }
-
-
-        if (winningsElement) {
-
-            removeLoadingEffect(
-                winningsElement
-            );
-
-            winningsElement.textContent =
-                "—";
-
-        }
-
 
         showToast(
             "ওয়ালেট ব্যালেন্স লোড করতে সমস্যা হয়েছে।",
@@ -1027,53 +1398,1324 @@ async function loadWallet(user) {
 
 
 /* =========================================
-   AUTH
+   REFRESH WALLET
 ========================================= */
 
-onAuthStateChanged(
-    auth,
-    user => {
+window.refreshWallet =
+async function(){
 
-        if (!user) {
+    if(!currentUserId){
 
-            showToast(
-                "অনুগ্রহ করে আগে লগইন করুন।",
-                "warning"
+        showToast(
+            "ইউজার যাচাই সম্পন্ন হয়নি।",
+            "warning"
+        );
+
+        return;
+
+    }
+
+    const icons = [
+        document.getElementById(
+            "header-refresh-icon"
+        ),
+        document.getElementById(
+            "balance-refresh-icon"
+        )
+    ];
+
+    icons.forEach(icon=>{
+
+        if(icon){
+            icon.classList.add(
+                "refresh-spin"
+            );
+        }
+
+    });
+
+    try{
+
+        const userRef =
+            doc(
+                db,
+                "users",
+                currentUserId
             );
 
+        const userSnap =
+            await getDoc(
+                userRef
+            );
 
-            setTimeout(
-                () => {
+        if(userSnap.exists()){
 
-                    window.location.replace(
-                        "login.html"
+            updateWalletUI(
+                userSnap.data() || {}
+            );
+
+        }
+
+        await Promise.all([
+            loadWalletActivity(),
+            loadRecentTransactions(),
+            loadGiftHistory()
+        ]);
+
+        updateAlerts();
+
+        showToast(
+            "Wallet successfully updated.",
+            "success"
+        );
+
+    }catch(error){
+
+        console.error(
+            "Refresh error:",
+            error
+        );
+
+        showToast(
+            "Wallet refresh করতে সমস্যা হয়েছে।",
+            "error"
+        );
+
+    }finally{
+
+        setTimeout(()=>{
+
+            icons.forEach(icon=>{
+
+                if(icon){
+                    icon.classList.remove(
+                        "refresh-spin"
                     );
+                }
 
-                },
-                700
+            });
+
+        },500);
+
+    }
+
+};
+
+
+/* =========================================
+   GET TRANSACTION STATUS
+========================================= */
+
+function getStatus(item){
+
+    return String(
+        item?.status ||
+        ""
+    )
+    .trim()
+    .toLowerCase();
+
+}
+
+
+/* =========================================
+   REJECT REASON
+========================================= */
+
+function getRejectionReason(item){
+
+    return String(
+        item?.rejectReason ||
+        item?.reviewReason ||
+        item?.rejectionReason ||
+        item?.reason ||
+        ""
+    ).trim();
+
+}
+
+
+/* =========================================
+   IS REJECTED
+========================================= */
+
+function isRejected(item){
+
+    const status =
+        getStatus(item);
+
+    return [
+        "rejected",
+        "reject",
+        "failed",
+        "declined"
+    ].includes(status);
+
+}
+
+
+/* =========================================
+   IS SUCCESS
+========================================= */
+
+function isSuccess(item){
+
+    const status =
+        getStatus(item);
+
+    return [
+        "success",
+        "approved",
+        "completed",
+        "complete",
+        "paid"
+    ].includes(status);
+
+}
+
+
+/* =========================================
+   LOAD WALLET ACTIVITY
+========================================= */
+
+async function loadWalletActivity(){
+
+    if(!currentUserId) return;
+
+    try{
+
+        const txQuery =
+            query(
+                collection(
+                    db,
+                    "transactions"
+                ),
+                where(
+                    "userId",
+                    "==",
+                    currentUserId
+                )
             );
 
+        const wdQuery =
+            query(
+                collection(
+                    db,
+                    "withdraws"
+                ),
+                where(
+                    "uid",
+                    "==",
+                    currentUserId
+                )
+            );
+
+        const [
+            txSnap,
+            wdSnap
+        ] =
+            await Promise.all([
+                getDocs(txQuery),
+                getDocs(wdQuery)
+            ]);
+
+        let totalDeposit = 0;
+        let totalWithdraw = 0;
+
+        txSnap.forEach(
+            docSnap=>{
+
+                const data =
+                    docSnap.data() || {};
+
+                if(
+                    isSuccess(data)
+                ){
+
+                    const type =
+                        String(
+                            data.type ||
+                            data.transactionType ||
+                            "deposit"
+                        ).toLowerCase();
+
+                    if(
+                        type.includes("deposit") ||
+                        type.includes("add")
+                    ){
+
+                        totalDeposit +=
+                            getNumber(
+                                data.amount,
+                                0
+                            );
+
+                    }
+
+                }
+
+            }
+        );
+
+
+        wdSnap.forEach(
+            docSnap=>{
+
+                const data =
+                    docSnap.data() || {};
+
+                if(
+                    isSuccess(data)
+                ){
+
+                    totalWithdraw +=
+                        getNumber(
+                            data.amount,
+                            0
+                        );
+
+                }
+
+            }
+        );
+
+
+        const depositElement =
+            document.getElementById(
+                "total-deposit"
+            );
+
+        const withdrawElement =
+            document.getElementById(
+                "total-withdraw"
+            );
+
+        if(depositElement){
+
+            depositElement.textContent =
+                "৳" +
+                totalDeposit.toLocaleString("en-US");
+
+        }
+
+        if(withdrawElement){
+
+            withdrawElement.textContent =
+                "৳" +
+                totalWithdraw.toLocaleString("en-US");
+
+        }
+
+    }catch(error){
+
+        console.error(
+            "Wallet activity error:",
+            error
+        );
+
+    }
+
+}
+
+
+/* =========================================
+   LOAD RECENT TRANSACTIONS
+========================================= */
+
+async function loadRecentTransactions(){
+
+    if(!currentUserId) return;
+
+    const list =
+        document.getElementById(
+            "recent-transactions"
+        );
+
+    if(!list) return;
+
+    try{
+
+        const txQuery =
+            query(
+                collection(
+                    db,
+                    "transactions"
+                ),
+                where(
+                    "userId",
+                    "==",
+                    currentUserId
+                )
+            );
+
+        const wdQuery =
+            query(
+                collection(
+                    db,
+                    "withdraws"
+                ),
+                where(
+                    "uid",
+                    "==",
+                    currentUserId
+                )
+            );
+
+        const [
+            txSnap,
+            wdSnap
+        ] =
+            await Promise.all([
+                getDocs(txQuery),
+                getDocs(wdQuery)
+            ]);
+
+        let items = [];
+
+        txSnap.forEach(
+            docSnap=>{
+
+                items.push({
+                    id:docSnap.id,
+                    source:"deposit",
+                    ...docSnap.data()
+                });
+
+            }
+        );
+
+        wdSnap.forEach(
+            docSnap=>{
+
+                items.push({
+                    id:docSnap.id,
+                    source:"withdraw",
+                    ...docSnap.data()
+                });
+
+            }
+        );
+
+
+        items.sort(
+            (a,b)=>
+                getTimeValue(b) -
+                getTimeValue(a)
+        );
+
+
+        const recent =
+            items.slice(0,3);
+
+
+        if(!recent.length){
+
+            list.innerHTML =
+                `<div class="p-5 text-center">
+                    <i class="fa-solid fa-receipt text-slate-700 text-xl mb-2"></i>
+                    <p class="text-xs text-slate-500">
+                        কোনো transaction পাওয়া যায়নি।
+                    </p>
+                </div>`;
 
             return;
 
         }
 
 
+        list.innerHTML =
+            recent.map(
+                item=>{
+
+                    const rejected =
+                        isRejected(item);
+
+                    const success =
+                        isSuccess(item);
+
+                    let title =
+                        item.source==="withdraw"
+                        ? `Withdraw (${escapeHtml(item.method || "Wallet")})`
+                        : escapeHtml(
+                            item.type ||
+                            "Deposit"
+                          );
+
+                    let icon =
+                        item.source==="withdraw"
+                        ? "fa-arrow-up"
+                        : "fa-arrow-down";
+
+                    let iconColor =
+                        item.source==="withdraw"
+                        ? "text-red-400 bg-red-500/10"
+                        : "text-emerald-400 bg-emerald-500/10";
+
+                    let statusText =
+                        "Pending";
+
+                    let statusClass =
+                        "text-amber-400 bg-amber-500/10 border-amber-500/20";
+
+                    if(success){
+
+                        statusText =
+                            "Success";
+
+                        statusClass =
+                            "text-emerald-400 bg-emerald-500/10 border-emerald-500/20";
+
+                    }
+
+                    if(rejected){
+
+                        statusText =
+                            "Rejected";
+
+                        statusClass =
+                            "text-red-400 bg-red-500/10 border-red-500/20";
+
+                    }
+
+                    const reason =
+                        getRejectionReason(item);
+
+
+                    let reasonHTML = "";
+
+                    if(
+                        rejected &&
+                        reason
+                    ){
+
+                        reasonHTML =
+                            `<div class="mt-2 rounded-lg bg-red-500/5 border border-red-500/10 px-2.5 py-2">
+                                <p class="text-[9px] text-red-400 font-bold">
+                                    Rejection Reason
+                                </p>
+                                <p class="text-[10px] text-slate-400 mt-0.5">
+                                    ${escapeHtml(reason)}
+                                </p>
+                            </div>`;
+
+                    }
+
+
+                    return `
+                    <div class="p-4 border-b border-slate-800/50 last:border-b-0">
+
+                        <div class="flex items-start gap-3">
+
+                            <div class="w-9 h-9 rounded-xl ${iconColor} flex items-center justify-center shrink-0">
+
+                                <i class="fa-solid ${icon} text-xs"></i>
+
+                            </div>
+
+
+                            <div class="min-w-0 flex-1">
+
+                                <div class="flex items-start justify-between gap-2">
+
+                                    <div>
+
+                                        <p class="text-xs font-bold text-white">
+                                            ${title}
+                                        </p>
+
+                                        <p class="text-[9px] text-slate-500 mt-0.5">
+                                            ${escapeHtml(formatDate(item))}
+                                        </p>
+
+                                    </div>
+
+
+                                    <p class="text-xs font-black text-white whitespace-nowrap">
+
+                                        ৳${getNumber(item.amount,0).toLocaleString("en-US")}
+
+                                    </p>
+
+                                </div>
+
+
+                                <div class="mt-2">
+
+                                    <span class="inline-flex text-[9px] font-bold px-2 py-1 rounded-lg border ${statusClass}">
+
+                                        ${statusText}
+
+                                    </span>
+
+                                </div>
+
+                                ${reasonHTML}
+
+                            </div>
+
+                        </div>
+
+                    </div>
+                    `;
+
+                }
+            ).join("");
+
+
+    }catch(error){
+
+        console.error(
+            "Recent transactions error:",
+            error
+        );
+
+        list.innerHTML =
+            `<div class="p-5 text-center text-xs text-slate-500">
+                Transaction load করা যায়নি।
+            </div>`;
+
+    }
+
+}
+
+
+/* =========================================
+   LOAD GIFT HISTORY
+========================================= */
+
+async function loadGiftHistory(){
+
+    if(!currentUserId) return;
+
+    const container =
+        document.getElementById(
+            "gift-history"
+        );
+
+    if(!container) return;
+
+    try{
+
+        const giftQuery =
+            query(
+                collection(
+                    db,
+                    "giftCodes"
+                ),
+                where(
+                    "usedBy",
+                    "array-contains",
+                    currentUserId
+                )
+            );
+
+        const giftSnap =
+            await getDocs(
+                giftQuery
+            );
+
+        let items = [];
+
+        giftSnap.forEach(
+            docSnap=>{
+
+                const data =
+                    docSnap.data() || {};
+
+                items.push({
+                    id:docSnap.id,
+                    ...data
+                });
+
+            }
+        );
+
+
+        /*
+         * যদি usedBy না থাকে,
+         * claimedUsers দিয়েও চেষ্টা করা হবে।
+         */
+
+        if(!items.length){
+
+            const claimedQuery =
+                query(
+                    collection(
+                        db,
+                        "giftCodes"
+                    ),
+                    where(
+                        "claimedUsers",
+                        "array-contains",
+                        currentUserId
+                    )
+                );
+
+            const claimedSnap =
+                await getDocs(
+                    claimedQuery
+                );
+
+            claimedSnap.forEach(
+                docSnap=>{
+
+                    const data =
+                        docSnap.data() || {};
+
+                    items.push({
+                        id:docSnap.id,
+                        ...data
+                    });
+
+                }
+            );
+
+        }
+
+
+        items.sort(
+            (a,b)=>
+                getTimeValue(b) -
+                getTimeValue(a)
+        );
+
+
+        const recent =
+            items.slice(0,5);
+
+
+        if(!recent.length){
+
+            container.innerHTML =
+                `<div class="p-5 text-center">
+
+                    <div class="w-10 h-10 rounded-xl bg-blue-500/10 text-blue-400 flex items-center justify-center mx-auto mb-2">
+
+                        <i class="fa-solid fa-gift text-sm"></i>
+
+                    </div>
+
+                    <p class="text-xs text-slate-500">
+                        এখনো কোনো gift code redeem করা হয়নি।
+                    </p>
+
+                </div>`;
+
+            return;
+
+        }
+
+
+        container.innerHTML =
+            recent.map(
+                item=>{
+
+                    const amount =
+                        getNumber(
+                            item.amount,
+                            0
+                        );
+
+                    const code =
+                        item.code ||
+                        item.giftCode ||
+                        item.id ||
+                        "Gift Code";
+
+                    return `
+                    <div class="p-4 flex items-center gap-3">
+
+                        <div class="w-9 h-9 rounded-xl bg-blue-500/10 text-blue-400 flex items-center justify-center shrink-0">
+
+                            <i class="fa-solid fa-gift text-xs"></i>
+
+                        </div>
+
+
+                        <div class="min-w-0 flex-1">
+
+                            <p class="text-xs font-bold text-white truncate">
+                                ${escapeHtml(code)}
+                            </p>
+
+                            <p class="text-[9px] text-slate-500 mt-0.5">
+                                ${escapeHtml(formatDate(item))}
+                            </p>
+
+                        </div>
+
+
+                        <div class="text-right">
+
+                            <p class="text-xs font-black text-emerald-400">
+                                +৳${amount.toLocaleString("en-US")}
+                            </p>
+
+                            <p class="text-[9px] text-emerald-500/70 mt-0.5">
+                                Redeemed
+                            </p>
+
+                        </div>
+
+                    </div>
+                    `;
+
+                }
+            ).join("");
+
+
+    }catch(error){
+
+        console.error(
+            "Gift history error:",
+            error
+        );
+
+        container.innerHTML =
+            `<div class="p-5 text-center text-xs text-slate-500">
+                Gift history load করা যায়নি।
+            </div>`;
+
+    }
+
+}
+
+
+/* =========================================
+   LOAD ALERTS
+========================================= */
+
+async function updateAlerts(){
+
+    if(!currentUserId) return;
+
+    const container =
+        document.getElementById(
+            "wallet-alerts"
+        );
+
+    if(!container) return;
+
+    try{
+
+        const wdQuery =
+            query(
+                collection(
+                    db,
+                    "withdraws"
+                ),
+                where(
+                    "uid",
+                    "==",
+                    currentUserId
+                )
+            );
+
+        const txQuery =
+            query(
+                collection(
+                    db,
+                    "transactions"
+                ),
+                where(
+                    "userId",
+                    "==",
+                    currentUserId
+                )
+            );
+
+        const [
+            wdSnap,
+            txSnap
+        ] =
+            await Promise.all([
+                getDocs(wdQuery),
+                getDocs(txQuery)
+            ]);
+
+
+        let withdraws = [];
+
+        let transactions = [];
+
+
+        wdSnap.forEach(
+            docSnap=>{
+
+                withdraws.push({
+                    source:"withdraw",
+                    ...docSnap.data()
+                });
+
+            }
+        );
+
+
+        txSnap.forEach(
+            docSnap=>{
+
+                transactions.push({
+                    source:"deposit",
+                    ...docSnap.data()
+                });
+
+            }
+        );
+
+
+        withdraws.sort(
+            (a,b)=>
+                getTimeValue(b) -
+                getTimeValue(a)
+        );
+
+
+        transactions.sort(
+            (a,b)=>
+                getTimeValue(b) -
+                getTimeValue(a)
+        );
+
+
+        const pendingWithdraw =
+            withdraws.find(
+                item =>
+                    [
+                        "pending",
+                        "processing",
+                        "review"
+                    ].includes(
+                        getStatus(item)
+                    )
+            );
+
+
+        const rejectedWithdraw =
+            withdraws.find(
+                item =>
+                    isRejected(item)
+            );
+
+
+        const rejectedDeposit =
+            transactions.find(
+                item =>
+                    isRejected(item)
+            );
+
+
+        let html = "";
+
+
+        if(pendingWithdraw){
+
+            const amount =
+                getNumber(
+                    pendingWithdraw.amount,
+                    0
+                );
+
+            html +=
+                `<div class="glass-card rounded-2xl p-3.5 border border-amber-500/20 bg-amber-500/5 alert-pulse">
+
+                    <div class="flex items-start gap-3">
+
+                        <div class="w-9 h-9 rounded-xl bg-amber-500/10 text-amber-400 flex items-center justify-center shrink-0">
+
+                            <i class="fa-solid fa-clock text-xs"></i>
+
+                        </div>
+
+                        <div class="min-w-0">
+
+                            <p class="text-xs font-black text-amber-300">
+                                Withdraw যাচাই করা হচ্ছে
+                            </p>
+
+                            <p class="text-[10px] text-slate-400 mt-0.5">
+                                আপনার ৳${amount.toLocaleString("en-US")} Withdraw বর্তমানে যাচাই করা হচ্ছে।
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                </div>`;
+
+        }
+
+
+        if(rejectedWithdraw){
+
+            const amount =
+                getNumber(
+                    rejectedWithdraw.amount,
+                    0
+                );
+
+            const reason =
+                getRejectionReason(
+                    rejectedWithdraw
+                );
+
+
+            html +=
+                `<div class="glass-card rounded-2xl p-3.5 border border-red-500/20 bg-red-500/5">
+
+                    <div class="flex items-start gap-3">
+
+                        <div class="w-9 h-9 rounded-xl bg-red-500/10 text-red-400 flex items-center justify-center shrink-0">
+
+                            <i class="fa-solid fa-circle-xmark text-xs"></i>
+
+                        </div>
+
+                        <div class="min-w-0">
+
+                            <p class="text-xs font-black text-red-300">
+                                Withdraw Rejected
+                            </p>
+
+                            <p class="text-[10px] text-slate-400 mt-0.5">
+                                ৳${amount.toLocaleString("en-US")} Withdraw reject করা হয়েছে।
+                            </p>
+
+                            ${
+                                reason
+                                ? `
+                                <p class="text-[10px] text-red-300/80 mt-1">
+                                    কারণ: ${escapeHtml(reason)}
+                                </p>
+                                `
+                                : ""
+                            }
+
+                        </div>
+
+                    </div>
+
+                </div>`;
+
+        }
+
+
+        if(rejectedDeposit){
+
+            const amount =
+                getNumber(
+                    rejectedDeposit.amount,
+                    0
+                );
+
+            const reason =
+                getRejectionReason(
+                    rejectedDeposit
+                );
+
+
+            html +=
+                `<div class="glass-card rounded-2xl p-3.5 border border-red-500/20 bg-red-500/5">
+
+                    <div class="flex items-start gap-3">
+
+                        <div class="w-9 h-9 rounded-xl bg-red-500/10 text-red-400 flex items-center justify-center shrink-0">
+
+                            <i class="fa-solid fa-wallet text-xs"></i>
+
+                        </div>
+
+                        <div class="min-w-0">
+
+                            <p class="text-xs font-black text-red-300">
+                                Deposit Rejected
+                            </p>
+
+                            <p class="text-[10px] text-slate-400 mt-0.5">
+                                ৳${amount.toLocaleString("en-US")} Deposit reject করা হয়েছে।
+                            </p>
+
+                            ${
+                                reason
+                                ? `
+                                <p class="text-[10px] text-red-300/80 mt-1">
+                                    কারণ: ${escapeHtml(reason)}
+                                </p>
+                                `
+                                : ""
+                            }
+
+                        </div>
+
+                    </div>
+
+                </div>`;
+
+        }
+
+
+        if(html){
+
+            container.innerHTML =
+                html;
+
+            container.classList.remove(
+                "hidden"
+            );
+
+        }else{
+
+            container.innerHTML =
+                "";
+
+            container.classList.add(
+                "hidden"
+            );
+
+        }
+
+
+    }catch(error){
+
+        console.error(
+            "Wallet alert error:",
+            error
+        );
+
+    }
+
+}
+
+
+/* =========================================
+   COPY UID
+========================================= */
+
+window.copyAccountUID =
+async function(){
+
+    if(!currentUserId){
+
+        showToast(
+            "UID পাওয়া যায়নি।",
+            "error"
+        );
+
+        return;
+
+    }
+
+    try{
+
+        await navigator.clipboard.writeText(
+            currentUserId
+        );
+
+        showToast(
+            "Account UID copied.",
+            "success"
+        );
+
+    }catch(error){
+
+        console.error(
+            "Copy UID error:",
+            error
+        );
+
+        showToast(
+            "UID copy করা যায়নি।",
+            "error"
+        );
+
+    }
+
+};
+
+
+/* =========================================
+   WINNING MODAL
+========================================= */
+
+window.showWinningDetails =
+function(){
+
+    const modal =
+        document.getElementById(
+            "winning-modal"
+        );
+
+    if(!modal) return;
+
+    const total =
+        document.getElementById(
+            "modal-total-winning"
+        );
+
+    if(total){
+
+        total.textContent =
+            balanceVisible
+            ? "৳" +
+              currentWinningBalance.toLocaleString("en-US")
+            : "৳••••";
+
+    }
+
+    modal.classList.remove(
+        "hidden"
+    );
+
+    modal.classList.add(
+        "flex"
+    );
+
+};
+
+
+window.closeWinningDetails =
+function(){
+
+    const modal =
+        document.getElementById(
+            "winning-modal"
+        );
+
+    if(!modal) return;
+
+    modal.classList.add(
+        "hidden"
+    );
+
+    modal.classList.remove(
+        "flex"
+    );
+
+};
+
+
+document.getElementById(
+    "winning-modal"
+)?.addEventListener(
+    "click",
+    function(event){
+
+        if(
+            event.target === this
+        ){
+
+            closeWinningDetails();
+
+        }
+
+    }
+);
+
+
+/* =========================================
+   AUTH
+========================================= */
+
+onAuthStateChanged(
+    auth,
+    async user=>{
+
+        if(!user){
+
+            showToast(
+                "অনুগ্রহ করে আগে লগইন করুন।",
+                "warning"
+            );
+
+            setTimeout(
+                ()=>{
+                    window.location.replace(
+                        "login.html"
+                    );
+                },
+                700
+            );
+
+            return;
+
+        }
+
+
+        currentUser =
+            user;
+
         currentUserId =
             user.uid;
 
 
-        loadWallet(user)
-            .catch(
-                error => {
+        const uidElement =
+            document.getElementById(
+                "account-uid"
+            );
 
-                    console.error(
-                        "Wallet background load:",
+        if(uidElement){
+
+            uidElement.textContent =
+                user.uid;
+
+        }
+
+
+        /*
+         * Wallet + history
+         * parallel load
+         */
+
+        await Promise.all([
+            loadWallet(user),
+            loadWalletActivity(),
+            loadRecentTransactions(),
+            loadGiftHistory()
+        ]);
+
+
+        /*
+         * Alerts আলাদাভাবে load
+         */
+
+        updateAlerts();
+
+
+        /*
+         * Referral reward background-এ
+         */
+
+        processReferralReward(
+            user.uid
+        )
+        .then(
+            async ()=>{
+
+                try{
+
+                    await loadWallet(user);
+                    await loadWalletActivity();
+
+                }catch(error){
+
+                    console.warn(
+                        "Referral wallet refresh:",
                         error
                     );
 
                 }
-            );
+
+            }
+        )
+        .catch(
+            error=>{
+
+                console.warn(
+                    "Referral check:",
+                    error
+                );
+
+            }
+        );
 
     }
 );
@@ -1084,27 +2726,25 @@ onAuthStateChanged(
 ========================================= */
 
 window.applyGiftCode =
-async function() {
+async function(){
 
     const codeInput =
         document.getElementById(
             "gift-code-input"
         );
 
-
     const applyBtn =
         document.getElementById(
             "apply-gift-btn"
         );
 
-
     const code =
         codeInput
-            ? codeInput.value.trim()
-            : "";
+        ? codeInput.value.trim()
+        : "";
 
 
-    if (!code) {
+    if(!code){
 
         showToast(
             "অনুগ্রহ করে একটি গিফট কোড লিখুন।",
@@ -1116,7 +2756,7 @@ async function() {
     }
 
 
-    if (!currentUserId) {
+    if(!currentUserId){
 
         showToast(
             "ইউজার যাচাই সম্পন্ন হয়নি। একটু পর আবার চেষ্টা করুন।",
@@ -1128,13 +2768,12 @@ async function() {
     }
 
 
-    applyBtn.disabled = true;
-
+    applyBtn.disabled =
+        true;
 
     applyBtn.innerHTML =
         `<i class="fa-solid fa-spinner fa-spin text-[11px]"></i>
          <span>Applying...</span>`;
-
 
     applyBtn.classList.add(
         "opacity-75",
@@ -1150,7 +2789,7 @@ async function() {
         );
 
 
-    try {
+    try{
 
         const giftRef =
             doc(
@@ -1162,7 +2801,7 @@ async function() {
 
         await runTransaction(
             db,
-            async transaction => {
+            async transaction=>{
 
                 const giftSnap =
                     await transaction.get(
@@ -1170,7 +2809,7 @@ async function() {
                     );
 
 
-                if (!giftSnap.exists()) {
+                if(!giftSnap.exists()){
 
                     throw new Error(
                         "গিফট কোডটি ভুল অথবা আর ব্যবহারযোগ্য নেই।"
@@ -1189,11 +2828,23 @@ async function() {
                     );
 
 
+                if(
+                    !Number.isFinite(amount) ||
+                    amount <= 0
+                ){
+
+                    throw new Error(
+                        "এই gift code-এর amount সঠিক নয়।"
+                    );
+
+                }
+
+
                 const usedBy =
                     Array.isArray(
                         giftData.usedBy
                     )
-                    ? giftData.usedBy
+                    ? [...giftData.usedBy]
                     : [];
 
 
@@ -1201,11 +2852,11 @@ async function() {
                     Array.isArray(
                         giftData.claimedUsers
                     )
-                    ? giftData.claimedUsers
+                    ? [...giftData.claimedUsers]
                     : [];
 
 
-                if (
+                if(
                     usedBy.includes(
                         currentUserId
                     )
@@ -1213,7 +2864,7 @@ async function() {
                     claimedUsers.includes(
                         currentUserId
                     )
-                ) {
+                ){
 
                     throw new Error(
                         "আপনি ইতিমধ্যে এই গিফট কোডটি ব্যবহার করেছেন।"
@@ -1238,10 +2889,10 @@ async function() {
                     );
 
 
-                if (
+                if(
                     maxUses > 0 &&
                     currentUses >= maxUses
-                ) {
+                ){
 
                     throw new Error(
                         "এই গিফট কোডের সর্বোচ্চ ব্যবহার সীমা পূর্ণ হয়ে গেছে।"
@@ -1256,7 +2907,7 @@ async function() {
                     );
 
 
-                if (!userSnap.exists()) {
+                if(!userSnap.exists()){
 
                     throw new Error(
                         "ইউজার ডাটা পাওয়া যায়নি।"
@@ -1279,20 +2930,14 @@ async function() {
                     currentUserId
                 );
 
-
                 claimedUsers.push(
                     currentUserId
                 );
 
 
-                const newUsedCount =
-                    currentUses + 1;
-
-
                 transaction.update(
                     giftRef,
                     {
-
                         usedBy:
                             usedBy,
 
@@ -1300,11 +2945,10 @@ async function() {
                             claimedUsers,
 
                         usedCount:
-                            newUsedCount,
+                            currentUses + 1,
 
                         used:
                             true
-
                     }
                 );
 
@@ -1327,20 +2971,13 @@ async function() {
         );
 
 
-        /*
-         * Gift code redeem হওয়ার পরে
-         * latest wallet data নেওয়া হবে।
-         */
-
         const updatedUserSnap =
             await getDoc(
                 userRef
             );
 
 
-        if (
-            updatedUserSnap.exists()
-        ) {
+        if(updatedUserSnap.exists()){
 
             updateWalletUI(
                 updatedUserSnap.data() || {}
@@ -1349,7 +2986,15 @@ async function() {
         }
 
 
-        codeInput.value = "";
+        codeInput.value =
+            "";
+
+
+        await Promise.all([
+            loadWalletActivity(),
+            loadRecentTransactions(),
+            loadGiftHistory()
+        ]);
 
 
         showToast(
@@ -1358,13 +3003,12 @@ async function() {
         );
 
 
-    } catch (error) {
+    }catch(error){
 
         console.error(
             "Gift code error:",
             error
         );
-
 
         showToast(
             error.message ||
@@ -1372,17 +3016,14 @@ async function() {
             "error"
         );
 
-
-    } finally {
+    }finally{
 
         applyBtn.disabled =
             false;
 
-
         applyBtn.innerHTML =
             `<i class="fa-solid fa-gift text-[11px]"></i>
              <span>Apply Gift Code</span>`;
-
 
         applyBtn.classList.remove(
             "opacity-75",
@@ -1399,11 +3040,9 @@ async function() {
 ========================================= */
 
 window.showGuide =
-function(type) {
+function(type){
 
-    if (
-        type === "add-money"
-    ) {
+    if(type==="add-money"){
 
         showToast(
             "Add Money-এর নির্দেশনামূলক ভিডিও শীঘ্রই আসছে।",
@@ -1412,10 +3051,7 @@ function(type) {
 
     }
 
-
-    else if (
-        type === "join-match"
-    ) {
+    else if(type==="join-match"){
 
         showToast(
             "Match Join-এর নির্দেশনামূলক ভিডিও শীঘ্রই আসছে।",
@@ -1424,10 +3060,7 @@ function(type) {
 
     }
 
-
-    else if (
-        type === "withdraw"
-    ) {
+    else if(type==="withdraw"){
 
         showToast(
             "Withdraw-এর নির্দেশনামূলক ভিডিও শীঘ্রই আসছে।",
@@ -1439,7 +3072,6 @@ function(type) {
 };
 
 </script>
-
 
 </body>
 </html>
