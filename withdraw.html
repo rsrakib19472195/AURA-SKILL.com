@@ -4,267 +4,2517 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Aura Skill - Withdraw</title>
-    <!-- Tailwind CSS CDN -->
+
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- FontAwesome for Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&display=swap"
+          rel="stylesheet">
+
     <style>
-        body { font-family: 'Hind Siliguri', sans-serif; background-color: #050811; color: #f8fafc; }
-        ::-webkit-scrollbar { width: 5px; }
-        ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 10px; }
-        .glass-card { background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(12px); border: 1px solid rgba(30, 41, 59, 0.9); }
-        
-        #toast-container { position: fixed; top: 20px; right: 20px; z-index: 9999; display: flex; flex-direction: column; gap: 10px; }
-        .toast {
-            background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(12px); border-left: 4px solid #3b82f6;
-            color: #fff; padding: 12px 20px; border-radius: 12px; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
-            font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 10px;
-            animation: slideIn 0.3s ease, fadeOut 0.3s ease 2.7s forwards;
+        * {
+            box-sizing: border-box;
         }
-        .toast.success { border-left-color: #10b981; }
-        .toast.error { border-left-color: #ef4444; }
-        .toast.warning { border-left-color: #f59e0b; }
-        @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
-        @keyframes fadeOut { from { opacity: 1; } to { opacity: 0; transform: translateY(-10px); } }
+
+        body {
+            font-family: 'Hind Siliguri', sans-serif;
+            background-color: #050811;
+            color: #f8fafc;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        ::-webkit-scrollbar {
+            width: 5px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #1e293b;
+            border-radius: 10px;
+        }
+
+        .glass-card {
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(30, 41, 59, 0.9);
+        }
+
+        input,
+        button {
+            font-family: inherit;
+        }
+
+        input::placeholder {
+            color: #64748b;
+        }
+
+        .amount-chip {
+            transition: all .15s ease;
+        }
+
+        .amount-chip:active {
+            transform: scale(.95);
+        }
+
+        .amount-chip.disabled {
+            opacity: .35;
+            pointer-events: none;
+        }
+
+        .history-item {
+            animation: historyIn .2s ease;
+        }
+
+        @keyframes historyIn {
+            from {
+                opacity: 0;
+                transform: translateY(5px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        #toast-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            left: 20px;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 10px;
+            pointer-events: none;
+        }
+
+        .toast {
+            max-width: 380px;
+            background: rgba(15, 23, 42, .97);
+            backdrop-filter: blur(12px);
+            color: #fff;
+            padding: 12px 16px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, .5);
+            font-size: 13px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-left: 4px solid #3b82f6;
+            animation: toastIn .25s ease, toastOut .25s ease 2.75s forwards;
+        }
+
+        .toast.success {
+            border-left-color: #10b981;
+        }
+
+        .toast.error {
+            border-left-color: #ef4444;
+        }
+
+        .toast.warning {
+            border-left-color: #f59e0b;
+        }
+
+        @keyframes toastIn {
+            from {
+                transform: translateX(30px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes toastOut {
+            from {
+                opacity: 1;
+            }
+
+            to {
+                opacity: 0;
+                transform: translateY(-8px);
+            }
+        }
+
+        .spinner {
+            width: 16px;
+            height: 16px;
+            border: 2px solid rgba(255,255,255,.35);
+            border-top-color: #fff;
+            border-radius: 50%;
+            animation: spin .7s linear infinite;
+            display: inline-block;
+            vertical-align: middle;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .success-icon {
+            animation: successPop .35s ease;
+        }
+
+        @keyframes successPop {
+            0% {
+                transform: scale(.5);
+                opacity: 0;
+            }
+
+            70% {
+                transform: scale(1.12);
+            }
+
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .modal-backdrop {
+            background: rgba(0, 0, 0, .72);
+            backdrop-filter: blur(7px);
+            -webkit-backdrop-filter: blur(7px);
+        }
+
+        .modal-card {
+            animation: modalIn .2s ease;
+        }
+
+        @keyframes modalIn {
+            from {
+                opacity: 0;
+                transform: translateY(12px) scale(.97);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .pending-pulse {
+            animation: pendingPulse 1.7s ease-in-out infinite;
+        }
+
+        @keyframes pendingPulse {
+            0%, 100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: .65;
+            }
+        }
     </style>
 </head>
-<body class="min-h-screen flex flex-col justify-between pb-10">
 
-    <div id="toast-container"></div>
+<body class="min-h-screen flex flex-col pb-10">
 
-    <!-- Header -->
-    <header class="px-4 py-4 flex items-center justify-between border-b border-slate-900 bg-[#0b0f1a]/80 backdrop-blur-md sticky top-0 z-30">
-        <div class="flex items-center space-x-3">
-            <button onclick="history.back()" class="w-9 h-9 rounded-xl bg-slate-900 border border-slate-800 flex items-center justify-center text-slate-300 hover:text-white transition">
-                <i class="fa-solid fa-arrow-left"></i>
-            </button>
-            <h1 class="text-base font-bold text-white tracking-wide">Withdraw</h1>
-        </div>
-    </header>
+<div id="toast-container"></div>
 
-    <!-- Main Container -->
-    <main class="max-w-md w-full mx-auto px-4 py-6 space-y-5">
-        
-        <!-- Choose Channel Label -->
-        <div class="text-center">
-            <span class="text-[10px] font-bold tracking-widest text-slate-400 uppercase">Choose your payment channel</span>
-        </div>
+<!-- HEADER -->
+<header class="px-4 py-4 flex items-center justify-between border-b border-slate-900 bg-[#0b0f1a]/80 backdrop-blur-md sticky top-0 z-30">
+    <div class="flex items-center space-x-3">
+        <button
+            onclick="history.back()"
+            class="w-9 h-9 rounded-xl bg-slate-900 border border-slate-800 flex items-center justify-center text-slate-300 hover:text-white transition">
+            <i class="fa-solid fa-arrow-left"></i>
+        </button>
 
-        <!-- Channel Selection Grid -->
-        <div class="grid grid-cols-2 gap-3">
-            <!-- bKash -->
-            <div id="channel-bkash" onclick="selectChannel('bkash')" class="glass-card p-4 rounded-2xl flex flex-col items-center justify-center cursor-pointer border-2 border-emerald-500 transition shadow-lg relative">
-                <div class="absolute top-2.5 right-2.5 w-5 h-5 rounded-full bg-emerald-500 flex items-center justify-center text-white text-[10px] shadow" id="check-bkash">
-                    <i class="fa-solid fa-check"></i>
-                </div>
-                <div class="w-12 h-12 bg-pink-600/10 rounded-xl flex items-center justify-center mb-2">
-                    <span class="text-pink-500 font-black text-lg tracking-tighter">bKash</span>
-                </div>
-                <span class="text-xs font-bold text-slate-200">bKash</span>
+        <h1 class="text-base font-bold text-white tracking-wide">
+            Withdraw
+        </h1>
+    </div>
+</header>
+
+
+<main class="max-w-md w-full mx-auto px-4 py-6 space-y-5">
+
+    <!-- CHANNEL -->
+    <div class="text-center">
+        <span class="text-[10px] font-bold tracking-widest text-slate-400 uppercase">
+            Choose your payment channel
+        </span>
+    </div>
+
+    <div class="grid grid-cols-2 gap-3">
+
+        <!-- BKASH -->
+        <div
+            id="channel-bkash"
+            onclick="selectChannel('bkash')"
+            class="glass-card p-4 rounded-2xl flex flex-col items-center justify-center cursor-pointer border-2 border-emerald-500 transition shadow-lg relative">
+
+            <div
+                id="check-bkash"
+                class="absolute top-2.5 right-2.5 w-5 h-5 rounded-full bg-emerald-500 flex items-center justify-center text-white text-[10px] shadow">
+                <i class="fa-solid fa-check"></i>
             </div>
 
-            <!-- Nagad -->
-            <div id="channel-nagad" onclick="selectChannel('nagad')" class="glass-card p-4 rounded-2xl flex flex-col items-center justify-center cursor-pointer border-2 border-slate-800 transition shadow-lg relative opacity-70 hover:opacity-100">
-                <div class="absolute top-2.5 right-2.5 w-5 h-5 rounded-full bg-slate-700 flex items-center justify-center text-white text-[10px] shadow" id="check-nagad" style="display: none;">
-                    <i class="fa-solid fa-check"></i>
+            <div class="w-12 h-12 bg-pink-600/10 rounded-xl flex items-center justify-center mb-2">
+                <span class="text-pink-500 font-black text-lg tracking-tighter">
+                    bKash
+                </span>
+            </div>
+
+            <span class="text-xs font-bold text-slate-200">
+                bKash
+            </span>
+        </div>
+
+
+        <!-- NAGAD -->
+        <div
+            id="channel-nagad"
+            onclick="selectChannel('nagad')"
+            class="glass-card p-4 rounded-2xl flex flex-col items-center justify-center cursor-pointer border-2 border-slate-800 transition shadow-lg relative opacity-70 hover:opacity-100">
+
+            <div
+                id="check-nagad"
+                class="absolute top-2.5 right-2.5 w-5 h-5 rounded-full bg-emerald-500 flex items-center justify-center text-white text-[10px] shadow"
+                style="display:none;">
+                <i class="fa-solid fa-check"></i>
+            </div>
+
+            <div class="w-12 h-12 bg-orange-600/10 rounded-xl flex items-center justify-center mb-2">
+                <span class="text-orange-500 font-black text-lg">
+                    নগদ
+                </span>
+            </div>
+
+            <span class="text-xs font-bold text-slate-200">
+                Nagad
+            </span>
+        </div>
+
+    </div>
+
+
+    <!-- FORM -->
+    <div class="space-y-4 pt-1">
+
+        <!-- WALLET -->
+        <div>
+            <div class="relative">
+                <input
+                    type="tel"
+                    id="wallet-number"
+                    inputmode="numeric"
+                    autocomplete="tel"
+                    maxlength="13"
+                    placeholder="Enter your Wallet Number"
+                    class="w-full bg-[#0d1322] border border-slate-800 rounded-2xl px-4 py-3.5 pr-11 text-white text-xs focus:outline-none focus:border-emerald-500 transition shadow-inner">
+
+                <div
+                    id="wallet-valid-icon"
+                    class="absolute right-4 top-3.5 text-emerald-400 hidden">
+                    <i class="fa-solid fa-circle-check"></i>
                 </div>
-                <div class="w-12 h-12 bg-orange-600/10 rounded-xl flex items-center justify-center mb-2">
-                    <span class="text-orange-500 font-black text-lg">নগদ</span>
-                </div>
-                <span class="text-xs font-bold text-slate-200">Nagad</span>
+            </div>
+
+            <div
+                id="wallet-message"
+                class="text-[10px] px-2 mt-1.5 min-h-[15px] text-slate-500">
+                ১১ ডিজিটের মোবাইল নম্বর দিন
             </div>
         </div>
 
-        <!-- Form Fields -->
-        <div class="space-y-4 pt-1">
-            <!-- Wallet Number -->
+
+        <!-- SAVED NUMBER -->
+        <div id="saved-number-box" class="hidden">
+            <div class="flex items-center justify-between bg-[#0d1322] border border-slate-800 rounded-xl px-3 py-2.5">
+                <div class="flex items-center gap-2 min-w-0">
+                    <i class="fa-solid fa-clock-rotate-left text-slate-500 text-[11px]"></i>
+                    <span class="text-[10px] text-slate-500">Saved number</span>
+                    <span id="saved-number-text" class="text-[11px] font-bold text-slate-300"></span>
+                </div>
+
+                <button
+                    onclick="useSavedNumber()"
+                    class="text-[10px] font-bold text-emerald-400 px-2 py-1">
+                    USE
+                </button>
+            </div>
+        </div>
+
+
+        <!-- AMOUNT -->
+        <div>
+
+            <div class="relative">
+                <span class="absolute left-4 top-3.5 text-slate-400 font-bold text-sm">
+                    ৳
+                </span>
+
+                <input
+                    type="number"
+                    id="withdraw-amount"
+                    inputmode="decimal"
+                    min="50"
+                    max="100000"
+                    placeholder="Amount"
+                    class="w-full bg-[#0d1322] border border-slate-800 rounded-2xl pl-9 pr-16 py-3.5 text-white text-xs focus:outline-none focus:border-emerald-500 transition shadow-inner">
+
+                <button
+                    id="max-btn"
+                    onclick="setMaxAmount()"
+                    class="absolute right-2 top-2 bottom-2 px-3 rounded-xl bg-emerald-500/10 text-emerald-400 text-[10px] font-black border border-emerald-500/20 hover:bg-emerald-500/20 transition">
+                    MAX
+                </button>
+            </div>
+
+            <div class="flex justify-between items-center text-[11px] text-slate-500 px-2 mt-1.5">
+                <span>Min: ৳50</span>
+                <span>Max: ৳100000</span>
+            </div>
+        </div>
+
+
+        <!-- QUICK AMOUNTS -->
+        <div>
+            <div class="text-[10px] font-bold text-slate-500 mb-2 px-1">
+                QUICK AMOUNT
+            </div>
+
+            <div class="grid grid-cols-5 gap-2">
+                <button onclick="setQuickAmount(50)" class="amount-chip bg-[#0d1322] border border-slate-800 rounded-xl py-2.5 text-[10px] font-bold text-slate-300">
+                    ৳50
+                </button>
+
+                <button onclick="setQuickAmount(100)" class="amount-chip bg-[#0d1322] border border-slate-800 rounded-xl py-2.5 text-[10px] font-bold text-slate-300">
+                    ৳100
+                </button>
+
+                <button onclick="setQuickAmount(500)" class="amount-chip bg-[#0d1322] border border-slate-800 rounded-xl py-2.5 text-[10px] font-bold text-slate-300">
+                    ৳500
+                </button>
+
+                <button onclick="setQuickAmount(1000)" class="amount-chip bg-[#0d1322] border border-slate-800 rounded-xl py-2.5 text-[10px] font-bold text-slate-300">
+                    ৳1000
+                </button>
+
+                <button onclick="setQuickAmount(5000)" class="amount-chip bg-[#0d1322] border border-slate-800 rounded-xl py-2.5 text-[10px] font-bold text-slate-300">
+                    ৳5000
+                </button>
+            </div>
+        </div>
+
+
+        <!-- FEE CALCULATION -->
+        <div class="glass-card rounded-2xl p-4 border border-slate-800 space-y-2.5">
+
+            <div class="flex justify-between text-xs">
+                <span class="text-slate-400">
+                    Amount
+                </span>
+
+                <span id="summary-amount" class="font-bold text-white">
+                    ৳0
+                </span>
+            </div>
+
+            <div class="flex justify-between text-xs">
+                <span class="text-slate-400">
+                    Fee
+                </span>
+
+                <span id="summary-fee" class="font-bold text-amber-400">
+                    ৳0
+                </span>
+            </div>
+
+            <div class="border-t border-slate-800 pt-2.5 flex justify-between">
+                <span class="text-xs font-bold text-slate-300">
+                    You'll Receive
+                </span>
+
+                <span id="summary-receive" class="text-sm font-black text-emerald-400">
+                    ৳0
+                </span>
+            </div>
+
+            <div
+                id="total-deduction"
+                class="text-[10px] text-slate-500 text-right">
+                Balance থেকে কাটা হবে: ৳0
+            </div>
+        </div>
+
+
+        <!-- WITHDRAW BUTTON -->
+        <button
+            onclick="submitWithdraw()"
+            id="withdraw-btn"
+            class="w-full bg-gradient-to-r from-red-600 to-rose-700 hover:from-red-500 hover:to-rose-600 disabled:opacity-60 disabled:cursor-not-allowed text-white font-bold py-3.5 rounded-2xl transition shadow-lg text-xs uppercase tracking-wider">
+            Withdraw
+        </button>
+
+    </div>
+
+
+    <!-- BALANCE -->
+    <div class="glass-card rounded-2xl p-4 flex justify-between items-center border border-slate-800 shadow">
+
+        <div class="flex items-center space-x-2.5">
+            <div class="w-8 h-8 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400">
+                <i class="fa-solid fa-chart-line text-xs"></i>
+            </div>
+
+            <span class="text-xs font-semibold text-slate-300">
+                Your Withdrawal Balance is:
+            </span>
+        </div>
+
+        <span
+            id="user-balance-display"
+            class="text-sm font-black text-emerald-400">
+            ৳0
+        </span>
+    </div>
+
+
+    <!-- PENDING NOTICE -->
+    <div
+        id="pending-box"
+        class="hidden bg-amber-500/10 border border-amber-500/20 rounded-2xl p-4">
+
+        <div class="flex items-center gap-2 mb-1">
+            <span class="pending-pulse text-amber-400">
+                <i class="fa-solid fa-clock"></i>
+            </span>
+
+            <span class="text-xs font-bold text-amber-400">
+                Withdrawal Pending
+            </span>
+        </div>
+
+        <p id="pending-text" class="text-[11px] text-slate-300 leading-relaxed">
+            আপনার একটি withdrawal request বর্তমানে pending আছে।
+        </p>
+    </div>
+
+
+    <!-- NOTICE -->
+    <div class="bg-[#0f1d17] border border-emerald-500/20 rounded-2xl p-4 space-y-1.5 shadow-md">
+
+        <div class="flex items-center space-x-2">
+            <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+
+            <span class="text-[11px] font-bold text-emerald-400 tracking-wide">
+                morning to night, no tention
+            </span>
+        </div>
+
+        <p class="text-[11px] text-slate-300 leading-relaxed">
+            সর্বনিম্ন উত্তোলন পরিমাণ টাকা ৫০ এবং সর্বোচ্চ উত্তোলন পরিমাণ টাকা ১,০০,০০০।
+            ৳৫০–৳৯৯ withdrawal fee ৳১০ এবং ৳১০০ বা তার বেশি withdrawal fee ৳৫।
+        </p>
+    </div>
+
+
+    <!-- HISTORY -->
+    <div class="space-y-3 pt-2">
+
+        <div class="flex items-center justify-between">
             <div>
-                <input type="text" id="wallet-number" placeholder="Enter your Wallet Number" class="w-full bg-[#0d1322] border border-slate-800 rounded-2xl px-4 py-3.5 text-white text-xs focus:outline-none focus:border-emerald-500 transition shadow-inner">
+                <h2 class="text-sm font-bold text-white">
+                    Withdrawal History
+                </h2>
+
+                <p class="text-[10px] text-slate-500">
+                    Your recent withdrawal requests
+                </p>
             </div>
 
-            <!-- Amount -->
-            <div>
-                <div class="relative">
-                    <span class="absolute left-4 top-3.5 text-slate-400 font-bold text-sm">৳</span>
-                    <input type="number" id="withdraw-amount" placeholder="Amount" class="w-full bg-[#0d1322] border border-slate-800 rounded-2xl pl-9 pr-4 py-3.5 text-white text-xs focus:outline-none focus:border-emerald-500 transition shadow-inner">
-                </div>
-                <div class="flex justify-between items-center text-[11px] text-slate-500 px-2 mt-1.5">
-                    <span>Min: ৳50</span>
-                    <span>Max: ৳100000</span>
-                </div>
-            </div>
-
-            <!-- Withdraw Button -->
-            <button onclick="submitWithdraw()" id="withdraw-btn" class="w-full bg-gradient-to-r from-red-600 to-rose-700 hover:from-red-500 hover:to-rose-600 text-white font-bold py-3.5 rounded-2xl transition shadow-lg text-xs uppercase tracking-wider">
-                Withdraw
+            <button
+                onclick="loadWithdrawalHistory()"
+                class="w-8 h-8 rounded-xl bg-slate-900 border border-slate-800 text-slate-400 hover:text-white">
+                <i class="fa-solid fa-rotate-right text-[11px]"></i>
             </button>
         </div>
 
-        <!-- Balance Info Card -->
-        <div class="glass-card rounded-2xl p-4 flex justify-between items-center border border-slate-800 shadow">
-            <div class="flex items-center space-x-2.5">
-                <div class="w-8 h-8 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400">
-                    <i class="fa-solid fa-chart-line text-xs"></i>
-                </div>
-                <span class="text-xs font-semibold text-slate-300">Your Withdrawal Balance is:</span>
+
+        <div
+            id="history-list"
+            class="space-y-2">
+
+            <div class="glass-card rounded-2xl p-4 text-center">
+                <span class="text-[11px] text-slate-500">
+                    Loading history...
+                </span>
             </div>
-            <span id="user-balance-display" class="text-sm font-black text-emerald-400">৳0</span>
+
         </div>
 
-        <!-- Notice Box -->
-        <div class="bg-[#0f1d17] border border-emerald-500/20 rounded-2xl p-4 space-y-1.5 shadow-md">
-            <div class="flex items-center space-x-2">
-                <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                <span class="text-[11px] font-bold text-emerald-400 tracking-wide">morning to night, no tention</span>
+    </div>
+
+</main>
+
+
+<!-- CONFIRM MODAL -->
+<div
+    id="confirm-modal"
+    class="fixed inset-0 z-[100] hidden items-center justify-center px-4 modal-backdrop">
+
+    <div class="modal-card w-full max-w-sm glass-card rounded-3xl p-5 border border-slate-700 shadow-2xl">
+
+        <div class="text-center mb-5">
+
+            <div class="w-12 h-12 mx-auto rounded-2xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400 mb-3">
+                <i class="fa-solid fa-money-bill-transfer"></i>
             </div>
-            <p class="text-[11px] text-slate-300 leading-relaxed">
-                সর্বনিম্ন উত্তোলন পরিমাণ টাকা ৫০ এবং সর্বোচ্চ উত্তোলন পরিমাণ টাকা ১,০০,০০০।
+
+            <h3 class="text-base font-bold text-white">
+                Confirm Withdrawal
+            </h3>
+
+            <p class="text-[10px] text-slate-500 mt-1">
+                Please check your details before confirming
             </p>
         </div>
 
-    </main>
 
-    <!-- Firebase Logic -->
-    <script type="module">
-        import { auth, db } from "./firebase.js";
-        import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-        import { collection, addDoc, doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        <div class="bg-[#0b1220] rounded-2xl p-4 space-y-3">
 
-        let selectedChannelName = 'bkash';
-        let currentUser = null;
-        let userCurrentBalance = 0;
+            <div class="flex justify-between">
+                <span class="text-[11px] text-slate-500">
+                    Method
+                </span>
 
-        window.showToast = function(message, type = 'success') {
-            const container = document.getElementById('toast-container');
-            if (!container) return;
-            const toast = document.createElement('div');
-            toast.className = `toast ${type}`;
-            
-            let iconClass = "fa-solid fa-circle-check text-emerald-400";
-            if (type === 'error') iconClass = "fa-solid fa-circle-xmark text-red-400";
-            if (type === 'warning') iconClass = "fa-solid fa-triangle-exclamation text-amber-400";
+                <span id="confirm-method" class="text-[11px] font-bold text-white">
+                    bKash
+                </span>
+            </div>
 
-            toast.innerHTML = `<i class="${iconClass}"></i> <span>${message}</span>`;
-            container.appendChild(toast);
-            setTimeout(() => toast.remove(), 3000);
+            <div class="flex justify-between">
+                <span class="text-[11px] text-slate-500">
+                    Number
+                </span>
+
+                <span id="confirm-number" class="text-[11px] font-bold text-white">
+                    -
+                </span>
+            </div>
+
+            <div class="flex justify-between">
+                <span class="text-[11px] text-slate-500">
+                    Amount
+                </span>
+
+                <span id="confirm-amount" class="text-[11px] font-bold text-white">
+                    ৳0
+                </span>
+            </div>
+
+            <div class="flex justify-between">
+                <span class="text-[11px] text-slate-500">
+                    Fee
+                </span>
+
+                <span id="confirm-fee" class="text-[11px] font-bold text-amber-400">
+                    ৳0
+                </span>
+            </div>
+
+            <div class="border-t border-slate-800 pt-3 flex justify-between">
+                <span class="text-[11px] font-bold text-slate-300">
+                    You'll Receive
+                </span>
+
+                <span id="confirm-receive" class="text-sm font-black text-emerald-400">
+                    ৳0
+                </span>
+            </div>
+
+        </div>
+
+
+        <div class="grid grid-cols-2 gap-3 mt-5">
+
+            <button
+                onclick="closeConfirmModal()"
+                id="cancel-confirm-btn"
+                class="py-3 rounded-2xl bg-slate-800 border border-slate-700 text-slate-300 text-xs font-bold">
+                Cancel
+            </button>
+
+            <button
+                onclick="confirmWithdrawal()"
+                id="confirm-withdraw-btn"
+                class="py-3 rounded-2xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold">
+                Confirm
+            </button>
+
+        </div>
+
+    </div>
+</div>
+
+
+<!-- SUCCESS MODAL -->
+<div
+    id="success-modal"
+    class="fixed inset-0 z-[110] hidden items-center justify-center px-4 modal-backdrop">
+
+    <div class="modal-card w-full max-w-sm glass-card rounded-3xl p-6 border border-emerald-500/20 shadow-2xl text-center">
+
+        <div class="success-icon w-16 h-16 mx-auto rounded-full bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400 text-2xl mb-4">
+            <i class="fa-solid fa-check"></i>
+        </div>
+
+        <h3 class="text-lg font-bold text-white">
+            Withdrawal Request Submitted ✓
+        </h3>
+
+        <p class="text-xs text-slate-400 mt-2 leading-relaxed">
+            আপনার withdrawal request সফলভাবে জমা হয়েছে।
+            Admin review করার পর টাকা পাঠানো হবে।
+        </p>
+
+        <button
+            onclick="closeSuccessModal()"
+            class="w-full mt-5 py-3 rounded-2xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold">
+            Done
+        </button>
+
+    </div>
+</div>
+
+
+<script type="module">
+
+    import { auth, db } from "./firebase.js";
+
+    import {
+        onAuthStateChanged
+    } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+
+    import {
+        collection,
+        doc,
+        getDoc,
+        getDocs,
+        query,
+        where,
+        runTransaction
+    } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+
+    /* =========================================================
+       GLOBAL STATE
+    ========================================================= */
+
+    let selectedChannelName = "bkash";
+    let currentUser = null;
+
+    let userCurrentBalance = 0;
+    let currentPendingWithdrawal = null;
+
+    let selectedAmount = 0;
+    let isProcessing = false;
+
+    let savedNumbers = {
+        bkash: "",
+        nagad: ""
+    };
+
+
+    /* =========================================================
+       TOAST
+    ========================================================= */
+
+    window.showToast = function(message, type = "success") {
+
+        const container = document.getElementById("toast-container");
+
+        if (!container) return;
+
+        const toast = document.createElement("div");
+
+        toast.className = `toast ${type}`;
+
+        let icon =
+            "fa-solid fa-circle-check text-emerald-400";
+
+        if (type === "error") {
+            icon =
+                "fa-solid fa-circle-xmark text-red-400";
         }
 
-        window.selectChannel = function(channel) {
-            selectedChannelName = channel;
-            const bkashCard = document.getElementById('channel-bkash');
-            const nagadCard = document.getElementById('channel-nagad');
-            const bkashCheck = document.getElementById('check-bkash');
-            const nagadCheck = document.getElementById('check-nagad');
-
-            if(channel === 'bkash') {
-                bkashCard.className = "glass-card p-4 rounded-2xl flex flex-col items-center justify-center cursor-pointer border-2 border-emerald-500 transition shadow-lg relative";
-                bkashCard.style.opacity = "1";
-                bkashCheck.style.display = "flex";
-
-                nagadCard.className = "glass-card p-4 rounded-2xl flex flex-col items-center justify-center cursor-pointer border-2 border-slate-800 transition shadow-lg relative opacity-70 hover:opacity-100";
-                nagadCheck.style.display = "none";
-            } else {
-                nagadCard.className = "glass-card p-4 rounded-2xl flex flex-col items-center justify-center cursor-pointer border-2 border-emerald-500 transition shadow-lg relative";
-                nagadCard.style.opacity = "1";
-                nagadCheck.style.display = "flex";
-
-                bkashCard.className = "glass-card p-4 rounded-2xl flex flex-col items-center justify-center cursor-pointer border-2 border-slate-800 transition shadow-lg relative opacity-70 hover:opacity-100";
-                bkashCheck.style.display = "none";
-            }
+        if (type === "warning") {
+            icon =
+                "fa-solid fa-triangle-exclamation text-amber-400";
         }
 
-        onAuthStateChanged(auth, async (user) => {
-            if (user) {
-                currentUser = user;
-                try {
-                    const userRef = doc(db, "users", user.uid);
-                    const userSnap = await getDoc(userRef);
-                    if(userSnap.exists()) {
-                        userCurrentBalance = Number(userSnap.data().balance || 0);
-                        document.getElementById('user-balance-display').innerText = `৳${userCurrentBalance}`;
-                    } else {
-                        document.getElementById('user-balance-display').innerText = `৳0`;
-                    }
-                } catch(e) {
-                    console.error("Error fetching user balance:", e);
-                }
-            } else {
-                showToast("দয়া করে প্রথমে লগইন করুন!", "warning");
+        toast.innerHTML = `
+            <i class="${icon}"></i>
+            <span>${escapeHtml(message)}</span>
+        `;
+
+        container.appendChild(toast);
+
+        setTimeout(() => {
+            toast.remove();
+        }, 3000);
+    };
+
+
+    /* =========================================================
+       ESCAPE HTML
+    ========================================================= */
+
+    function escapeHtml(value) {
+
+        return String(value ?? "")
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#039;");
+    }
+
+
+    /* =========================================================
+       NUMBER FORMAT
+    ========================================================= */
+
+    function money(value) {
+
+        return "৳" + Number(value || 0).toLocaleString("en-US");
+    }
+
+
+    function cleanNumber(value) {
+
+        return String(value || "")
+            .replace(/\D/g, "")
+            .slice(0, 11);
+    }
+
+
+    function displayWalletNumber(value) {
+
+        const n = cleanNumber(value);
+
+        if (n.length <= 4) return n;
+
+        if (n.length <= 7) {
+            return n.slice(0, 4) + " " + n.slice(4);
+        }
+
+        return (
+            n.slice(0, 4) +
+            " " +
+            n.slice(4, 7) +
+            " " +
+            n.slice(7)
+        );
+    }
+
+
+    /* =========================================================
+       FEE
+    ========================================================= */
+
+    function calculateFee(amount) {
+
+        amount = Number(amount || 0);
+
+        if (amount <= 0) {
+            return 0;
+        }
+
+        return amount < 100 ? 10 : 5;
+    }
+
+
+    /* =========================================================
+       AMOUNT SUMMARY
+    ========================================================= */
+
+    function updateAmountSummary() {
+
+        const input =
+            document.getElementById("withdraw-amount");
+
+        const amount = Number(input.value || 0);
+
+        const fee = calculateFee(amount);
+
+        const receive =
+            Math.max(0, amount);
+
+        const total =
+            amount + fee;
+
+
+        document.getElementById("summary-amount")
+            .innerText = money(amount);
+
+        document.getElementById("summary-fee")
+            .innerText = money(fee);
+
+        document.getElementById("summary-receive")
+            .innerText = money(receive);
+
+        document.getElementById("total-deduction")
+            .innerText =
+            "Balance থেকে কাটা হবে: " + money(total);
+
+
+        validateAmount(false);
+    }
+
+
+    /* =========================================================
+       AMOUNT VALIDATION
+    ========================================================= */
+
+    function validateAmount(showToastMessage = true) {
+
+        const input =
+            document.getElementById("withdraw-amount");
+
+        const amount =
+            Number(input.value || 0);
+
+        if (!amount) {
+            input.classList.remove("border-red-500");
+            return false;
+        }
+
+
+        if (amount < 50) {
+
+            input.classList.add("border-red-500");
+
+            if (showToastMessage) {
+                showToast(
+                    "সর্বনিম্ন withdrawal amount ৳50।",
+                    "warning"
+                );
             }
+
+            return false;
+        }
+
+
+        if (amount > 100000) {
+
+            input.classList.add("border-red-500");
+
+            if (showToastMessage) {
+                showToast(
+                    "সর্বোচ্চ withdrawal amount ৳100,000।",
+                    "warning"
+                );
+            }
+
+            return false;
+        }
+
+
+        const fee =
+            calculateFee(amount);
+
+        const total =
+            amount + fee;
+
+
+        if (total > userCurrentBalance) {
+
+            input.classList.add("border-red-500");
+
+            if (showToastMessage) {
+                showToast(
+                    `Fee সহ আপনার কমপক্ষে ${money(total)} balance প্রয়োজন।`,
+                    "error"
+                );
+            }
+
+            return false;
+        }
+
+
+        input.classList.remove("border-red-500");
+
+        return true;
+    }
+
+
+    /* =========================================================
+       QUICK AMOUNT
+    ========================================================= */
+
+    window.setQuickAmount = function(amount) {
+
+        if (!currentUser) {
+
+            showToast(
+                "দয়া করে প্রথমে লগইন করুন!",
+                "warning"
+            );
+
+            return;
+        }
+
+
+        const fee =
+            calculateFee(amount);
+
+        const total =
+            amount + fee;
+
+
+        if (total > userCurrentBalance) {
+
+            showToast(
+                `${money(amount)} withdraw করতে fee সহ ${money(total)} balance প্রয়োজন।`,
+                "warning"
+            );
+
+            return;
+        }
+
+
+        const input =
+            document.getElementById("withdraw-amount");
+
+        input.value = amount;
+
+        updateAmountSummary();
+
+        input.focus();
+    };
+
+
+    /* =========================================================
+       SMART MAX
+    ========================================================= */
+
+    window.setMaxAmount = function() {
+
+        if (!currentUser) {
+
+            showToast(
+                "দয়া করে প্রথমে লগইন করুন!",
+                "warning"
+            );
+
+            return;
+        }
+
+
+        const balance =
+            Number(userCurrentBalance || 0);
+
+
+        let maxAmount = 0;
+
+
+        /*
+            ৳60–৳104 balance:
+            fee = ৳10
+            max withdrawal = balance - 10
+
+            ৳105+ balance:
+            ৳100 withdrawal-এর fee = ৳5
+            এরপর fee fixed ৳5
+            max withdrawal = balance - 5
+        */
+
+        if (balance >= 105) {
+
+            maxAmount =
+                Math.min(
+                    100000,
+                    Math.floor(balance - 5)
+                );
+
+        } else {
+
+            maxAmount =
+                Math.floor(balance - 10);
+        }
+
+
+        if (maxAmount < 50) {
+
+            showToast(
+                "MAX withdrawal করার জন্য fee সহ কমপক্ষে ৳60 balance প্রয়োজন।",
+                "warning"
+            );
+
+            return;
+        }
+
+
+        const input =
+            document.getElementById("withdraw-amount");
+
+        input.value = maxAmount;
+
+        updateAmountSummary();
+
+        input.focus();
+    };
+
+
+    /* =========================================================
+       CHANNEL
+    ========================================================= */
+
+    window.selectChannel = function(channel) {
+
+        if (isProcessing) return;
+
+        selectedChannelName = channel;
+
+        const bkash =
+            document.getElementById("channel-bkash");
+
+        const nagad =
+            document.getElementById("channel-nagad");
+
+        const bkashCheck =
+            document.getElementById("check-bkash");
+
+        const nagadCheck =
+            document.getElementById("check-nagad");
+
+
+        if (channel === "bkash") {
+
+            bkash.className =
+                "glass-card p-4 rounded-2xl flex flex-col items-center justify-center cursor-pointer border-2 border-emerald-500 transition shadow-lg relative";
+
+            nagad.className =
+                "glass-card p-4 rounded-2xl flex flex-col items-center justify-center cursor-pointer border-2 border-slate-800 transition shadow-lg relative opacity-70 hover:opacity-100";
+
+            bkashCheck.style.display = "flex";
+            nagadCheck.style.display = "none";
+
+        } else {
+
+            nagad.className =
+                "glass-card p-4 rounded-2xl flex flex-col items-center justify-center cursor-pointer border-2 border-emerald-500 transition shadow-lg relative";
+
+            bkash.className =
+                "glass-card p-4 rounded-2xl flex flex-col items-center justify-center cursor-pointer border-2 border-slate-800 transition shadow-lg relative opacity-70 hover:opacity-100";
+
+            nagadCheck.style.display = "flex";
+            bkashCheck.style.display = "none";
+        }
+
+
+        loadSavedNumber();
+    };
+
+
+    /* =========================================================
+       WALLET VALIDATION
+    ========================================================= */
+
+    function validateWallet(showToastMessage = false) {
+
+        const input =
+            document.getElementById("wallet-number");
+
+        const icon =
+            document.getElementById("wallet-valid-icon");
+
+        const message =
+            document.getElementById("wallet-message");
+
+
+        const number =
+            cleanNumber(input.value);
+
+
+        if (number.length === 0) {
+
+            icon.classList.add("hidden");
+
+            message.innerText =
+                "১১ ডিজিটের মোবাইল নম্বর দিন";
+
+            message.className =
+                "text-[10px] px-2 mt-1.5 min-h-[15px] text-slate-500";
+
+            return false;
+        }
+
+
+        if (!number.startsWith("01")) {
+
+            icon.classList.add("hidden");
+
+            message.innerText =
+                "সঠিক বাংলাদেশি মোবাইল নম্বর দিন";
+
+            message.className =
+                "text-[10px] px-2 mt-1.5 min-h-[15px] text-red-400";
+
+            if (showToastMessage) {
+                showToast(
+                    "Wallet number অবশ্যই 01 দিয়ে শুরু হতে হবে।",
+                    "warning"
+                );
+            }
+
+            return false;
+        }
+
+
+        if (number.length !== 11) {
+
+            icon.classList.add("hidden");
+
+            message.innerText =
+                `${number.length}/11 digit`;
+
+            message.className =
+                "text-[10px] px-2 mt-1.5 min-h-[15px] text-amber-400";
+
+            return false;
+        }
+
+
+        icon.classList.remove("hidden");
+
+        message.innerText =
+            "Wallet number ঠিক আছে ✓";
+
+        message.className =
+            "text-[10px] px-2 mt-1.5 min-h-[15px] text-emerald-400";
+
+        return true;
+    }
+
+
+    /* =========================================================
+       WALLET INPUT
+    ========================================================= */
+
+    document
+        .getElementById("wallet-number")
+        .addEventListener("input", function() {
+
+            const clean =
+                cleanNumber(this.value);
+
+            this.value =
+                displayWalletNumber(clean);
+
+            validateWallet(false);
         });
 
-        window.submitWithdraw = async function() {
-            if(!currentUser) {
-                showToast("লগইন করা নেই!", "error");
+
+    /* =========================================================
+       AMOUNT INPUT
+    ========================================================= */
+
+    document
+        .getElementById("withdraw-amount")
+        .addEventListener("input", function() {
+
+            if (Number(this.value) > 100000) {
+                this.value = 100000;
+            }
+
+            updateAmountSummary();
+        });
+
+
+    /* =========================================================
+       LOCAL STORAGE SAVED NUMBERS
+    ========================================================= */
+
+    function loadSavedNumbers() {
+
+        try {
+
+            const data =
+                localStorage.getItem(
+                    "aura_withdraw_wallets"
+                );
+
+            if (data) {
+
+                const parsed =
+                    JSON.parse(data);
+
+                savedNumbers.bkash =
+                    cleanNumber(parsed.bkash || "");
+
+                savedNumbers.nagad =
+                    cleanNumber(parsed.nagad || "");
+            }
+
+        } catch (e) {
+
+            console.warn(
+                "Saved wallet load failed",
+                e
+            );
+        }
+    }
+
+
+    function saveCurrentNumber(number) {
+
+        try {
+
+            savedNumbers[selectedChannelName] =
+                cleanNumber(number);
+
+            localStorage.setItem(
+                "aura_withdraw_wallets",
+                JSON.stringify(savedNumbers)
+            );
+
+        } catch (e) {
+
+            console.warn(
+                "Wallet save failed",
+                e
+            );
+        }
+    }
+
+
+    function loadSavedNumber() {
+
+        const saved =
+            savedNumbers[selectedChannelName];
+
+        const box =
+            document.getElementById(
+                "saved-number-box"
+            );
+
+        const text =
+            document.getElementById(
+                "saved-number-text"
+            );
+
+
+        if (!saved) {
+
+            box.classList.add("hidden");
+
+            return;
+        }
+
+
+        text.innerText =
+            displayWalletNumber(saved);
+
+        box.classList.remove("hidden");
+    }
+
+
+    window.useSavedNumber = function() {
+
+        const saved =
+            savedNumbers[selectedChannelName];
+
+        if (!saved) return;
+
+
+        const input =
+            document.getElementById("wallet-number");
+
+        input.value =
+            displayWalletNumber(saved);
+
+        validateWallet(false);
+
+        input.focus();
+
+        showToast(
+            `${selectedChannelName === "bkash" ? "bKash" : "Nagad"} number selected।`,
+            "success"
+        );
+    };
+
+
+    /* =========================================================
+       AUTH
+    ========================================================= */
+
+    onAuthStateChanged(
+        auth,
+        async (user) => {
+
+            if (!user) {
+
+                currentUser = null;
+
+                showToast(
+                    "দয়া করে প্রথমে লগইন করুন!",
+                    "warning"
+                );
+
+                disableWithdraw();
+
                 return;
             }
 
-            const number = document.getElementById('wallet-number').value.trim();
-            const amount = Number(document.getElementById('withdraw-amount').value);
 
-            if(!number) {
-                showToast("দয়া করে আপনার ওয়ালেট নম্বর দিন!", "warning");
-                return;
-            }
+            currentUser = user;
 
-            if(!amount || isNaN(amount)) {
-                showToast("সঠিক অ্যামাউন্ট লিখুন!", "warning");
-                return;
-            }
+            loadSavedNumbers();
+            loadSavedNumber();
 
-            if(amount < 50) {
-                showToast("সর্বনিম্ন উত্তোলন পরিমাণ ৫০ টাকা।", "warning");
-                return;
-            }
-
-            if(amount > 100000) {
-                showToast("সর্বোচ্চ উত্তোলন পরিমাণ ১,০০,০০০ টাকা।", "warning");
-                return;
-            }
-
-            if(amount > userCurrentBalance) {
-                showToast("আপনার পর্যাপ্ত ব্যালেন্স নেই!", "error");
-                return;
-            }
-
-            const btn = document.getElementById('withdraw-btn');
-            btn.disabled = true;
-            btn.innerText = "Processing...";
 
             try {
-                const timestamp = Date.now();
-                
-                const userRef = doc(db, "users", currentUser.uid);
-                const newBalance = userCurrentBalance - amount;
-                await updateDoc(userRef, { balance: newBalance });
 
-                await addDoc(collection(db, "withdraws"), {
-                    uid: currentUser.uid,
-                    userId: currentUser.uid,
-                    userEmail: currentUser.email || "",
-                    username: currentUser.displayName || currentUser.email || "User",
-                    method: selectedChannelName.toUpperCase(),
-                    number: number,
-                    accountNumber: number,
-                    amount: amount,
-                    status: "pending",
-                    timestamp: timestamp,
-                    createdAt: timestamp
-                });
+                await loadUserBalance();
 
-                showToast("উত্তোলন অনুরোধ সফলভাবে জমা হয়েছে!", "success");
-                setTimeout(() => {
-                    location.reload();
-                }, 1500);
+                await loadWithdrawalHistory();
 
-            } catch(e) {
-                console.error(e);
-                showToast("সমস্যা হয়েছে: " + e.message, "error");
-                btn.disabled = false;
-                btn.innerText = "Withdraw";
+            } catch (error) {
+
+                console.error(error);
+
+                showToast(
+                    "Account information load করা যায়নি।",
+                    "error"
+                );
             }
         }
-    </script>
+    );
+
+
+    /* =========================================================
+       USER BALANCE
+    ========================================================= */
+
+    async function loadUserBalance() {
+
+        if (!currentUser) return;
+
+
+        const userRef =
+            doc(db, "users", currentUser.uid);
+
+
+        const snap =
+            await getDoc(userRef);
+
+
+        if (!snap.exists()) {
+
+            userCurrentBalance = 0;
+
+        } else {
+
+            userCurrentBalance =
+                Number(
+                    snap.data().balance || 0
+                );
+        }
+
+
+        updateBalanceUI();
+    }
+
+
+    function updateBalanceUI() {
+
+        document
+            .getElementById(
+                "user-balance-display"
+            )
+            .innerText =
+            money(userCurrentBalance);
+    }
+
+
+    /* =========================================================
+       DISABLE WITHDRAW
+    ========================================================= */
+
+    function disableWithdraw() {
+
+        const btn =
+            document.getElementById(
+                "withdraw-btn"
+            );
+
+        btn.disabled = true;
+    }
+
+
+    /* =========================================================
+       PENDING UI
+    ========================================================= */
+
+    function updatePendingUI() {
+
+        const box =
+            document.getElementById(
+                "pending-box"
+            );
+
+        const text =
+            document.getElementById(
+                "pending-text"
+            );
+
+        const btn =
+            document.getElementById(
+                "withdraw-btn"
+            );
+
+
+        if (currentPendingWithdrawal) {
+
+            const amount =
+                Number(
+                    currentPendingWithdrawal.amount || 0
+                );
+
+
+            box.classList.remove("hidden");
+
+            text.innerText =
+                `আপনার ${money(amount)} এর একটি withdrawal request বর্তমানে pending আছে। এটি completed/rejected হওয়ার পর নতুন withdrawal করতে পারবেন।`;
+
+
+            btn.disabled = true;
+
+            btn.innerHTML =
+                `<i class="fa-solid fa-clock mr-2"></i> Withdrawal Pending`;
+
+        } else {
+
+            box.classList.add("hidden");
+
+            if (!isProcessing) {
+
+                btn.disabled = false;
+
+                btn.innerText =
+                    "Withdraw";
+            }
+        }
+    }
+
+
+    /* =========================================================
+       LOAD HISTORY
+    ========================================================= */
+
+    window.loadWithdrawalHistory =
+        async function() {
+
+            if (!currentUser) return;
+
+
+            const history =
+                document.getElementById(
+                    "history-list"
+                );
+
+
+            try {
+
+                const q =
+                    query(
+                        collection(db, "withdraws"),
+                        where(
+                            "uid",
+                            "==",
+                            currentUser.uid
+                        )
+                    );
+
+
+                const snap =
+                    await getDocs(q);
+
+
+                let records =
+                    snap.docs.map(
+                        d => ({
+                            id: d.id,
+                            ...d.data()
+                        })
+                    );
+
+
+                records.sort(
+                    (a, b) =>
+                        Number(
+                            b.timestamp ||
+                            b.createdAt ||
+                            0
+                        ) -
+                        Number(
+                            a.timestamp ||
+                            a.createdAt ||
+                            0
+                        )
+                );
+
+
+                records =
+                    records.slice(0, 20);
+
+
+                currentPendingWithdrawal =
+                    records.find(
+                        item =>
+                            String(
+                                item.status || ""
+                            ).toLowerCase() ===
+                            "pending"
+                    ) || null;
+
+
+                updatePendingUI();
+
+
+                if (!records.length) {
+
+                    history.innerHTML = `
+                        <div class="glass-card rounded-2xl p-5 text-center">
+                            <div class="w-10 h-10 mx-auto rounded-xl bg-slate-800 flex items-center justify-center text-slate-500 mb-2">
+                                <i class="fa-solid fa-clock-rotate-left"></i>
+                            </div>
+
+                            <p class="text-[11px] text-slate-500">
+                                কোনো withdrawal history নেই
+                            </p>
+                        </div>
+                    `;
+
+                    return;
+                }
+
+
+                history.innerHTML =
+                    records.map(
+                        renderHistoryItem
+                    ).join("");
+
+
+            } catch (error) {
+
+                console.error(
+                    "History error:",
+                    error
+                );
+
+                history.innerHTML = `
+                    <div class="glass-card rounded-2xl p-4 text-center">
+                        <span class="text-[11px] text-red-400">
+                            History load করা যায়নি
+                        </span>
+                    </div>
+                `;
+            }
+        };
+
+
+    /* =========================================================
+       RENDER HISTORY ITEM
+    ========================================================= */
+
+    function renderHistoryItem(item) {
+
+        const status =
+            String(
+                item.status || "pending"
+            ).toLowerCase();
+
+
+        let statusText = "Pending";
+        let statusClass =
+            "text-amber-400 bg-amber-500/10 border-amber-500/20";
+        let statusIcon =
+            "fa-clock";
+
+
+        if (status === "completed" ||
+            status === "complete" ||
+            status === "approved") {
+
+            statusText = "Completed";
+
+            statusClass =
+                "text-emerald-400 bg-emerald-500/10 border-emerald-500/20";
+
+            statusIcon =
+                "fa-circle-check";
+        }
+
+
+        if (status === "rejected" ||
+            status === "reject" ||
+            status === "failed") {
+
+            statusText = "Rejected";
+
+            statusClass =
+                "text-red-400 bg-red-500/10 border-red-500/20";
+
+            statusIcon =
+                "fa-circle-xmark";
+        }
+
+
+        const amount =
+            Number(item.amount || 0);
+
+        const fee =
+            item.fee !== undefined
+                ? Number(item.fee)
+                : calculateFee(amount);
+
+        const receive =
+            item.receiveAmount !== undefined
+                ? Number(item.receiveAmount)
+                : amount;
+
+
+        const method =
+            String(
+                item.method || "BKASH"
+            ).toUpperCase();
+
+
+        const number =
+            displayWalletNumber(
+                item.number ||
+                item.accountNumber ||
+                ""
+            );
+
+
+        const timestamp =
+            Number(
+                item.timestamp ||
+                item.createdAt ||
+                0
+            );
+
+
+        const date =
+            timestamp
+                ? new Date(timestamp).toLocaleString(
+                    "en-BD",
+                    {
+                        day: "2-digit",
+                        month: "short",
+                        year: "numeric",
+                        hour: "2-digit",
+                        minute: "2-digit"
+                    }
+                )
+                : "Date unavailable";
+
+
+        let reasonHTML = "";
+
+
+        if (
+            status === "rejected" &&
+            item.rejectReason
+        ) {
+
+            reasonHTML = `
+                <div class="mt-3 px-3 py-2.5 rounded-xl bg-red-500/5 border border-red-500/10">
+                    <div class="flex items-center gap-1.5 mb-1">
+                        <i class="fa-solid fa-circle-info text-red-400 text-[9px]"></i>
+                        <span class="text-[9px] font-bold text-red-400">
+                            Rejection Reason
+                        </span>
+                    </div>
+
+                    <p class="text-[10px] text-slate-400 leading-relaxed">
+                        ${escapeHtml(item.rejectReason)}
+                    </p>
+                </div>
+            `;
+        }
+
+
+        return `
+            <div class="history-item glass-card rounded-2xl p-4 border border-slate-800">
+
+                <div class="flex justify-between items-start gap-3">
+
+                    <div class="min-w-0">
+
+                        <div class="flex items-center gap-2">
+
+                            <div class="w-9 h-9 rounded-xl ${
+                                method === "NAGAD"
+                                    ? "bg-orange-500/10 text-orange-400"
+                                    : "bg-pink-500/10 text-pink-400"
+                            } flex items-center justify-center">
+
+                                <i class="fa-solid fa-wallet text-xs"></i>
+
+                            </div>
+
+                            <div>
+
+                                <div class="text-xs font-bold text-white">
+                                    ${escapeHtml(method)}
+                                </div>
+
+                                <div class="text-[9px] text-slate-500">
+                                    ${escapeHtml(number || "No number")}
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="text-right">
+
+                        <div class="text-sm font-black text-white">
+                            ${money(amount)}
+                        </div>
+
+                        <div class="text-[9px] text-slate-500">
+                            ${escapeHtml(date)}
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="flex items-center justify-between mt-3 pt-3 border-t border-slate-800">
+
+                    <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg border ${statusClass} text-[9px] font-bold">
+
+                        <i class="fa-solid ${statusIcon}"></i>
+
+                        ${statusText}
+
+                    </span>
+
+
+                    <div class="text-right">
+
+                        <div class="text-[9px] text-slate-500">
+                            Fee ${money(fee)}
+                        </div>
+
+                        <div class="text-[10px] font-bold text-emerald-400">
+                            Receive ${money(receive)}
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                ${reasonHTML}
+
+            </div>
+        `;
+    }
+
+
+    /* =========================================================
+       SUBMIT - OPEN CONFIRM
+    ========================================================= */
+
+    window.submitWithdraw =
+        async function() {
+
+            if (isProcessing) return;
+
+
+            if (!currentUser) {
+
+                showToast(
+                    "লগইন করা নেই!",
+                    "error"
+                );
+
+                return;
+            }
+
+
+            /*
+                Re-check latest balance before confirmation.
+            */
+
+            try {
+
+                await loadUserBalance();
+
+            } catch (error) {
+
+                showToast(
+                    "Balance check করা যায়নি।",
+                    "error"
+                );
+
+                return;
+            }
+
+
+            /*
+                Check pending first.
+            */
+
+            await loadWithdrawalHistory();
+
+
+            if (currentPendingWithdrawal) {
+
+                showToast(
+                    "আপনার একটি withdrawal request বর্তমানে pending আছে।",
+                    "warning"
+                );
+
+                return;
+            }
+
+
+            const input =
+                document.getElementById(
+                    "wallet-number"
+                );
+
+
+            const number =
+                cleanNumber(input.value);
+
+
+            if (!validateWallet(true)) {
+
+                showToast(
+                    "সঠিক ১১ ডিজিটের wallet number দিন।",
+                    "warning"
+                );
+
+                input.focus();
+
+                return;
+            }
+
+
+            const amount =
+                Number(
+                    document.getElementById(
+                        "withdraw-amount"
+                    ).value || 0
+                );
+
+
+            if (!validateAmount(true)) {
+
+                return;
+            }
+
+
+            const fee =
+                calculateFee(amount);
+
+            const total =
+                amount + fee;
+
+            const receive =
+                amount;
+
+
+            /*
+                Final balance check.
+            */
+
+            if (total > userCurrentBalance) {
+
+                showToast(
+                    `Fee সহ ${money(total)} balance প্রয়োজন।`,
+                    "error"
+                );
+
+                return;
+            }
+
+
+            selectedAmount = amount;
+
+
+            /*
+                Save number for this method.
+            */
+
+            saveCurrentNumber(number);
+
+
+            /*
+                Confirmation data.
+            */
+
+            document.getElementById(
+                "confirm-method"
+            ).innerText =
+                selectedChannelName === "bkash"
+                    ? "bKash"
+                    : "Nagad";
+
+
+            document.getElementById(
+                "confirm-number"
+            ).innerText =
+                displayWalletNumber(number);
+
+
+            document.getElementById(
+                "confirm-amount"
+            ).innerText =
+                money(amount);
+
+
+            document.getElementById(
+                "confirm-fee"
+            ).innerText =
+                money(fee);
+
+
+            document.getElementById(
+                "confirm-receive"
+            ).innerText =
+                money(receive);
+
+
+            openConfirmModal();
+        };
+
+
+    /* =========================================================
+       CONFIRM MODAL
+    ========================================================= */
+
+    function openConfirmModal() {
+
+        const modal =
+            document.getElementById(
+                "confirm-modal"
+            );
+
+        modal.classList.remove("hidden");
+        modal.classList.add("flex");
+    }
+
+
+    window.closeConfirmModal =
+        function() {
+
+            if (isProcessing) return;
+
+            const modal =
+                document.getElementById(
+                    "confirm-modal"
+                );
+
+            modal.classList.add("hidden");
+            modal.classList.remove("flex");
+        };
+
+
+    /* =========================================================
+       CONFIRM WITHDRAWAL
+    ========================================================= */
+
+    window.confirmWithdrawal =
+        async function() {
+
+            if (isProcessing) return;
+
+            if (!currentUser) {
+
+                showToast(
+                    "লগইন করা নেই!",
+                    "error"
+                );
+
+                return;
+            }
+
+
+            const amount =
+                Number(selectedAmount || 0);
+
+
+            const number =
+                cleanNumber(
+                    document.getElementById(
+                        "wallet-number"
+                    ).value
+                );
+
+
+            if (
+                amount < 50 ||
+                amount > 100000
+            ) {
+
+                showToast(
+                    "Withdrawal amount সঠিক নয়।",
+                    "warning"
+                );
+
+                return;
+            }
+
+
+            if (!validateWallet(true)) {
+
+                closeConfirmModal();
+
+                return;
+            }
+
+
+            const fee =
+                calculateFee(amount);
+
+            const total =
+                amount + fee;
+
+            const receive =
+                amount;
+
+
+            /*
+                PROCESSING STATE
+            */
+
+            isProcessing = true;
+
+
+            const confirmBtn =
+                document.getElementById(
+                    "confirm-withdraw-btn"
+                );
+
+            const cancelBtn =
+                document.getElementById(
+                    "cancel-confirm-btn"
+                );
+
+            const mainBtn =
+                document.getElementById(
+                    "withdraw-btn"
+                );
+
+
+            confirmBtn.disabled = true;
+            cancelBtn.disabled = true;
+
+            confirmBtn.innerHTML =
+                `<span class="spinner mr-2"></span> Processing...`;
+
+
+            mainBtn.disabled = true;
+
+            mainBtn.innerHTML =
+                `<span class="spinner mr-2"></span> Processing...`;
+
+
+            try {
+
+                const userRef =
+                    doc(
+                        db,
+                        "users",
+                        currentUser.uid
+                    );
+
+
+                const withdrawRef =
+                    doc(
+                        collection(
+                            db,
+                            "withdraws"
+                        )
+                    );
+
+
+                /*
+                    FIRESTORE TRANSACTION
+
+                    User balance update and
+                    withdrawal document creation
+                    happen atomically.
+                */
+
+                await runTransaction(
+                    db,
+                    async (transaction) => {
+
+                        /*
+                            READ USER BALANCE
+                        */
+
+                        const userSnap =
+                            await transaction.get(
+                                userRef
+                            );
+
+
+                        if (!userSnap.exists()) {
+
+                            throw new Error(
+                                "USER_NOT_FOUND"
+                            );
+                        }
+
+
+                        const latestBalance =
+                            Number(
+                                userSnap.data().balance || 0
+                            );
+
+
+                        /*
+                            CHECK PENDING AGAIN
+                            INSIDE TRANSACTION
+                        */
+
+                        const pendingQuery =
+                            query(
+                                collection(
+                                    db,
+                                    "withdraws"
+                                ),
+                                where(
+                                    "uid",
+                                    "==",
+                                    currentUser.uid
+                                ),
+                                where(
+                                    "status",
+                                    "==",
+                                    "pending"
+                                )
+                            );
+
+
+                        const pendingSnap =
+                            await transaction.get(
+                                pendingQuery
+                            );
+
+
+                        if (!pendingSnap.empty) {
+
+                            throw new Error(
+                                "PENDING_WITHDRAWAL"
+                            );
+                        }
+
+
+                        /*
+                            CHECK LATEST BALANCE
+                        */
+
+                        if (
+                            latestBalance <
+                            total
+                        ) {
+
+                            throw new Error(
+                                "INSUFFICIENT_BALANCE"
+                            );
+                        }
+
+
+                        const newBalance =
+                            latestBalance -
+                            total;
+
+
+                        const timestamp =
+                            Date.now();
+
+
+                        /*
+                            UPDATE BALANCE
+                        */
+
+                        transaction.update(
+                            userRef,
+                            {
+                                balance: newBalance
+                            }
+                        );
+
+
+                        /*
+                            CREATE WITHDRAWAL
+                        */
+
+                        transaction.set(
+                            withdrawRef,
+                            {
+                                uid:
+                                    currentUser.uid,
+
+                                userId:
+                                    currentUser.uid,
+
+                                userEmail:
+                                    currentUser.email || "",
+
+                                username:
+                                    currentUser.displayName ||
+                                    currentUser.email ||
+                                    "User",
+
+                                method:
+                                    selectedChannelName.toUpperCase(),
+
+                                number:
+                                    number,
+
+                                accountNumber:
+                                    number,
+
+                                amount:
+                                    amount,
+
+                                fee:
+                                    fee,
+
+                                receiveAmount:
+                                    receive,
+
+                                totalDeduction:
+                                    total,
+
+                                status:
+                                    "pending",
+
+                                timestamp:
+                                    timestamp,
+
+                                createdAt:
+                                    timestamp
+                            }
+                        );
+
+
+                        /*
+                            Update local balance
+                        */
+
+                        userCurrentBalance =
+                            newBalance;
+                    }
+                );
+
+
+                /*
+                    Update UI instantly
+                */
+
+                updateBalanceUI();
+
+
+                /*
+                    Close confirmation
+                */
+
+                const confirmModal =
+                    document.getElementById(
+                        "confirm-modal"
+                    );
+
+                confirmModal.classList.add(
+                    "hidden"
+                );
+
+                confirmModal.classList.remove(
+                    "flex"
+                );
+
+
+                /*
+                    Reload history without
+                    reloading page.
+                */
+
+                await loadWithdrawalHistory();
+
+
+                /*
+                    Success animation
+                */
+
+                const successModal =
+                    document.getElementById(
+                        "success-modal"
+                    );
+
+                successModal.classList.remove(
+                    "hidden"
+                );
+
+                successModal.classList.add(
+                    "flex"
+                );
+
+
+                showToast(
+                    "Withdrawal request সফলভাবে জমা হয়েছে!",
+                    "success"
+                );
+
+
+            } catch (error) {
+
+                console.error(
+                    "Withdrawal error:",
+                    error
+                );
+
+
+                if (
+                    error.message ===
+                    "PENDING_WITHDRAWAL"
+                ) {
+
+                    await loadWithdrawalHistory();
+
+                    showToast(
+                        "আপনার একটি withdrawal request বর্তমানে pending আছে।",
+                        "warning"
+                    );
+
+                } else if (
+                    error.message ===
+                    "INSUFFICIENT_BALANCE"
+                ) {
+
+                    await loadUserBalance();
+
+                    showToast(
+                        `Fee সহ ${money(total)} balance প্রয়োজন।`,
+                        "error"
+                    );
+
+                } else if (
+                    error.message ===
+                    "USER_NOT_FOUND"
+                ) {
+
+                    showToast(
+                        "User account পাওয়া যায়নি।",
+                        "error"
+                    );
+
+                } else {
+
+                    showToast(
+                        "Withdrawal failed। আবার চেষ্টা করুন।",
+                        "error"
+                    );
+                }
+
+            } finally {
+
+                isProcessing = false;
+
+                confirmBtn.disabled = false;
+                cancelBtn.disabled = false;
+
+                confirmBtn.innerText =
+                    "Confirm";
+
+                /*
+                    Pending state অনুযায়ী
+                    main button update হবে।
+                */
+
+                updatePendingUI();
+            }
+        };
+
+
+    /* =========================================================
+       SUCCESS MODAL
+    ========================================================= */
+
+    window.closeSuccessModal =
+        function() {
+
+            const modal =
+                document.getElementById(
+                    "success-modal"
+                );
+
+            modal.classList.add("hidden");
+            modal.classList.remove("flex");
+        };
+
+
+    /* =========================================================
+       ESCAPE MODAL WITH BACKDROP
+    ========================================================= */
+
+    document
+        .getElementById("confirm-modal")
+        .addEventListener(
+            "click",
+            function(e) {
+
+                if (
+                    e.target === this &&
+                    !isProcessing
+                ) {
+                    closeConfirmModal();
+                }
+            }
+        );
+
+
+    document
+        .getElementById("success-modal")
+        .addEventListener(
+            "click",
+            function(e) {
+
+                if (e.target === this) {
+                    closeSuccessModal();
+                }
+            }
+        );
+
+
+    /* =========================================================
+       INITIAL UI
+    ========================================================= */
+
+    updateAmountSummary();
+
+</script>
+
 </body>
 </html>
