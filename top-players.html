@@ -1,129 +1,2155 @@
 <!DOCTYPE html>
 <html lang="bn">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aura Skill - Top Players</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&display=swap" rel="stylesheet">
-    <style>
-        body { font-family: 'Hind Siliguri', sans-serif; background-color: #050811; color: #f8fafc; }
-        ::-webkit-scrollbar { width: 5px; }
-        ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 10px; }
-        .glass-card { background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(12px); border: 1px solid rgba(30, 41, 59, 0.9); }
-        #toast-container { position: fixed; top: 20px; right: 20px; z-index: 9999; display: flex; flex-direction: column; gap: 10px; }
-        .toast { background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(12px); border-left: 4px solid #3b82f6; color: #fff; padding: 12px 20px; border-radius: 12px; box-shadow: 0 10px 25px -5px rgba(0,0,0,.5); font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 10px; animation: slideIn .3s ease, fadeOut .3s ease 2.7s forwards; }
-        .toast.error { border-left-color: #ef4444; }
-        @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
-        @keyframes fadeOut { from { opacity: 1; } to { opacity: 0; transform: translateY(-10px); } }
-    </style>
-</head>
-<body class="min-h-screen flex flex-col pb-28 overflow-x-hidden">
-<div id="toast-container"></div>
-<div id="app-loader" class="fixed inset-0 z-50 flex flex-col items-center justify-center bg-[#050811] space-y-4">
-    <div class="w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
-    <p class="text-xs tracking-widest text-slate-400 font-semibold uppercase">Loading...</p>
-</div>
-<header class="bg-[#0b0f1a]/90 backdrop-blur-md px-4 py-3 sticky top-0 z-30 flex justify-between items-center border-b border-slate-900 shadow-md">
-    <div class="flex items-center space-x-2">
-        <a href="profile.html" class="bg-slate-800 text-slate-300 hover:text-white px-2.5 py-1.5 rounded-xl text-xs font-bold transition mr-1"><i class="fa-solid fa-arrow-left"></i></a>
-        <div class="text-xs font-black tracking-wider text-blue-400 uppercase">Top Players</div>
-    </div>
-    <div onclick="window.location.href='wallet.html'" class="cursor-pointer bg-[#131b2e] border border-slate-800 text-blue-400 px-2.5 py-1.5 rounded-xl text-xs font-semibold flex items-center space-x-1 shadow">
-        <i class="fa-solid fa-wallet text-[10px]"></i><span> <span id="wallet-balance">0</span></span>
-    </div>
-</header>
-<main class="max-w-md mx-auto px-4 py-4 flex-grow w-full space-y-4">
-    <div class="glass-card rounded-2xl p-4 flex items-center justify-between border border-blue-500/30 bg-gradient-to-r from-blue-950/40 to-indigo-950/40 shadow-lg">
-        <div class="flex items-center space-x-3">
-            <div id="my-rank-badge" class="w-12 h-12 rounded-xl bg-blue-600/20 border border-blue-500/40 flex items-center justify-center text-blue-400 font-black text-sm">#-</div>
-            <div><span class="text-[10px] text-slate-400 block font-semibold uppercase tracking-wider">Your Position</span><h4 id="my-name-display" class="text-xs font-bold text-white">Loading...</h4></div>
-        </div>
-        <div class="text-right">
-            <span class="text-[10px] text-slate-400 block font-semibold uppercase tracking-wider">Tournament & Refer Win</span>
-            <span class="text-xs font-extrabold text-amber-400">Won balance <span id="my-earnings-display">0</span></span>
-        </div>
-    </div>
-    <div id="podium-section" class="grid grid-cols-3 gap-2 pt-2 text-center" style="display:none;">
-        <div id="podium-2" class="glass-card rounded-2xl p-3 flex flex-col items-center justify-end space-y-1 border border-slate-800 mt-4">
-            <div class="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center text-slate-300 font-bold text-xs"><i class="fa-solid fa-medal text-slate-400"></i></div>
-            <h5 id="p2-name" class="text-[11px] font-bold text-white truncate w-full">-</h5>
-            <span class="text-[10px] text-amber-400 font-extrabold">Won balance <span id="p2-earnings">0</span></span>
-            <span class="text-[9px] text-slate-500 font-bold bg-slate-900 px-2 py-0.5 rounded">#2</span>
-        </div>
-        <div id="podium-1" class="glass-card rounded-2xl p-3 flex flex-col items-center justify-end space-y-1 border border-amber-500/40 bg-amber-500/5 shadow-amber-500/10 shadow-lg">
-            <div class="w-10 h-10 rounded-full bg-amber-500/20 flex items-center justify-center text-amber-400 font-bold text-sm"><i class="fa-solid fa-crown"></i></div>
-            <h5 id="p1-name" class="text-xs font-extrabold text-amber-300 truncate w-full">-</h5>
-            <span class="text-[11px] text-amber-400 font-extrabold">Won balance <span id="p1-earnings">0</span></span>
-            <span class="text-[10px] text-amber-300 font-black bg-amber-500/20 px-2.5 py-0.5 rounded-full">#1</span>
-        </div>
-        <div id="podium-3" class="glass-card rounded-2xl p-3 flex flex-col items-center justify-end space-y-1 border border-slate-800 mt-6">
-            <div class="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center text-amber-600 font-bold text-xs"><i class="fa-solid fa-medal text-amber-600"></i></div>
-            <h5 id="p3-name" class="text-[11px] font-bold text-white truncate w-full">-</h5>
-            <span class="text-[10px] text-amber-400 font-extrabold">Won balance <span id="p3-earnings">0</span></span>
-            <span class="text-[9px] text-slate-500 font-bold bg-slate-900 px-2 py-0.5 rounded">#3</span>
-        </div>
-    </div>
-    <div class="space-y-2 pt-2">
-        <h3 class="text-xs font-extrabold tracking-widest text-slate-400 uppercase px-1">All Players</h3>
-        <div id="leaderboard-list" class="space-y-2.5"></div>
-    </div>
-</main>
-<nav class="fixed bottom-0 left-0 right-0 max-w-md mx-auto bg-[#0b0f1a]/95 backdrop-blur-md border-t border-slate-900 px-6 py-2.5 flex justify-around items-center z-40 shadow-2xl">
-    <a href="index.html" class="flex flex-col items-center text-slate-400 hover:text-blue-400 transition space-y-1"><i class="fa-solid fa-house text-base"></i><span class="text-[10px] font-semibold">Home</span></a>
-    <a href="wallet.html" class="flex flex-col items-center text-slate-400 hover:text-blue-400 transition space-y-1"><i class="fa-solid fa-wallet text-base"></i><span class="text-[10px] font-semibold">Wallet</span></a>
-    <a href="profile.html" class="flex flex-col items-center text-slate-400 hover:text-blue-400 transition space-y-1"><i class="fa-solid fa-user text-base"></i><span class="text-[10px] font-semibold">Profile</span></a>
-</nav>
-<script type="module">
-import { auth, db } from "./firebase.js";
-import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-import { doc, getDoc, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-window.showToast=function(message,type='success'){const c=document.getElementById('toast-container'),t=document.createElement('div');t.className=`toast ${type}`;t.innerHTML=`${type==='error'?'<i class="fa-solid fa-circle-exclamation text-rose-400"></i>':'<i class="fa-solid fa-circle-check text-blue-400"></i>'}<span>${message}</span>`;c.appendChild(t);setTimeout(()=>t.remove(),3500);}
-onAuthStateChanged(auth,async user=>{if(!user){window.location.replace('login.html');return;}try{await fetchLeaderboardData(user.uid);}catch(e){console.error(e);}finally{document.getElementById('app-loader').style.display='none';}});
+<title>Aura Skill - Leaderboard</title>
+
+<script src="https://cdn.tailwindcss.com"></script>
+
+<link rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet">
+
+<style>
+
+*{
+    -webkit-tap-highlight-color:transparent;
+    box-sizing:border-box;
+}
+
+html,body{
+    margin:0;
+    padding:0;
+    min-height:100%;
+}
+
+body{
+    font-family:'Hind Siliguri',sans-serif;
+    background:
+        radial-gradient(circle at 50% -10%,rgba(59,130,246,.16),transparent 34%),
+        radial-gradient(circle at 0% 45%,rgba(99,102,241,.08),transparent 30%),
+        radial-gradient(circle at 100% 70%,rgba(168,85,247,.07),transparent 28%),
+        #050811;
+    color:#f8fafc;
+}
+
+::-webkit-scrollbar{
+    width:4px;
+}
+
+::-webkit-scrollbar-thumb{
+    background:#263247;
+    border-radius:20px;
+}
+
+.glass{
+    background:rgba(12,18,32,.76);
+    backdrop-filter:blur(18px);
+    -webkit-backdrop-filter:blur(18px);
+    border:1px solid rgba(255,255,255,.065);
+}
+
+.glass-strong{
+    background:rgba(10,16,29,.9);
+    backdrop-filter:blur(22px);
+    -webkit-backdrop-filter:blur(22px);
+    border:1px solid rgba(255,255,255,.08);
+}
+
+.fade-up{
+    animation:fadeUp .55s ease both;
+}
+
+@keyframes fadeUp{
+    from{
+        opacity:0;
+        transform:translateY(16px);
+    }
+    to{
+        opacity:1;
+        transform:translateY(0);
+    }
+}
+
+.stagger{
+    animation:fadeUp .45s ease both;
+}
+
+.float-crown{
+    animation:floatCrown 2.8s ease-in-out infinite;
+}
+
+@keyframes floatCrown{
+    0%,100%{
+        transform:translateY(0) rotate(-2deg);
+    }
+    50%{
+        transform:translateY(-5px) rotate(2deg);
+    }
+}
+
+.shine{
+    position:relative;
+    overflow:hidden;
+}
+
+.shine::after{
+    content:"";
+    position:absolute;
+    top:-100%;
+    left:-80%;
+    width:45%;
+    height:300%;
+    background:linear-gradient(
+        90deg,
+        transparent,
+        rgba(255,255,255,.09),
+        transparent
+    );
+    transform:rotate(20deg);
+    animation:shineMove 4.5s ease-in-out infinite;
+    pointer-events:none;
+}
+
+@keyframes shineMove{
+    0%,65%{
+        left:-80%;
+    }
+    100%{
+        left:150%;
+    }
+}
+
+.gold-glow{
+    box-shadow:
+        0 0 0 1px rgba(245,158,11,.16),
+        0 12px 45px rgba(245,158,11,.12);
+}
+
+.silver-glow{
+    box-shadow:
+        0 0 0 1px rgba(203,213,225,.12),
+        0 12px 35px rgba(148,163,184,.09);
+}
+
+.bronze-glow{
+    box-shadow:
+        0 0 0 1px rgba(180,83,9,.13),
+        0 12px 35px rgba(180,83,9,.08);
+}
+
+.avatar-ring{
+    padding:2px;
+    border-radius:50%;
+    background:linear-gradient(135deg,#60a5fa,#8b5cf6);
+}
+
+.avatar-img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    border-radius:50%;
+    background:#111827;
+}
+
+.avatar-fallback{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    width:100%;
+    height:100%;
+    border-radius:50%;
+    background:linear-gradient(135deg,#172554,#312e81);
+    color:#93c5fd;
+}
+
+.search-input::placeholder{
+    color:#64748b;
+}
+
+.filter-active{
+    background:linear-gradient(135deg,#2563eb,#4f46e5);
+    color:white;
+    box-shadow:0 7px 20px rgba(37,99,235,.22);
+}
+
+#toast-container{
+    position:fixed;
+    top:18px;
+    left:12px;
+    right:12px;
+    z-index:9999;
+    display:flex;
+    flex-direction:column;
+    align-items:flex-end;
+    gap:9px;
+    pointer-events:none;
+}
+
+.toast{
+    max-width:340px;
+    background:rgba(15,23,42,.96);
+    backdrop-filter:blur(16px);
+    border:1px solid rgba(255,255,255,.08);
+    border-left:3px solid #3b82f6;
+    color:#fff;
+    padding:11px 14px;
+    border-radius:14px;
+    box-shadow:0 15px 40px rgba(0,0,0,.4);
+    font-size:12px;
+    font-weight:600;
+    display:flex;
+    align-items:center;
+    gap:9px;
+    animation:toastIn .3s ease;
+}
+
+.toast.error{
+    border-left-color:#ef4444;
+}
+
+@keyframes toastIn{
+    from{
+        opacity:0;
+        transform:translateY(-10px) scale(.97);
+    }
+    to{
+        opacity:1;
+        transform:translateY(0) scale(1);
+    }
+}
+
+.modal-backdrop{
+    background:rgba(0,0,0,.7);
+    backdrop-filter:blur(8px);
+    -webkit-backdrop-filter:blur(8px);
+}
+
+.modal-box{
+    animation:modalIn .28s ease;
+}
+
+@keyframes modalIn{
+    from{
+        opacity:0;
+        transform:translateY(20px) scale(.96);
+    }
+    to{
+        opacity:1;
+        transform:translateY(0) scale(1);
+    }
+}
+
+.no-scroll{
+    overflow:hidden!important;
+}
+
+.podium-card{
+    min-width:0;
+}
+
+@media(max-width:370px){
+    .podium-name{
+        font-size:9px!important;
+    }
+
+    .podium-money{
+        font-size:9px!important;
+    }
+}
+
+</style>
+</head>
+
+<body class="min-h-screen flex flex-col pb-28 overflow-x-hidden">
+
+<div id="toast-container"></div>
+
+<!-- LOADER -->
+<div id="app-loader"
+     class="fixed inset-0 z-[100] flex flex-col items-center justify-center"
+     style="background:#050811">
+
+    <div class="relative w-14 h-14">
+
+        <div class="absolute inset-0 rounded-full border-2 border-blue-500/20"></div>
+
+        <div class="absolute inset-0 rounded-full border-2 border-transparent border-t-blue-500 animate-spin"></div>
+
+        <div class="absolute inset-3 rounded-full bg-blue-500/10 flex items-center justify-center">
+            <i class="fa-solid fa-trophy text-blue-400 text-sm"></i>
+        </div>
+
+    </div>
+
+    <p class="mt-4 text-[10px] tracking-[.25em] uppercase text-slate-500 font-bold">
+        Loading Leaderboard
+    </p>
+
+</div>
+
+
+<!-- PROFILE SETUP MODAL -->
+<div id="profile-modal"
+     class="hidden fixed inset-0 z-[90] modal-backdrop flex items-end sm:items-center justify-center p-3">
+
+    <div class="modal-box glass-strong rounded-[28px] w-full max-w-md p-5 shadow-2xl">
+
+        <div class="text-center mb-5">
+
+            <div class="mx-auto w-16 h-16 rounded-2xl
+                        bg-gradient-to-br from-blue-500/20 to-purple-500/20
+                        border border-blue-400/20
+                        flex items-center justify-center mb-3">
+
+                <i class="fa-solid fa-user-pen text-blue-400 text-xl"></i>
+
+            </div>
+
+            <h2 class="text-lg font-extrabold text-white">
+                Complete Your Profile
+            </h2>
+
+            <p class="text-[11px] text-slate-400 mt-1 leading-relaxed">
+                Leaderboard-এ সবাই যেন তোমাকে সুন্দরভাবে চিনতে পারে,
+                একটি Show Name ও Avatar সেট করো।
+            </p>
+
+        </div>
+
+
+        <!-- SHOW NAME -->
+        <div class="mb-3">
+
+            <label class="text-[10px] uppercase tracking-wider
+                          text-slate-500 font-bold ml-1">
+                Show Name
+            </label>
+
+            <div class="mt-1.5 relative">
+
+                <i class="fa-solid fa-signature
+                          absolute left-3 top-1/2 -translate-y-1/2
+                          text-slate-500 text-xs"></i>
+
+                <input id="show-name-input"
+                       maxlength="24"
+                       type="text"
+                       placeholder="যে নামে সবাই তোমাকে দেখবে"
+                       class="w-full bg-slate-950/70 border border-slate-800
+                              rounded-xl py-3 pl-9 pr-3
+                              text-xs text-white outline-none
+                              focus:border-blue-500/60 transition">
+
+            </div>
+
+            <p class="text-[9px] text-slate-600 mt-1 ml-1">
+                24 characters maximum
+            </p>
+
+        </div>
+
+
+        <!-- AVATAR -->
+        <div class="mb-4">
+
+            <label class="text-[10px] uppercase tracking-wider
+                          text-slate-500 font-bold ml-1">
+                Avatar URL
+            </label>
+
+            <div class="mt-1.5 relative">
+
+                <i class="fa-solid fa-image
+                          absolute left-3 top-1/2 -translate-y-1/2
+                          text-slate-500 text-xs"></i>
+
+                <input id="avatar-url-input"
+                       type="url"
+                       placeholder="https://example.com/avatar.jpg"
+                       class="w-full bg-slate-950/70 border border-slate-800
+                              rounded-xl py-3 pl-9 pr-3
+                              text-xs text-white outline-none
+                              focus:border-blue-500/60 transition">
+
+            </div>
+
+            <p class="text-[9px] text-slate-600 mt-1 ml-1">
+                Avatar image link দিলে এখানে save হবে।
+            </p>
+
+        </div>
+
+
+        <button id="save-profile-btn"
+                onclick="saveLeaderboardProfile()"
+                class="w-full py-3.5 rounded-xl
+                       bg-gradient-to-r from-blue-600 to-indigo-600
+                       text-white text-xs font-extrabold
+                       shadow-lg shadow-blue-900/20
+                       active:scale-[.98] transition">
+
+            <i class="fa-solid fa-check mr-1"></i>
+            Update Profile
+
+        </button>
+
+
+        <button onclick="closeProfileModal()"
+                class="w-full py-3 mt-2 rounded-xl
+                       bg-slate-900/70 border border-slate-800
+                       text-slate-400 text-xs font-bold
+                       active:scale-[.98] transition">
+
+            Skip Now
+
+        </button>
+
+    </div>
+
+</div>
+
+
+<!-- HEADER -->
+<header class="sticky top-0 z-40
+              bg-[#070c16]/80 backdrop-blur-xl
+              border-b border-white/[.05]">
+
+    <div class="max-w-md mx-auto px-4 py-3.5
+                flex items-center justify-between">
+
+        <div class="flex items-center gap-2.5">
+
+            <a href="profile.html"
+               class="w-9 h-9 rounded-xl
+                      bg-white/[.04]
+                      border border-white/[.06]
+                      flex items-center justify-center
+                      text-slate-400
+                      hover:text-white transition">
+
+                <i class="fa-solid fa-arrow-left text-xs"></i>
+
+            </a>
+
+            <div>
+
+                <div class="flex items-center gap-1.5">
+
+                    <i class="fa-solid fa-trophy text-amber-400 text-[11px]"></i>
+
+                    <span class="text-xs font-extrabold
+                                 tracking-[.12em] text-white">
+                        LEADERBOARD
+                    </span>
+
+                </div>
+
+                <p class="text-[9px] text-slate-500 font-medium mt-0.5">
+                    Top earning players
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <!-- WALLET -->
+        <button onclick="window.location.href='wallet.html'"
+                class="glass rounded-xl px-3 py-2
+                       flex items-center gap-2
+                       active:scale-95 transition">
+
+            <div class="w-6 h-6 rounded-lg
+                        bg-blue-500/10
+                        flex items-center justify-center">
+
+                <i class="fa-solid fa-wallet text-blue-400 text-[10px]"></i>
+
+            </div>
+
+            <div class="text-right">
+
+                <span class="block text-[8px] text-slate-500 uppercase font-bold">
+                    Balance
+                </span>
+
+                <span id="wallet-balance"
+                      class="block text-[11px] text-white font-extrabold">
+                    ৳0
+                </span>
+
+            </div>
+
+        </button>
+
+    </div>
+
+</header>
+
+
+<main class="max-w-md mx-auto px-4 py-5 w-full flex-grow">
+
+
+    <!-- YOUR POSITION -->
+    <section id="your-position"
+             class="glass shine rounded-[24px] p-4
+                    border border-blue-500/15
+                    relative overflow-hidden
+                    fade-up">
+
+        <div class="absolute -right-12 -top-12
+                    w-32 h-32 rounded-full
+                    bg-blue-600/10 blur-3xl"></div>
+
+        <div class="flex items-center justify-between relative z-10">
+
+            <div class="flex items-center gap-3">
+
+                <div id="my-avatar-wrap"
+                     class="avatar-ring w-12 h-12 shrink-0">
+
+                    <div class="avatar-fallback">
+                        <i class="fa-solid fa-user text-sm"></i>
+                    </div>
+
+                </div>
+
+                <div class="min-w-0">
+
+                    <span class="block text-[9px]
+                                 tracking-[.16em]
+                                 uppercase
+                                 text-slate-500
+                                 font-extrabold">
+                        YOUR RANK
+                    </span>
+
+                    <div class="flex items-center gap-2 mt-0.5">
+
+                        <strong id="my-rank"
+                                class="text-lg font-black text-blue-400">
+                            #-
+                        </strong>
+
+                        <h3 id="my-name"
+                            class="text-xs font-extrabold
+                                   text-white truncate max-w-[125px]">
+                            Loading...
+                        </h3>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="text-right">
+
+                <span class="block text-[8px]
+                             text-slate-500
+                             uppercase
+                             tracking-wider
+                             font-bold">
+                    TOTAL EARNINGS
+                </span>
+
+                <strong id="my-earnings"
+                        class="block text-base
+                               text-amber-400
+                               font-black mt-0.5">
+                    ৳0
+                </strong>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- FILTER -->
+    <section class="mt-4">
+
+        <div class="glass rounded-2xl p-1.5 flex gap-1">
+
+            <button id="filter-all"
+                    onclick="setFilter('all')"
+                    class="filter-active flex-1 py-2.5 rounded-xl
+                           text-[10px] font-extrabold transition">
+                All Time
+            </button>
+
+            <button id="filter-monthly"
+                    onclick="setFilter('monthly')"
+                    class="flex-1 py-2.5 rounded-xl
+                           text-[10px] font-extrabold
+                           text-slate-500 transition">
+                Monthly
+            </button>
+
+            <button id="filter-weekly"
+                    onclick="setFilter('weekly')"
+                    class="flex-1 py-2.5 rounded-xl
+                           text-[10px] font-extrabold
+                           text-slate-500 transition">
+                Weekly
+            </button>
+
+        </div>
+
+    </section>
+
+
+    <!-- SEARCH -->
+    <section class="mt-3">
+
+        <div class="glass rounded-xl px-3.5 py-3 flex items-center gap-2.5">
+
+            <i class="fa-solid fa-magnifying-glass
+                      text-slate-500 text-xs"></i>
+
+            <input id="player-search"
+                   oninput="filterPlayers()"
+                   type="text"
+                   placeholder="Search player..."
+                   class="search-input bg-transparent
+                          outline-none border-none
+                          text-xs text-white
+                          flex-1 min-w-0">
+
+            <button onclick="clearSearch()"
+                    id="clear-search"
+                    class="hidden text-slate-600 hover:text-white">
+
+                <i class="fa-solid fa-xmark text-xs"></i>
+
+            </button>
+
+        </div>
+
+    </section>
+
+
+    <!-- PODIUM -->
+    <section id="podium-section"
+             class="mt-6">
+
+        <div class="flex items-end justify-center gap-2">
+
+            <!-- 2ND -->
+            <div id="podium-2"
+                 class="podium-card glass silver-glow
+                        rounded-[22px] p-3
+                        w-[31%]
+                        text-center
+                        mt-8
+                        stagger">
+
+                <div class="flex justify-center">
+
+                    <div id="p2-avatar"
+                         class="avatar-ring w-12 h-12">
+
+                        <div class="avatar-fallback">
+                            <i class="fa-solid fa-user text-xs"></i>
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="mt-2">
+
+                    <div class="flex justify-center mb-1">
+                        <span class="px-2 py-0.5 rounded-full
+                                     bg-slate-300/10
+                                     text-slate-300
+                                     text-[8px] font-black">
+                            #2
+                        </span>
+                    </div>
+
+                    <h4 id="p2-name"
+                        class="podium-name text-[10px]
+                               font-extrabold text-white
+                               truncate">
+                        -
+                    </h4>
+
+                    <p class="podium-money mt-1
+                              text-[9px]
+                              text-slate-400
+                              font-semibold">
+                        <span id="p2-earnings">৳0</span>
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <!-- 1ST -->
+            <div id="podium-1"
+                 class="podium-card glass gold-glow shine
+                        rounded-[24px] p-3.5
+                        w-[38%]
+                        text-center
+                        relative
+                        stagger">
+
+                <div class="absolute -top-4 left-1/2
+                            -translate-x-1/2
+                            float-crown">
+
+                    <i class="fa-solid fa-crown
+                              text-amber-400
+                              text-xl
+                              drop-shadow-[0_0_10px_rgba(245,158,11,.55)]">
+                    </i>
+
+                </div>
+
+
+                <div class="flex justify-center">
+
+                    <div id="p1-avatar"
+                         class="avatar-ring w-16 h-16"
+                         style="background:linear-gradient(135deg,#f59e0b,#fde68a,#f59e0b)">
+
+                        <div class="avatar-fallback">
+                            <i class="fa-solid fa-user text-sm"></i>
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="mt-2">
+
+                    <div class="flex justify-center mb-1">
+
+                        <span class="px-2.5 py-0.5 rounded-full
+                                     bg-amber-500/15
+                                     border border-amber-400/15
+                                     text-amber-300
+                                     text-[8px]
+                                     font-black">
+                            #1 CHAMPION
+                        </span>
+
+                    </div>
+
+                    <h4 id="p1-name"
+                        class="podium-name text-[11px]
+                               font-black text-amber-300
+                               truncate">
+                        -
+                    </h4>
+
+                    <p class="podium-money mt-1
+                              text-[10px]
+                              text-amber-400
+                              font-extrabold">
+                        <span id="p1-earnings">৳0</span>
+                    </p>
+
+                    <span class="block text-[7px]
+                                 uppercase
+                                 tracking-wider
+                                 text-slate-600
+                                 font-bold mt-0.5">
+                        Total Earnings
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <!-- 3RD -->
+            <div id="podium-3"
+                 class="podium-card glass bronze-glow
+                        rounded-[22px] p-3
+                        w-[31%]
+                        text-center
+                        mt-12
+                        stagger">
+
+                <div class="flex justify-center">
+
+                    <div id="p3-avatar"
+                         class="avatar-ring w-12 h-12"
+                         style="background:linear-gradient(135deg,#92400e,#d97706)">
+
+                        <div class="avatar-fallback">
+                            <i class="fa-solid fa-user text-xs"></i>
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="mt-2">
+
+                    <div class="flex justify-center mb-1">
+
+                        <span class="px-2 py-0.5 rounded-full
+                                     bg-orange-500/10
+                                     text-orange-400
+                                     text-[8px] font-black">
+                            #3
+                        </span>
+
+                    </div>
+
+                    <h4 id="p3-name"
+                        class="podium-name text-[10px]
+                               font-extrabold text-white
+                               truncate">
+                        -
+                    </h4>
+
+                    <p class="podium-money mt-1
+                              text-[9px]
+                              text-slate-400
+                              font-semibold">
+                        <span id="p3-earnings">৳0</span>
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ALL PLAYERS -->
+    <section class="mt-7">
+
+        <div class="flex items-center justify-between mb-2.5 px-1">
+
+            <div>
+
+                <h3 class="text-[11px]
+                           font-black
+                           tracking-[.15em]
+                           text-white
+                           uppercase">
+                    All Players
+                </h3>
+
+                <p class="text-[8px] text-slate-600 mt-0.5">
+                    Ranked by total earnings
+                </p>
+
+            </div>
+
+            <span id="player-count"
+                  class="text-[9px]
+                         text-slate-600
+                         font-bold">
+                0 Players
+            </span>
+
+        </div>
+
+
+        <div id="leaderboard-list"
+             class="space-y-2.5">
+        </div>
+
+    </section>
+
+</main>
+
+
+<!-- BOTTOM NAV -->
+<nav class="fixed bottom-0 left-0 right-0
+           max-w-md mx-auto
+           bg-[#070c16]/90
+           backdrop-blur-xl
+           border-t border-white/[.05]
+           px-6 py-2.5
+           flex justify-around
+           items-center
+           z-40">
+
+    <a href="index.html"
+       class="flex flex-col items-center
+              text-slate-500
+              hover:text-blue-400
+              transition gap-1">
+
+        <i class="fa-solid fa-house text-sm"></i>
+
+        <span class="text-[9px] font-semibold">
+            Home
+        </span>
+
+    </a>
+
+
+    <a href="wallet.html"
+       class="flex flex-col items-center
+              text-slate-500
+              hover:text-blue-400
+              transition gap-1">
+
+        <i class="fa-solid fa-wallet text-sm"></i>
+
+        <span class="text-[9px] font-semibold">
+            Wallet
+        </span>
+
+    </a>
+
+
+    <a href="profile.html"
+       class="flex flex-col items-center
+              text-blue-400
+              transition gap-1">
+
+        <i class="fa-solid fa-user text-sm"></i>
+
+        <span class="text-[9px] font-semibold">
+            Profile
+        </span>
+
+    </a>
+
+</nav>
+
+
+<script type="module">
+
+import { auth, db } from "./firebase.js";
+
+import {
+    onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+
+import {
+    doc,
+    getDoc,
+    collection,
+    getDocs,
+    updateDoc
+} from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+
+let currentUser = null;
+let allPlayers = [];
+let currentFilter = "all";
+let currentPayouts = [];
+let currentUserData = null;
+
+
+/* =========================
+   TOAST
+========================= */
+
+window.showToast = function(message,type="success"){
+
+    const container =
+        document.getElementById("toast-container");
+
+    const toast =
+        document.createElement("div");
+
+    toast.className =
+        `toast ${type}`;
+
+    toast.innerHTML = `
+        <i class="fa-solid ${
+            type==="error"
+            ? "fa-circle-exclamation text-rose-400"
+            : "fa-circle-check text-blue-400"
+        }"></i>
+
+        <span>${escapeHtml(message)}</span>
+    `;
+
+    container.appendChild(toast);
+
+    setTimeout(()=>{
+        toast.remove();
+    },3500);
+};
+
+
+/* =========================
+   ESCAPE HTML
+========================= */
+
+function escapeHtml(value){
+
+    return String(value ?? "")
+        .replace(/&/g,"&amp;")
+        .replace(/</g,"&lt;")
+        .replace(/>/g,"&gt;")
+        .replace(/"/g,"&quot;")
+        .replace(/'/g,"&#039;");
+}
+
+
+/* =========================
+   MONEY
+========================= */
+
+function money(value){
+
+    const number =
+        Number(value || 0);
+
+    return "৳" +
+        number.toLocaleString("en-BD",{
+            maximumFractionDigits:2
+        });
+}
+
+
+/* =========================
+   AVATAR
+========================= */
+
+function getAvatar(data){
+
+    return (
+        data?.avatar ||
+        data?.photoURL ||
+        data?.photoUrl ||
+        data?.profileImage ||
+        data?.image ||
+        ""
+    );
+}
+
+
+/* =========================
+   SHOW NAME
+========================= */
+
+function getShowName(data){
+
+    return (
+        data?.showName ||
+        data?.displayName ||
+        data?.username ||
+        data?.name ||
+        data?.fullName ||
+        "User"
+    );
+}
+
+
+/* =========================
+   AVATAR HTML
+========================= */
+
+function avatarHTML(url,small=false){
+
+    const size =
+        small ? "w-10 h-10" : "w-12 h-12";
+
+    if(url){
+
+        return `
+            <div class="avatar-ring ${size} shrink-0">
+                <img
+                    src="${escapeHtml(url)}"
+                    class="avatar-img"
+                    alt="Avatar"
+                    onerror="this.parentElement.innerHTML='<div class=&quot;avatar-fallback&quot;><i class=&quot;fa-solid fa-user text-xs&quot;></i></div>'"
+                >
+            </div>
+        `;
+
+    }
+
+    return `
+        <div class="avatar-ring ${size} shrink-0">
+            <div class="avatar-fallback">
+                <i class="fa-solid fa-user text-xs"></i>
+            </div>
+        </div>
+    `;
+}
+
+
+/* =========================
+   COUNT UP
+========================= */
+
+function countUp(element,target){
+
+    target = Number(target || 0);
+
+    const duration = 700;
+    const start = performance.now();
+
+    function animate(now){
+
+        const progress =
+            Math.min((now-start)/duration,1);
+
+        const eased =
+            1-Math.pow(1-progress,3);
+
+        const value =
+            target*eased;
+
+        element.innerText =
+            money(value);
+
+        if(progress<1){
+
+            requestAnimationFrame(animate);
+
+        }else{
+
+            element.innerText =
+                money(target);
+        }
+    }
+
+    requestAnimationFrame(animate);
+}
+
+
+/* =========================
+   AUTH
+========================= */
+
+onAuthStateChanged(auth,async user=>{
+
+    if(!user){
+
+        window.location.replace("login.html");
+        return;
+    }
+
+    currentUser = user;
+
+    try{
+
+        await fetchLeaderboardData(user.uid);
+
+    }catch(error){
+
+        console.error(error);
+
+        showToast(
+            "Leaderboard load korte somoshya hoyese!",
+            "error"
+        );
+
+    }finally{
+
+        document.getElementById("app-loader").style.display="none";
+
+    }
+
+});
+
+
+/* =========================
+   LOAD DATA
+========================= */
 
 async function fetchLeaderboardData(uid){
-    try{
-        const [usersSnap,payoutSnap,userDocSnap]=await Promise.all([
-            getDocs(collection(db,"users")),
-            getDocs(collection(db,"tournamentPayouts")),
-            getDoc(doc(db,"users",uid))
-        ]);
-        const payoutTotals={};
-        payoutSnap.forEach(d=>{const x=d.data()||{},id=x.userId||x.uid||'';if(id)payoutTotals[id]=(payoutTotals[id]||0)+Number(x.amount||0);});
-        const usersList=[];
-        usersSnap.forEach(d=>{
-            const data=d.data()||{};
-            const referral=Number(data.referralBonusTotal||data.referBonus||0);
-            const storedTournament=Number(data.totalEarnings||data.earnings||data.winnings||0);
-            const paidTournament=payoutTotals[d.id]||0;
-            const totalEarned=paidTournament>0?paidTournament+referral:storedTournament+referral;
-            usersList.push({uid:d.id,name:data.name||data.fullName||data.username||'User',earnings:totalEarned});
+
+    const [
+        usersSnap,
+        payoutSnap,
+        userDocSnap
+    ] = await Promise.all([
+
+        getDocs(collection(db,"users")),
+
+        getDocs(collection(db,"tournamentPayouts")),
+
+        getDoc(doc(db,"users",uid))
+
+    ]);
+
+
+    currentPayouts = [];
+
+    payoutSnap.forEach(d=>{
+
+        const data = d.data() || {};
+
+        currentPayouts.push({
+            id:d.id,
+            ...data
         });
-        usersList.sort((a,b)=>b.earnings-a.earnings);
-        let myRank="-",myEarnings=0,myName="User";
-        usersList.forEach((u,i)=>{if(u.uid===uid){myRank=`#${i+1}`;myEarnings=u.earnings;myName=u.name;}});
-        document.getElementById('my-rank-badge').innerText=myRank;
-        document.getElementById('my-name-display').innerText=myName;
-        document.getElementById('my-earnings-display').innerText=myEarnings;
-        if(userDocSnap.exists())document.getElementById('wallet-balance').innerText=Number(userDocSnap.data().balance||0);
-        renderPodiumAndList(usersList,uid);
-    }catch(e){console.error(e);showToast("Leaderboard load korte somoshya hoyese!","error");}
-}
-function renderPodiumAndList(users,currentUid){
-    const listEl=document.getElementById('leaderboard-list'),podiumEl=document.getElementById('podium-section');listEl.innerHTML="";
-    if(!users.length){listEl.innerHTML=`<div class="text-center py-12 text-slate-500 text-xs">Kono player pawa jayni</div>`;return;}
-    podiumEl.style.display='grid';
-    document.getElementById('p1-name').innerText=users[0].name;document.getElementById('p1-earnings').innerText=users[0].earnings;
-    if(users.length>=2){document.getElementById('podium-2').style.display='flex';document.getElementById('p2-name').innerText=users[1].name;document.getElementById('p2-earnings').innerText=users[1].earnings;}else document.getElementById('podium-2').style.display='none';
-    if(users.length>=3){document.getElementById('podium-3').style.display='flex';document.getElementById('p3-name').innerText=users[2].name;document.getElementById('p3-earnings').innerText=users[2].earnings;}else document.getElementById('podium-3').style.display='none';
-    users.forEach((u,index)=>{
-        const rank=index+1,isMe=u.uid===currentUid,cardBg=isMe?'bg-blue-600/10 border-blue-500/50':'glass-card border-slate-800';
-        let icon=`<span class="text-xs font-bold text-slate-400">#${rank}</span>`;if(rank===1)icon='<i class="fa-solid fa-crown text-amber-400 text-xs"></i>';else if(rank===2)icon='<i class="fa-solid fa-medal text-slate-300 text-xs"></i>';else if(rank===3)icon='<i class="fa-solid fa-medal text-amber-600 text-xs"></i>';
-        listEl.innerHTML+=`<div class="${cardBg} rounded-2xl p-3.5 flex items-center justify-between shadow-md border transition"><div class="flex items-center space-x-3.5"><div class="w-8 h-8 rounded-xl bg-slate-900 border border-slate-800 flex items-center justify-center font-bold">${icon}</div><div><h4 class="text-xs font-bold text-white">${u.name} ${isMe?'<span class="text-[9px] text-blue-400 font-normal">(You)</span>':''}</h4><span class="text-[10px] text-slate-500 font-semibold">Rank #${rank}</span></div></div><div class="text-right"><span class="text-xs font-extrabold text-amber-400">Won balance ${u.earnings}</span></div></div>`;
+
     });
+
+
+    currentUserData =
+        userDocSnap.exists()
+        ? userDocSnap.data()
+        : {};
+
+
+    const payoutTotals = {};
+
+
+    currentPayouts.forEach(x=>{
+
+        const id =
+            x.userId ||
+            x.uid ||
+            "";
+
+        if(!id) return;
+
+        payoutTotals[id] =
+            (payoutTotals[id] || 0)
+            + Number(x.amount || 0);
+
+    });
+
+
+    allPlayers = [];
+
+
+    usersSnap.forEach(d=>{
+
+        const data =
+            d.data() || {};
+
+        const referral =
+            Number(
+                data.referralBonusTotal ||
+                data.referBonus ||
+                0
+            );
+
+
+        const storedTournament =
+            Number(
+                data.totalEarnings ||
+                data.earnings ||
+                data.winnings ||
+                0
+            );
+
+
+        const paidTournament =
+            payoutTotals[d.id] || 0;
+
+
+        const totalEarned =
+            paidTournament > 0
+            ? paidTournament + referral
+            : storedTournament + referral;
+
+
+        allPlayers.push({
+
+            uid:d.id,
+
+            name:getShowName(data),
+
+            username:
+                data.username ||
+                data.name ||
+                data.fullName ||
+                "User",
+
+            avatar:getAvatar(data),
+
+            earnings:totalEarned,
+
+            raw:data
+
+        });
+
+    });
+
+
+    allPlayers.sort(
+        (a,b)=>b.earnings-a.earnings
+    );
+
+
+    /* WALLET */
+
+    document.getElementById("wallet-balance")
+        .innerText =
+        money(currentUserData.balance || 0);
+
+
+    renderLeaderboard();
+
+
+    /* PROFILE PROMPT */
+
+    const showName =
+        currentUserData.showName ||
+        currentUserData.displayName ||
+        "";
+
+    const avatar =
+        getAvatar(currentUserData);
+
+
+    if(!showName || !avatar){
+
+        setTimeout(()=>{
+
+            openProfileModal(
+                showName,
+                avatar
+            );
+
+        },700);
+
+    }
+
 }
+
+
+/* =========================
+   FILTER
+========================= */
+
+window.setFilter = function(filter){
+
+    currentFilter = filter;
+
+    document
+        .querySelectorAll("[id^='filter-']")
+        .forEach(button=>{
+
+            button.classList.remove("filter-active");
+
+            button.classList.add("text-slate-500");
+
+        });
+
+
+    const selected =
+        document.getElementById(
+            "filter-"+filter
+        );
+
+    if(selected){
+
+        selected.classList.add("filter-active");
+
+        selected.classList.remove("text-slate-500");
+
+    }
+
+
+    renderLeaderboard();
+
+};
+
+
+/* =========================
+   FILTER DATA
+========================= */
+
+function getFilteredPlayers(){
+
+    if(currentFilter==="all"){
+
+        return [...allPlayers];
+
+    }
+
+
+    const now = Date.now();
+
+
+    const range =
+        currentFilter==="weekly"
+        ? 7*24*60*60*1000
+        : 30*24*60*60*1000;
+
+
+    const cutoff =
+        now-range;
+
+
+    const totals = {};
+
+
+    currentPayouts.forEach(item=>{
+
+        const uid =
+            item.userId ||
+            item.uid ||
+            "";
+
+        if(!uid) return;
+
+
+        let dateValue =
+            item.createdAt ||
+            item.timestamp ||
+            item.date ||
+            item.created_at;
+
+
+        let time = 0;
+
+
+        if(dateValue?.toMillis){
+
+            time =
+                dateValue.toMillis();
+
+        }else if(
+            dateValue?.seconds
+        ){
+
+            time =
+                Number(dateValue.seconds)*1000;
+
+        }else{
+
+            time =
+                new Date(dateValue).getTime();
+
+        }
+
+
+        if(!time || time<cutoff)
+            return;
+
+
+        totals[uid] =
+            (totals[uid] || 0)
+            + Number(item.amount || 0);
+
+    });
+
+
+    const filtered =
+        allPlayers.map(player=>({
+
+            ...player,
+
+            earnings:
+                totals[player.uid] || 0
+
+        }));
+
+
+    filtered.sort(
+        (a,b)=>b.earnings-a.earnings
+    );
+
+
+    return filtered;
+
+}
+
+
+/* =========================
+   RENDER
+========================= */
+
+function renderLeaderboard(){
+
+    const search =
+        document.getElementById(
+            "player-search"
+        )?.value
+        ?.trim()
+        ?.toLowerCase() || "";
+
+
+    let players =
+        getFilteredPlayers();
+
+
+    if(search){
+
+        players =
+            players.filter(player=>
+
+                player.name
+                    .toLowerCase()
+                    .includes(search)
+
+                ||
+
+                player.username
+                    .toLowerCase()
+                    .includes(search)
+
+            );
+
+    }
+
+
+    renderMyPosition(players);
+
+    renderPodium(players);
+
+    renderList(players);
+
+}
+
+
+/* =========================
+   MY POSITION
+========================= */
+
+function renderMyPosition(players){
+
+    let me =
+        players.find(
+            player =>
+            player.uid === currentUser.uid
+        );
+
+
+    /*
+      Search/filter করলে user না থাকলেও
+      allPlayers থেকে নিজের data নেওয়া হবে.
+    */
+
+    if(!me){
+
+        me =
+            allPlayers.find(
+                player =>
+                player.uid === currentUser.uid
+            );
+
+    }
+
+
+    if(!me) return;
+
+
+    const original =
+        getFilteredPlayers();
+
+
+    const index =
+        original.findIndex(
+            player =>
+            player.uid === currentUser.uid
+        );
+
+
+    const rank =
+        index>=0
+        ? "#"+(index+1)
+        : "#-";
+
+
+    document.getElementById("my-rank")
+        .innerText = rank;
+
+
+    document.getElementById("my-name")
+        .innerText = me.name;
+
+
+    countUp(
+        document.getElementById("my-earnings"),
+        me.earnings
+    );
+
+
+    document.getElementById("my-avatar-wrap")
+        .innerHTML =
+        avatarHTML(
+            me.avatar
+        );
+
+}
+
+
+/* =========================
+   PODIUM
+========================= */
+
+function renderPodium(players){
+
+    const podium =
+        players.slice(0,3);
+
+
+    if(!podium.length){
+
+        document.getElementById(
+            "podium-section"
+        ).style.display="none";
+
+        return;
+
+    }
+
+
+    document.getElementById(
+        "podium-section"
+    ).style.display="block";
+
+
+    /* FIRST */
+
+    if(podium[0]){
+
+        document.getElementById("p1-name")
+            .innerText =
+            podium[0].name;
+
+        countUp(
+            document.getElementById("p1-earnings"),
+            podium[0].earnings
+        );
+
+
+        document.getElementById("p1-avatar")
+            .innerHTML =
+            podium[0].avatar
+            ? `<img src="${escapeHtml(podium[0].avatar)}"
+                    class="avatar-img"
+                    alt="Avatar"
+                    onerror="this.parentElement.innerHTML='<div class=&quot;avatar-fallback&quot;><i class=&quot;fa-solid fa-user text-sm&quot;></i></div>'">`
+            : `<div class="avatar-fallback">
+                    <i class="fa-solid fa-user text-sm"></i>
+               </div>`;
+
+    }
+
+
+    /* SECOND */
+
+    if(podium[1]){
+
+        document.getElementById("p2-name")
+            .innerText =
+            podium[1].name;
+
+        countUp(
+            document.getElementById("p2-earnings"),
+            podium[1].earnings
+        );
+
+
+        document.getElementById("p2-avatar")
+            .innerHTML =
+            podium[1].avatar
+            ? `<img src="${escapeHtml(podium[1].avatar)}"
+                    class="avatar-img"
+                    alt="Avatar"
+                    onerror="this.parentElement.innerHTML='<div class=&quot;avatar-fallback&quot;><i class=&quot;fa-solid fa-user text-xs&quot;></i></div>'">`
+            : `<div class="avatar-fallback">
+                    <i class="fa-solid fa-user text-xs"></i>
+               </div>`;
+
+    }
+
+
+    /* THIRD */
+
+    if(podium[2]){
+
+        document.getElementById("p3-name")
+            .innerText =
+            podium[2].name;
+
+        countUp(
+            document.getElementById("p3-earnings"),
+            podium[2].earnings
+        );
+
+
+        document.getElementById("p3-avatar")
+            .innerHTML =
+            podium[2].avatar
+            ? `<img src="${escapeHtml(podium[2].avatar)}"
+                    class="avatar-img"
+                    alt="Avatar"
+                    onerror="this.parentElement.innerHTML='<div class=&quot;avatar-fallback&quot;><i class=&quot;fa-solid fa-user text-xs&quot;></i></div>'">`
+            : `<div class="avatar-fallback">
+                    <i class="fa-solid fa-user text-xs"></i>
+               </div>`;
+
+    }
+
+}
+
+
+/* =========================
+   PLAYER LIST
+========================= */
+
+function renderList(players){
+
+    const list =
+        document.getElementById(
+            "leaderboard-list"
+        );
+
+
+    list.innerHTML="";
+
+
+    document.getElementById("player-count")
+        .innerText =
+        `${players.length} Players`;
+
+
+    if(!players.length){
+
+        list.innerHTML = `
+
+            <div class="glass rounded-2xl
+                        py-12 text-center">
+
+                <div class="w-12 h-12 rounded-2xl
+                            bg-slate-900
+                            mx-auto flex items-center
+                            justify-center mb-3">
+
+                    <i class="fa-solid fa-user-slash
+                              text-slate-600"></i>
+
+                </div>
+
+                <p class="text-xs
+                          text-slate-500
+                          font-semibold">
+                    No player found
+                </p>
+
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+
+    players.forEach((player,index)=>{
+
+        const rank =
+            allPlayers.findIndex(
+                p=>p.uid===player.uid
+            )+1;
+
+
+        const isMe =
+            player.uid===currentUser.uid;
+
+
+        let rankIcon =
+            `<span class="text-[10px]
+                         font-black
+                         text-slate-500">
+                #${rank}
+             </span>`;
+
+
+        if(rank===1){
+
+            rankIcon =
+                `<i class="fa-solid fa-crown
+                          text-amber-400 text-[10px]"></i>`;
+
+        }else if(rank===2){
+
+            rankIcon =
+                `<i class="fa-solid fa-medal
+                          text-slate-300 text-[10px]"></i>`;
+
+        }else if(rank===3){
+
+            rankIcon =
+                `<i class="fa-solid fa-medal
+                          text-orange-500 text-[10px]"></i>`;
+
+        }
+
+
+        const card =
+            document.createElement("div");
+
+
+        card.className =
+            `glass rounded-2xl p-3
+             flex items-center justify-between
+             border
+             ${isMe
+                ? "border-blue-500/35 bg-blue-500/[.06]"
+                : "border-white/[.05]"
+             }
+             stagger`;
+
+
+        card.style.animationDelay =
+            `${Math.min(index*45,450)}ms`;
+
+
+        card.innerHTML = `
+
+            <div class="flex items-center
+                        gap-3 min-w-0">
+
+                <div class="w-8 h-8 shrink-0
+                            rounded-xl
+                            bg-slate-950/70
+                            border border-white/[.05]
+                            flex items-center
+                            justify-center">
+
+                    ${rankIcon}
+
+                </div>
+
+
+                ${avatarHTML(player.avatar,true)}
+
+
+                <div class="min-w-0">
+
+                    <div class="flex items-center gap-1.5">
+
+                        <h4 class="text-[11px]
+                                   font-extrabold
+                                   text-white
+                                   truncate
+                                   max-w-[130px]">
+
+                            ${escapeHtml(player.name)}
+
+                        </h4>
+
+                        ${
+                            isMe
+                            ? `
+                                <span class="shrink-0
+                                             px-1.5 py-0.5
+                                             rounded-full
+                                             bg-blue-500/10
+                                             text-blue-400
+                                             text-[7px]
+                                             font-black">
+                                    YOU
+                                </span>
+                              `
+                            : ""
+                        }
+
+                    </div>
+
+
+                    <span class="text-[8px]
+                                 text-slate-600
+                                 font-semibold">
+
+                        ${
+                            rank<=3
+                            ? "Top Player"
+                            : "Rank #"+rank
+                        }
+
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <div class="text-right ml-2 shrink-0">
+
+                <strong class="block
+                               text-[11px]
+                               text-amber-400
+                               font-black">
+
+                    ${money(player.earnings)}
+
+                </strong>
+
+                <span class="block
+                             text-[7px]
+                             text-slate-600
+                             uppercase
+                             tracking-wider
+                             font-bold
+                             mt-0.5">
+
+                    Total Earnings
+
+                </span>
+
+            </div>
+
+        `;
+
+
+        list.appendChild(card);
+
+    });
+
+}
+
+
+/* =========================
+   SEARCH
+========================= */
+
+window.filterPlayers = function(){
+
+    const input =
+        document.getElementById(
+            "player-search"
+        );
+
+
+    const clear =
+        document.getElementById(
+            "clear-search"
+        );
+
+
+    clear.classList.toggle(
+        "hidden",
+        !input.value
+    );
+
+
+    renderLeaderboard();
+
+};
+
+
+window.clearSearch = function(){
+
+    const input =
+        document.getElementById(
+            "player-search"
+        );
+
+
+    input.value="";
+
+    document.getElementById(
+        "clear-search"
+    ).classList.add("hidden");
+
+
+    renderLeaderboard();
+
+};
+
+
+/* =========================
+   PROFILE MODAL
+========================= */
+
+function openProfileModal(showName="",avatar=""){
+
+    document.getElementById(
+        "show-name-input"
+    ).value =
+        showName || "";
+
+
+    document.getElementById(
+        "avatar-url-input"
+    ).value =
+        avatar || "";
+
+
+    document.getElementById(
+        "profile-modal"
+    ).classList.remove("hidden");
+
+
+    document.body.classList.add("no-scroll");
+
+}
+
+
+window.closeProfileModal = function(){
+
+    document.getElementById(
+        "profile-modal"
+    ).classList.add("hidden");
+
+
+    document.body.classList.remove("no-scroll");
+
+};
+
+
+/* =========================
+   SAVE PROFILE
+========================= */
+
+window.saveLeaderboardProfile = async function(){
+
+    if(!currentUser){
+
+        return;
+
+    }
+
+
+    const showName =
+        document.getElementById(
+            "show-name-input"
+        ).value.trim();
+
+
+    const avatar =
+        document.getElementById(
+            "avatar-url-input"
+        ).value.trim();
+
+
+    if(!showName){
+
+        showToast(
+            "একটি Show Name দিন!",
+            "error"
+        );
+
+        return;
+
+    }
+
+
+    if(showName.length<2){
+
+        showToast(
+            "Show Name একটু বড় দিন!",
+            "error"
+        );
+
+        return;
+
+    }
+
+
+    const button =
+        document.getElementById(
+            "save-profile-btn"
+        );
+
+
+    button.disabled=true;
+
+    button.innerHTML=`
+        <i class="fa-solid fa-spinner animate-spin mr-1"></i>
+        Saving...
+    `;
+
+
+    try{
+
+        await updateDoc(
+            doc(db,"users",currentUser.uid),
+            {
+                showName:showName,
+                avatar:avatar || ""
+            }
+        );
+
+
+        currentUserData.showName =
+            showName;
+
+        currentUserData.avatar =
+            avatar || "";
+
+
+        /*
+          Local leaderboard data update
+        */
+
+        const me =
+            allPlayers.find(
+                p=>p.uid===currentUser.uid
+            );
+
+
+        if(me){
+
+            me.name =
+                showName;
+
+            me.avatar =
+                avatar || "";
+
+        }
+
+
+        closeProfileModal();
+
+        renderLeaderboard();
+
+
+        showToast(
+            "Profile successfully updated!"
+        );
+
+
+    }catch(error){
+
+        console.error(error);
+
+        showToast(
+            "Profile update করা যায়নি!",
+            "error"
+        );
+
+    }finally{
+
+        button.disabled=false;
+
+        button.innerHTML=`
+            <i class="fa-solid fa-check mr-1"></i>
+            Update Profile
+        `;
+
+    }
+
+};
+
+
+/* =========================
+   ESCAPE MODAL
+========================= */
+
+document.getElementById(
+    "profile-modal"
+).addEventListener("click",e=>{
+
+    if(e.target.id==="profile-modal"){
+
+        closeProfileModal();
+
+    }
+
+});
+
+
 </script>
+
 </body>
 </html>
