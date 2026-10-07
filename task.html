@@ -626,18 +626,6 @@ body{
         </button>
 
 
-        <button
-            class="tab whitespace-nowrap
-                   px-4 py-2 rounded-xl
-                   border border-slate-700/60
-                   text-sm text-slate-300"
-            data-filter="deposit">
-
-            Deposit
-
-        </button>
-
-
     </div>
 
 
@@ -683,7 +671,11 @@ import {
     doc,
     getDoc,
     setDoc,
-    serverTimestamp
+    serverTimestamp,
+    collection,
+    getDocs,
+    query,
+    where
 }
 from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
@@ -711,17 +703,11 @@ function hideLoader(){
 }
 
 
-/*
- * Safety fallback:
- * Firebase/network slow হলেও loader
- * indefinite থাকবে না।
- */
-
 setTimeout(() => {
 
     hideLoader();
 
-}, 1200);
+},1200);
 
 
 
@@ -798,20 +784,6 @@ const TASKS = [
         progressKey:"referrals",
         button:"Invite Now",
         link:"profile.html"
-    },
-
-
-    {
-        id:"first_deposit",
-        type:"deposit",
-        icon:"fa-wallet",
-        title:"Make First Deposit",
-        description:"প্রথম deposit complete করুন",
-        target:1,
-        reward:10,
-        progressKey:"deposits",
-        button:"Deposit",
-        link:"wallet.html"
     }
 
 ];
@@ -830,9 +802,7 @@ let userStats = {
 
     wins:0,
 
-    referrals:0,
-
-    deposits:0
+    referrals:0
 
 };
 
@@ -867,11 +837,6 @@ const progressText =
 /* =========================================================
    INITIAL RENDER
    ========================================================= */
-
-/*
- * UI প্রথমেই render হবে।
- * Firebase-এর জন্য wait করবে না।
- */
 
 renderTasks();
 
@@ -908,7 +873,8 @@ function showToast(message,type="success"){
         document.getElementById("toast");
 
 
-    toast.textContent = message;
+    toast.textContent =
+        message;
 
 
     toast.className =
@@ -925,11 +891,482 @@ function showToast(message,type="success"){
     clearTimeout(toastTimer);
 
 
-    toastTimer = setTimeout(() => {
+    toastTimer =
+        setTimeout(() => {
 
-        toast.classList.remove("show");
+            toast.classList.remove("show");
 
-    },2600);
+        },2600);
+
+}
+
+
+
+/* =========================================================
+   NORMALIZE STATUS
+   ========================================================= */
+
+function normalizeText(value){
+
+    return String(
+        value ?? ""
+    )
+    .trim()
+    .toLowerCase();
+
+}
+
+
+
+/* =========================================================
+   CANCELLED / REFUNDED MATCH
+   ========================================================= */
+
+function isCancelledMatch(data){
+
+    if(!data) return false;
+
+
+    if(
+        data.cancelled === true ||
+        data.canceled === true
+    ){
+        return true;
+    }
+
+
+    const status =
+        normalizeText(
+            data.status
+        );
+
+
+    return [
+        "cancelled",
+        "canceled",
+        "cancel",
+        "refunded",
+        "refund"
+    ].includes(status);
+
+}
+
+
+
+/* =========================================================
+   COMPLETED MATCH
+   ========================================================= */
+
+function isCompletedMatch(data){
+
+    if(!data) return false;
+
+
+    if(
+        data.completed === true ||
+        data.isCompleted === true
+    ){
+        return true;
+    }
+
+
+    const status =
+        normalizeText(
+            data.status
+        );
+
+
+    return [
+        "complete",
+        "completed",
+        "finished",
+        "finish",
+        "result"
+    ].includes(status);
+
+}
+
+
+
+/* =========================================================
+   FIND USER PARTICIPANT
+   ========================================================= */
+
+function findUserParticipant(data,uid){
+
+    if(!data || !uid){
+        return null;
+    }
+
+
+    const participants =
+        Array.isArray(data.participants)
+        ? data.participants
+        : [];
+
+
+    return participants.find(
+        participant => {
+
+            if(!participant){
+                return false;
+            }
+
+
+            return (
+                participant.uid === uid ||
+                participant.userId === uid ||
+                participant.userUID === uid ||
+                participant.id === uid
+            );
+
+        }
+    ) || null;
+
+}
+
+
+
+/* =========================================================
+   WIN DETECTION
+   ========================================================= */
+
+function isWinnerRecord(data,uid){
+
+    if(!data || !uid){
+        return false;
+    }
+
+
+    const userResult =
+        data.userResult ||
+        data.resultData ||
+        data.resultInfo ||
+        {};
+
+
+    const userEntry =
+        data.userEntry ||
+        findUserParticipant(data,uid) ||
+        {};
+
+
+    const outcome =
+        normalizeText(
+            userResult.result ??
+            userResult.outcome ??
+            userResult.matchResult ??
+            userEntry.result ??
+            userEntry.outcome ??
+            data.result ??
+            data.outcome ??
+            data.matchResult
+        );
+
+
+    const winnerUid =
+        data.winnerUid ??
+        data.winnerUserId ??
+        data.winnerId ??
+        "";
+
+
+    const winnerUids =
+        Array.isArray(data.winnerUids)
+        ? data.winnerUids
+        : [];
+
+
+    const wonAmount =
+        safeNumber(
+            userResult.amount ??
+            userResult.prize ??
+            userEntry.wonAmount ??
+            userEntry.winnings ??
+            userEntry.prizeWon ??
+            userEntry.winAmount ??
+            data.wonAmount ??
+            data.winnings ??
+            data.prizeWon
+        );
+
+
+    if(
+        userResult.winner === true ||
+        userResult.isWinner === true ||
+        userEntry.isWinner === true ||
+        userEntry.winner === true
+    ){
+        return true;
+    }
+
+
+    if(
+        winnerUid &&
+        String(winnerUid) === String(uid)
+    ){
+        return true;
+    }
+
+
+    if(
+        winnerUids.includes(uid)
+    ){
+        return true;
+    }
+
+
+    if([
+        "win",
+        "won",
+        "winner",
+        "victory"
+    ].includes(outcome)){
+        return true;
+    }
+
+
+    if(wonAmount > 0){
+        return true;
+    }
+
+
+    return false;
+
+}
+
+
+
+/* =========================================================
+   MATCH DATA LOAD
+   ========================================================= */
+
+async function loadActualMatchStats(){
+
+    if(!currentUser){
+        return;
+    }
+
+
+    const uid =
+        currentUser.uid;
+
+
+    let matchIds =
+        new Set();
+
+
+    let winIds =
+        new Set();
+
+
+
+    try{
+
+        /* =====================================================
+           1. MATCH HISTORY
+           ===================================================== */
+
+        let historyDocs = [];
+
+
+        try{
+
+            const historyQuery =
+                query(
+                    collection(
+                        db,
+                        "matchHistory"
+                    ),
+                    where(
+                        "userId",
+                        "==",
+                        uid
+                    )
+                );
+
+
+            const historySnapshot =
+                await getDocs(
+                    historyQuery
+                );
+
+
+            historyDocs =
+                historySnapshot.docs;
+
+        }
+
+        catch(error){
+
+            console.warn(
+                "matchHistory query error:",
+                error
+            );
+
+        }
+
+
+
+        historyDocs.forEach(
+            historyDoc => {
+
+                const data =
+                    historyDoc.data() || {};
+
+
+                if(
+                    isCancelledMatch(data)
+                ){
+                    return;
+                }
+
+
+                const historyId =
+                    String(
+                        data.tournamentId ??
+                        data.matchId ??
+                        historyDoc.id
+                    );
+
+
+                if(
+                    historyId
+                ){
+                    matchIds.add(
+                        historyId
+                    );
+                }
+
+
+                if(
+                    isWinnerRecord(
+                        data,
+                        uid
+                    )
+                ){
+
+                    winIds.add(
+                        historyId
+                    );
+
+                }
+
+            }
+        );
+
+
+
+        /* =====================================================
+           2. TOURNAMENTS
+           ===================================================== */
+
+        const tournamentSnapshot =
+            await getDocs(
+                collection(
+                    db,
+                    "tournaments"
+                )
+            );
+
+
+        tournamentSnapshot.forEach(
+            tournamentDoc => {
+
+                const data =
+                    tournamentDoc.data() || {};
+
+
+                if(
+                    isCancelledMatch(data)
+                ){
+                    return;
+                }
+
+
+                const participant =
+                    findUserParticipant(
+                        data,
+                        uid
+                    );
+
+
+                if(!participant){
+                    return;
+                }
+
+
+                const tournamentId =
+                    String(
+                        data.tournamentId ??
+                        data.matchId ??
+                        tournamentDoc.id
+                    );
+
+
+                if(
+                    tournamentId
+                ){
+                    matchIds.add(
+                        tournamentId
+                    );
+                }
+
+
+
+                /* =================================================
+                   WIN DETECTION FROM TOURNAMENT
+                   ================================================= */
+
+                const combinedData = {
+
+                    ...data,
+
+                    userEntry:
+                        participant
+
+                };
+
+
+                if(
+                    isWinnerRecord(
+                        combinedData,
+                        uid
+                    )
+                ){
+
+                    winIds.add(
+                        tournamentId
+                    );
+
+                }
+
+            }
+        );
+
+
+
+        userStats.matches =
+            matchIds.size;
+
+
+        userStats.wins =
+            winIds.size;
+
+
+
+        renderTasks();
+
+    }
+
+    catch(error){
+
+        console.error(
+            "Actual match stats error:",
+            error
+        );
+
+    }
 
 }
 
@@ -944,7 +1381,9 @@ function getTaskProgress(task){
     return Math.min(
 
         safeNumber(
-            userStats[task.progressKey]
+            userStats[
+                task.progressKey
+            ]
         ),
 
         task.target
@@ -961,7 +1400,9 @@ function getTaskProgress(task){
 
 function isTaskCompleted(task){
 
-    return claimedTasks[task.id] === true;
+    return claimedTasks[
+        task.id
+    ] === true;
 
 }
 
@@ -975,7 +1416,8 @@ function canClaim(task){
 
     return (
 
-        getTaskProgress(task) >= task.target
+        getTaskProgress(task) >=
+        task.target
 
         &&
 
@@ -993,15 +1435,19 @@ function canClaim(task){
 
 function renderTasks(){
 
-    let visibleTasks = TASKS;
+    let visibleTasks =
+        TASKS;
 
 
-    if(currentFilter !== "all"){
+    if(
+        currentFilter !== "all"
+    ){
 
         visibleTasks =
             TASKS.filter(
                 task =>
-                    task.type === currentFilter
+                    task.type ===
+                    currentFilter
             );
 
     }
@@ -1033,6 +1479,7 @@ function renderTasks(){
 
         `;
 
+
         updateOverallProgress();
 
         return;
@@ -1046,15 +1493,21 @@ function renderTasks(){
 
 
         const progress =
-            getTaskProgress(task);
+            getTaskProgress(
+                task
+            );
 
 
         const completed =
-            isTaskCompleted(task);
+            isTaskCompleted(
+                task
+            );
 
 
         const ready =
-            canClaim(task);
+            canClaim(
+                task
+            );
 
 
         const percent =
@@ -1063,7 +1516,10 @@ function renderTasks(){
                 100,
 
                 Math.round(
-                    (progress / task.target) * 100
+                    (
+                        progress /
+                        task.target
+                    ) * 100
                 )
 
             );
@@ -1241,7 +1697,6 @@ function renderTasks(){
 
                                 </span>
 
-
                             </div>
 
 
@@ -1302,7 +1757,8 @@ function updateOverallProgress(){
 
     const completed =
         TASKS.filter(
-            task => isTaskCompleted(task)
+            task =>
+                isTaskCompleted(task)
         ).length;
 
 
@@ -1316,7 +1772,10 @@ function updateOverallProgress(){
         ?
 
         Math.round(
-            (completed / TASKS.length) * 100
+            (
+                completed /
+                TASKS.length
+            ) * 100
         )
 
         :
@@ -1328,7 +1787,10 @@ function updateOverallProgress(){
         percentage + "%";
 
 
-    if(completed === TASKS.length){
+    if(
+        completed ===
+        TASKS.length
+    ){
 
         progressText.textContent =
             "সব mission completed! 🎉";
@@ -1355,7 +1817,9 @@ function(taskId){
 
     const task =
         TASKS.find(
-            item => item.id === taskId
+            item =>
+                item.id ===
+                taskId
         );
 
 
@@ -1376,7 +1840,6 @@ function(taskId){
 window.claimTask =
 async function(taskId){
 
-
     if(!currentUser){
 
         showToast(
@@ -1392,7 +1855,9 @@ async function(taskId){
 
     const task =
         TASKS.find(
-            item => item.id === taskId
+            item =>
+                item.id ===
+                taskId
         );
 
 
@@ -1400,7 +1865,9 @@ async function(taskId){
 
 
 
-    if(isTaskCompleted(task)){
+    if(
+        isTaskCompleted(task)
+    ){
 
         showToast(
             "এই mission ইতিমধ্যে claim করা হয়েছে",
@@ -1413,7 +1880,9 @@ async function(taskId){
 
 
 
-    if(!canClaim(task)){
+    if(
+        !canClaim(task)
+    ){
 
         showToast(
             "Mission এখনো complete হয়নি",
@@ -1428,7 +1897,6 @@ async function(taskId){
 
     try{
 
-
         const taskRef =
             doc(
                 db,
@@ -1440,14 +1908,18 @@ async function(taskId){
 
 
         const existing =
-            await getDoc(taskRef);
+            await getDoc(
+                taskRef
+            );
 
 
+        if(
+            existing.exists()
+        ){
 
-        if(existing.exists()){
-
-            claimedTasks[task.id] =
-                true;
+            claimedTasks[
+                task.id
+            ] = true;
 
 
             renderTasks();
@@ -1469,13 +1941,17 @@ async function(taskId){
             taskRef,
             {
 
-                taskId:task.id,
+                taskId:
+                    task.id,
 
-                title:task.title,
+                title:
+                    task.title,
 
-                reward:task.reward,
+                reward:
+                    task.reward,
 
-                claimed:true,
+                claimed:
+                    true,
 
                 claimedAt:
                     serverTimestamp()
@@ -1485,8 +1961,9 @@ async function(taskId){
 
 
 
-        claimedTasks[task.id] =
-            true;
+        claimedTasks[
+            task.id
+        ] = true;
 
 
         renderTasks();
@@ -1496,7 +1973,6 @@ async function(taskId){
             `Mission complete! +৳${task.reward}`,
             "success"
         );
-
 
     }
 
@@ -1532,11 +2008,6 @@ async function loadClaimedTasks(){
 
 
 
-    /*
-     * আলাদা আলাদা task read করা হচ্ছে।
-     * এতে existing structure পরিবর্তন করার দরকার নেই।
-     */
-
     await Promise.all(
 
         TASKS.map(
@@ -1555,13 +2026,18 @@ async function loadClaimedTasks(){
 
 
                     const snapshot =
-                        await getDoc(taskRef);
+                        await getDoc(
+                            taskRef
+                        );
 
 
-                    if(snapshot.exists()){
+                    if(
+                        snapshot.exists()
+                    ){
 
-                        claimedTasks[task.id] =
-                            true;
+                        claimedTasks[
+                            task.id
+                        ] = true;
 
                     }
 
@@ -1591,12 +2067,14 @@ async function loadClaimedTasks(){
 
 
 /* =========================================================
-   LOAD USER STATS
+   LOAD REFERRAL DATA
    ========================================================= */
 
-async function loadUserStats(){
+async function loadReferralStats(){
 
-    if(!currentUser) return;
+    if(!currentUser){
+        return;
+    }
 
 
     try{
@@ -1610,33 +2088,17 @@ async function loadUserStats(){
 
 
         const snapshot =
-            await getDoc(userRef);
+            await getDoc(
+                userRef
+            );
 
 
-
-        if(snapshot.exists()){
+        if(
+            snapshot.exists()
+        ){
 
             const data =
                 snapshot.data();
-
-
-
-            userStats.matches =
-                safeNumber(
-                    data.matches ??
-                    data.totalMatches ??
-                    0
-                );
-
-
-
-            userStats.wins =
-                safeNumber(
-                    data.wins ??
-                    data.totalWins ??
-                    0
-                );
-
 
 
             userStats.referrals =
@@ -1647,24 +2109,14 @@ async function loadUserStats(){
                     0
                 );
 
-
-
-            userStats.deposits =
-                safeNumber(
-                    data.deposits ??
-                    data.totalDeposits ??
-                    0
-                );
-
         }
-
 
     }
 
     catch(error){
 
         console.error(
-            "Stats load error:",
+            "Referral stats error:",
             error
         );
 
@@ -1682,11 +2134,9 @@ document
 .querySelectorAll(".tab")
 .forEach(tab => {
 
-
     tab.addEventListener(
         "click",
         () => {
-
 
             document
             .querySelectorAll(".tab")
@@ -1699,16 +2149,13 @@ document
             });
 
 
-
             tab.classList.add(
                 "active"
             );
 
 
-
             currentFilter =
                 tab.dataset.filter;
-
 
 
             renderTasks();
@@ -1728,7 +2175,6 @@ onAuthStateChanged(
     auth,
     async user => {
 
-
         if(!user){
 
             hideLoader();
@@ -1741,30 +2187,29 @@ onAuthStateChanged(
         }
 
 
-
         currentUser =
             user;
 
 
-
         /*
-         * UI already rendered.
-         * Firebase data background-এ load হবে।
+         * Loader দ্রুত hide হবে।
          */
 
         hideLoader();
 
 
         /*
-         * দুটো কাজ parallel-এ করা হচ্ছে,
-         * তাই unnecessary waiting কম।
+         * Claim + referral + actual match
+         * data parallel-এ load হবে।
          */
 
         await Promise.all([
 
-            loadUserStats(),
+            loadClaimedTasks(),
 
-            loadClaimedTasks()
+            loadReferralStats(),
+
+            loadActualMatchStats()
 
         ]);
 
