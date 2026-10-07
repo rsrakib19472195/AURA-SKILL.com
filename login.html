@@ -622,7 +622,10 @@
         import {
             onAuthStateChanged,
             signInWithEmailAndPassword,
-            sendPasswordResetEmail
+            sendPasswordResetEmail,
+            setPersistence,
+            browserLocalPersistence,
+            browserSessionPersistence
         } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
         import {
@@ -827,6 +830,14 @@
                         throw new Error("USERNAME_NOT_FOUND");
                     }
                 }
+
+                // Remember Me অনুযায়ী Firebase login persistence সেট করা
+                await setPersistence(
+                    auth,
+                    rememberMe.checked
+                        ? browserLocalPersistence
+                        : browserSessionPersistence
+                );
 
                 const credential = await withTimeout(
                     signInWithEmailAndPassword(auth, email, password),
@@ -1225,6 +1236,13 @@
             if (!user) return;
 
             console.log("AURA logged-in user:", user.uid);
+
+            // Firebase-এ saved session থাকলে login page না দেখিয়ে
+            // সরাসরি main app-এ নিয়ে যাবে।
+            if (window.location.pathname.endsWith("login.html")) {
+                window.location.replace("index.html");
+                return;
+            }
 
             if (isMedianApp()) {
                 linkOneSignalUser(user)
