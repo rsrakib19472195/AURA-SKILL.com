@@ -3,142 +3,927 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Aura Skill - My Matches</title>
+
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&display=swap"
+          rel="stylesheet">
+
     <style>
-        body { font-family: 'Hind Siliguri', sans-serif; background-color: #050811; color: #f8fafc; }
-        ::-webkit-scrollbar { width: 5px; }
-        ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 10px; }
-        .glass-card { background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(12px); border: 1px solid rgba(30, 41, 59, 0.9); }
-        #toast-container { position: fixed; top: 20px; right: 20px; z-index: 9999; display: flex; flex-direction: column; gap: 10px; }
-        .toast {
-            background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(12px); border-left: 4px solid #3b82f6;
-            color: #fff; padding: 12px 20px; border-radius: 12px; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
-            font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 10px;
-            animation: slideIn 0.3s ease, fadeOut 0.3s ease 2.7s forwards;
+
+        * {
+            box-sizing: border-box;
         }
-        .toast.error { border-left-color: #ef4444; }
-        @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
-        @keyframes fadeOut { from { opacity: 1; } to { opacity: 0; transform: translateY(-10px); } }
+
+        body {
+            font-family: 'Hind Siliguri', sans-serif;
+            background:
+                radial-gradient(
+                    circle at top left,
+                    rgba(37,99,235,.08),
+                    transparent 30%
+                ),
+                radial-gradient(
+                    circle at top right,
+                    rgba(16,185,129,.06),
+                    transparent 25%
+                ),
+                #050811;
+
+            color: #f8fafc;
+
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        ::-webkit-scrollbar {
+            width: 5px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #1e293b;
+            border-radius: 10px;
+        }
+
+        .glass-card {
+            background: rgba(15, 23, 42, .86);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border: 1px solid rgba(51, 65, 85, .65);
+        }
+
+        .summary-card {
+            background:
+                linear-gradient(
+                    145deg,
+                    rgba(15,23,42,.95),
+                    rgba(11,18,32,.88)
+                );
+
+            border: 1px solid rgba(51,65,85,.7);
+
+            box-shadow:
+                0 15px 40px rgba(0,0,0,.22);
+        }
+
+        .match-card {
+            transition:
+                transform .18s ease,
+                border-color .18s ease;
+        }
+
+        .match-card:active {
+            transform: scale(.99);
+        }
+
+        .tab-active {
+            background: #2563eb !important;
+            color: white !important;
+
+            box-shadow:
+                0 5px 18px rgba(37,99,235,.25);
+        }
+
+        .tab-btn {
+            color: #94a3b8;
+            transition: .18s ease;
+        }
+
+        .tab-btn:hover {
+            color: white;
+        }
+
+        .filter-box {
+            background: rgba(13,19,34,.9);
+            border: 1px solid rgba(51,65,85,.75);
+        }
+
+        .copy-btn {
+            transition: .15s ease;
+        }
+
+        .copy-btn:active {
+            transform: scale(.92);
+        }
+
+        #toast-container {
+            position: fixed;
+            top: 18px;
+            right: 15px;
+            left: 15px;
+            z-index: 9999;
+
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+
+            gap: 9px;
+
+            pointer-events: none;
+        }
+
+        .toast {
+            max-width: 340px;
+
+            background: rgba(15,23,42,.96);
+
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+
+            border-left: 4px solid #3b82f6;
+
+            color: #fff;
+
+            padding: 11px 15px;
+
+            border-radius: 13px;
+
+            box-shadow:
+                0 12px 30px rgba(0,0,0,.45);
+
+            font-size: 12px;
+            font-weight: 600;
+
+            display: flex;
+            align-items: center;
+
+            gap: 9px;
+
+            animation:
+                slideIn .25s ease,
+                fadeOut .3s ease 3s forwards;
+        }
+
+        .toast.error {
+            border-left-color: #ef4444;
+        }
+
+        .toast.success {
+            border-left-color: #10b981;
+        }
+
+        @keyframes slideIn {
+
+            from {
+                transform: translateY(-12px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+
+        }
+
+        @keyframes fadeOut {
+
+            from {
+                opacity: 1;
+            }
+
+            to {
+                opacity: 0;
+                transform: translateY(-8px);
+            }
+
+        }
+
+        .status-dot {
+            width: 6px;
+            height: 6px;
+
+            border-radius: 50%;
+
+            display: inline-block;
+        }
+
+        .profit-positive {
+            color: #34d399;
+        }
+
+        .profit-negative {
+            color: #fb7185;
+        }
+
+        .profit-zero {
+            color: #94a3b8;
+        }
+
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
     </style>
 </head>
+
+
 <body class="min-h-screen flex flex-col pb-28 overflow-x-hidden">
 
-    <div id="toast-container"></div>
 
-    <div id="app-loader" class="fixed inset-0 z-50 flex flex-col items-center justify-center bg-[#050811] space-y-4">
-        <div class="w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
-        <p class="text-xs tracking-widest text-slate-400 font-semibold uppercase">লোড হচ্ছে...</p>
+<!-- Toast -->
+<div id="toast-container"></div>
+
+
+<!-- Top Header -->
+<header
+    class="bg-[#0b0f1a]/95 backdrop-blur-md px-4 py-3 sticky top-0 z-30 flex justify-between items-center border-b border-slate-900 shadow-md">
+
+    <div class="flex items-center space-x-2">
+
+        <a href="profile.html"
+           class="bg-slate-800/90 text-slate-300 hover:text-white px-2.5 py-1.5 rounded-xl text-xs font-bold transition mr-1">
+
+            <i class="fa-solid fa-arrow-left"></i>
+
+        </a>
+
+
+        <div>
+
+            <div class="text-xs font-black tracking-wider text-blue-400 uppercase">
+                My Matches
+            </div>
+
+            <div class="text-[9px] text-slate-500">
+                Tournament History
+            </div>
+
+        </div>
+
     </div>
 
-    <!-- Top Header -->
-    <header class="bg-[#0b0f1a]/90 backdrop-blur-md px-4 py-3 sticky top-0 z-30 flex justify-between items-center border-b border-slate-900 shadow-md">
-        <div class="flex items-center space-x-2">
-            <a href="profile.html" class="bg-slate-800 text-slate-300 hover:text-white px-2.5 py-1.5 rounded-xl text-xs font-bold transition mr-1">
-                <i class="fa-solid fa-arrow-left"></i>
-            </a>
-            <div class="text-xs font-black tracking-wider text-blue-400 uppercase">My Matches History</div>
-        </div>
-        <div onclick="window.location.href='wallet.html'" class="cursor-pointer bg-[#131b2e] border border-slate-800 text-blue-400 px-2.5 py-1.5 rounded-xl text-xs font-semibold flex items-center space-x-1 shadow">
+
+    <div class="flex items-center gap-2">
+
+        <button
+            onclick="window.location.href='withdraw.html'"
+            class="bg-emerald-600/15 border border-emerald-500/25 text-emerald-400 px-2.5 py-1.5 rounded-xl text-[10px] font-bold flex items-center gap-1.5">
+
+            <i class="fa-solid fa-money-bill-transfer"></i>
+
+            Withdraw
+
+        </button>
+
+
+        <div
+            onclick="window.location.href='wallet.html'"
+            class="cursor-pointer bg-[#131b2e] border border-slate-800 text-blue-400 px-2.5 py-1.5 rounded-xl text-xs font-semibold flex items-center space-x-1 shadow">
+
             <i class="fa-solid fa-wallet text-[10px]"></i>
-            <span>৳ <span id="wallet-balance">0</span></span>
-        </div>
-    </header>
 
-    <main class="max-w-md mx-auto px-4 py-4 flex-grow w-full space-y-4">
-        <div class="flex space-x-1.5 bg-[#0d1322] p-1.5 rounded-2xl border border-slate-800/80">
-            <button onclick="filterMatches('joined')" id="tab-joined" class="flex-1 py-2 text-[11px] font-bold rounded-xl bg-blue-600 text-white shadow transition">Joined</button>
-            <button onclick="filterMatches('completed')" id="tab-completed" class="flex-1 py-2 text-[11px] font-bold rounded-xl text-slate-400 hover:text-white transition">Completed</button>
+            <span>
+                ৳ <span id="wallet-balance">0</span>
+            </span>
+
         </div>
 
-        <div id="matches-grid" class="space-y-3"></div>
-    </main>
+    </div>
 
-    <!-- Bottom Navigation Bar -->
-    <nav class="fixed bottom-0 left-0 right-0 max-w-md mx-auto bg-[#0b0f1a]/95 backdrop-blur-md border-t border-slate-900 px-6 py-2.5 flex justify-around items-center z-40 shadow-2xl">
-        <a href="index_3.html" class="flex flex-col items-center text-slate-400 hover:text-blue-400 transition space-y-1">
-            <i class="fa-solid fa-house text-base"></i>
-            <span class="text-[10px] font-semibold">Home</span>
-        </a>
-        <a href="wallet.html" class="flex flex-col items-center text-slate-400 hover:text-blue-400 transition space-y-1">
-            <i class="fa-solid fa-wallet text-base"></i>
-            <span class="text-[10px] font-semibold">Wallet</span>
-        </a>
-        <a href="profile.html" class="flex flex-col items-center text-slate-400 hover:text-blue-400 transition space-y-1">
-            <i class="fa-solid fa-user text-base"></i>
-            <span class="text-[10px] font-semibold">Profile</span>
-        </a>
-    </nav>
+</header>
 
-    <script type="module">
-        import { auth, db } from "./firebase.js";
-        import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-        import { doc, getDoc, collection, getDocs, query, where, onSnapshot, setDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-        let currentUserUid = null;
-        let allJoinedMatches = [];
-        let currentFilter = 'joined';
+<main class="max-w-md mx-auto px-4 py-4 flex-grow w-full space-y-4">
 
-        window.showToast = function(message, type = 'success') {
-            const container = document.getElementById('toast-container');
-            const toast = document.createElement('div');
-            toast.className = `toast ${type}`;
-            let icon = type === 'error' ? '<i class="fa-solid fa-circle-exclamation text-rose-400"></i>' : '<i class="fa-solid fa-circle-check text-blue-400"></i>';
-            toast.innerHTML = `${icon} <span>${message}</span>`;
-            container.appendChild(toast);
-            setTimeout(() => { toast.remove(); }, 3500);
-        }
 
-        onAuthStateChanged(auth, async (user) => {
-            if (!user) { window.location.replace('login.html'); return; }
-            currentUserUid = user.uid;
+    <!-- Overview -->
 
-            try {
-                await fetchUserData(user.uid);
-                await fetchMyMatches(user.uid);
-                startMyMatchesRealtime(user.uid);
-            } catch (err) {
-                console.error(err);
-            } finally {
-                document.getElementById('app-loader').style.display = 'none';
+    <section class="summary-card rounded-2xl p-4">
+
+        <div class="flex items-center justify-between mb-3">
+
+            <div>
+
+                <h2 class="text-sm font-bold text-white">
+                    Match Overview
+                </h2>
+
+                <p class="text-[10px] text-slate-500">
+                    তোমার tournament performance
+                </p>
+
+            </div>
+
+
+            <div
+                class="w-9 h-9 rounded-xl bg-blue-600/15 border border-blue-500/20 flex items-center justify-center">
+
+                <i class="fa-solid fa-chart-line text-blue-400 text-sm"></i>
+
+            </div>
+
+        </div>
+
+
+        <div class="grid grid-cols-3 gap-2">
+
+
+            <div
+                class="bg-[#0b0f1a] border border-slate-800 rounded-xl p-2.5">
+
+                <p class="text-[9px] text-slate-500">
+                    Total Matches
+                </p>
+
+                <p id="total-matches"
+                   class="text-sm font-bold text-white mt-1">
+                    0
+                </p>
+
+            </div>
+
+
+            <div
+                class="bg-[#0b0f1a] border border-slate-800 rounded-xl p-2.5">
+
+                <p class="text-[9px] text-slate-500">
+                    Total Entry
+                </p>
+
+                <p id="total-entry"
+                   class="text-sm font-bold text-blue-400 mt-1">
+                    ৳0
+                </p>
+
+            </div>
+
+
+            <div
+                class="bg-[#0b0f1a] border border-slate-800 rounded-xl p-2.5">
+
+                <p class="text-[9px] text-slate-500">
+                    Total Won
+                </p>
+
+                <p id="total-won"
+                   class="text-sm font-bold text-emerald-400 mt-1">
+                    ৳0
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <!-- Total Profit -->
+
+        <div
+            class="mt-2.5 rounded-xl p-3 bg-gradient-to-r from-emerald-950/40 to-blue-950/30 border border-emerald-500/20">
+
+            <div class="flex items-center justify-between">
+
+                <div>
+
+                    <p class="text-[10px] text-slate-400">
+                        Total Profit
+                    </p>
+
+                    <p id="total-profit"
+                       class="text-xl font-black text-emerald-400 mt-0.5">
+                        ৳0
+                    </p>
+
+                </div>
+
+
+                <div class="flex gap-2">
+
+                    <!-- Share -->
+
+                    <button
+                        onclick="shareProfit()"
+                        class="w-9 h-9 rounded-xl bg-blue-600/15 border border-blue-500/25 text-blue-400 flex items-center justify-center">
+
+                        <i class="fa-solid fa-share-nodes text-xs"></i>
+
+                    </button>
+
+
+                    <!-- Withdraw -->
+
+                    <button
+                        onclick="window.location.href='withdraw.html'"
+                        class="px-3 h-9 rounded-xl bg-emerald-600 text-white text-[10px] font-bold flex items-center gap-1.5 shadow-lg shadow-emerald-900/20">
+
+                        <i class="fa-solid fa-money-bill-transfer"></i>
+
+                        Withdraw
+
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <p id="profit-note"
+               class="text-[9px] text-slate-500 mt-1">
+
+                Total Won − Total Entry
+
+            </p>
+
+        </div>
+
+    </section>
+
+
+    <!-- Tabs -->
+
+    <div class="filter-box p-1.5 rounded-2xl">
+
+        <div class="flex gap-1 overflow-x-auto hide-scrollbar">
+
+
+            <button
+                onclick="filterMatches('all')"
+                id="tab-all"
+                class="tab-btn tab-active flex-1 min-w-[65px] py-2 text-[10px] font-bold rounded-xl">
+
+                All
+
+            </button>
+
+
+            <button
+                onclick="filterMatches('joined')"
+                id="tab-joined"
+                class="tab-btn flex-1 min-w-[65px] py-2 text-[10px] font-bold rounded-xl">
+
+                Joined
+
+            </button>
+
+
+            <button
+                onclick="filterMatches('completed')"
+                id="tab-completed"
+                class="tab-btn flex-1 min-w-[75px] py-2 text-[10px] font-bold rounded-xl">
+
+                Completed
+
+            </button>
+
+
+            <button
+                onclick="filterMatches('cancelled')"
+                id="tab-cancelled"
+                class="tab-btn flex-1 min-w-[70px] py-2 text-[10px] font-bold rounded-xl">
+
+                Cancelled
+
+            </button>
+
+
+            <button
+                onclick="filterMatches('winning')"
+                id="tab-winning"
+                class="tab-btn flex-1 min-w-[70px] py-2 text-[10px] font-bold rounded-xl">
+
+                Winning
+
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- Match Count -->
+
+    <div class="flex items-center justify-between px-1">
+
+        <div class="text-[10px] text-slate-500">
+
+            <span id="visible-count">
+                0
+            </span>
+
+            টি ম্যাচ
+
+        </div>
+
+
+        <div class="text-[9px] text-slate-600">
+            Latest first
+        </div>
+
+    </div>
+
+
+    <!-- Matches -->
+
+    <div id="matches-grid"
+         class="space-y-3">
+
+        <div class="glass-card rounded-2xl p-10 text-center">
+
+            <div
+                class="w-12 h-12 rounded-full bg-slate-800/70 mx-auto flex items-center justify-center mb-3">
+
+                <i class="fa-solid fa-trophy text-slate-600"></i>
+
+            </div>
+
+            <p class="text-xs font-bold text-slate-500">
+                ম্যাচ লোড হচ্ছে...
+            </p>
+
+        </div>
+
+    </div>
+
+
+</main>
+
+
+<!-- Bottom Navigation -->
+
+<nav
+    class="fixed bottom-0 left-0 right-0 max-w-md mx-auto bg-[#0b0f1a]/95 backdrop-blur-md border-t border-slate-900 px-6 py-2.5 flex justify-around items-center z-40 shadow-2xl">
+
+
+    <a href="index_3.html"
+       class="flex flex-col items-center text-slate-400 hover:text-blue-400 transition space-y-1">
+
+        <i class="fa-solid fa-house text-base"></i>
+
+        <span class="text-[10px] font-semibold">
+            Home
+        </span>
+
+    </a>
+
+
+    <a href="wallet.html"
+       class="flex flex-col items-center text-slate-400 hover:text-blue-400 transition space-y-1">
+
+        <i class="fa-solid fa-wallet text-base"></i>
+
+        <span class="text-[10px] font-semibold">
+            Wallet
+        </span>
+
+    </a>
+
+
+    <a href="profile.html"
+       class="flex flex-col items-center text-slate-400 hover:text-blue-400 transition space-y-1">
+
+        <i class="fa-solid fa-user text-base"></i>
+
+        <span class="text-[10px] font-semibold">
+            Profile
+        </span>
+
+    </a>
+
+</nav>
+
+
+<script type="module">
+
+    import {
+        auth,
+        db
+    } from "./firebase.js";
+
+
+    import {
+        onAuthStateChanged
+    } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+
+
+    import {
+        doc,
+        getDoc,
+        collection,
+        getDocs,
+        query,
+        where,
+        onSnapshot,
+        setDoc
+    } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+
+    let currentUserUid = null;
+
+    let allJoinedMatches = [];
+
+    let currentFilter = "all";
+
+
+    /* =========================
+       TOAST
+    ========================= */
+
+    window.showToast = function(
+        message,
+        type = "success"
+    ) {
+
+        const container =
+            document.getElementById(
+                "toast-container"
+            );
+
+
+        const toast =
+            document.createElement(
+                "div"
+            );
+
+
+        toast.className =
+            `toast ${type}`;
+
+
+        const icon =
+            type === "error"
+
+                ? '<i class="fa-solid fa-circle-exclamation text-rose-400"></i>'
+
+                : '<i class="fa-solid fa-circle-check text-emerald-400"></i>';
+
+
+        toast.innerHTML =
+            `${icon}<span>${message}</span>`;
+
+
+        container.appendChild(
+            toast
+        );
+
+
+        setTimeout(() => {
+
+            toast.remove();
+
+        }, 3500);
+
+    };
+
+
+    /* =========================
+       AUTH
+    ========================= */
+
+    onAuthStateChanged(
+        auth,
+        async user => {
+
+            if (!user) {
+
+                window.location.replace(
+                    "login.html"
+                );
+
+                return;
+
             }
-        });
 
-        async function fetchUserData(uid) {
-            try {
-                const snap = await getDoc(doc(db, "users", uid));
-                if (snap.exists()) {
-                    document.getElementById('wallet-balance').innerText = Number(snap.data().balance || 0);
-                }
-            } catch (e) { console.error(e); }
+
+            currentUserUid =
+                user.uid;
+
+
+            /*
+             * UI সাথে সাথে render
+             * করবে।
+             */
+
+            renderMatches();
+
+
+            /*
+             * User balance এবং matches
+             * parallel load হবে।
+             */
+
+            await Promise.allSettled([
+
+                fetchUserData(
+                    user.uid
+                ),
+
+                fetchMyMatches(
+                    user.uid
+                )
+
+            ]);
+
+
+            /*
+             * Data load হওয়ার পর
+             * realtime চালু।
+             */
+
+            startMyMatchesRealtime(
+                user.uid
+            );
+
+        }
+    );
+
+
+    /* =========================
+       USER DATA
+    ========================= */
+
+    async function fetchUserData(uid) {
+
+        try {
+
+            const snap =
+                await getDoc(
+                    doc(
+                        db,
+                        "users",
+                        uid
+                    )
+                );
+
+
+            if (
+                snap.exists()
+            ) {
+
+                const data =
+                    snap.data();
+
+
+                document.getElementById(
+                    "wallet-balance"
+                ).innerText =
+                    Number(
+                        data.balance || 0
+                    );
+
+            }
+
+        } catch (e) {
+
+            console.error(
+                "User data:",
+                e
+            );
+
         }
 
-        async function archiveCompletedMatch(tournamentId, data, userEntry) {
-            try {
-                const historyId = `${tournamentId}_${currentUserUid}`;
-                const historyRef = doc(db, "matchHistory", historyId);
-                const historySnap = await getDoc(historyRef);
+    }
 
-                // Never overwrite an existing permanent result.
-                if (historySnap.exists()) return;
 
-                const results = Array.isArray(data.results) ? data.results : [];
-                const userResult = results.find(r =>
-                    r && (r.userId === currentUserUid || r.uid === currentUserUid)
+    /* =========================
+       TIMESTAMP
+    ========================= */
+
+    function getMatchTimestamp(m) {
+
+        return Number(
+            m.completedAt ||
+            m.startTime ||
+            m.registeredAt ||
+            m.createdAt ||
+            0
+        );
+
+    }
+
+
+    function formatBanglaDateTime(
+        timestamp
+    ) {
+
+        const value =
+            Number(timestamp);
+
+
+        if (!value)
+            return "সময় নির্ধারিত নয়";
+
+
+        const d =
+            new Date(value);
+
+
+        if (
+            isNaN(
+                d.getTime()
+            )
+        )
+            return "সময় নির্ধারিত নয়";
+
+
+        const date =
+            d.toLocaleDateString(
+                "bn-BD",
+                {
+                    day: "numeric",
+                    month: "numeric",
+                    year: "numeric"
+                }
+            );
+
+
+        const time =
+            d.toLocaleTimeString(
+                "en-US",
+                {
+                    hour: "2-digit",
+                    minute: "2-digit",
+                    hour12: true
+                }
+            );
+
+
+        return `${date} • ${time}`;
+
+    }
+
+
+    /* =========================
+       ARCHIVE
+    ========================= */
+
+    async function archiveCompletedMatch(
+        tournamentId,
+        data,
+        userEntry
+    ) {
+
+        try {
+
+            const historyId =
+                `${tournamentId}_${currentUserUid}`;
+
+
+            const historyRef =
+                doc(
+                    db,
+                    "matchHistory",
+                    historyId
+                );
+
+
+            const historySnap =
+                await getDoc(
+                    historyRef
+                );
+
+
+            if (
+                historySnap.exists()
+            )
+                return;
+
+
+            const results =
+                Array.isArray(
+                    data.results
+                )
+                    ? data.results
+                    : [];
+
+
+            const userResult =
+                results.find(
+                    r =>
+                        r &&
+                        (
+                            r.userId ===
+                                currentUserUid ||
+
+                            r.uid ===
+                                currentUserUid
+                        )
                 ) || {};
 
-                const outcome = String(
+
+            const outcome =
+                String(
                     userResult.result ??
                     userResult.outcome ??
                     userResult.matchResult ??
                     userEntry.result ??
                     userEntry.outcome ??
-                    ''
-                ).trim().toLowerCase();
+                    ""
+                )
+                .trim()
+                .toLowerCase();
 
-                let wonAmount = Number(
+
+            let wonAmount =
+                Number(
                     userResult.amount ??
                     userResult.prize ??
                     userEntry.wonAmount ??
@@ -148,82 +933,246 @@
                     0
                 );
 
-                const kills = Number(userResult.kills || 0);
-                const perKill = Number(data.perKill || 0);
 
-                if (wonAmount <= 0 && kills > 0 && perKill > 0 &&
-                    (userResult.killOnly === true || data.killOnly === true)) {
-                    wonAmount = kills * perKill;
-                }
+            const kills =
+                Number(
+                    userResult.kills ||
+                    0
+                );
 
-                const isWinner =
-                    userResult.winner === true ||
-                    userEntry.isWinner === true ||
-                    userEntry.winner === true ||
-                    data.winnerUid === currentUserUid ||
-                    (Array.isArray(data.winnerUids) && data.winnerUids.includes(currentUserUid)) ||
-                    ['win', 'won', 'winner', 'victory'].includes(outcome) ||
-                    wonAmount > 0;
 
-                const isLoss =
-                    userResult.winner === false ||
-                    userEntry.isWinner === false ||
-                    userEntry.winner === false ||
-                    ['loss', 'lost', 'lose', 'defeat'].includes(outcome);
+            const perKill =
+                Number(
+                    data.perKill ||
+                    0
+                );
 
-                await setDoc(historyRef, {
-                    tournamentId: tournamentId,
-                    userId: currentUserUid,
-                    uid: currentUserUid,
-                    name: data.name || 'Tournament',
-                    time: data.time || '',
-                    startTime: Number(data.startTime || 0),
-                    completedAt: Number(data.completedAt || Date.now()),
-                    status: 'completed',
 
-                    userPlayers: Array.isArray(userEntry.players) ? userEntry.players : [],
-                    registeredAt: userEntry.registeredAt || 0,
+            if (
+                wonAmount <= 0 &&
+                kills > 0 &&
+                perKill > 0 &&
+                (
+                    userResult.killOnly === true ||
+                    data.killOnly === true
+                )
+            ) {
 
-                    entryFee: Number(data.entryFee || 0),
-                    entryFeePaid: Number(
-                        userEntry.entryFeePaid ??
-                        userEntry.paidEntryFee ??
-                        userEntry.amountPaid ??
-                        data.entryFee ??
-                        0
-                    ),
+                wonAmount =
+                    kills * perKill;
 
-                    prize: data.prize || 0,
-                    map: data.map || 'Bermuda',
-
-                    result: isWinner ? 'WIN' : (isLoss ? 'LOSS' : 'RESULT PENDING'),
-                    matchResult: isWinner ? 'WIN' : (isLoss ? 'LOSS' : 'RESULT PENDING'),
-                    isWinner: isWinner,
-                    winner: isWinner,
-
-                    wonAmount: isWinner ? wonAmount : 0,
-                    winnings: isWinner ? wonAmount : 0,
-                    prizeWon: isWinner ? wonAmount : 0,
-
-                    kills: kills,
-                    position: userResult.position ?? null,
-                    roomId: data.roomId || '',
-                    roomPass: data.roomPass || ''
-                });
-            } catch (e) {
-                console.error('Permanent match history archive failed:', e);
             }
+
+
+            const isWinner =
+                userResult.winner === true ||
+                userEntry.isWinner === true ||
+                userEntry.winner === true ||
+                data.winnerUid === currentUserUid ||
+                (
+                    Array.isArray(
+                        data.winnerUids
+                    ) &&
+                    data.winnerUids.includes(
+                        currentUserUid
+                    )
+                ) ||
+                [
+                    "win",
+                    "won",
+                    "winner",
+                    "victory"
+                ].includes(
+                    outcome
+                ) ||
+                wonAmount > 0;
+
+
+            const isLoss =
+                userResult.winner === false ||
+                userEntry.isWinner === false ||
+                userEntry.winner === false ||
+                [
+                    "loss",
+                    "lost",
+                    "lose",
+                    "defeat"
+                ].includes(
+                    outcome
+                );
+
+
+            await setDoc(
+                historyRef,
+                {
+
+                    tournamentId,
+
+                    userId:
+                        currentUserUid,
+
+                    uid:
+                        currentUserUid,
+
+                    name:
+                        data.name ||
+                        "Tournament",
+
+                    time:
+                        data.time ||
+                        "",
+
+                    startTime:
+                        Number(
+                            data.startTime ||
+                            0
+                        ),
+
+                    completedAt:
+                        Number(
+                            data.completedAt ||
+                            Date.now()
+                        ),
+
+                    status:
+                        "completed",
+
+                    userPlayers:
+                        Array.isArray(
+                            userEntry.players
+                        )
+                            ? userEntry.players
+                            : [],
+
+                    registeredAt:
+                        userEntry.registeredAt ||
+                        0,
+
+                    entryFee:
+                        Number(
+                            data.entryFee ||
+                            0
+                        ),
+
+                    entryFeePaid:
+                        Number(
+                            userEntry.entryFeePaid ??
+                            userEntry.paidEntryFee ??
+                            userEntry.amountPaid ??
+                            data.entryFee ??
+                            0
+                        ),
+
+                    prize:
+                        data.prize ||
+                        0,
+
+                    map:
+                        data.map ||
+                        "Bermuda",
+
+                    result:
+                        isWinner
+                            ? "WIN"
+                            : (
+                                isLoss
+                                    ? "LOSS"
+                                    : "RESULT PENDING"
+                            ),
+
+                    matchResult:
+                        isWinner
+                            ? "WIN"
+                            : (
+                                isLoss
+                                    ? "LOSS"
+                                    : "RESULT PENDING"
+                            ),
+
+                    isWinner,
+
+                    winner:
+                        isWinner,
+
+                    wonAmount:
+                        isWinner
+                            ? wonAmount
+                            : 0,
+
+                    winnings:
+                        isWinner
+                            ? wonAmount
+                            : 0,
+
+                    prizeWon:
+                        isWinner
+                            ? wonAmount
+                            : 0,
+
+                    kills,
+
+                    position:
+                        userResult.position ??
+                        null,
+
+                    roomId:
+                        data.roomId ||
+                        "",
+
+                    roomPass:
+                        data.roomPass ||
+                        ""
+
+                }
+            );
+
+        } catch (e) {
+
+            console.error(
+                "Archive:",
+                e
+            );
+
         }
 
-        function getResultInfo(m) {
-            const entry = m.userEntry || {};
-            const results = Array.isArray(m.results) ? m.results : [];
+    }
 
-            const userResult = results.find(r =>
-                r && (r.userId === currentUserUid || r.uid === currentUserUid)
+
+    /* =========================
+       RESULT
+    ========================= */
+
+    function getResultInfo(m) {
+
+        const entry =
+            m.userEntry ||
+            {};
+
+
+        const results =
+            Array.isArray(
+                m.results
+            )
+                ? m.results
+                : [];
+
+
+        const userResult =
+            results.find(
+                r =>
+                    r &&
+                    (
+                        r.userId ===
+                            currentUserUid ||
+
+                        r.uid ===
+                            currentUserUid
+                    )
             ) || {};
 
-            const outcome = String(
+
+        const outcome =
+            String(
                 m.result ??
                 m.matchResult ??
                 m.outcome ??
@@ -232,10 +1181,14 @@
                 entry.outcome ??
                 userResult.result ??
                 userResult.outcome ??
-                ''
-            ).trim().toLowerCase();
+                ""
+            )
+            .trim()
+            .toLowerCase();
 
-            let wonAmount = Number(
+
+        let wonAmount =
+            Number(
                 m.wonAmount ??
                 m.winnings ??
                 m.prizeWon ??
@@ -249,253 +1202,1945 @@
                 0
             );
 
-            const kills = Number(userResult.kills ?? m.kills ?? 0);
-            const perKill = Number(m.perKill || 0);
 
-            if (wonAmount <= 0 && kills > 0 && perKill > 0 &&
-                (userResult.killOnly === true || m.killOnly === true)) {
-                wonAmount = kills * perKill;
-            }
+        const kills =
+            Number(
+                userResult.kills ??
+                m.kills ??
+                0
+            );
 
-            const isWinner =
-                m.isWinner === true ||
-                m.winner === true ||
-                entry.isWinner === true ||
-                entry.winner === true ||
-                userResult.winner === true ||
-                m.winnerUid === currentUserUid ||
-                (Array.isArray(m.winnerUids) && m.winnerUids.includes(currentUserUid)) ||
-                ['win', 'won', 'winner', 'victory'].includes(outcome) ||
-                wonAmount > 0;
 
-            const isLoss =
-                m.isWinner === false ||
-                m.winner === false ||
-                entry.isWinner === false ||
-                entry.winner === false ||
-                userResult.winner === false ||
-                ['loss', 'lost', 'lose', 'defeat'].includes(outcome);
+        const perKill =
+            Number(
+                m.perKill ||
+                0
+            );
 
-            return {
-                isWinner,
-                isLoss,
-                result: isWinner ? 'WIN' : (isLoss ? 'LOSS' : 'RESULT PENDING'),
-                wonAmount: Number.isFinite(wonAmount) ? wonAmount : 0,
-                kills
-            };
+
+        if (
+            wonAmount <= 0 &&
+            kills > 0 &&
+            perKill > 0 &&
+            (
+                userResult.killOnly === true ||
+                m.killOnly === true
+            )
+        ) {
+
+            wonAmount =
+                kills * perKill;
+
         }
 
-        async function fetchMyMatches(uid) {
-            try {
-                const [historySnap, tourSnap] = await Promise.all([
-                    getDocs(query(collection(db, 'matchHistory'), where('userId', '==', uid))).catch(() => null),
-                    getDocs(collection(db, "tournaments"))
+
+        const isWinner =
+            m.isWinner === true ||
+            m.winner === true ||
+            entry.isWinner === true ||
+            entry.winner === true ||
+            userResult.winner === true ||
+            m.winnerUid === currentUserUid ||
+            (
+                Array.isArray(
+                    m.winnerUids
+                ) &&
+                m.winnerUids.includes(
+                    currentUserUid
+                )
+            ) ||
+            [
+                "win",
+                "won",
+                "winner",
+                "victory"
+            ].includes(
+                outcome
+            ) ||
+            wonAmount > 0;
+
+
+        const isLoss =
+            m.isWinner === false ||
+            m.winner === false ||
+            entry.isWinner === false ||
+            entry.winner === false ||
+            userResult.winner === false ||
+            [
+                "loss",
+                "lost",
+                "lose",
+                "defeat"
+            ].includes(
+                outcome
+            );
+
+
+        return {
+
+            isWinner,
+
+            isLoss,
+
+            result:
+                isWinner
+                    ? "WIN"
+                    : (
+                        isLoss
+                            ? "LOSS"
+                            : "RESULT PENDING"
+                    ),
+
+            wonAmount:
+                Number.isFinite(
+                    wonAmount
+                )
+                    ? wonAmount
+                    : 0,
+
+            kills,
+
+            position:
+                userResult.position ??
+                m.position ??
+                null
+
+        };
+
+    }
+
+
+    /* =========================
+       FETCH MATCHES
+    ========================= */
+
+    async function fetchMyMatches(uid) {
+
+        try {
+
+            /*
+             * দুই query একসাথে।
+             */
+
+            const historyPromise =
+                getDocs(
+                    query(
+                        collection(
+                            db,
+                            "matchHistory"
+                        ),
+                        where(
+                            "userId",
+                            "==",
+                            uid
+                        )
+                    )
+                ).catch(
+                    () => null
+                );
+
+
+            const tournamentPromise =
+                getDocs(
+                    collection(
+                        db,
+                        "tournaments"
+                    )
+                );
+
+
+            const [
+                historySnap,
+                tourSnap
+            ] =
+                await Promise.all([
+                    historyPromise,
+                    tournamentPromise
                 ]);
 
-                const byId = new Map();
 
-                // Permanent history always comes first.
-                if (historySnap) {
-                    historySnap.forEach(d => {
-                        const data = d.data() || {};
-                        byId.set(String(data.tournamentId || d.id), {
-                            id: String(data.tournamentId || d.id),
-                            ...data,
-                            status: 'completed',
-                            userEntry: {
-                                uid: uid,
-                                players: data.userPlayers || [],
-                                isWinner: data.isWinner === true,
-                                winner: data.winner === true,
-                                wonAmount: data.wonAmount
-                            },
-                            userPlayers: Array.isArray(data.userPlayers) ? data.userPlayers : []
-                        });
-                    });
-                }
+            const byId =
+                new Map();
 
-                // Add live/upcoming tournaments and update a permanent result
-                // only when the tournament document still exists.
-                for (const d of tourSnap.docs) {
-                    const data = d.data() || {};
-                    const participants = Array.isArray(data.participants) ? data.participants : [];
-                    const userEntry = participants.find(p => p && p.uid === uid);
-                    if (!userEntry) continue;
 
-                    const rawStatus = String(data.status || 'upcoming').toLowerCase();
-                    const isCompleted =
-                        ['complete', 'completed', 'finished', 'finish', 'result'].includes(rawStatus) ||
-                        data.completed === true ||
-                        data.isCompleted === true;
+            /* Permanent history */
 
-                    if (isCompleted) {
-                        await archiveCompletedMatch(d.id, data, userEntry);
-                    }
+            if (historySnap) {
 
-                    const existing = byId.get(d.id);
+                historySnap.forEach(
+                    d => {
 
-                    if (existing && existing.status === 'completed') {
-                        // Keep permanent result values; only refresh harmless tournament details.
-                        byId.set(d.id, {
-                            ...existing,
-                            name: data.name || existing.name,
-                            time: data.time || existing.time,
-                            startTime: data.startTime ?? existing.startTime,
-                            roomId: data.roomId ?? existing.roomId,
-                            roomPass: data.roomPass ?? existing.roomPass
-                        });
-                    } else {
-                        byId.set(d.id, {
-                            id: d.id,
-                            ...data,
-                            userPlayers: Array.isArray(userEntry.players) ? userEntry.players : [],
-                            userEntry,
-                            registeredAt: userEntry.registeredAt || 0,
-                            status: data.status || 'upcoming'
-                        });
-                    }
-                }
+                        const data =
+                            d.data() ||
+                            {};
 
-                allJoinedMatches = Array.from(byId.values())
-                    .sort((a, b) =>
-                        Number(b.completedAt || b.startTime || b.registeredAt || 0) -
-                        Number(a.completedAt || a.startTime || a.registeredAt || 0)
-                    );
 
-                renderMatches();
-            } catch (e) {
-                console.error(e);
-                showToast("ম্যাচ হিস্ট্রি লোড করতে সমস্যা হয়েছে!", "error");
-            }
-        }
+                        byId.set(
+                            String(
+                                data.tournamentId ||
+                                d.id
+                            ),
+                            {
 
-        function startMyMatchesRealtime(uid) {
-            onSnapshot(
-                collection(db, 'tournaments'),
-                async () => {
-                    await fetchMyMatches(uid);
-                },
-                e => console.warn('Tournament realtime failed:', e)
-            );
+                                id:
+                                    String(
+                                        data.tournamentId ||
+                                        d.id
+                                    ),
 
-            onSnapshot(
-                query(collection(db, 'matchHistory'), where('userId', '==', uid)),
-                snapshot => {
-                    snapshot.docChanges().forEach(change => {
-                        if (change.type === 'removed') return;
+                                ...data,
 
-                        const data = change.doc.data() || {};
-                        const tournamentId = String(data.tournamentId || change.doc.id);
-                        const item = {
-                            id: tournamentId,
-                            ...data,
-                            status: 'completed',
-                            userPlayers: Array.isArray(data.userPlayers) ? data.userPlayers : [],
-                            userEntry: {
-                                uid,
-                                players: Array.isArray(data.userPlayers) ? data.userPlayers : [],
-                                isWinner: data.isWinner === true,
-                                winner: data.winner === true,
-                                wonAmount: data.wonAmount
+                                status:
+                                    "completed",
+
+                                userEntry: {
+
+                                    uid,
+
+                                    players:
+                                        data.userPlayers ||
+                                        [],
+
+                                    isWinner:
+                                        data.isWinner === true,
+
+                                    winner:
+                                        data.winner === true,
+
+                                    wonAmount:
+                                        data.wonAmount
+
+                                },
+
+                                userPlayers:
+                                    Array.isArray(
+                                        data.userPlayers
+                                    )
+                                        ? data.userPlayers
+                                        : []
+
                             }
-                        };
-
-                        const idx = allJoinedMatches.findIndex(
-                            m => String(m.id) === tournamentId
                         );
 
-                        if (idx >= 0) {
-                            allJoinedMatches[idx] = {
-                                ...allJoinedMatches[idx],
-                                ...item
-                            };
-                        } else {
-                            allJoinedMatches.unshift(item);
-                        }
-                    });
+                    }
+                );
 
-                    allJoinedMatches.sort((a, b) =>
-                        Number(b.completedAt || b.startTime || b.registeredAt || 0) -
-                        Number(a.completedAt || a.startTime || a.registeredAt || 0)
+            }
+
+
+            /* Current tournaments */
+
+            for (
+                const d of
+                tourSnap.docs
+            ) {
+
+                const data =
+                    d.data() ||
+                    {};
+
+
+                const participants =
+                    Array.isArray(
+                        data.participants
+                    )
+                        ? data.participants
+                        : [];
+
+
+                const userEntry =
+                    participants.find(
+                        p =>
+                            p &&
+                            (
+                                p.uid === uid ||
+                                p.userId === uid
+                            )
                     );
 
-                    renderMatches();
-                },
-                e => console.warn('My Matches history realtime failed:', e)
-            );
-        }
 
-        window.filterMatches = function(type) {
-            currentFilter = type;
-            document.getElementById('tab-joined').className = type === 'joined' ? "flex-1 py-2 text-[11px] font-bold rounded-xl bg-blue-600 text-white shadow transition" : "flex-1 py-2 text-[11px] font-bold rounded-xl text-slate-400 hover:text-white transition";
-            document.getElementById('tab-completed').className = type === 'completed' ? "flex-1 py-2 text-[11px] font-bold rounded-xl bg-blue-600 text-white shadow transition" : "flex-1 py-2 text-[11px] font-bold rounded-xl text-slate-400 hover:text-white transition";
+                if (!userEntry)
+                    continue;
+
+
+                const rawStatus =
+                    String(
+                        data.status ||
+                        "upcoming"
+                    )
+                    .toLowerCase();
+
+
+                const isCompleted =
+                    [
+                        "complete",
+                        "completed",
+                        "finished",
+                        "finish",
+                        "result"
+                    ].includes(
+                        rawStatus
+                    ) ||
+                    data.completed === true ||
+                    data.isCompleted === true;
+
+
+                const isCancelled =
+                    [
+                        "cancelled",
+                        "canceled",
+                        "cancel",
+                        "refunded"
+                    ].includes(
+                        rawStatus
+                    ) ||
+                    data.cancelled === true ||
+                    data.canceled === true;
+
+
+                if (
+                    isCompleted
+                ) {
+
+                    await archiveCompletedMatch(
+                        d.id,
+                        data,
+                        userEntry
+                    );
+
+                }
+
+
+                const existing =
+                    byId.get(
+                        d.id
+                    );
+
+
+                if (
+                    existing &&
+                    existing.status ===
+                        "completed"
+                ) {
+
+                    byId.set(
+                        d.id,
+                        {
+
+                            ...existing,
+
+                            name:
+                                data.name ||
+                                existing.name,
+
+                            time:
+                                data.time ||
+                                existing.time,
+
+                            startTime:
+                                data.startTime ??
+                                existing.startTime,
+
+                            roomId:
+                                data.roomId ??
+                                existing.roomId,
+
+                            roomPass:
+                                data.roomPass ??
+                                existing.roomPass,
+
+                            prize:
+                                data.prize ??
+                                existing.prize,
+
+                            map:
+                                data.map ??
+                                existing.map,
+
+                            results:
+                                data.results ??
+                                existing.results,
+
+                            perKill:
+                                data.perKill ??
+                                existing.perKill
+
+                        }
+                    );
+
+                } else {
+
+                    byId.set(
+                        d.id,
+                        {
+
+                            id:
+                                d.id,
+
+                            ...data,
+
+                            userPlayers:
+                                Array.isArray(
+                                    userEntry.players
+                                )
+                                    ? userEntry.players
+                                    : [],
+
+                            userEntry,
+
+                            registeredAt:
+                                userEntry.registeredAt ||
+                                0,
+
+                            status:
+                                isCancelled
+                                    ? "cancelled"
+                                    : (
+                                        data.status ||
+                                        "upcoming"
+                                    )
+
+                        }
+                    );
+
+                }
+
+            }
+
+
+            allJoinedMatches =
+                Array.from(
+                    byId.values()
+                )
+                .sort(
+                    (a, b) =>
+                        getMatchTimestamp(b) -
+                        getMatchTimestamp(a)
+                );
+
+
             renderMatches();
+
+        } catch (e) {
+
+            console.error(
+                "Matches:",
+                e
+            );
+
+
+            showToast(
+                "ম্যাচ হিস্ট্রি লোড করতে সমস্যা হয়েছে!",
+                "error"
+            );
+
         }
 
-        function renderMatches() {
-            const grid = document.getElementById('matches-grid');
-            grid.innerHTML = "";
+    }
 
-            let filtered = allJoinedMatches;
-            if (currentFilter === 'completed') {
-                filtered = allJoinedMatches.filter(m => String(m.status || '').toLowerCase() === 'completed');
+
+    /* =========================
+       REALTIME
+    ========================= */
+
+    function startMyMatchesRealtime(
+        uid
+    ) {
+
+        onSnapshot(
+
+            collection(
+                db,
+                "tournaments"
+            ),
+
+            async () => {
+
+                await fetchMyMatches(
+                    uid
+                );
+
+            },
+
+            e =>
+                console.warn(
+                    "Tournament realtime failed:",
+                    e
+                )
+
+        );
+
+
+        onSnapshot(
+
+            query(
+                collection(
+                    db,
+                    "matchHistory"
+                ),
+                where(
+                    "userId",
+                    "==",
+                    uid
+                )
+            ),
+
+            snapshot => {
+
+                snapshot.docChanges()
+                    .forEach(
+                        change => {
+
+                            if (
+                                change.type ===
+                                "removed"
+                            )
+                                return;
+
+
+                            const data =
+                                change.doc.data() ||
+                                {};
+
+
+                            const tournamentId =
+                                String(
+                                    data.tournamentId ||
+                                    change.doc.id
+                                );
+
+
+                            const item = {
+
+                                id:
+                                    tournamentId,
+
+                                ...data,
+
+                                status:
+                                    "completed",
+
+                                userPlayers:
+                                    Array.isArray(
+                                        data.userPlayers
+                                    )
+                                        ? data.userPlayers
+                                        : [],
+
+                                userEntry: {
+
+                                    uid,
+
+                                    players:
+                                        Array.isArray(
+                                            data.userPlayers
+                                        )
+                                            ? data.userPlayers
+                                            : [],
+
+                                    isWinner:
+                                        data.isWinner === true,
+
+                                    winner:
+                                        data.winner === true,
+
+                                    wonAmount:
+                                        data.wonAmount
+
+                                }
+
+                            };
+
+
+                            const idx =
+                                allJoinedMatches.findIndex(
+                                    m =>
+                                        String(
+                                            m.id
+                                        ) ===
+                                        tournamentId
+                                );
+
+
+                            if (
+                                idx >= 0
+                            ) {
+
+                                allJoinedMatches[idx] =
+                                    {
+
+                                        ...allJoinedMatches[idx],
+
+                                        ...item
+
+                                    };
+
+                            } else {
+
+                                allJoinedMatches.unshift(
+                                    item
+                                );
+
+                            }
+
+                        }
+                    );
+
+
+                allJoinedMatches.sort(
+                    (a, b) =>
+                        getMatchTimestamp(b) -
+                        getMatchTimestamp(a)
+                );
+
+
+                renderMatches();
+
+            },
+
+            e =>
+                console.warn(
+                    "History realtime failed:",
+                    e
+                )
+
+        );
+
+    }
+
+
+    /* =========================
+       FILTER
+    ========================= */
+
+    window.filterMatches =
+        function(type) {
+
+            currentFilter =
+                type;
+
+
+            document
+                .querySelectorAll(
+                    ".tab-btn"
+                )
+                .forEach(
+                    btn =>
+                        btn.classList.remove(
+                            "tab-active"
+                        )
+                );
+
+
+            const active =
+                document.getElementById(
+                    `tab-${type}`
+                );
+
+
+            if (active)
+                active.classList.add(
+                    "tab-active"
+                );
+
+
+            renderMatches();
+
+        };
+
+
+    /* =========================
+       MATCH STATE
+    ========================= */
+
+    function getMatchState(m) {
+
+        const status =
+            String(
+                m.status ||
+                "upcoming"
+            )
+            .toLowerCase();
+
+
+        if (
+            [
+                "cancelled",
+                "canceled",
+                "cancel",
+                "refunded"
+            ].includes(
+                status
+            ) ||
+            m.cancelled === true ||
+            m.canceled === true
+        ) {
+
+            return "cancelled";
+
+        }
+
+
+        if (
+            [
+                "completed",
+                "complete",
+                "finished",
+                "finish",
+                "result"
+            ].includes(
+                status
+            ) ||
+            m.completed === true ||
+            m.isCompleted === true
+        ) {
+
+            return "completed";
+
+        }
+
+
+        if (
+            status === "live" ||
+            status === "running"
+        ) {
+
+            return "live";
+
+        }
+
+
+        return "joined";
+
+    }
+
+
+    /* =========================
+       RENDER
+    ========================= */
+
+    function renderMatches() {
+
+        const grid =
+            document.getElementById(
+                "matches-grid"
+            );
+
+
+        if (!grid)
+            return;
+
+
+        let filtered =
+            [...allJoinedMatches];
+
+
+        if (
+            currentFilter ===
+            "completed"
+        ) {
+
+            filtered =
+                filtered.filter(
+                    m =>
+                        getMatchState(m) ===
+                        "completed"
+                );
+
+        }
+
+        else if (
+            currentFilter ===
+            "cancelled"
+        ) {
+
+            filtered =
+                filtered.filter(
+                    m =>
+                        getMatchState(m) ===
+                        "cancelled"
+                );
+
+        }
+
+        else if (
+            currentFilter ===
+            "joined"
+        ) {
+
+            filtered =
+                filtered.filter(
+                    m =>
+                        [
+                            "joined",
+                            "live"
+                        ].includes(
+                            getMatchState(m)
+                        )
+                );
+
+        }
+
+        else if (
+            currentFilter ===
+            "winning"
+        ) {
+
+            filtered =
+                filtered.filter(
+                    m =>
+                        getResultInfo(m)
+                            .isWinner
+                );
+
+        }
+
+
+        document.getElementById(
+            "visible-count"
+        ).innerText =
+            filtered.length;
+
+
+        if (
+            filtered.length === 0
+        ) {
+
+            if (
+                allJoinedMatches.length ===
+                0
+            ) {
+
+                grid.innerHTML = `
+
+                    <div class="glass-card rounded-2xl p-10 text-center">
+
+                        <div
+                            class="w-12 h-12 rounded-full bg-slate-800/70 mx-auto flex items-center justify-center mb-3">
+
+                            <i class="fa-solid fa-trophy text-slate-600"></i>
+
+                        </div>
+
+                        <p class="text-xs font-bold text-slate-500">
+                            কোনো ম্যাচ হিস্ট্রি পাওয়া যায়নি
+                        </p>
+
+                    </div>
+
+                `;
+
             } else {
-                filtered = allJoinedMatches.filter(m => String(m.status || '').toLowerCase() !== 'completed');
+
+                grid.innerHTML = `
+
+                    <div class="glass-card rounded-2xl p-10 text-center">
+
+                        <div
+                            class="w-12 h-12 rounded-full bg-slate-800/70 mx-auto flex items-center justify-center mb-3">
+
+                            <i class="fa-solid fa-filter text-slate-600"></i>
+
+                        </div>
+
+                        <p class="text-xs font-bold text-slate-500">
+                            এই filter-এ কোনো ম্যাচ নেই
+                        </p>
+
+                    </div>
+
+                `;
+
             }
 
-            if (filtered.length === 0) {
-                grid.innerHTML = `<div class="text-center py-16 text-slate-500 text-xs">কোনো ম্যাচ হিস্ট্রি পাওয়া যায়নি</div>`;
-                return;
-            }
 
-            filtered.forEach(m => {
-                const ignList = Array.isArray(m.userPlayers) ? m.userPlayers.join(', ') : 'N/A';
-                const statusBadge = String(m.status || 'upcoming').toUpperCase();
-                const entry = m.userEntry || {};
-                const paidRaw = m.entryFeePaid ?? entry.entryFeePaid ?? entry.paidEntryFee ?? entry.amountPaid ?? m.entryFee ?? 0;
-                const paidAmount = Number(paidRaw);
+            updateSummary();
 
-                const resultInfo = getResultInfo(m);
-                const resultLabel = resultInfo.result;
-                const totalAmountWon = resultInfo.wonAmount;
-                const resultClass = resultLabel === 'WIN'
-                    ? 'text-emerald-400 border-emerald-500/30 bg-emerald-600/15'
-                    : resultLabel === 'LOSS'
-                        ? 'text-rose-400 border-rose-500/30 bg-rose-600/15'
-                        : 'text-amber-400 border-amber-500/30 bg-amber-600/15';
+            return;
+
+        }
+
+
+        grid.innerHTML = "";
+
+
+        filtered.forEach(
+            m => {
+
+                const ignList =
+                    Array.isArray(
+                        m.userPlayers
+                    )
+                        ? m.userPlayers.join(
+                            ", "
+                        )
+                        : "N/A";
+
+
+                const state =
+                    getMatchState(m);
+
+
+                const resultInfo =
+                    getResultInfo(m);
+
+
+                const resultLabel =
+                    resultInfo.result;
+
+
+                const paidRaw =
+                    m.entryFeePaid ??
+                    (m.userEntry || {})
+                        .entryFeePaid ??
+                    (m.userEntry || {})
+                        .paidEntryFee ??
+                    (m.userEntry || {})
+                        .amountPaid ??
+                    m.entryFee ??
+                    0;
+
+
+                const paidAmount =
+                    Number(
+                        paidRaw
+                    );
+
+
+                const position =
+                    resultInfo.position;
+
+
+                const positionText =
+                    position !== null &&
+                    position !== undefined &&
+                    position !== ""
+
+                        ? `#${position}`
+
+                        : "Not recorded";
+
+
+                const stateLabel =
+                    state === "completed"
+
+                        ? "COMPLETED"
+
+                        : state === "cancelled"
+
+                            ? "CANCELLED"
+
+                            : state === "live"
+
+                                ? "LIVE"
+
+                                : String(
+                                    m.status ||
+                                    "UPCOMING"
+                                ).toUpperCase();
+
+
+                let stateClass =
+                    "text-blue-400 border-blue-500/20 bg-blue-500/10";
+
+
+                if (
+                    state ===
+                    "completed"
+                )
+
+                    stateClass =
+                        "text-emerald-400 border-emerald-500/20 bg-emerald-500/10";
+
+
+                if (
+                    state ===
+                    "cancelled"
+                )
+
+                    stateClass =
+                        "text-rose-400 border-rose-500/20 bg-rose-500/10";
+
+
+                if (
+                    state ===
+                    "live"
+                )
+
+                    stateClass =
+                        "text-amber-400 border-amber-500/20 bg-amber-500/10";
+
+
+                const resultClass =
+                    resultLabel ===
+                    "WIN"
+
+                        ? "text-emerald-400 border-emerald-500/30 bg-emerald-600/15"
+
+                        : resultLabel ===
+                          "LOSS"
+
+                            ? "text-rose-400 border-rose-500/30 bg-rose-600/15"
+
+                            : "text-amber-400 border-amber-500/30 bg-amber-600/15";
+
+
+                const resultIcon =
+                    resultLabel ===
+                    "WIN"
+
+                        ? "fa-trophy"
+
+                        : resultLabel ===
+                          "LOSS"
+
+                            ? "fa-xmark"
+
+                            : "fa-clock";
+
+
+                const timestamp =
+                    getMatchTimestamp(
+                        m
+                    );
+
+
+                const dateText =
+                    formatBanglaDateTime(
+                        timestamp
+                    );
+
+
+                const roomId =
+                    m.roomId ||
+                    "";
+
+
+                const roomPass =
+                    m.roomPass ||
+                    "";
+
+
+                const hasRoom =
+                    roomId &&
+                    roomPass;
+
+
+                const refund =
+                    state ===
+                    "cancelled" ||
+
+                    m.refunded === true ||
+
+                    m.refundStatus ===
+                    "refunded";
+
 
                 grid.innerHTML += `
-                    <div class="glass-card rounded-2xl p-4 space-y-3 shadow-lg border border-slate-800">
-                        <div class="flex justify-between items-center">
-                            <div>
-                                <h4 class="text-xs font-bold text-white">${m.name || 'Tournament'}</h4>
-                                <span class="text-[10px] text-slate-400 block">${m.time || 'Scheduled'}</span>
+
+                    <div
+                        class="match-card glass-card rounded-2xl overflow-hidden shadow-xl">
+
+                        <!-- Header -->
+
+                        <div class="p-4 pb-3">
+
+                            <div
+                                class="flex justify-between items-start gap-3">
+
+                                <div class="min-w-0">
+
+                                    <div
+                                        class="flex items-center gap-2">
+
+                                        <div
+                                            class="w-8 h-8 rounded-xl bg-blue-600/10 border border-blue-500/20 flex items-center justify-center shrink-0">
+
+                                            <i class="fa-solid fa-gamepad text-blue-400 text-xs"></i>
+
+                                        </div>
+
+
+                                        <div class="min-w-0">
+
+                                            <h4
+                                                class="text-xs font-bold text-white truncate">
+
+                                                ${escapeHtml(
+                                                    m.name ||
+                                                    "Tournament"
+                                                )}
+
+                                            </h4>
+
+
+                                            <span
+                                                class="text-[9px] text-slate-500 block mt-0.5">
+
+                                                ${dateText}
+
+                                            </span>
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+
+                                <span
+                                    class="shrink-0 px-2 py-1 rounded-lg border text-[8px] font-black ${stateClass}">
+
+                                    ${stateLabel}
+
+                                </span>
+
                             </div>
-                            <span class="px-2 py-0.5 rounded-md border text-[10px] font-bold ${resultLabel === 'WIN' ? 'text-emerald-400 border-emerald-500/30 bg-emerald-600/15' : resultLabel === 'LOSS' ? 'text-rose-400 border-rose-500/30 bg-rose-600/15' : 'text-amber-400 border-amber-500/30 bg-amber-600/15'}">
-                                ${String(m.status || '').toLowerCase() === 'completed'
-                                    ? (resultLabel === 'WIN' ? `WIN • ৳${totalAmountWon}` : resultLabel)
-                                    : statusBadge}
-                            </span>
-                        </div>
-                        <div class="bg-[#0b0f1a] p-2.5 rounded-xl border border-slate-800/80 text-[11px] space-y-1">
-                            <div class="flex justify-between"><span class="text-slate-400">Entry Fee Paid:</span> <span class="text-white font-semibold">৳${Number.isFinite(paidAmount) ? paidAmount : 0}</span></div>
-                            <div class="flex justify-between"><span class="text-slate-400">Result:</span> <span class="px-2 py-0.5 rounded-md border text-[10px] font-bold ${resultClass}">${resultLabel}</span></div>
-                            <div class="flex justify-between"><span class="text-slate-400">Won Amount:</span> <span class="${resultLabel === 'WIN' ? 'text-emerald-400' : 'text-slate-400'} font-bold">৳${totalAmountWon}</span></div>
-                            ${resultInfo.kills > 0 ? `<div class="flex justify-between"><span class="text-slate-400">Kills:</span> <span class="text-blue-300 font-bold">${resultInfo.kills}</span></div>` : ''}
-                            <div class="flex justify-between"><span class="text-slate-400">Prize Pool:</span> <span class="text-amber-400 font-semibold">${m.prize || '0 TK'}</span></div>
-                            <div class="flex justify-between"><span class="text-slate-400">Map:</span> <span class="text-emerald-400 font-semibold">${m.map || 'Bermuda'}</span></div>
-                            <div class="pt-1 border-t border-slate-800"><span class="text-slate-400 block mb-0.5">Your IGNs:</span> <span class="text-blue-300 font-bold select-all">${ignList}</span></div>
-                        </div>
-                        ${m.roomId && m.roomPass ? `
-                            <div class="bg-emerald-950/30 border border-emerald-500/30 p-2.5 rounded-xl flex justify-between items-center text-xs">
-                                <div><span class="text-slate-400 text-[10px] block">Room ID: <strong class="text-white select-all">${m.roomId}</strong></span></div>
-                                <div><span class="text-slate-400 text-[10px] block">Password: <strong class="text-amber-400 select-all">${m.roomPass}</strong></span></div>
+
+
+                            <!-- Result -->
+
+                            <div
+                                class="mt-3 flex items-center justify-between">
+
+                                <div>
+
+                                    <p class="text-[9px] text-slate-500">
+                                        Match Result
+                                    </p>
+
+
+                                    <div
+                                        class="flex items-center gap-1.5 mt-0.5">
+
+                                        <i
+                                            class="fa-solid ${resultIcon} ${
+                                                resultLabel ===
+                                                "WIN"
+
+                                                    ? "text-emerald-400"
+
+                                                    : resultLabel ===
+                                                      "LOSS"
+
+                                                        ? "text-rose-400"
+
+                                                        : "text-amber-400"
+                                            } text-[10px]">
+                                        </i>
+
+
+                                        <span
+                                            class="text-xs font-black ${
+                                                resultLabel ===
+                                                "WIN"
+
+                                                    ? "text-emerald-400"
+
+                                                    : resultLabel ===
+                                                      "LOSS"
+
+                                                        ? "text-rose-400"
+
+                                                        : "text-amber-400"
+                                            }">
+
+                                            ${
+                                                resultLabel ===
+                                                "WIN"
+
+                                                    ? `WIN • ৳${resultInfo.wonAmount}`
+
+                                                    : resultLabel
+                                            }
+
+                                        </span>
+
+                                    </div>
+
+                                </div>
+
+
+                                <div class="text-right">
+
+                                    <p class="text-[9px] text-slate-500">
+                                        Position
+                                    </p>
+
+                                    <p
+                                        class="text-xs font-bold text-white mt-0.5">
+
+                                        ${positionText}
+
+                                    </p>
+
+                                </div>
+
                             </div>
-                        ` : ''}
+
+                        </div>
+
+
+                        <!-- Details -->
+
+                        <div
+                            class="mx-4 mb-3 bg-[#0b0f1a] rounded-xl border border-slate-800/90 p-3">
+
+                            <div
+                                class="grid grid-cols-2 gap-x-4 gap-y-2.5">
+
+
+                                <div>
+
+                                    <span
+                                        class="text-[9px] text-slate-500 block">
+
+                                        Entry Fee Paid
+
+                                    </span>
+
+                                    <span
+                                        class="text-[11px] text-white font-bold">
+
+                                        ৳${
+                                            Number.isFinite(
+                                                paidAmount
+                                            )
+                                                ? paidAmount
+                                                : 0
+                                        }
+
+                                    </span>
+
+                                </div>
+
+
+                                <div
+                                    class="text-right">
+
+                                    <span
+                                        class="text-[9px] text-slate-500 block">
+
+                                        Won Amount
+
+                                    </span>
+
+                                    <span
+                                        class="text-[11px] ${
+                                            resultLabel ===
+                                            "WIN"
+
+                                                ? "text-emerald-400"
+
+                                                : "text-slate-400"
+                                        } font-bold">
+
+                                        ${
+                                            resultLabel ===
+                                            "RESULT PENDING"
+
+                                                ? "Not recorded"
+
+                                                : `৳${resultInfo.wonAmount}`
+                                        }
+
+                                    </span>
+
+                                </div>
+
+
+                                <div>
+
+                                    <span
+                                        class="text-[9px] text-slate-500 block">
+
+                                        Prize Pool
+
+                                    </span>
+
+                                    <span
+                                        class="text-[11px] text-amber-400 font-bold">
+
+                                        ${escapeHtml(
+                                            String(
+                                                m.prize ||
+                                                "0 TK"
+                                            )
+                                        )}
+
+                                    </span>
+
+                                </div>
+
+
+                                <div
+                                    class="text-right">
+
+                                    <span
+                                        class="text-[9px] text-slate-500 block">
+
+                                        Map
+
+                                    </span>
+
+                                    <span
+                                        class="text-[11px] text-emerald-400 font-bold">
+
+                                        ${escapeHtml(
+                                            m.map ||
+                                            "Bermuda"
+                                        )}
+
+                                    </span>
+
+                                </div>
+
+
+                                <div>
+
+                                    <span
+                                        class="text-[9px] text-slate-500 block">
+
+                                        Kills
+
+                                    </span>
+
+                                    <span
+                                        class="text-[11px] text-blue-300 font-bold">
+
+                                        ${
+                                            resultInfo.kills ||
+                                            0
+                                        }
+
+                                    </span>
+
+                                </div>
+
+
+                                <div
+                                    class="text-right">
+
+                                    <span
+                                        class="text-[9px] text-slate-500 block">
+
+                                        Result Status
+
+                                    </span>
+
+
+                                    <span
+                                        class="inline-block mt-0.5 px-2 py-0.5 rounded-md border text-[8px] font-bold ${resultClass}">
+
+                                        <i
+                                            class="fa-solid ${resultIcon} mr-0.5">
+                                        </i>
+
+                                        ${resultLabel}
+
+                                    </span>
+
+                                </div>
+
+                            </div>
+
+
+                            <!-- IGN -->
+
+                            <div
+                                class="pt-2.5 mt-2.5 border-t border-slate-800">
+
+                                <span
+                                    class="text-[9px] text-slate-500 block mb-1">
+
+                                    Your IGNs
+
+                                </span>
+
+
+                                <span
+                                    class="text-[11px] text-blue-300 font-bold break-words">
+
+                                    ${escapeHtml(
+                                        ignList
+                                    )}
+
+                                </span>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- Room -->
+
+                        ${
+                            hasRoom
+
+                                ? `
+
+                                    <div
+                                        class="mx-4 mb-3 rounded-xl bg-emerald-950/30 border border-emerald-500/20 p-3">
+
+                                        <div
+                                            class="flex items-center justify-between gap-3">
+
+                                            <div class="min-w-0">
+
+                                                <p class="text-[8px] text-slate-500">
+                                                    ROOM ID
+                                                </p>
+
+                                                <p
+                                                    class="text-[11px] text-white font-bold truncate">
+
+                                                    ${escapeHtml(
+                                                        roomId
+                                                    )}
+
+                                                </p>
+
+                                            </div>
+
+
+                                            <button
+                                                onclick="copyText('${escapeJs(roomId)}')"
+                                                class="copy-btn w-8 h-8 rounded-lg bg-slate-900/70 border border-slate-700 text-blue-400 flex items-center justify-center">
+
+                                                <i class="fa-regular fa-copy text-[10px]"></i>
+
+                                            </button>
+
+                                        </div>
+
+
+                                        <div
+                                            class="border-t border-emerald-500/10 my-2">
+                                        </div>
+
+
+                                        <div
+                                            class="flex items-center justify-between gap-3">
+
+                                            <div class="min-w-0">
+
+                                                <p class="text-[8px] text-slate-500">
+                                                    PASSWORD
+                                                </p>
+
+                                                <p
+                                                    class="text-[11px] text-amber-400 font-bold truncate">
+
+                                                    ${escapeHtml(
+                                                        roomPass
+                                                    )}
+
+                                                </p>
+
+                                            </div>
+
+
+                                            <button
+                                                onclick="copyText('${escapeJs(roomPass)}')"
+                                                class="copy-btn w-8 h-8 rounded-lg bg-slate-900/70 border border-slate-700 text-amber-400 flex items-center justify-center">
+
+                                                <i class="fa-regular fa-copy text-[10px]"></i>
+
+                                            </button>
+
+                                        </div>
+
+                                    </div>
+
+                                `
+
+                                : ""
+                        }
+
+
+                        <!-- Footer -->
+
+                        <div
+                            class="px-4 pb-4">
+
+
+                            ${
+                                refund
+
+                                    ? `
+
+                                        <div
+                                            class="rounded-xl bg-rose-950/20 border border-rose-500/20 px-3 py-2.5">
+
+                                            <div
+                                                class="flex items-center gap-2">
+
+                                                <i
+                                                    class="fa-solid fa-rotate-left text-rose-400 text-xs">
+                                                </i>
+
+
+                                                <div>
+
+                                                    <p
+                                                        class="text-[10px] text-rose-300 font-bold">
+
+                                                        Tournament Cancelled
+
+                                                    </p>
+
+
+                                                    <p
+                                                        class="text-[8px] text-slate-500">
+
+                                                        Refund status:
+                                                        ${
+                                                            escapeHtml(
+                                                                m.refundStatus ||
+                                                                "Refund pending"
+                                                            )
+                                                        }
+
+                                                    </p>
+
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+
+                                    `
+
+                                    : state ===
+                                      "completed"
+
+                                        ? `
+
+                                            <div
+                                                class="rounded-xl ${
+                                                    resultLabel ===
+                                                    "WIN"
+
+                                                        ? "bg-emerald-950/20 border-emerald-500/20"
+
+                                                        : "bg-slate-900/60 border-slate-800"
+                                                } border px-3 py-2.5">
+
+                                                <div
+                                                    class="flex justify-between items-center">
+
+                                                    <span
+                                                        class="text-[9px] text-slate-500">
+
+                                                        Completed
+
+                                                    </span>
+
+
+                                                    <span
+                                                        class="text-[9px] font-bold ${
+                                                            resultLabel ===
+                                                            "WIN"
+
+                                                                ? "text-emerald-400"
+
+                                                                : "text-slate-400"
+                                                        }">
+
+                                                        ${
+                                                            resultLabel ===
+                                                            "WIN"
+
+                                                                ? `+৳${resultInfo.wonAmount}`
+
+                                                                : resultLabel ===
+                                                                  "LOSS"
+
+                                                                    ? "No winnings"
+
+                                                                    : "Result Pending"
+                                                        }
+
+                                                    </span>
+
+                                                </div>
+
+                                            </div>
+
+                                        `
+
+                                        : `
+
+                                            <div
+                                                class="rounded-xl bg-blue-950/20 border border-blue-500/15 px-3 py-2.5">
+
+                                                <div
+                                                    class="flex items-center gap-2">
+
+                                                    <span
+                                                        class="status-dot bg-blue-400">
+                                                    </span>
+
+
+                                                    <span
+                                                        class="text-[9px] text-blue-300 font-semibold">
+
+                                                        ${
+                                                            state ===
+                                                            "live"
+
+                                                                ? "Match is currently LIVE"
+
+                                                                : "You are registered in this tournament"
+                                                        }
+
+                                                    </span>
+
+                                                </div>
+
+                                            </div>
+
+                                        `
+                            }
+
+                        </div>
+
                     </div>
+
                 `;
-            });
-        }
-    </script>
+
+            }
+        );
+
+
+        updateSummary();
+
+    }
+
+
+    /* =========================
+       SUMMARY
+    ========================= */
+
+    function updateSummary() {
+
+        const completed =
+            allJoinedMatches.filter(
+                m =>
+                    getMatchState(m) ===
+                    "completed"
+            );
+
+
+        let totalEntry = 0;
+
+        let totalWon = 0;
+
+
+        completed.forEach(
+            m => {
+
+                const entry =
+                    Number(
+                        m.entryFeePaid ??
+                        (m.userEntry || {})
+                            .entryFeePaid ??
+                        (m.userEntry || {})
+                            .paidEntryFee ??
+                        (m.userEntry || {})
+                            .amountPaid ??
+                        m.entryFee ??
+                        0
+                    );
+
+
+                const result =
+                    getResultInfo(m);
+
+
+                totalEntry +=
+                    Number.isFinite(
+                        entry
+                    )
+                        ? entry
+                        : 0;
+
+
+                totalWon +=
+                    Number.isFinite(
+                        result.wonAmount
+                    )
+                        ? result.wonAmount
+                        : 0;
+
+            }
+        );
+
+
+        const totalProfit =
+            totalWon -
+            totalEntry;
+
+
+        document.getElementById(
+            "total-matches"
+        ).innerText =
+            allJoinedMatches.length;
+
+
+        document.getElementById(
+            "total-entry"
+        ).innerText =
+            `৳${totalEntry}`;
+
+
+        document.getElementById(
+            "total-won"
+        ).innerText =
+            `৳${totalWon}`;
+
+
+        const profitElement =
+            document.getElementById(
+                "total-profit"
+            );
+
+
+        profitElement.innerText =
+            `৳${totalProfit}`;
+
+
+        profitElement.className =
+            "text-xl font-black mt-0.5 " +
+
+            (
+                totalProfit > 0
+
+                    ? "profit-positive"
+
+                    : totalProfit < 0
+
+                        ? "profit-negative"
+
+                        : "profit-zero"
+            );
+
+
+        document.getElementById(
+            "profit-note"
+        ).innerText =
+
+            totalProfit > 0
+
+                ? `তোমার মোট লাভ ৳${totalProfit}`
+
+                : totalProfit < 0
+
+                    ? `তোমার নেট ফলাফল ৳${totalProfit}`
+
+                    : "Total Won − Total Entry";
+
+    }
+
+
+    /* =========================
+       SHARE
+    ========================= */
+
+    window.shareProfit =
+        async function() {
+
+            const text =
+                document.getElementById(
+                    "total-profit"
+                ).innerText;
+
+
+            const shareText =
+                `Aura Skill My Matches\n\n` +
+                `Total Profit: ${text}\n` +
+                `My tournament performance`;
+
+
+            try {
+
+                if (
+                    navigator.share
+                ) {
+
+                    await navigator.share({
+
+                        title:
+                            "Aura Skill - My Matches",
+
+                        text:
+                            shareText
+
+                    });
+
+                    return;
+
+                }
+
+
+                await navigator.clipboard.writeText(
+                    shareText
+                );
+
+
+                showToast(
+                    "Profit summary কপি হয়েছে!"
+                );
+
+            } catch (e) {
+
+                if (
+                    e &&
+                    e.name ===
+                    "AbortError"
+                )
+                    return;
+
+
+                showToast(
+                    "Share করা যায়নি!",
+                    "error"
+                );
+
+            }
+
+        };
+
+
+    /* =========================
+       COPY
+    ========================= */
+
+    window.copyText =
+        async function(text) {
+
+            if (!text) {
+
+                showToast(
+                    "কপি করার মতো তথ্য নেই!",
+                    "error"
+                );
+
+                return;
+
+            }
+
+
+            try {
+
+                await navigator.clipboard.writeText(
+                    text
+                );
+
+
+                showToast(
+                    "কপি হয়েছে!"
+                );
+
+            } catch (e) {
+
+                const textarea =
+                    document.createElement(
+                        "textarea"
+                    );
+
+
+                textarea.value =
+                    text;
+
+
+                document.body.appendChild(
+                    textarea
+                );
+
+
+                textarea.select();
+
+
+                document.execCommand(
+                    "copy"
+                );
+
+
+                textarea.remove();
+
+
+                showToast(
+                    "কপি হয়েছে!"
+                );
+
+            }
+
+        };
+
+
+    /* =========================
+       ESCAPE
+    ========================= */
+
+    function escapeHtml(value) {
+
+        return String(
+            value ?? ""
+        )
+
+            .replace(
+                /&/g,
+                "&amp;"
+            )
+
+            .replace(
+                /</g,
+                "&lt;"
+            )
+
+            .replace(
+                />/g,
+                "&gt;"
+            )
+
+            .replace(
+                /"/g,
+                "&quot;"
+            )
+
+            .replace(
+                /'/g,
+                "&#039;"
+            );
+
+    }
+
+
+    function escapeJs(value) {
+
+        return String(
+            value
+        )
+
+            .replace(
+                /\\/g,
+                "\\\\"
+            )
+
+            .replace(
+                /'/g,
+                "\\'"
+            )
+
+            .replace(
+                /"/g,
+                "&quot;"
+            );
+
+    }
+
+</script>
+
 </body>
 </html>
