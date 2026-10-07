@@ -226,9 +226,27 @@
                     const giftData = giftSnap.data();
                     const amount = Number(giftData.amount || 0);
 
+                    // Support both old gift codes (usedBy) and the newer
+                    // claimedUsers field created by the admin panel.
                     const usedBy = Array.isArray(giftData.usedBy) ? giftData.usedBy : [];
-                    if (usedBy.includes(currentUserId)) {
+                    const claimedUsers = Array.isArray(giftData.claimedUsers) ? giftData.claimedUsers : [];
+
+                    // A user can redeem the same gift code only once.
+                    if (usedBy.includes(currentUserId) || claimedUsers.includes(currentUserId)) {
                         throw new Error("আপনি ইতিমধ্যে এই গিফট কোডটি ব্যবহার করেছেন!");
+                    }
+
+                    // Enforce the admin-set maximum number of users atomically.
+                    // maxUses <= 0 means unlimited, matching common admin-panel behavior.
+                    const maxUses = Number(giftData.maxUses || 0);
+                    const currentUses = Math.max(
+                        Number(giftData.usedCount || 0),
+                        usedBy.length,
+                        claimedUsers.length
+                    );
+
+                    if (maxUses > 0 && currentUses >= maxUses) {
+                        throw new Error("এই গিফট কোডের সর্বোচ্চ ব্যবহার সীমা পূর্ণ হয়ে গেছে!");
                     }
 
                     const userSnap = await transaction.get(userRef);
@@ -240,9 +258,15 @@
                     const currentBalance = Number(userData.balance || 0);
 
                     usedBy.push(currentUserId);
+                    claimedUsers.push(currentUserId);
+
+                    const newUsedCount = currentUses + 1;
+
                     transaction.update(giftRef, { 
                         usedBy: usedBy,
-                        used: true 
+                        claimedUsers: claimedUsers,
+                        usedCount: newUsedCount,
+                        used: true
                     });
 
                     transaction.update(userRef, {
