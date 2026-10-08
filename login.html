@@ -243,10 +243,6 @@
                 0 0 25px rgba(124, 58, 237, .08);
         }
 
-        .aura-input:focus:valid {
-            border-color: rgba(124, 58, 237, .72);
-        }
-
         .password-toggle {
             position: absolute;
             right: 14px;
@@ -596,6 +592,71 @@
             box-shadow: 0 30px 90px rgba(0, 0, 0, .5);
         }
 
+        /* BAN SCREEN */
+        #banScreen {
+            z-index: 19000;
+            background:
+                radial-gradient(
+                    circle at top,
+                    rgba(239, 68, 68, .14),
+                    transparent 42%
+                ),
+                #050816;
+        }
+
+        .ban-icon {
+            width: 76px;
+            height: 76px;
+            margin: 0 auto;
+            border-radius: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(239,68,68,.10);
+            color: #fb7185;
+            border: 1px solid rgba(239,68,68,.18);
+            font-size: 30px;
+        }
+
+        .ban-reason {
+            margin-top: 16px;
+            padding: 13px 14px;
+            border-radius: 14px;
+            background: rgba(239,68,68,.06);
+            border: 1px solid rgba(239,68,68,.12);
+            color: #cbd5e1;
+            font-size: 13px;
+            line-height: 1.6;
+            word-break: break-word;
+        }
+
+        .ban-time {
+            margin-top: 10px;
+            color: #fbbf24;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .support-ban-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            min-height: 50px;
+            margin-top: 18px;
+            border-radius: 14px;
+            background: linear-gradient(135deg, #22c55e, #15803d);
+            color: #fff;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 700;
+            box-shadow: 0 12px 30px rgba(34,197,94,.18);
+        }
+
+        .support-ban-btn:active {
+            transform: scale(.98);
+        }
+
         #startupLoader {
             position: fixed;
             inset: 0;
@@ -604,7 +665,7 @@
             align-items: center;
             justify-content: center;
             background: #050816;
-            transition: opacity .4s ease, visibility .4s ease;
+            transition: opacity .25s ease, visibility .25s ease;
         }
 
         #startupLoader.hide {
@@ -632,12 +693,10 @@
         @keyframes loaderPulse {
             0%, 100% {
                 transform: scale(1);
-                box-shadow: 0 0 0 rgba(124, 58, 237, 0);
             }
 
             50% {
                 transform: scale(1.05);
-                box-shadow: 0 0 35px rgba(124, 58, 237, .25);
             }
         }
 
@@ -698,19 +757,6 @@
             color: #34d399;
             border: 1px solid rgba(16, 185, 129, .18);
             font-size: 30px;
-            animation: successPop .4s ease;
-        }
-
-        @keyframes successPop {
-            from {
-                transform: scale(.6);
-                opacity: 0;
-            }
-
-            to {
-                transform: scale(1);
-                opacity: 1;
-            }
         }
 
         .success-login {
@@ -769,7 +815,7 @@
     <div class="aura-orb aura-orb-3"></div>
 </div>
 
-<!-- STARTUP LOADER -->
+<!-- STARTUP -->
 <div id="startupLoader">
     <div class="text-center">
         <div class="loader-logo">
@@ -836,6 +882,55 @@
             </button>
 
         </a>
+    </div>
+</div>
+
+<!-- BAN SCREEN -->
+<div id="banScreen" class="full-screen-overlay">
+
+    <div class="overlay-card">
+
+        <div class="ban-icon">
+            <i class="fa-solid fa-user-lock"></i>
+        </div>
+
+        <h2 class="text-xl font-bold mt-5">
+            Account Temporarily Banned
+        </h2>
+
+        <p class="text-sm text-slate-400 mt-3 leading-6">
+            আপনার account বর্তমানে ব্যবহার করা যাচ্ছে না।
+        </p>
+
+        <div id="banReasonBox" class="ban-reason">
+            Ban reason এখানে দেখাবে।
+        </div>
+
+        <div id="banTimeBox" class="ban-time">
+            Ban status checking...
+        </div>
+
+        <a
+            id="banSupportLink"
+            class="support-ban-btn"
+            href="https://chat.whatsapp.com/DCxfqldDvbl8wOtk7PzCP9?s=cl&p=a&mlu=4&ilr=4"
+            target="_blank"
+            rel="noopener noreferrer">
+
+            <i class="fa-brands fa-whatsapp mr-2"></i>
+            Support এ যোগাযোগ করুন
+
+        </a>
+
+        <button
+            id="banCloseBtn"
+            type="button"
+            class="w-full mt-3 h-11 rounded-xl border border-white/5 bg-white/[.03] text-slate-400 text-sm font-semibold">
+
+            ফিরে যান
+
+        </button>
+
     </div>
 </div>
 
@@ -921,7 +1016,6 @@
 
         </div>
 
-        <!-- CONNECTION -->
         <div id="connectionStatus"
              class="connection-status online">
 
@@ -937,7 +1031,6 @@
               class="mt-7 space-y-4"
               autocomplete="on">
 
-            <!-- USERNAME -->
             <div>
 
                 <label
@@ -967,7 +1060,6 @@
 
             </div>
 
-            <!-- PASSWORD -->
             <div>
 
                 <label
@@ -1006,7 +1098,6 @@
 
             </div>
 
-            <!-- WRONG PASSWORD WARNING -->
             <div id="securityWarning"
                  class="security-warning">
 
@@ -1016,7 +1107,6 @@
 
             </div>
 
-            <!-- REMEMBER / FORGOT -->
             <div class="flex items-center justify-between gap-3 pt-1">
 
                 <label class="remember-box">
@@ -1042,7 +1132,6 @@
 
             </div>
 
-            <!-- LOGIN -->
             <button
                 type="submit"
                 id="loginBtn"
@@ -1058,7 +1147,6 @@
 
             </button>
 
-            <!-- REGISTER -->
             <div class="text-center text-sm text-slate-500 pt-2">
 
                 অ্যাকাউন্ট নেই?
@@ -1075,14 +1163,15 @@
 
         </form>
 
-        <!-- SUPPORT -->
         <div class="support-row">
 
             <a href="https://chat.whatsapp.com/DCxfqldDvbl8wOtk7PzCP9?s=cl&p=a&mlu=4&ilr=4"
                target="_blank"
                rel="noopener noreferrer">
+
                 <i class="fa-solid fa-headset mr-1"></i>
                 Support
+
             </a>
 
             <span class="text-slate-700">•</span>
@@ -1125,18 +1214,15 @@
 
 </main>
 
-<!-- FORGOT PASSWORD MODAL -->
+<!-- FORGOT PASSWORD -->
 <div id="forgotModal">
 
     <div class="forgot-card">
 
-        <!-- RESET FORM -->
         <div id="resetFormArea">
 
             <div class="w-12 h-12 rounded-xl bg-violet-500/10 text-violet-400 flex items-center justify-center text-lg">
-
                 <i class="fa-solid fa-key"></i>
-
             </div>
 
             <h2 class="text-xl font-bold mt-4">
@@ -1194,7 +1280,6 @@
 
         </div>
 
-        <!-- RESET SUCCESS -->
         <div id="resetSuccessArea"
              class="reset-success">
 
@@ -1216,9 +1301,7 @@
             </p>
 
             <div class="mt-4 text-xs text-slate-500">
-
                 Gmail-এর Spam/Junk folder-ও check করতে পারেন।
-
             </div>
 
             <button
@@ -1242,7 +1325,6 @@
 
             <div id="resendCountdown"
                  class="text-[10px] text-slate-600 mt-2">
-
             </div>
 
         </div>
@@ -1253,1460 +1335,1077 @@
 
 <script type="module">
 
-    import {
-        auth,
-        db,
-        isMedianApp,
-        getOneSignalInfo,
-        linkOneSignalUser
-    } from "./firebase.js";
+import {
+    auth,
+    db,
+    isMedianApp,
+    getOneSignalInfo,
+    linkOneSignalUser
+} from "./firebase.js";
 
-    import {
-        onAuthStateChanged,
-        signInWithEmailAndPassword,
-        sendPasswordResetEmail,
-        setPersistence,
-        browserLocalPersistence,
-        browserSessionPersistence,
-        signOut
-    } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+import {
+    onAuthStateChanged,
+    signInWithEmailAndPassword,
+    sendPasswordResetEmail,
+    setPersistence,
+    browserLocalPersistence,
+    browserSessionPersistence,
+    signOut
+} from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
-    import {
-        collection,
-        query,
-        where,
-        getDocs,
-        doc,
-        getDoc,
-        onSnapshot
-    } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+import {
+    collection,
+    query,
+    where,
+    getDocs,
+    doc,
+    getDoc,
+    onSnapshot,
+    updateDoc
+} from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
 
-    /* =========================================
-       ELEMENTS
-    ========================================= */
+/* =====================================================
+   ELEMENTS
+===================================================== */
 
-    const startupLoader =
-        document.getElementById("startupLoader");
+const startupLoader = document.getElementById("startupLoader");
 
-    const maintenanceScreen =
-        document.getElementById("maintenanceScreen");
+const maintenanceScreen =
+    document.getElementById("maintenanceScreen");
 
-    const maintenanceReason =
-        document.getElementById("maintenanceReason");
+const maintenanceReason =
+    document.getElementById("maintenanceReason");
 
-    const updateScreen =
-        document.getElementById("updateScreen");
+const updateScreen =
+    document.getElementById("updateScreen");
 
-    const updateLink =
-        document.getElementById("updateLink");
+const updateLink =
+    document.getElementById("updateLink");
 
-    const loginCard =
-        document.getElementById("loginCard");
+const banScreen =
+    document.getElementById("banScreen");
 
-    const loginForm =
-        document.getElementById("loginForm");
+const banReasonBox =
+    document.getElementById("banReasonBox");
 
-    const loginIdentifier =
-        document.getElementById("loginIdentifier");
+const banTimeBox =
+    document.getElementById("banTimeBox");
 
-    const loginPassword =
-        document.getElementById("loginPassword");
+const banSupportLink =
+    document.getElementById("banSupportLink");
 
-    const loginBtn =
-        document.getElementById("loginBtn");
+const banCloseBtn =
+    document.getElementById("banCloseBtn");
 
-    const loginBtnText =
-        document.getElementById("loginBtnText");
+const loginCard =
+    document.getElementById("loginCard");
 
-    const rememberMe =
-        document.getElementById("rememberMe");
+const loginForm =
+    document.getElementById("loginForm");
 
-    const togglePassword =
-        document.getElementById("togglePassword");
+const loginIdentifier =
+    document.getElementById("loginIdentifier");
 
-    const passwordEye =
-        document.getElementById("passwordEye");
+const loginPassword =
+    document.getElementById("loginPassword");
 
-    const forgotPasswordBtn =
-        document.getElementById("forgotPasswordBtn");
+const loginBtn =
+    document.getElementById("loginBtn");
 
-    const forgotModal =
-        document.getElementById("forgotModal");
+const loginBtnText =
+    document.getElementById("loginBtnText");
 
-    const forgotForm =
-        document.getElementById("forgotForm");
+const rememberMe =
+    document.getElementById("rememberMe");
 
-    const forgotEmail =
-        document.getElementById("forgotEmail");
+const togglePassword =
+    document.getElementById("togglePassword");
 
-    const closeForgotModal =
-        document.getElementById("closeForgotModal");
+const passwordEye =
+    document.getElementById("passwordEye");
 
-    const resetPasswordBtn =
-        document.getElementById("resetPasswordBtn");
+const forgotPasswordBtn =
+    document.getElementById("forgotPasswordBtn");
 
-    const resetBtnText =
-        document.getElementById("resetBtnText");
+const forgotModal =
+    document.getElementById("forgotModal");
 
-    const resetFormArea =
-        document.getElementById("resetFormArea");
+const forgotForm =
+    document.getElementById("forgotForm");
 
-    const resetSuccessArea =
-        document.getElementById("resetSuccessArea");
+const forgotEmail =
+    document.getElementById("forgotEmail");
 
-    const resetSuccessText =
-        document.getElementById("resetSuccessText");
+const closeForgotModal =
+    document.getElementById("closeForgotModal");
 
-    const resetCloseSuccess =
-        document.getElementById("resetCloseSuccess");
+const resetPasswordBtn =
+    document.getElementById("resetPasswordBtn");
 
-    const resendResetBtn =
-        document.getElementById("resendResetBtn");
+const resetBtnText =
+    document.getElementById("resetBtnText");
 
-    const resendCountdown =
-        document.getElementById("resendCountdown");
+const resetFormArea =
+    document.getElementById("resetFormArea");
 
-    const toastContainer =
-        document.getElementById("toastContainer");
+const resetSuccessArea =
+    document.getElementById("resetSuccessArea");
 
-    const notifBanner =
-        document.getElementById("customNotifBanner");
+const resetSuccessText =
+    document.getElementById("resetSuccessText");
 
-    const allowNotifBtn =
-        document.getElementById("allowNotifBtn");
+const resetCloseSuccess =
+    document.getElementById("resetCloseSuccess");
 
-    const closeNotifBtn =
-        document.getElementById("closeNotifBtn");
+const resendResetBtn =
+    document.getElementById("resendResetBtn");
 
-    const connectionStatus =
-        document.getElementById("connectionStatus");
+const resendCountdown =
+    document.getElementById("resendCountdown");
 
-    const connectionText =
-        document.getElementById("connectionText");
+const toastContainer =
+    document.getElementById("toastContainer");
 
-    const welcomeBox =
-        document.getElementById("welcomeBox");
+const notifBanner =
+    document.getElementById("customNotifBanner");
 
-    const welcomeSubtitle =
-        document.getElementById("welcomeSubtitle");
+const allowNotifBtn =
+    document.getElementById("allowNotifBtn");
 
-    const securityWarning =
-        document.getElementById("securityWarning");
+const closeNotifBtn =
+    document.getElementById("closeNotifBtn");
 
-    const securityWarningText =
-        document.getElementById("securityWarningText");
+const connectionStatus =
+    document.getElementById("connectionStatus");
 
+const connectionText =
+    document.getElementById("connectionText");
 
-    /* =========================================
-       GLOBAL STATE
-    ========================================= */
+const welcomeBox =
+    document.getElementById("welcomeBox");
 
-    let loginBusy = false;
-    let notificationBusy = false;
+const welcomeSubtitle =
+    document.getElementById("welcomeSubtitle");
 
-    let resetBusy = false;
-    let resetCooldownTimer = null;
+const securityWarning =
+    document.getElementById("securityWarning");
 
-    let lastResetEmail = "";
+const securityWarningText =
+    document.getElementById("securityWarningText");
 
-    const LOGIN_MAX_ATTEMPTS = 5;
-    const LOGIN_COOLDOWN_SECONDS = 30;
 
-    const RESET_COOLDOWN_SECONDS = 30;
+/* =====================================================
+   CONFIG
+===================================================== */
 
+const SUPPORT_LINK =
+    "https://chat.whatsapp.com/DCxfqldDvbl8wOtk7PzCP9?s=cl&p=a&mlu=4&ilr=4";
 
-    /* =========================================
-       HELPERS
-    ========================================= */
+const LOGIN_MAX_ATTEMPTS = 5;
+const LOGIN_COOLDOWN_SECONDS = 30;
 
-    function withTimeout(promise, milliseconds = 10000) {
+const RESET_COOLDOWN_SECONDS = 30;
 
-        return Promise.race([
-            promise,
 
-            new Promise((_, reject) => {
+/* =====================================================
+   STATE
+===================================================== */
 
-                setTimeout(() => {
-                    reject(new Error("REQUEST_TIMEOUT"));
-                }, milliseconds);
+let loginBusy = false;
+let notificationBusy = false;
+let resetBusy = false;
 
-            })
-        ]);
+let resetCooldownTimer = null;
+let lastResetEmail = "";
 
-    }
+let authStateResolved = false;
+let redirecting = false;
 
 
-    function escapeHTML(value) {
+/* =====================================================
+   TIMEOUT
+===================================================== */
 
-        return String(value)
-            .replace(/&/g, "&amp;")
-            .replace(/</g, "&lt;")
-            .replace(/>/g, "&gt;")
-            .replace(/"/g, "&quot;")
-            .replace(/'/g, "&#039;");
+function withTimeout(promise, milliseconds = 7000) {
 
-    }
+    return Promise.race([
 
+        promise,
 
-    function showToast(message, type = "info") {
-
-        if (!toastContainer) return;
-
-        const toast =
-            document.createElement("div");
-
-        toast.className = "aura-toast";
-
-        let icon = "fa-circle-info";
-
-        if (type === "success") {
-            icon = "fa-circle-check";
-        }
-
-        if (type === "error") {
-            icon = "fa-circle-exclamation";
-        }
-
-        if (type === "warning") {
-            icon = "fa-triangle-exclamation";
-        }
-
-        toast.innerHTML = `
-            <div class="toast-icon">
-                <i class="fa-solid ${icon}"></i>
-            </div>
-
-            <div class="toast-text">
-                ${escapeHTML(message)}
-            </div>
-        `;
-
-        toastContainer.appendChild(toast);
-
-        setTimeout(() => {
-
-            toast.style.opacity = "0";
-            toast.style.transform = "translateY(-6px)";
-            toast.style.transition =
-                "opacity .25s ease, transform .25s ease";
+        new Promise((_, reject) => {
 
             setTimeout(() => {
-                toast.remove();
-            }, 250);
+                reject(new Error("REQUEST_TIMEOUT"));
+            }, milliseconds);
 
-        }, 3500);
+        })
 
-    }
+    ]);
 
-
-    function hideStartupLoader() {
-
-        if (!startupLoader) return;
-
-        startupLoader.classList.add("hide");
-
-        setTimeout(() => {
-
-            startupLoader.style.display = "none";
-
-        }, 450);
-
-    }
+}
 
 
-    /* =========================================
-       CONNECTION STATUS
-    ========================================= */
+/* =====================================================
+   HTML ESCAPE
+===================================================== */
 
-    function updateConnectionStatus() {
+function escapeHTML(value) {
 
-        if (!connectionStatus) return;
+    return String(value)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
 
-        if (navigator.onLine) {
-
-            connectionStatus.classList.remove("offline");
-            connectionStatus.classList.add("online");
-
-            connectionText.textContent =
-                "Internet Connected";
-
-        } else {
-
-            connectionStatus.classList.remove("online");
-            connectionStatus.classList.add("offline");
-
-            connectionText.textContent =
-                "No Internet Connection";
-
-        }
-
-    }
+}
 
 
-    window.addEventListener(
-        "online",
-        () => {
+/* =====================================================
+   TOAST
+===================================================== */
 
-            updateConnectionStatus();
+function showToast(message, type = "info") {
 
-            showToast(
-                "Internet connection ফিরে এসেছে।",
-                "success"
-            );
+    if (!toastContainer) return;
 
-        }
-    );
+    const toast =
+        document.createElement("div");
 
+    toast.className = "aura-toast";
 
-    window.addEventListener(
-        "offline",
-        () => {
+    let icon = "fa-circle-info";
 
-            updateConnectionStatus();
+    if (type === "success")
+        icon = "fa-circle-check";
 
-            showToast(
-                "No Internet Connection।",
-                "error"
-            );
+    if (type === "error")
+        icon = "fa-circle-exclamation";
 
-        }
-    );
+    if (type === "warning")
+        icon = "fa-triangle-exclamation";
 
+    toast.innerHTML = `
+        <div class="toast-icon">
+            <i class="fa-solid ${icon}"></i>
+        </div>
 
-    updateConnectionStatus();
+        <div class="toast-text">
+            ${escapeHTML(message)}
+        </div>
+    `;
 
-
-    /* =========================================
-       STARTUP
-    ========================================= */
-
-    window.addEventListener(
-        "load",
-        () => {
-
-            setTimeout(
-                hideStartupLoader,
-                600
-            );
-
-        }
-    );
-
-
-    setTimeout(
-        hideStartupLoader,
-        5000
-    );
-
-
-    /* =========================================
-       LOGIN CARD GLOW
-    ========================================= */
+    toastContainer.appendChild(toast);
 
     setTimeout(() => {
 
-        if (loginCard) {
-            loginCard.classList.add("card-glow");
-        }
+        toast.style.opacity = "0";
+        toast.style.transform = "translateY(-6px)";
+        toast.style.transition =
+            "opacity .25s ease, transform .25s ease";
 
-    }, 1000);
+        setTimeout(() => toast.remove(), 250);
+
+    }, 3500);
+
+}
 
 
-    /* =========================================
-       PASSWORD SHOW/HIDE
-    ========================================= */
+/* =====================================================
+   LOADER
+===================================================== */
 
-    togglePassword.addEventListener(
-        "click",
-        () => {
+function hideStartupLoader() {
 
-            const isPassword =
-                loginPassword.type === "password";
+    if (!startupLoader) return;
 
-            loginPassword.type =
-                isPassword
-                    ? "text"
-                    : "password";
+    startupLoader.classList.add("hide");
 
-            passwordEye.className =
-                isPassword
-                    ? "fa-solid fa-eye-slash"
-                    : "fa-solid fa-eye";
+    setTimeout(() => {
+        startupLoader.style.display = "none";
+    }, 280);
 
-            togglePassword.setAttribute(
-                "aria-label",
-                isPassword
-                    ? "Hide password"
-                    : "Show password"
-            );
+}
 
-        }
+
+/*
+ * Loader খুব বেশি সময় ধরে থাকবে না।
+ * Auth check আলাদাভাবে চলবে।
+ */
+setTimeout(hideStartupLoader, 1800);
+
+
+/* =====================================================
+   CONNECTION
+===================================================== */
+
+function updateConnectionStatus() {
+
+    if (!connectionStatus) return;
+
+    if (navigator.onLine) {
+
+        connectionStatus.classList.remove("offline");
+        connectionStatus.classList.add("online");
+
+        connectionText.textContent =
+            "Internet Connected";
+
+    } else {
+
+        connectionStatus.classList.remove("online");
+        connectionStatus.classList.add("offline");
+
+        connectionText.textContent =
+            "No Internet Connection";
+
+    }
+
+}
+
+window.addEventListener("online", () => {
+
+    updateConnectionStatus();
+
+    showToast(
+        "Internet connection ফিরে এসেছে।",
+        "success"
     );
 
+});
 
-    /* =========================================
-       SAVED LOGIN
-    ========================================= */
+window.addEventListener("offline", () => {
+
+    updateConnectionStatus();
+
+    showToast(
+        "No Internet Connection।",
+        "error"
+    );
+
+});
+
+updateConnectionStatus();
+
+
+/* =====================================================
+   PASSWORD
+===================================================== */
+
+togglePassword.addEventListener("click", () => {
+
+    const isPassword =
+        loginPassword.type === "password";
+
+    loginPassword.type =
+        isPassword ? "text" : "password";
+
+    passwordEye.className =
+        isPassword
+            ? "fa-solid fa-eye-slash"
+            : "fa-solid fa-eye";
+
+});
+
+
+/* =====================================================
+   SAVED LOGIN
+===================================================== */
+
+try {
+
+    const savedIdentifier =
+        localStorage.getItem("auraSavedLogin");
+
+    if (savedIdentifier) {
+
+        loginIdentifier.value =
+            savedIdentifier;
+
+        rememberMe.checked = true;
+
+        showWelcome(savedIdentifier);
+
+    }
+
+} catch (error) {
+    console.warn("Remember me unavailable:", error);
+}
+
+
+/* =====================================================
+   WELCOME
+===================================================== */
+
+function showWelcome(value) {
+
+    if (!value) return;
+
+    const clean = value.trim();
+
+    if (!clean) return;
+
+    let name = clean;
+
+    if (clean.includes("@")) {
+        name = clean.split("@")[0];
+    }
+
+    name =
+        name
+            .replace(/[._-]+/g, " ")
+            .trim();
+
+    if (!name) return;
+
+    name =
+        name.charAt(0).toUpperCase() +
+        name.slice(1);
+
+    welcomeBox.innerHTML = `
+        <i class="fa-solid fa-hand-wave mr-1"></i>
+        Welcome back, ${escapeHTML(name)}
+    `;
+
+    welcomeBox.style.display = "block";
+
+    welcomeSubtitle.textContent =
+        "আপনাকে আবার দেখে ভালো লাগছে ❤️";
+
+}
+
+loginIdentifier.addEventListener("input", () => {
+
+    showWelcome(loginIdentifier.value);
+
+});
+
+
+/* =====================================================
+   USERNAME -> EMAIL
+===================================================== */
+
+async function getEmailFromUsername(username) {
+
+    const usernameLower =
+        username.toLowerCase().trim();
+
 
     try {
 
-        const savedIdentifier =
-            localStorage.getItem(
-                "auraSavedLogin"
+        const q1 =
+            query(
+                collection(db, "users"),
+                where(
+                    "usernameLower",
+                    "==",
+                    usernameLower
+                )
             );
 
-        if (savedIdentifier) {
+        const snap1 =
+            await getDocs(q1);
 
-            loginIdentifier.value =
-                savedIdentifier;
+        if (!snap1.empty) {
 
-            rememberMe.checked = true;
+            const data =
+                snap1.docs[0].data();
 
-            showWelcome(savedIdentifier);
+            if (data.email) {
+                return data.email.trim();
+            }
 
         }
 
     } catch (error) {
 
         console.warn(
-            "Remember me unavailable:",
+            "usernameLower lookup:",
             error
         );
 
     }
 
 
-    /* =========================================
-       WELCOME PERSONALIZATION
-    ========================================= */
+    try {
 
-    function showWelcome(value) {
+        const q2 =
+            query(
+                collection(db, "users"),
+                where(
+                    "username",
+                    "==",
+                    username.trim()
+                )
+            );
 
-        if (!value) return;
+        const snap2 =
+            await getDocs(q2);
 
-        const clean =
-            value.trim();
+        if (!snap2.empty) {
 
-        if (!clean) return;
+            const data =
+                snap2.docs[0].data();
 
-        let name = clean;
+            if (data.email) {
+                return data.email.trim();
+            }
 
-        if (clean.includes("@")) {
-            name = clean.split("@")[0];
         }
 
-        name =
-            name
-                .replace(/[._-]+/g, " ")
-                .trim();
+    } catch (error) {
 
-        if (!name) return;
-
-        name =
-            name.charAt(0).toUpperCase() +
-            name.slice(1);
-
-        welcomeBox.innerHTML = `
-            <i class="fa-solid fa-hand-wave mr-1"></i>
-            Welcome back, ${escapeHTML(name)}
-        `;
-
-        welcomeBox.style.display = "block";
-
-        welcomeSubtitle.textContent =
-            "আপনাকে আবার দেখে ভালো লাগছে ❤️";
+        console.warn(
+            "username lookup:",
+            error
+        );
 
     }
 
+    return null;
 
-    loginIdentifier.addEventListener(
-        "input",
-        () => {
+}
 
-            showWelcome(
-                loginIdentifier.value
+
+/* =====================================================
+   USER PROFILE
+===================================================== */
+
+async function getUserProfile(uid) {
+
+    try {
+
+        const userRef =
+            doc(db, "users", uid);
+
+        const snapshot =
+            await withTimeout(
+                getDoc(userRef),
+                6000
             );
 
-        }
-    );
-
-
-    /* =========================================
-       USERNAME -> EMAIL
-    ========================================= */
-
-    async function getEmailFromUsername(username) {
-
-        const usernameLower =
-            username.toLowerCase().trim();
-
-
-        /* usernameLower */
-        try {
-
-            const q1 =
-                query(
-                    collection(db, "users"),
-                    where(
-                        "usernameLower",
-                        "==",
-                        usernameLower
-                    )
-                );
-
-            const snap1 =
-                await getDocs(q1);
-
-            if (!snap1.empty) {
-
-                const data =
-                    snap1.docs[0].data();
-
-                if (data.email) {
-                    return data.email.trim();
-                }
-
-            }
-
-        } catch (error) {
-
-            console.warn(
-                "usernameLower lookup failed:",
-                error
-            );
-
+        if (!snapshot.exists()) {
+            return null;
         }
 
+        return snapshot.data() || {};
 
-        /* exact username */
-        try {
+    } catch (error) {
 
-            const q2 =
-                query(
-                    collection(db, "users"),
-                    where(
-                        "username",
-                        "==",
-                        username.trim()
-                    )
-                );
-
-            const snap2 =
-                await getDocs(q2);
-
-            if (!snap2.empty) {
-
-                const data =
-                    snap2.docs[0].data();
-
-                if (data.email) {
-                    return data.email.trim();
-                }
-
-            }
-
-        } catch (error) {
-
-            console.warn(
-                "username lookup failed:",
-                error
-            );
-
-        }
+        console.warn(
+            "Profile check failed:",
+            error
+        );
 
         return null;
 
     }
 
+}
 
-    /* =========================================
-       FIRESTORE USER PROFILE
-    ========================================= */
 
-    async function getUserProfile(uid) {
+/* =====================================================
+   BAN DATE PARSER
+===================================================== */
 
-        try {
+function getBanDate(value) {
 
-            const userRef =
-                doc(db, "users", uid);
+    if (!value) return null;
 
-            const snapshot =
-                await withTimeout(
-                    getDoc(userRef),
-                    8000
-                );
+    try {
 
-            if (!snapshot.exists()) {
-                return null;
+        /*
+         * Firestore Timestamp
+         */
+        if (
+            typeof value === "object" &&
+            typeof value.toDate === "function"
+        ) {
+            return value.toDate();
+        }
+
+
+        /*
+         * Firestore Timestamp raw
+         */
+        if (
+            typeof value === "object" &&
+            typeof value.seconds === "number"
+        ) {
+
+            return new Date(
+                value.seconds * 1000
+            );
+
+        }
+
+
+        /*
+         * JavaScript Date
+         */
+        if (value instanceof Date) {
+            return value;
+        }
+
+
+        /*
+         * Number milliseconds
+         */
+        if (typeof value === "number") {
+
+            /*
+             * seconds হলে milliseconds-এ convert
+             */
+            if (value < 100000000000) {
+                return new Date(value * 1000);
             }
 
-            return snapshot.data() || {};
-
-        } catch (error) {
-
-            console.warn(
-                "User profile check failed:",
-                error
-            );
-
-            return null;
+            return new Date(value);
 
         }
 
-    }
 
+        /*
+         * String / ISO
+         */
+        if (typeof value === "string") {
 
-    /* =========================================
-       BANNED CHECK
-    ========================================= */
+            const date =
+                new Date(value);
 
-    function isUserBanned(profile) {
+            if (!isNaN(date.getTime())) {
+                return date;
+            }
 
-        if (!profile) return false;
+        }
 
-        return (
-            profile.banned === true ||
-            profile.isBanned === true ||
-            profile.blocked === true
+    } catch (error) {
+
+        console.warn(
+            "Ban date parse failed:",
+            error
         );
 
     }
 
+    return null;
 
-    function getBanMessage(profile) {
+}
 
-        if (!profile) {
-            return "আপনার account এই মুহূর্তে ব্যবহার করা যাচ্ছে না।";
-        }
 
-        return (
-            profile.banReason ||
-            profile.reason ||
-            profile.blockReason ||
-            "আপনার account সাময়িকভাবে বন্ধ করা হয়েছে।"
+/* =====================================================
+   BAN CHECK
+===================================================== */
+
+function getBanInfo(profile) {
+
+    if (!profile) {
+
+        return {
+            banned: false,
+            expired: false,
+            reason: "",
+            until: null
+        };
+
+    }
+
+
+    const rawBanned =
+        profile.banned === true ||
+        profile.isBanned === true ||
+        profile.blocked === true;
+
+
+    const until =
+        getBanDate(profile.banUntil);
+
+
+    /*
+     * banUntil পার হয়ে গেলে automatic expired
+     */
+    if (
+        rawBanned &&
+        until &&
+        until.getTime() <= Date.now()
+    ) {
+
+        return {
+            banned: false,
+            expired: true,
+            reason: "",
+            until
+        };
+
+    }
+
+
+    const reason =
+        profile.banReason ||
+        profile.reason ||
+        profile.blockReason ||
+        "আপনার account সাময়িকভাবে বন্ধ করা হয়েছে।";
+
+
+    return {
+        banned: rawBanned,
+        expired: false,
+        reason,
+        until,
+        supportLink:
+            profile.supportLink || SUPPORT_LINK
+    };
+
+}
+
+
+/* =====================================================
+   BAN REMAINING TEXT
+===================================================== */
+
+function getRemainingText(until) {
+
+    if (!until) {
+        return "Ban-এর সময় নির্ধারিত নেই।";
+    }
+
+    const difference =
+        until.getTime() - Date.now();
+
+    if (difference <= 0) {
+        return "Ban-এর সময় শেষ হয়েছে।";
+    }
+
+    const totalSeconds =
+        Math.ceil(
+            difference / 1000
         );
 
-    }
+    const days =
+        Math.floor(
+            totalSeconds / 86400
+        );
+
+    const hours =
+        Math.floor(
+            (totalSeconds % 86400) / 3600
+        );
+
+    const minutes =
+        Math.floor(
+            (totalSeconds % 3600) / 60
+        );
+
+    const seconds =
+        totalSeconds % 60;
 
 
-    /* =========================================
-       LOGIN ATTEMPT SYSTEM
-    ========================================= */
+    const parts = [];
 
-    function getAttemptCount() {
+    if (days > 0)
+        parts.push(`${days} দিন`);
 
-        try {
+    if (hours > 0)
+        parts.push(`${hours} ঘণ্টা`);
 
-            return Number(
-                sessionStorage.getItem(
-                    "auraLoginAttempts"
-                ) || 0
+    if (minutes > 0)
+        parts.push(`${minutes} মিনিট`);
+
+    if (
+        seconds > 0 &&
+        parts.length < 2
+    )
+        parts.push(`${seconds} সেকেন্ড`);
+
+
+    return `${parts.join(" ")} বাকি আছে।`;
+
+}
+
+
+/* =====================================================
+   SHOW BAN SCREEN
+===================================================== */
+
+let banCountdownTimer = null;
+
+function showBanScreen(profile) {
+
+    const info =
+        getBanInfo(profile);
+
+
+    banReasonBox.textContent =
+        info.reason;
+
+
+    banSupportLink.href =
+        info.supportLink || SUPPORT_LINK;
+
+
+    function updateBanTime() {
+
+        const current =
+            getBanInfo(profile);
+
+        if (!current.banned) {
+
+            clearInterval(
+                banCountdownTimer
             );
 
-        } catch (error) {
+            hideBanScreen();
 
-            return 0;
+            showToast(
+                "Ban-এর সময় শেষ হয়েছে। এখন আবার লগইন করতে পারবেন।",
+                "success"
+            );
+
+            return;
 
         }
 
+        banTimeBox.textContent =
+            getRemainingText(
+                current.until
+            );
+
     }
 
 
-    function setAttemptCount(count) {
+    updateBanTime();
 
+
+    if (banCountdownTimer) {
+        clearInterval(
+            banCountdownTimer
+        );
+    }
+
+
+    banCountdownTimer =
+        setInterval(
+            updateBanTime,
+            1000
+        );
+
+
+    banScreen.style.display =
+        "flex";
+
+}
+
+
+/* =====================================================
+   HIDE BAN
+===================================================== */
+
+function hideBanScreen() {
+
+    banScreen.style.display =
+        "none";
+
+}
+
+
+/* =====================================================
+   BAN CLOSE
+===================================================== */
+
+banCloseBtn.addEventListener(
+    "click",
+    async () => {
+
+        hideBanScreen();
+
+        loginPassword.value = "";
+
+        /*
+         * Ban screen থেকে ফিরে আসার সময়
+         * Firebase session থাকলে sign out করা হবে।
+         */
         try {
-
-            sessionStorage.setItem(
-                "auraLoginAttempts",
-                String(count)
-            );
-
+            if (auth.currentUser) {
+                await signOut(auth);
+            }
         } catch (error) {}
 
     }
+);
 
 
-    function clearLoginAttempts() {
+/* =====================================================
+   LOGIN ATTEMPTS
+===================================================== */
 
-        try {
+function getAttemptCount() {
 
-            sessionStorage.removeItem(
+    try {
+
+        return Number(
+            sessionStorage.getItem(
                 "auraLoginAttempts"
-            );
+            ) || 0
+        );
 
-            sessionStorage.removeItem(
-                "auraLoginCooldown"
-            );
-
-        } catch (error) {}
-
-        securityWarning.style.display =
-            "none";
-
-    }
-
-
-    function getLoginCooldown() {
-
-        try {
-
-            const until =
-                Number(
-                    sessionStorage.getItem(
-                        "auraLoginCooldown"
-                    ) || 0
-                );
-
-            if (until > Date.now()) {
-
-                return Math.ceil(
-                    (until - Date.now()) / 1000
-                );
-
-            }
-
-        } catch (error) {}
+    } catch (error) {
 
         return 0;
 
     }
 
+}
 
-    function startLoginCooldown() {
+
+function setAttemptCount(count) {
+
+    try {
+
+        sessionStorage.setItem(
+            "auraLoginAttempts",
+            String(count)
+        );
+
+    } catch (error) {}
+
+}
+
+
+function clearLoginAttempts() {
+
+    try {
+
+        sessionStorage.removeItem(
+            "auraLoginAttempts"
+        );
+
+        sessionStorage.removeItem(
+            "auraLoginCooldown"
+        );
+
+    } catch (error) {}
+
+    securityWarning.style.display =
+        "none";
+
+}
+
+
+function getLoginCooldown() {
+
+    try {
 
         const until =
-            Date.now() +
-            LOGIN_COOLDOWN_SECONDS * 1000;
-
-        try {
-
-            sessionStorage.setItem(
-                "auraLoginCooldown",
-                String(until)
+            Number(
+                sessionStorage.getItem(
+                    "auraLoginCooldown"
+                ) || 0
             );
 
-        } catch (error) {}
+        if (until > Date.now()) {
 
-        loginBtn.disabled = true;
+            return Math.ceil(
+                (until - Date.now()) / 1000
+            );
 
-        let remaining =
-            LOGIN_COOLDOWN_SECONDS;
+        }
 
-        securityWarning.style.display =
-            "block";
+    } catch (error) {}
 
-        const update = () => {
+    return 0;
 
-            securityWarningText.textContent =
-                `নিরাপত্তার জন্য ${remaining} সেকেন্ড অপেক্ষা করুন।`;
+}
 
-            loginBtnText.innerHTML = `
-                <i class="fa-solid fa-lock mr-2"></i>
-                ${remaining}s অপেক্ষা করুন
-            `;
 
-        };
+function startLoginCooldown() {
 
-        update();
+    const until =
+        Date.now() +
+        LOGIN_COOLDOWN_SECONDS * 1000;
 
-        const timer =
-            setInterval(() => {
+    try {
 
-                remaining--;
+        sessionStorage.setItem(
+            "auraLoginCooldown",
+            String(until)
+        );
 
-                if (remaining <= 0) {
+    } catch (error) {}
 
-                    clearInterval(timer);
+    loginBtn.disabled = true;
 
-                    try {
+    let remaining =
+        LOGIN_COOLDOWN_SECONDS;
 
-                        sessionStorage.removeItem(
-                            "auraLoginCooldown"
-                        );
+    securityWarning.style.display =
+        "block";
 
-                    } catch (error) {}
 
-                    securityWarning.style.display =
-                        "none";
+    const update = () => {
 
-                    loginBtn.disabled = false;
+        securityWarningText.textContent =
+            `নিরাপত্তার জন্য ${remaining} সেকেন্ড অপেক্ষা করুন।`;
 
-                    loginBtnText.innerHTML = `
-                        <i class="fa-solid fa-right-to-bracket mr-2"></i>
-                        লগইন করুন
-                    `;
+        loginBtnText.innerHTML = `
+            <i class="fa-solid fa-lock mr-2"></i>
+            ${remaining}s অপেক্ষা করুন
+        `;
 
-                    return;
+    };
 
-                }
 
-                update();
+    update();
 
-            }, 1000);
 
-    }
+    const timer =
+        setInterval(() => {
 
+            remaining--;
 
-    /* =========================================
-       LOGIN BUTTON
-    ========================================= */
+            if (remaining <= 0) {
 
-    loginForm.addEventListener(
-        "submit",
-        async (event) => {
+                clearInterval(timer);
 
-            event.preventDefault();
-
-
-            /* double-click protection */
-            if (loginBusy) return;
-
-
-            /* browser offline */
-            if (!navigator.onLine) {
-
-                showToast(
-                    "No Internet Connection।",
-                    "error"
-                );
-
-                return;
-
-            }
-
-
-            /* existing cooldown */
-            const cooldown =
-                getLoginCooldown();
-
-            if (cooldown > 0) {
-
-                showToast(
-                    `নিরাপত্তার জন্য ${cooldown} সেকেন্ড অপেক্ষা করুন।`,
-                    "warning"
-                );
-
-                return;
-
-            }
-
-
-            const identifier =
-                loginIdentifier.value.trim();
-
-            const password =
-                loginPassword.value;
-
-
-            if (!identifier) {
-
-                showToast(
-                    "Username অথবা Gmail দিন।",
-                    "warning"
-                );
-
-                loginIdentifier.focus();
-
-                return;
-
-            }
-
-
-            if (!password) {
-
-                showToast(
-                    "Password দিন।",
-                    "warning"
-                );
-
-                loginPassword.focus();
-
-                return;
-
-            }
-
-
-            loginBusy = true;
-
-            loginBtn.disabled = true;
-
-
-            loginBtnText.innerHTML = `
-                <i class="fa-solid fa-spinner fa-spin mr-2"></i>
-                লগইন হচ্ছে...
-            `;
-
-
-            try {
-
-                let email =
-                    identifier;
-
-
-                /* Username lookup */
-                if (!identifier.includes("@")) {
-
-                    email =
-                        await withTimeout(
-                            getEmailFromUsername(
-                                identifier
-                            ),
-                            10000
-                        );
-
-                    if (!email) {
-                        throw new Error(
-                            "USERNAME_NOT_FOUND"
-                        );
-                    }
-
-                }
-
-
-                /* Firebase persistence */
-                await setPersistence(
-                    auth,
-                    rememberMe.checked
-                        ? browserLocalPersistence
-                        : browserSessionPersistence
-                );
-
-
-                /* Login */
-                const credential =
-                    await withTimeout(
-                        signInWithEmailAndPassword(
-                            auth,
-                            email,
-                            password
-                        ),
-                        15000
-                    );
-
-
-                /* =================================
-                   BANNED ACCOUNT CHECK
-                ================================= */
-
-                const profile =
-                    await getUserProfile(
-                        credential.user.uid
-                    );
-
-
-                if (isUserBanned(profile)) {
-
-                    const reason =
-                        getBanMessage(profile);
-
-                    await signOut(auth);
-
-                    throw new Error(
-                        "ACCOUNT_BANNED:" + reason
-                    );
-
-                }
-
-
-                /* Clear wrong attempts */
-                clearLoginAttempts();
-
-
-                /* Save login */
                 try {
-
-                    if (rememberMe.checked) {
-
-                        localStorage.setItem(
-                            "auraSavedLogin",
-                            identifier
-                        );
-
-                    } else {
-
-                        localStorage.removeItem(
-                            "auraSavedLogin"
-                        );
-
-                    }
-
-                } catch (error) {
-
-                    console.warn(
-                        "Could not save login:",
-                        error
+                    sessionStorage.removeItem(
+                        "auraLoginCooldown"
                     );
+                } catch (error) {}
 
-                }
+                securityWarning.style.display =
+                    "none";
 
-
-                /* OneSignal */
-                linkOneSignalUser(
-                    credential.user
-                )
-                    .then(result => {
-
-                        console.log(
-                            "AURA OneSignal linked:",
-                            result
-                        );
-
-                    })
-                    .catch(error => {
-
-                        console.warn(
-                            "OneSignal linking skipped:",
-                            error
-                        );
-
-                    });
-
-
-                /* =================================
-                   SUCCESS ANIMATION
-                ================================= */
+                loginBtn.disabled =
+                    false;
 
                 loginBtnText.innerHTML = `
-                    <i class="fa-solid fa-circle-check mr-2"></i>
-                    লগইন সফল হয়েছে
+                    <i class="fa-solid fa-right-to-bracket mr-2"></i>
+                    লগইন করুন
                 `;
 
-                loginCard.classList.remove(
-                    "card-glow"
-                );
-
-                loginCard.classList.add(
-                    "success-login"
-                );
-
-                showToast(
-                    "লগইন সফল হয়েছে! স্বাগতম ❤️",
-                    "success"
-                );
-
-
-                setTimeout(() => {
-
-                    window.location.href =
-                        "index.html";
-
-                }, 650);
-
-
-            } catch (error) {
-
-                console.error(
-                    "Login error:",
-                    error
-                );
-
-
-                let message =
-                    "লগইন করা যায়নি। আবার চেষ্টা করুন।";
-
-
-                /* banned */
-                if (
-                    error?.message?.startsWith(
-                        "ACCOUNT_BANNED:"
-                    )
-                ) {
-
-                    message =
-                        error.message
-                            .replace(
-                                "ACCOUNT_BANNED:",
-                                ""
-                            );
-
-                    showToast(
-                        "Account বন্ধ করা হয়েছে।",
-                        "error"
-                    );
-
-                    setTimeout(() => {
-
-                        showToast(
-                            message,
-                            "warning"
-                        );
-
-                    }, 300);
-
-                }
-
-
-                else if (
-                    error?.message ===
-                    "USERNAME_NOT_FOUND"
-                ) {
-
-                    message =
-                        "এই Username পাওয়া যায়নি।";
-
-                    showToast(
-                        message,
-                        "error"
-                    );
-
-                }
-
-
-                else if (
-                    error?.code ===
-                    "auth/invalid-credential" ||
-                    error?.code ===
-                    "auth/wrong-password"
-                ) {
-
-                    const attempts =
-                        getAttemptCount() + 1;
-
-                    setAttemptCount(
-                        attempts
-                    );
-
-
-                    if (
-                        attempts >=
-                        LOGIN_MAX_ATTEMPTS
-                    ) {
-
-                        showToast(
-                            "অনেকবার ভুল password দেওয়া হয়েছে।",
-                            "warning"
-                        );
-
-                        startLoginCooldown();
-
-                    } else {
-
-                        const left =
-                            LOGIN_MAX_ATTEMPTS -
-                            attempts;
-
-                        message =
-                            `Password ভুল। আরও ${left} বার চেষ্টা করা যাবে।`;
-
-                        securityWarning.style.display =
-                            "block";
-
-                        securityWarningText.textContent =
-                            `ভুল password: ${attempts}/${LOGIN_MAX_ATTEMPTS} — ${left} বার বাকি।`;
-
-                        showToast(
-                            message,
-                            "error"
-                        );
-
-                    }
-
-                }
-
-
-                else if (
-                    error?.code ===
-                    "auth/user-not-found"
-                ) {
-
-                    message =
-                        "এই Gmail দিয়ে কোনো account পাওয়া যায়নি।";
-
-                    showToast(
-                        message,
-                        "error"
-                    );
-
-                }
-
-
-                else if (
-                    error?.code ===
-                    "auth/too-many-requests"
-                ) {
-
-                    message =
-                        "অনেকবার চেষ্টা করা হয়েছে। কিছুক্ষণ পরে আবার চেষ্টা করুন।";
-
-                    showToast(
-                        message,
-                        "warning"
-                    );
-
-                    startLoginCooldown();
-
-                }
-
-
-                else if (
-                    error?.code ===
-                    "auth/network-request-failed"
-                ) {
-
-                    message =
-                        "Internet connection check করুন।";
-
-                    showToast(
-                        message,
-                        "error"
-                    );
-
-                }
-
-
-                else if (
-                    error?.message ===
-                    "REQUEST_TIMEOUT"
-                ) {
-
-                    message =
-                        "Server response পেতে বেশি সময় লাগছে। Internet check করুন।";
-
-                    showToast(
-                        message,
-                        "error"
-                    );
-
-                }
-
-
-                else {
-
-                    showToast(
-                        message,
-                        "error"
-                    );
-
-                }
-
-
-                if (
-                    !loginBtn.disabled ||
-                    getLoginCooldown() <= 0
-                ) {
-
-                    loginBtnText.innerHTML = `
-                        <i class="fa-solid fa-right-to-bracket mr-2"></i>
-                        লগইন করুন
-                    `;
-
-                }
-
-            } finally {
-
-                loginBusy = false;
-
-
-                if (
-                    getLoginCooldown() <= 0
-                ) {
-
-                    setTimeout(() => {
-
-                        loginBtn.disabled =
-                            false;
-
-                    }, 300);
-
-                }
+                return;
 
             }
 
-        }
-    );
+            update();
 
+        }, 1000);
 
-    /* =========================================
-       FORGOT PASSWORD OPEN
-    ========================================= */
+}
 
-    forgotPasswordBtn.addEventListener(
-        "click",
-        () => {
 
-            const currentValue =
-                loginIdentifier.value.trim();
+/* =====================================================
+   LOGIN
+===================================================== */
 
+loginForm.addEventListener(
+    "submit",
+    async event => {
 
-            if (currentValue) {
+        event.preventDefault();
 
-                forgotEmail.value =
-                    currentValue;
-
-            }
-
-
-            resetFormArea.style.display =
-                "block";
-
-            resetSuccessArea.style.display =
-                "none";
-
-            forgotModal.style.display =
-                "flex";
-
-
-            setTimeout(() => {
-
-                forgotEmail.focus();
-
-            }, 100);
-
-        }
-    );
-
-
-    /* =========================================
-       CLOSE RESET
-    ========================================= */
-
-    function closeForgot() {
-
-        forgotModal.style.display =
-            "none";
-
-        resetFormArea.style.display =
-            "block";
-
-        resetSuccessArea.style.display =
-            "none";
-
-    }
-
-
-    closeForgotModal.addEventListener(
-        "click",
-        closeForgot
-    );
-
-
-    resetCloseSuccess.addEventListener(
-        "click",
-        closeForgot
-    );
-
-
-    forgotModal.addEventListener(
-        "click",
-        event => {
-
-            if (
-                event.target ===
-                forgotModal
-            ) {
-
-                closeForgot();
-
-            }
-
-        }
-    );
-
-
-    /* =========================================
-       RESET COOLDOWN
-    ========================================= */
-
-    function startResetCooldown() {
-
-        let remaining =
-            RESET_COOLDOWN_SECONDS;
-
-        resendResetBtn.disabled =
-            true;
-
-        resendResetBtn.classList.add(
-            "opacity-50",
-            "cursor-not-allowed"
-        );
-
-
-        resendCountdown.textContent =
-            `${remaining} সেকেন্ড পরে আবার পাঠাতে পারবেন।`;
-
-
-        if (resetCooldownTimer) {
-            clearInterval(
-                resetCooldownTimer
-            );
-        }
-
-
-        resetCooldownTimer =
-            setInterval(() => {
-
-                remaining--;
-
-                if (remaining <= 0) {
-
-                    clearInterval(
-                        resetCooldownTimer
-                    );
-
-                    resendResetBtn.disabled =
-                        false;
-
-                    resendResetBtn.classList.remove(
-                        "opacity-50",
-                        "cursor-not-allowed"
-                    );
-
-                    resendCountdown.textContent =
-                        "আবার পাঠাতে চাইলে নিচের button চাপুন।";
-
-                    return;
-
-                }
-
-
-                resendCountdown.textContent =
-                    `${remaining} সেকেন্ড পরে আবার পাঠাতে পারবেন।`;
-
-            }, 1000);
-
-    }
-
-
-    /* =========================================
-       FIND RESET EMAIL
-    ========================================= */
-
-    async function resolveResetEmail(value) {
-
-        const clean =
-            value.trim();
-
-
-        if (!clean) {
-            return null;
-        }
-
-
-        /* Direct email */
-        if (clean.includes("@")) {
-
-            return clean;
-
-        }
-
-
-        /* Username */
-        return await withTimeout(
-            getEmailFromUsername(clean),
-            10000
-        );
-
-    }
-
-
-    /* =========================================
-       SEND RESET EMAIL
-    ========================================= */
-
-    async function sendResetEmail() {
-
-        if (resetBusy) return;
+        if (loginBusy) return;
 
 
         if (!navigator.onLine) {
@@ -2721,13 +2420,13 @@
         }
 
 
-        if (
-            resendResetBtn.disabled &&
-            lastResetEmail
-        ) {
+        const cooldown =
+            getLoginCooldown();
+
+        if (cooldown > 0) {
 
             showToast(
-                "কিছুক্ষণ পরে আবার চেষ্টা করুন।",
+                `নিরাপত্তার জন্য ${cooldown} সেকেন্ড অপেক্ষা করুন।`,
                 "warning"
             );
 
@@ -2736,116 +2435,325 @@
         }
 
 
-        const value =
-            forgotEmail.value.trim();
+        const identifier =
+            loginIdentifier.value.trim();
+
+        const password =
+            loginPassword.value;
 
 
-        if (!value) {
+        if (!identifier) {
 
             showToast(
                 "Username অথবা Gmail দিন।",
                 "warning"
             );
 
-            forgotEmail.focus();
+            loginIdentifier.focus();
 
             return;
 
         }
 
 
-        resetBusy = true;
+        if (!password) {
 
-        resetPasswordBtn.disabled =
-            true;
+            showToast(
+                "Password দিন।",
+                "warning"
+            );
+
+            loginPassword.focus();
+
+            return;
+
+        }
 
 
-        resetBtnText.innerHTML = `
+        loginBusy = true;
+        loginBtn.disabled = true;
+
+
+        loginBtnText.innerHTML = `
             <i class="fa-solid fa-spinner fa-spin mr-2"></i>
-            যাচাই হচ্ছে...
+            লগইন হচ্ছে...
         `;
 
 
         try {
 
-            const email =
-                await resolveResetEmail(
-                    value
+            let email = identifier;
+
+
+            /*
+             * Username -> Email
+             */
+            if (!identifier.includes("@")) {
+
+                email =
+                    await withTimeout(
+                        getEmailFromUsername(
+                            identifier
+                        ),
+                        7000
+                    );
+
+                if (!email) {
+
+                    throw new Error(
+                        "USERNAME_NOT_FOUND"
+                    );
+
+                }
+
+            }
+
+
+            /*
+             * Remember Me
+             */
+            await setPersistence(
+                auth,
+                rememberMe.checked
+                    ? browserLocalPersistence
+                    : browserSessionPersistence
+            );
+
+
+            /*
+             * Firebase login
+             */
+            const credential =
+                await withTimeout(
+                    signInWithEmailAndPassword(
+                        auth,
+                        email,
+                        password
+                    ),
+                    12000
                 );
 
 
-            if (!email) {
+            /*
+             * IMPORTANT:
+             * Remember Me থাকলেও এখানে ban check হবে।
+             */
+            const profile =
+                await getUserProfile(
+                    credential.user.uid
+                );
+
+
+            const banInfo =
+                getBanInfo(profile);
+
+
+            /*
+             * Ban active
+             */
+            if (banInfo.banned) {
+
+                await signOut(auth);
+
+                showBanScreen(profile);
 
                 throw new Error(
-                    "RESET_USER_NOT_FOUND"
+                    "ACCOUNT_BANNED"
                 );
 
             }
 
 
-            lastResetEmail =
-                email;
+            /*
+             * Expired ban হলে optional cleanup
+             */
+            if (
+                banInfo.expired &&
+                profile &&
+                profile.banned === true
+            ) {
+
+                try {
+
+                    await updateDoc(
+                        doc(
+                            db,
+                            "users",
+                            credential.user.uid
+                        ),
+                        {
+                            banned: false
+                        }
+                    );
+
+                } catch (error) {
+
+                    console.warn(
+                        "Expired ban cleanup skipped:",
+                        error
+                    );
+
+                }
+
+            }
 
 
-            resetBtnText.innerHTML = `
-                <i class="fa-solid fa-spinner fa-spin mr-2"></i>
-                Email পাঠানো হচ্ছে...
+            clearLoginAttempts();
+
+
+            /*
+             * Remember Me local username
+             */
+            try {
+
+                if (rememberMe.checked) {
+
+                    localStorage.setItem(
+                        "auraSavedLogin",
+                        identifier
+                    );
+
+                } else {
+
+                    localStorage.removeItem(
+                        "auraSavedLogin"
+                    );
+
+                }
+
+            } catch (error) {}
+
+
+            /*
+             * OneSignal background
+             */
+            linkOneSignalUser(
+                credential.user
+            )
+            .catch(() => {});
+
+
+            loginBtnText.innerHTML = `
+                <i class="fa-solid fa-circle-check mr-2"></i>
+                লগইন সফল হয়েছে
             `;
 
 
-            await withTimeout(
-                sendPasswordResetEmail(
-                    auth,
-                    email
-                ),
-                15000
+            loginCard.classList.remove(
+                "card-glow"
             );
 
-
-            resetFormArea.style.display =
-                "none";
-
-            resetSuccessArea.style.display =
-                "block";
-
-
-            resetSuccessText.innerHTML = `
-                <b class="text-white">
-                    ${escapeHTML(email)}
-                </b>
-                <br>
-                এই Gmail-এ password reset link পাঠানো হয়েছে।
-            `;
-
-
-            startResetCooldown();
+            loginCard.classList.add(
+                "success-login"
+            );
 
 
             showToast(
-                "Password reset link পাঠানো হয়েছে।",
+                "লগইন সফল হয়েছে! স্বাগতম ❤️",
                 "success"
             );
+
+
+            setTimeout(() => {
+
+                if (redirecting) return;
+
+                redirecting = true;
+
+                window.location.replace(
+                    "index.html"
+                );
+
+            }, 450);
 
 
         } catch (error) {
 
             console.error(
-                "Password reset error:",
+                "Login error:",
                 error
             );
 
 
+            /*
+             * Ban screen already shown.
+             */
+            if (
+                error?.message ===
+                "ACCOUNT_BANNED"
+            ) {
+                return;
+            }
+
+
             let message =
-                "Reset link পাঠানো যায়নি।";
+                "লগইন করা যায়নি। আবার চেষ্টা করুন।";
 
 
             if (
                 error?.message ===
-                "RESET_USER_NOT_FOUND"
+                "USERNAME_NOT_FOUND"
             ) {
 
                 message =
-                    "এই Username/Gmail দিয়ে কোনো account পাওয়া যায়নি।";
+                    "এই Username পাওয়া যায়নি।";
+
+                showToast(
+                    message,
+                    "error"
+                );
+
+            }
+
+
+            else if (
+                error?.code ===
+                "auth/invalid-credential" ||
+                error?.code ===
+                "auth/wrong-password"
+            ) {
+
+                const attempts =
+                    getAttemptCount() + 1;
+
+                setAttemptCount(
+                    attempts
+                );
+
+
+                if (
+                    attempts >=
+                    LOGIN_MAX_ATTEMPTS
+                ) {
+
+                    showToast(
+                        "অনেকবার ভুল password দেওয়া হয়েছে।",
+                        "warning"
+                    );
+
+                    startLoginCooldown();
+
+                } else {
+
+                    const left =
+                        LOGIN_MAX_ATTEMPTS -
+                        attempts;
+
+                    message =
+                        `Password ভুল। আরও ${left} বার চেষ্টা করা যাবে।`;
+
+                    securityWarning.style.display =
+                        "block";
+
+                    securityWarningText.textContent =
+                        `ভুল password: ${attempts}/${LOGIN_MAX_ATTEMPTS} — ${left} বার বাকি।`;
+
+                    showToast(
+                        message,
+                        "error"
+                    );
+
+                }
 
             }
 
@@ -2855,19 +2763,10 @@
                 "auth/user-not-found"
             ) {
 
-                message =
-                    "এই Gmail দিয়ে কোনো account পাওয়া যায়নি।";
-
-            }
-
-
-            else if (
-                error?.code ===
-                "auth/invalid-email"
-            ) {
-
-                message =
-                    "সঠিক Gmail দিন।";
+                showToast(
+                    "এই Gmail দিয়ে কোনো account পাওয়া যায়নি।",
+                    "error"
+                );
 
             }
 
@@ -2877,8 +2776,25 @@
                 "auth/too-many-requests"
             ) {
 
-                message =
-                    "অনেকবার reset request করা হয়েছে। কিছুক্ষণ পরে আবার চেষ্টা করুন।";
+                showToast(
+                    "অনেকবার চেষ্টা করা হয়েছে। কিছুক্ষণ পরে আবার চেষ্টা করুন।",
+                    "warning"
+                );
+
+                startLoginCooldown();
+
+            }
+
+
+            else if (
+                error?.code ===
+                "auth/network-request-failed"
+            ) {
+
+                showToast(
+                    "Internet connection check করুন।",
+                    "error"
+                );
 
             }
 
@@ -2888,304 +2804,672 @@
                 "REQUEST_TIMEOUT"
             ) {
 
-                message =
-                    "Server response পেতে বেশি সময় লাগছে।";
+                showToast(
+                    "Server response পেতে বেশি সময় লাগছে। Internet check করুন।",
+                    "error"
+                );
 
             }
 
 
-            showToast(
-                message,
-                "error"
-            );
+            else {
 
+                showToast(
+                    message,
+                    "error"
+                );
+
+            }
+
+
+            if (
+                getLoginCooldown() <= 0
+            ) {
+
+                loginBtnText.innerHTML = `
+                    <i class="fa-solid fa-right-to-bracket mr-2"></i>
+                    লগইন করুন
+                `;
+
+            }
 
         } finally {
 
-            resetBusy = false;
-
-            resetPasswordBtn.disabled =
-                false;
-
-            resetBtnText.innerHTML = `
-                <i class="fa-solid fa-paper-plane mr-2"></i>
-                Reset Link পাঠান
-            `;
-
-        }
-
-    }
-
-
-    forgotForm.addEventListener(
-        "submit",
-        async event => {
-
-            event.preventDefault();
-
-            await sendResetEmail();
-
-        }
-    );
-
-
-    resendResetBtn.addEventListener(
-        "click",
-        async () => {
+            loginBusy = false;
 
             if (
-                resendResetBtn.disabled ||
-                !lastResetEmail
+                getLoginCooldown() <= 0 &&
+                !redirecting
             ) {
-                return;
+
+                loginBtn.disabled = false;
+
             }
 
+        }
+
+    }
+);
+
+
+/* =====================================================
+   FORGOT PASSWORD
+===================================================== */
+
+forgotPasswordBtn.addEventListener(
+    "click",
+    () => {
+
+        const currentValue =
+            loginIdentifier.value.trim();
+
+        if (currentValue) {
             forgotEmail.value =
-                lastResetEmail;
-
-            resetFormArea.style.display =
-                "block";
-
-            resetSuccessArea.style.display =
-                "none";
-
-            await sendResetEmail();
-
-        }
-    );
-
-
-    /* =========================================
-       MAINTENANCE
-    ========================================= */
-
-    function setupMaintenanceListener() {
-
-        try {
-
-            const maintenanceRef =
-                doc(
-                    db,
-                    "settings",
-                    "siteMaintenance"
-                );
-
-
-            onSnapshot(
-                maintenanceRef,
-                snapshot => {
-
-                    if (!snapshot.exists()) {
-
-                        maintenanceScreen.style.display =
-                            "none";
-
-                        return;
-
-                    }
-
-
-                    const data =
-                        snapshot.data();
-
-
-                    const enabled =
-                        data.enabled === true;
-
-
-                    if (enabled) {
-
-                        maintenanceReason.textContent =
-                            data.reason ||
-                            "কিছু সময়ের জন্য সাইটটি বন্ধ রাখা হয়েছে।";
-
-
-                        maintenanceScreen.style.display =
-                            "flex";
-
-                    } else {
-
-                        maintenanceScreen.style.display =
-                            "none";
-
-                    }
-
-                },
-                error => {
-
-                    console.warn(
-                        "Maintenance listener error:",
-                        error
-                    );
-
-                }
-            );
-
-        } catch (error) {
-
-            console.warn(
-                "Maintenance setup failed:",
-                error
-            );
-
+                currentValue;
         }
 
-    }
+        resetFormArea.style.display =
+            "block";
 
+        resetSuccessArea.style.display =
+            "none";
 
-    /* =========================================
-       UPDATE
-    ========================================= */
-
-    function setupUpdateListener() {
-
-        try {
-
-            const updateRef =
-                doc(
-                    db,
-                    "settings",
-                    "appUpdate"
-                );
-
-
-            onSnapshot(
-                updateRef,
-                snapshot => {
-
-                    if (!snapshot.exists()) {
-
-                        updateScreen.style.display =
-                            "none";
-
-                        return;
-
-                    }
-
-
-                    const data =
-                        snapshot.data();
-
-
-                    const enabled =
-                        data.enabled === true;
-
-                    const url =
-                        data.url ||
-                        data.link ||
-                        "";
-
-
-                    if (
-                        enabled &&
-                        isValidURL(url)
-                    ) {
-
-                        updateLink.href =
-                            url;
-
-                        updateScreen.style.display =
-                            "flex";
-
-                    } else {
-
-                        updateScreen.style.display =
-                            "none";
-
-                    }
-
-                },
-                error => {
-
-                    console.warn(
-                        "Update listener error:",
-                        error
-                    );
-
-                }
-            );
-
-        } catch (error) {
-
-            console.warn(
-                "Update setup failed:",
-                error
-            );
-
-        }
-
-    }
-
-
-    function isValidURL(url) {
-
-        try {
-
-            const parsed =
-                new URL(url);
-
-            return (
-                parsed.protocol === "http:" ||
-                parsed.protocol === "https:"
-            );
-
-        } catch (error) {
-
-            return false;
-
-        }
-
-    }
-
-
-    /* =========================================
-       NOTIFICATION
-    ========================================= */
-
-    function hideNotificationBanner() {
-
-        if (!notifBanner) return;
-
-        notifBanner.style.opacity = "0";
-
-        notifBanner.style.transform =
-            "translateX(-50%) translateY(20px)";
-
+        forgotModal.style.display =
+            "flex";
 
         setTimeout(() => {
+            forgotEmail.focus();
+        }, 100);
 
-            notifBanner.style.display =
-                "none";
+    }
+);
 
-        }, 250);
+
+function closeForgot() {
+
+    forgotModal.style.display =
+        "none";
+
+    resetFormArea.style.display =
+        "block";
+
+    resetSuccessArea.style.display =
+        "none";
+
+}
+
+
+closeForgotModal.addEventListener(
+    "click",
+    closeForgot
+);
+
+resetCloseSuccess.addEventListener(
+    "click",
+    closeForgot
+);
+
+forgotModal.addEventListener(
+    "click",
+    event => {
+
+        if (
+            event.target ===
+            forgotModal
+        ) {
+            closeForgot();
+        }
+
+    }
+);
+
+
+/* =====================================================
+   RESET COOLDOWN
+===================================================== */
+
+function startResetCooldown() {
+
+    let remaining =
+        RESET_COOLDOWN_SECONDS;
+
+    resendResetBtn.disabled =
+        true;
+
+    resendResetBtn.classList.add(
+        "opacity-50",
+        "cursor-not-allowed"
+    );
+
+    resendCountdown.textContent =
+        `${remaining} সেকেন্ড পরে আবার পাঠাতে পারবেন।`;
+
+
+    if (resetCooldownTimer) {
+        clearInterval(
+            resetCooldownTimer
+        );
+    }
+
+
+    resetCooldownTimer =
+        setInterval(() => {
+
+            remaining--;
+
+            if (remaining <= 0) {
+
+                clearInterval(
+                    resetCooldownTimer
+                );
+
+                resendResetBtn.disabled =
+                    false;
+
+                resendResetBtn.classList.remove(
+                    "opacity-50",
+                    "cursor-not-allowed"
+                );
+
+                resendCountdown.textContent =
+                    "আবার পাঠাতে চাইলে নিচের button চাপুন।";
+
+                return;
+
+            }
+
+            resendCountdown.textContent =
+                `${remaining} সেকেন্ড পরে আবার পাঠাতে পারবেন।`;
+
+        }, 1000);
+
+}
+
+
+/* =====================================================
+   RESET EMAIL
+===================================================== */
+
+async function resolveResetEmail(value) {
+
+    const clean =
+        value.trim();
+
+    if (!clean) return null;
+
+    if (clean.includes("@")) {
+        return clean;
+    }
+
+    return await withTimeout(
+        getEmailFromUsername(clean),
+        7000
+    );
+
+}
+
+
+async function sendResetEmail() {
+
+    if (resetBusy) return;
+
+
+    if (!navigator.onLine) {
+
+        showToast(
+            "No Internet Connection।",
+            "error"
+        );
+
+        return;
 
     }
 
 
-    function showNotificationBanner() {
+    const value =
+        forgotEmail.value.trim();
 
-        if (!notifBanner) return;
 
-        notifBanner.style.display =
+    if (!value) {
+
+        showToast(
+            "Username অথবা Gmail দিন।",
+            "warning"
+        );
+
+        forgotEmail.focus();
+
+        return;
+
+    }
+
+
+    resetBusy = true;
+
+    resetPasswordBtn.disabled =
+        true;
+
+
+    resetBtnText.innerHTML = `
+        <i class="fa-solid fa-spinner fa-spin mr-2"></i>
+        যাচাই হচ্ছে...
+    `;
+
+
+    try {
+
+        const email =
+            await resolveResetEmail(
+                value
+            );
+
+
+        if (!email) {
+
+            throw new Error(
+                "RESET_USER_NOT_FOUND"
+            );
+
+        }
+
+
+        lastResetEmail =
+            email;
+
+
+        resetBtnText.innerHTML = `
+            <i class="fa-solid fa-spinner fa-spin mr-2"></i>
+            Email পাঠানো হচ্ছে...
+        `;
+
+
+        await withTimeout(
+            sendPasswordResetEmail(
+                auth,
+                email
+            ),
+            12000
+        );
+
+
+        resetFormArea.style.display =
+            "none";
+
+        resetSuccessArea.style.display =
             "block";
 
 
-        requestAnimationFrame(() => {
+        resetSuccessText.innerHTML = `
+            <b class="text-white">
+                ${escapeHTML(email)}
+            </b>
+            <br>
+            এই Gmail-এ password reset link পাঠানো হয়েছে।
+        `;
 
-            notifBanner.style.opacity =
-                "1";
 
-            notifBanner.style.transform =
-                "translateX(-50%) translateY(0)";
+        startResetCooldown();
 
-        });
+
+        showToast(
+            "Password reset link পাঠানো হয়েছে।",
+            "success"
+        );
+
+
+    } catch (error) {
+
+        console.error(
+            "Password reset error:",
+            error
+        );
+
+
+        let message =
+            "Reset link পাঠানো যায়নি।";
+
+
+        if (
+            error?.message ===
+            "RESET_USER_NOT_FOUND"
+        ) {
+
+            message =
+                "এই Username/Gmail দিয়ে কোনো account পাওয়া যায়নি।";
+
+        }
+
+        else if (
+            error?.code ===
+            "auth/invalid-email"
+        ) {
+
+            message =
+                "সঠিক Gmail দিন।";
+
+        }
+
+        else if (
+            error?.code ===
+            "auth/too-many-requests"
+        ) {
+
+            message =
+                "অনেকবার reset request করা হয়েছে। কিছুক্ষণ পরে আবার চেষ্টা করুন।";
+
+        }
+
+        else if (
+            error?.message ===
+            "REQUEST_TIMEOUT"
+        ) {
+
+            message =
+                "Server response পেতে বেশি সময় লাগছে।";
+
+        }
+
+
+        showToast(
+            message,
+            "error"
+        );
+
+
+    } finally {
+
+        resetBusy = false;
+
+        resetPasswordBtn.disabled =
+            false;
+
+        resetBtnText.innerHTML = `
+            <i class="fa-solid fa-paper-plane mr-2"></i>
+            Reset Link পাঠান
+        `;
+
+    }
+
+}
+
+
+forgotForm.addEventListener(
+    "submit",
+    async event => {
+
+        event.preventDefault();
+
+        await sendResetEmail();
+
+    }
+);
+
+
+resendResetBtn.addEventListener(
+    "click",
+    async () => {
+
+        if (
+            resendResetBtn.disabled ||
+            !lastResetEmail
+        ) {
+            return;
+        }
+
+        forgotEmail.value =
+            lastResetEmail;
+
+        resetFormArea.style.display =
+            "block";
+
+        resetSuccessArea.style.display =
+            "none";
+
+        await sendResetEmail();
+
+    }
+);
+
+
+/* =====================================================
+   MAINTENANCE
+===================================================== */
+
+function setupMaintenanceListener() {
+
+    try {
+
+        const maintenanceRef =
+            doc(
+                db,
+                "settings",
+                "siteMaintenance"
+            );
+
+
+        onSnapshot(
+            maintenanceRef,
+            snapshot => {
+
+                if (!snapshot.exists()) {
+
+                    maintenanceScreen.style.display =
+                        "none";
+
+                    return;
+
+                }
+
+
+                const data =
+                    snapshot.data();
+
+
+                if (
+                    data.enabled === true
+                ) {
+
+                    maintenanceReason.textContent =
+                        data.reason ||
+                        "কিছু সময়ের জন্য সাইটটি বন্ধ রাখা হয়েছে।";
+
+                    maintenanceScreen.style.display =
+                        "flex";
+
+                } else {
+
+                    maintenanceScreen.style.display =
+                        "none";
+
+                }
+
+            },
+            error => {
+
+                console.warn(
+                    "Maintenance listener:",
+                    error
+                );
+
+            }
+        );
+
+    } catch (error) {
+
+        console.warn(
+            "Maintenance setup:",
+            error
+        );
+
+    }
+
+}
+
+
+/* =====================================================
+   UPDATE
+===================================================== */
+
+function setupUpdateListener() {
+
+    try {
+
+        const updateRef =
+            doc(
+                db,
+                "settings",
+                "appUpdate"
+            );
+
+
+        onSnapshot(
+            updateRef,
+            snapshot => {
+
+                if (!snapshot.exists()) {
+
+                    updateScreen.style.display =
+                        "none";
+
+                    return;
+
+                }
+
+
+                const data =
+                    snapshot.data();
+
+
+                const url =
+                    data.url ||
+                    data.link ||
+                    "";
+
+
+                if (
+                    data.enabled === true &&
+                    isValidURL(url)
+                ) {
+
+                    updateLink.href =
+                        url;
+
+                    updateScreen.style.display =
+                        "flex";
+
+                } else {
+
+                    updateScreen.style.display =
+                        "none";
+
+                }
+
+            },
+            error => {
+
+                console.warn(
+                    "Update listener:",
+                    error
+                );
+
+            }
+        );
+
+    } catch (error) {
+
+        console.warn(
+            "Update setup:",
+            error
+        );
+
+    }
+
+}
+
+
+function isValidURL(url) {
+
+    try {
+
+        const parsed =
+            new URL(url);
+
+        return (
+            parsed.protocol === "http:" ||
+            parsed.protocol === "https:"
+        );
+
+    } catch (error) {
+
+        return false;
+
+    }
+
+}
+
+
+/* =====================================================
+   NOTIFICATION
+===================================================== */
+
+function hideNotificationBanner() {
+
+    if (!notifBanner) return;
+
+    notifBanner.style.opacity = "0";
+
+    notifBanner.style.transform =
+        "translateX(-50%) translateY(20px)";
+
+    setTimeout(() => {
+
+        notifBanner.style.display =
+            "none";
+
+    }, 250);
+
+}
+
+
+function showNotificationBanner() {
+
+    if (!notifBanner) return;
+
+    notifBanner.style.display =
+        "block";
+
+    requestAnimationFrame(() => {
+
+        notifBanner.style.opacity =
+            "1";
+
+        notifBanner.style.transform =
+            "translateX(-50%) translateY(0)";
+
+    });
+
+}
+
+
+async function checkNotificationStatus() {
+
+    if (!isMedianApp()) {
+
+        hideNotificationBanner();
+
+        return;
 
     }
 
 
-    async function checkNotificationStatus() {
+    try {
 
-        if (!isMedianApp()) {
+        const info =
+            await getOneSignalInfo();
+
+        if (
+            info?.subscription?.optedIn === true
+        ) {
 
             hideNotificationBanner();
 
@@ -3193,295 +3477,296 @@
 
         }
 
+        setTimeout(
+            showNotificationBanner,
+            1500
+        );
 
+    } catch (error) {
+
+        setTimeout(
+            showNotificationBanner,
+            1500
+        );
+
+    }
+
+}
+
+
+if (allowNotifBtn) {
+
+    allowNotifBtn.addEventListener(
+        "click",
+        async () => {
+
+            if (notificationBusy) return;
+
+            notificationBusy = true;
+
+            const oldHTML =
+                allowNotifBtn.innerHTML;
+
+            allowNotifBtn.disabled =
+                true;
+
+            allowNotifBtn.innerHTML = `
+                <i class="fa-solid fa-spinner fa-spin mr-1"></i>
+                চালু হচ্ছে...
+            `;
+
+
+            try {
+
+                if (!isMedianApp()) {
+
+                    hideNotificationBanner();
+
+                    showToast(
+                        "Notification feature APK-তে ব্যবহার করুন।",
+                        "info"
+                    );
+
+                    return;
+
+                }
+
+
+                let info = null;
+
+
+                try {
+
+                    info =
+                        await getOneSignalInfo();
+
+                } catch (error) {}
+
+
+                if (
+                    info?.subscription?.optedIn === true
+                ) {
+
+                    hideNotificationBanner();
+
+                    if (auth.currentUser) {
+
+                        linkOneSignalUser(
+                            auth.currentUser
+                        ).catch(() => {});
+
+                    }
+
+                    showToast(
+                        "নোটিফিকেশন ইতোমধ্যে চালু আছে ✅",
+                        "success"
+                    );
+
+                    return;
+
+                }
+
+
+                await new Promise(
+                    resolve =>
+                        setTimeout(
+                            resolve,
+                            500
+                        )
+                );
+
+
+                info =
+                    await getOneSignalInfo();
+
+
+                if (
+                    info?.subscription?.optedIn === true
+                ) {
+
+                    hideNotificationBanner();
+
+                    showToast(
+                        "নোটিফিকেশন সফলভাবে চালু হয়েছে 🔔",
+                        "success"
+                    );
+
+                } else {
+
+                    showToast(
+                        "Permission এখনো চালু হয়নি। ফোনের notification permission থেকে Allow করুন।",
+                        "warning"
+                    );
+
+                }
+
+
+            } catch (error) {
+
+                showToast(
+                    "Notification চালু করা যায়নি।",
+                    "error"
+                );
+
+
+            } finally {
+
+                notificationBusy =
+                    false;
+
+                allowNotifBtn.disabled =
+                    false;
+
+                allowNotifBtn.innerHTML =
+                    oldHTML;
+
+            }
+
+        }
+    );
+
+}
+
+
+if (closeNotifBtn) {
+
+    closeNotifBtn.addEventListener(
+        "click",
+        () => {
+
+            hideNotificationBanner();
+
+            try {
+
+                sessionStorage.setItem(
+                    "auraNotifBannerClosed",
+                    "1"
+                );
+
+            } catch (error) {}
+
+        }
+    );
+
+}
+
+
+async function initNotificationUI() {
+
+    if (!isMedianApp()) {
+
+        hideNotificationBanner();
+
+        return;
+
+    }
+
+
+    try {
+
+        if (
+            sessionStorage.getItem(
+                "auraNotifBannerClosed"
+            ) === "1"
+        ) {
+
+            hideNotificationBanner();
+
+            return;
+
+        }
+
+    } catch (error) {}
+
+
+    await checkNotificationStatus();
+
+}
+
+
+/* =====================================================
+   AUTH STATE
+   IMPORTANT:
+   Remember Me থাকলেও এই check চলবে।
+===================================================== */
+
+onAuthStateChanged(
+    auth,
+    async user => {
+
+        authStateResolved = true;
+
+        /*
+         * Loader দ্রুত hide
+         */
+        hideStartupLoader();
+
+
+        if (!user) {
+            return;
+        }
+
+
+        if (redirecting) {
+            return;
+        }
+
+
+        /*
+         * Login page-এ already logged in থাকলে
+         * Firestore ban check না করে সরাসরি index-এ যাবে না।
+         */
         try {
 
-            const info =
-                await getOneSignalInfo();
+            const profile =
+                await getUserProfile(
+                    user.uid
+                );
 
 
-            const enabled =
-                info?.subscription?.optedIn === true;
+            const banInfo =
+                getBanInfo(profile);
 
 
-            if (enabled) {
+            /*
+             * REMEMBER ME থাকলেও ACTIVE BAN CHECK
+             */
+            if (banInfo.banned) {
 
-                hideNotificationBanner();
+                await signOut(auth);
+
+                showBanScreen(profile);
 
                 return;
 
             }
 
 
-            setTimeout(
-                showNotificationBanner,
-                2000
-            );
-
-        } catch (error) {
-
-            console.warn(
-                "AURA notification status:",
-                error
-            );
-
-            setTimeout(
-                showNotificationBanner,
-                2000
-            );
-
-        }
-
-    }
-
-
-    if (allowNotifBtn) {
-
-        allowNotifBtn.addEventListener(
-            "click",
-            async () => {
-
-                if (notificationBusy) return;
-
-                notificationBusy = true;
-
-
-                const oldHTML =
-                    allowNotifBtn.innerHTML;
-
-
-                allowNotifBtn.disabled =
-                    true;
-
-
-                allowNotifBtn.innerHTML = `
-                    <i class="fa-solid fa-spinner fa-spin mr-1"></i>
-                    চালু হচ্ছে...
-                `;
-
+            /*
+             * Expired ban automatically remove
+             */
+            if (
+                banInfo.expired &&
+                profile?.banned === true
+            ) {
 
                 try {
 
-                    if (!isMedianApp()) {
-
-                        hideNotificationBanner();
-
-                        showToast(
-                            "Notification feature APK-তে ব্যবহার করুন।",
-                            "info"
-                        );
-
-                        return;
-
-                    }
-
-
-                    let info = null;
-
-
-                    try {
-
-                        info =
-                            await getOneSignalInfo();
-
-                    } catch (error) {
-
-                        console.warn(
-                            "Notification info error:",
-                            error
-                        );
-
-                    }
-
-
-                    if (
-                        info?.subscription?.optedIn === true
-                    ) {
-
-                        hideNotificationBanner();
-
-                        if (auth.currentUser) {
-
-                            linkOneSignalUser(
-                                auth.currentUser
-                            ).catch(() => {});
-
+                    await updateDoc(
+                        doc(
+                            db,
+                            "users",
+                            user.uid
+                        ),
+                        {
+                            banned: false
                         }
-
-                        showToast(
-                            "নোটিফিকেশন ইতোমধ্যে চালু আছে ✅",
-                            "success"
-                        );
-
-                        return;
-
-                    }
-
-
-                    await new Promise(
-                        resolve =>
-                            setTimeout(
-                                resolve,
-                                1000
-                            )
-                    );
-
-
-                    try {
-
-                        info =
-                            await getOneSignalInfo();
-
-                    } catch (error) {
-
-                        console.warn(
-                            "Notification status recheck failed:",
-                            error
-                        );
-
-                    }
-
-
-                    if (
-                        info?.subscription?.optedIn === true
-                    ) {
-
-                        hideNotificationBanner();
-
-                        if (auth.currentUser) {
-
-                            linkOneSignalUser(
-                                auth.currentUser
-                            ).catch(() => {});
-
-                        }
-
-                        showToast(
-                            "নোটিফিকেশন সফলভাবে চালু হয়েছে 🔔",
-                            "success"
-                        );
-
-                    } else {
-
-                        showToast(
-                            "Permission এখনো চালু হয়নি। ফোনের notification permission থেকে Allow করুন।",
-                            "warning"
-                        );
-
-                    }
-
-
-                } catch (error) {
-
-                    console.error(
-                        "Notification error:",
-                        error
-                    );
-
-                    showToast(
-                        "Notification চালু করা যায়নি।",
-                        "error"
-                    );
-
-
-                } finally {
-
-                    notificationBusy =
-                        false;
-
-                    allowNotifBtn.disabled =
-                        false;
-
-                    allowNotifBtn.innerHTML =
-                        oldHTML;
-
-                }
-
-            }
-        );
-
-    }
-
-
-    if (closeNotifBtn) {
-
-        closeNotifBtn.addEventListener(
-            "click",
-            () => {
-
-                hideNotificationBanner();
-
-                try {
-
-                    sessionStorage.setItem(
-                        "auraNotifBannerClosed",
-                        "1"
                     );
 
                 } catch (error) {}
 
             }
-        );
 
-    }
-
-
-    async function initNotificationUI() {
-
-        if (!isMedianApp()) {
-
-            hideNotificationBanner();
-
-            return;
-
-        }
-
-
-        try {
-
-            const closed =
-                sessionStorage.getItem(
-                    "auraNotifBannerClosed"
-                );
-
-
-            if (closed === "1") {
-
-                hideNotificationBanner();
-
-                return;
-
-            }
-
-        } catch (error) {}
-
-
-        await checkNotificationStatus();
-
-    }
-
-
-    /* =========================================
-       AUTH STATE
-    ========================================= */
-
-    onAuthStateChanged(
-        auth,
-        async user => {
-
-            if (!user) return;
-
-
-            console.log(
-                "AURA logged-in user:",
-                user.uid
-            );
-
-
-            /*
-             * Login page-এ already authenticated user
-             * এলে সরাসরি app-এ পাঠানো হবে।
-             */
 
             const path =
                 window.location.pathname
@@ -3495,36 +3780,7 @@
                 path === ""
             ) {
 
-                /*
-                 * এখানে banned account-ও check করা হচ্ছে।
-                 */
-
-                const profile =
-                    await getUserProfile(
-                        user.uid
-                    );
-
-
-                if (
-                    isUserBanned(profile)
-                ) {
-
-                    const reason =
-                        getBanMessage(profile);
-
-
-                    await signOut(auth);
-
-
-                    showToast(
-                        reason,
-                        "error"
-                    );
-
-                    return;
-
-                }
-
+                redirecting = true;
 
                 window.location.replace(
                     "index.html"
@@ -3538,125 +3794,120 @@
             if (isMedianApp()) {
 
                 linkOneSignalUser(user)
-                    .then(result => {
-
-                        console.log(
-                            "AURA OneSignal session linked:",
-                            result
-                        );
-
-                    })
-                    .catch(error => {
-
-                        console.warn(
-                            "Existing session OneSignal link skipped:",
-                            error
-                        );
-
-                    });
+                    .catch(() => {});
 
             }
 
-        }
-    );
+        } catch (error) {
 
+            /*
+             * Security-এর জন্য Firestore ban check
+             * fail হলে automatic login bypass করানো হচ্ছে না।
+             */
+            console.warn(
+                "Auth ban check failed:",
+                error
+            );
 
-    /* =========================================
-       VISIBILITY / ONESIGNAL
-    ========================================= */
-
-    document.addEventListener(
-        "visibilitychange",
-        async () => {
-
-            if (
-                document.visibilityState !==
-                "visible"
-            ) {
-                return;
-            }
-
-
-            if (!isMedianApp()) return;
-
-
-            setTimeout(
-                async () => {
-
-                    try {
-
-                        const info =
-                            await getOneSignalInfo();
-
-
-                        if (
-                            info?.subscription?.optedIn === true
-                        ) {
-
-                            hideNotificationBanner();
-
-
-                            if (auth.currentUser) {
-
-                                linkOneSignalUser(
-                                    auth.currentUser
-                                ).catch(() => {});
-
-                            }
-
-                        }
-
-                    } catch (error) {
-
-                        console.warn(
-                            "Visibility OneSignal check:",
-                            error
-                        );
-
-                    }
-
-                },
-                500
+            showToast(
+                "Account status check করা যায়নি। আবার চেষ্টা করুন।",
+                "warning"
             );
 
         }
-    );
+
+    }
+);
 
 
-    /* =========================================
-       ENTER KEY
-    ========================================= */
+/* =====================================================
+   VISIBILITY
+===================================================== */
 
-    loginIdentifier.addEventListener(
-        "keydown",
-        event => {
+document.addEventListener(
+    "visibilitychange",
+    async () => {
 
-            if (event.key === "Enter") {
+        if (
+            document.visibilityState !==
+            "visible"
+        ) {
+            return;
+        }
 
-                event.preventDefault();
 
-                loginPassword.focus();
+        if (!isMedianApp()) return;
 
-            }
+
+        setTimeout(
+            async () => {
+
+                try {
+
+                    const info =
+                        await getOneSignalInfo();
+
+
+                    if (
+                        info?.subscription?.optedIn === true
+                    ) {
+
+                        hideNotificationBanner();
+
+                        if (auth.currentUser) {
+
+                            linkOneSignalUser(
+                                auth.currentUser
+                            ).catch(() => {});
+
+                        }
+
+                    }
+
+                } catch (error) {}
+
+            },
+            300
+        );
+
+    }
+);
+
+
+/* =====================================================
+   ENTER KEY
+===================================================== */
+
+loginIdentifier.addEventListener(
+    "keydown",
+    event => {
+
+        if (event.key === "Enter") {
+
+            event.preventDefault();
+
+            loginPassword.focus();
 
         }
-    );
+
+    }
+);
 
 
-    /* =========================================
-       INITIALIZE
-    ========================================= */
+/* =====================================================
+   INIT
+===================================================== */
 
-    setupMaintenanceListener();
+setupMaintenanceListener();
 
-    setupUpdateListener();
+setupUpdateListener();
 
-    initNotificationUI();
+initNotificationUI();
 
 
-    console.log(
-        "AURA ARMAN TOUR login system loaded successfully."
-    );
+console.log(
+    "AURA ARMAN TOUR login system loaded successfully."
+);
 
 </script>
 
