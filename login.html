@@ -592,70 +592,119 @@
             box-shadow: 0 30px 90px rgba(0, 0, 0, .5);
         }
 
-        /* BAN SCREEN */
-        #banScreen {
-            z-index: 19000;
-            background:
-                radial-gradient(
-                    circle at top,
-                    rgba(239, 68, 68, .14),
-                    transparent 42%
-                ),
-                #050816;
-        }
+/* BAN SCREEN */
+#banScreen {
+    z-index: 19000;
+    background:
+        radial-gradient(
+            circle at top,
+            rgba(239, 68, 68, .14),
+            transparent 42%
+        ),
+        #050816;
+}
 
-        .ban-icon {
-            width: 76px;
-            height: 76px;
-            margin: 0 auto;
-            border-radius: 24px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: rgba(239,68,68,.10);
-            color: #fb7185;
-            border: 1px solid rgba(239,68,68,.18);
-            font-size: 30px;
-        }
+/* Animated Ban Logo */
+.ban-logo-wrap {
+    width: 86px;
+    height: 86px;
+    margin: 0 auto;
+    padding: 3px;
+    border-radius: 25px;
 
-        .ban-reason {
-            margin-top: 16px;
-            padding: 13px 14px;
-            border-radius: 14px;
-            background: rgba(239,68,68,.06);
-            border: 1px solid rgba(239,68,68,.12);
-            color: #cbd5e1;
-            font-size: 13px;
-            line-height: 1.6;
-            word-break: break-word;
-        }
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
-        .ban-time {
-            margin-top: 10px;
-            color: #fbbf24;
-            font-size: 12px;
-            font-weight: 700;
-        }
+    background: linear-gradient(
+        135deg,
+        #7c3aed,
+        #06b6d4,
+        #ec4899,
+        #7c3aed
+    );
 
-        .support-ban-btn {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 100%;
-            min-height: 50px;
-            margin-top: 18px;
-            border-radius: 14px;
-            background: linear-gradient(135deg, #22c55e, #15803d);
-            color: #fff;
-            text-decoration: none;
-            font-size: 14px;
-            font-weight: 700;
-            box-shadow: 0 12px 30px rgba(34,197,94,.18);
-        }
+    border: 1px solid rgba(255,255,255,.15);
 
-        .support-ban-btn:active {
-            transform: scale(.98);
-        }
+    box-shadow:
+        0 0 25px rgba(124,58,237,.30),
+        0 0 45px rgba(6,182,212,.12);
+
+    overflow: hidden;
+
+    animation: banLogoFloat 2.5s ease-in-out infinite;
+}
+
+.ban-logo {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 22px;
+
+    animation: banLogoPulse 1.8s ease-in-out infinite;
+
+    box-shadow:
+        0 0 18px rgba(168,85,247,.35);
+}
+
+@keyframes banLogoFloat {
+    0%, 100% {
+        transform: translateY(0) rotate(0deg);
+    }
+
+    50% {
+        transform: translateY(-7px) rotate(1deg);
+    }
+}
+
+@keyframes banLogoPulse {
+    0%, 100% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.06);
+    }
+}
+
+.ban-reason {
+    margin-top: 16px;
+    padding: 13px 14px;
+    border-radius: 14px;
+    background: rgba(239,68,68,.06);
+    border: 1px solid rgba(239,68,68,.12);
+    color: #cbd5e1;
+    font-size: 13px;
+    line-height: 1.6;
+    word-break: break-word;
+}
+
+.ban-time {
+    margin-top: 10px;
+    color: #fbbf24;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.support-ban-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    min-height: 50px;
+    margin-top: 18px;
+    border-radius: 14px;
+    background: linear-gradient(135deg, #22c55e, #15803d);
+    color: #fff;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 700;
+    box-shadow: 0 12px 30px rgba(34,197,94,.18);
+}
+
+.support-ban-btn:active {
+    transform: scale(.98);
+}
 
         #startupLoader {
             position: fixed;
@@ -890,8 +939,13 @@
 
     <div class="overlay-card">
 
-        <div class="ban-icon">
-            <i class="fa-solid fa-user-lock"></i>
+        <!-- Animated Logo -->
+        <div class="ban-logo-wrap">
+            <img
+                src="https://videotourl.com/images/1791379280718-c75cba00-3bbf-42f1-892e-e8bf3fa44209.png"
+                alt="AURA ARMAN TOUR"
+                class="ban-logo"
+            >
         </div>
 
         <h2 class="text-xl font-bold mt-5">
