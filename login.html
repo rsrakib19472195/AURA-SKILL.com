@@ -748,6 +748,44 @@
                 transform: scale(1.05);
             }
         }
+.permanent-ban{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
+}
+
+.infinity-logo{
+    display:inline-block;
+    font-size:28px;
+    font-weight:900;
+    background:linear-gradient(
+        135deg,
+        #7c3aed,
+        #06b6d4,
+        #ec4899,
+        #7c3aed
+    );
+    background-size:300% 300%;
+    -webkit-background-clip:text;
+    background-clip:text;
+    color:transparent;
+    animation:
+        infinityMove 2s ease-in-out infinite,
+        infinityGradient 3s linear infinite;
+    filter:drop-shadow(0 0 8px rgba(124,58,237,.6));
+}
+
+@keyframes infinityMove{
+    0%,100%{transform:scale(1) rotate(0deg);}
+    50%{transform:scale(1.15) rotate(4deg);}
+}
+
+@keyframes infinityGradient{
+    0%{background-position:0% 50%;}
+    50%{background-position:100% 50%;}
+    100%{background-position:0% 50%;}
+}
 
         .loader-spinner {
             width: 24px;
@@ -948,12 +986,12 @@
             >
         </div>
 
-        <h2 class="text-xl font-bold mt-5">
-            Account Temporarily Banned
-        </h2>
+<h2 id="banTitle" class="text-xl font-bold mt-5">
+    Account Temporarily Banned
+</h2>
 
         <p class="text-sm text-slate-400 mt-3 leading-6">
-            আপনার account বর্তমানে ব্যবহার করা যাচ্ছে না।
+            Your Tour Account has been banned by the Admin.
         </p>
 
         <div id="banReasonBox" class="ban-reason">
@@ -1947,12 +1985,12 @@ async function getUserProfile(uid) {
 
     } catch (error) {
 
-        console.warn(
+        console.error(
             "Profile check failed:",
             error
         );
 
-        return null;
+        throw error;
 
     }
 
@@ -2121,7 +2159,12 @@ function getBanInfo(profile) {
 function getRemainingText(until) {
 
     if (!until) {
-        return "Ban-এর সময় নির্ধারিত নেই।";
+        return `
+    <span class="permanent-ban">
+        <span class="infinity-logo">∞</span>
+        <span>এই নিষেধাজ্ঞার কোনো নির্ধারিত সময়সীমা নেই।</span>
+    </span>
+`;
     }
 
     const difference =
@@ -2189,7 +2232,13 @@ function showBanScreen(profile) {
     const info =
         getBanInfo(profile);
 
+const banTitle = document.getElementById("banTitle");
 
+if (banTitle) {
+    banTitle.textContent = info.until
+        ? "Account Temporarily Banned"
+        : "Account Permanently Banned";
+}
     banReasonBox.textContent =
         info.reason;
 
@@ -2220,10 +2269,10 @@ function showBanScreen(profile) {
 
         }
 
-        banTimeBox.textContent =
-            getRemainingText(
-                current.until
-            );
+banTimeBox.innerHTML =
+    getRemainingText(
+        current.until
+    );
 
     }
 
@@ -2621,35 +2670,33 @@ loginForm.addEventListener(
             /*
              * Expired ban হলে optional cleanup
              */
-            if (
-                banInfo.expired &&
-                profile &&
-                profile.banned === true
-            ) {
+if (banInfo.expired && profile) {
 
-                try {
+    try {
 
-                    await updateDoc(
-                        doc(
-                            db,
-                            "users",
-                            credential.user.uid
-                        ),
-                        {
-                            banned: false
-                        }
-                    );
-
-                } catch (error) {
-
-                    console.warn(
-                        "Expired ban cleanup skipped:",
-                        error
-                    );
-
-                }
-
+        await updateDoc(
+            doc(
+                db,
+                "users",
+                credential.user.uid
+            ),
+            {
+                banned: false,
+                isBanned: false,
+                blocked: false
             }
+        );
+
+    } catch (error) {
+
+        console.warn(
+            "Expired ban cleanup skipped:",
+            error
+        );
+
+    }
+
+}
 
 
             clearLoginAttempts();
@@ -2793,14 +2840,14 @@ loginForm.addEventListener(
                         LOGIN_MAX_ATTEMPTS -
                         attempts;
 
-                    message =
-                        `Password ভুল। আরও ${left} বার চেষ্টা করা যাবে।`;
+message =
+    `Username/Gmail অথবা Password সঠিক নয়। আরও ${left} বার চেষ্টা করা যাবে।`;
 
                     securityWarning.style.display =
                         "block";
 
-                    securityWarningText.textContent =
-                        `ভুল password: ${attempts}/${LOGIN_MAX_ATTEMPTS} — ${left} বার বাকি।`;
+securityWarningText.textContent =
+    `Username/Gmail অথবা Password সঠিক নয়: ${attempts}/${LOGIN_MAX_ATTEMPTS} — ${left} বার বাকি।`;
 
                     showToast(
                         message,
@@ -3799,27 +3846,33 @@ onAuthStateChanged(
             /*
              * Expired ban automatically remove
              */
-            if (
-                banInfo.expired &&
-                profile?.banned === true
-            ) {
+if (banInfo.expired && profile) {
 
-                try {
+    try {
 
-                    await updateDoc(
-                        doc(
-                            db,
-                            "users",
-                            user.uid
-                        ),
-                        {
-                            banned: false
-                        }
-                    );
-
-                } catch (error) {}
-
+        await updateDoc(
+            doc(
+                db,
+                "users",
+                user.uid
+            ),
+            {
+                banned: false,
+                isBanned: false,
+                blocked: false
             }
+        );
+
+    } catch (error) {
+
+        console.warn(
+            "Expired ban cleanup skipped:",
+            error
+        );
+
+    }
+
+}
 
 
             const path =
@@ -3852,23 +3905,37 @@ onAuthStateChanged(
 
             }
 
-        } catch (error) {
+} catch (error) {
 
-            /*
-             * Security-এর জন্য Firestore ban check
-             * fail হলে automatic login bypass করানো হচ্ছে না।
-             */
-            console.warn(
-                "Auth ban check failed:",
-                error
-            );
+    /*
+     * Security:
+     * Firestore ban check fail হলে
+     * authenticated session রাখা হবে না।
+     */
+    console.error(
+        "Auth ban check failed:",
+        error
+    );
 
-            showToast(
-                "Account status check করা যায়নি। আবার চেষ্টা করুন।",
-                "warning"
-            );
+    try {
 
-        }
+        await signOut(auth);
+
+    } catch (signOutError) {
+
+        console.warn(
+            "Sign out after ban check failure failed:",
+            signOutError
+        );
+
+    }
+
+    showToast(
+        "Account status যাচাই করা যায়নি। আবার চেষ্টা করুন।",
+        "error"
+    );
+
+}
 
     }
 );
