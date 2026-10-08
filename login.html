@@ -2,448 +2,161 @@
 <html lang="bn">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#050816">
     <title>AURA ARMAN TOUR - Login</title>
 
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        aura: {
+                            bg: "#050816",
+                            card: "#0b1224",
+                            primary: "#7c3aed",
+                            secondary: "#06b6d4",
+                            pink: "#ec4899"
+                        }
+                    }
+                }
+            }
+        };
+    </script>
 
-    <link rel="preconnect" href="https://www.gstatic.com" crossorigin>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 
-    <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
-        rel="stylesheet"
-    >
-
-    <link
-        rel="stylesheet"
-        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
-    >
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+          rel="stylesheet">
 
     <style>
-
         * {
             box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
         }
 
-        html,
-        body {
+        html, body {
             margin: 0;
+            padding: 0;
+            width: 100%;
             min-height: 100%;
-            font-family: Inter, sans-serif;
-        }
-
-        body {
             background: #050816;
             color: #fff;
+            font-family: "Inter", sans-serif;
+        }
+
+        body {
             overflow-x: hidden;
         }
 
-        button,
-        input {
+        button, input {
             font-family: inherit;
         }
 
-        /* =====================================================
-           BACKGROUND
-        ===================================================== */
-
-        .bg-orb {
+        .aura-bg {
             position: fixed;
-            border-radius: 50%;
-            filter: blur(70px);
+            inset: 0;
+            overflow: hidden;
             pointer-events: none;
-            z-index: -1;
+            z-index: 0;
         }
 
-        .orb-one {
+        .aura-orb {
+            position: absolute;
+            border-radius: 9999px;
+            filter: blur(80px);
+            opacity: .25;
+        }
+
+        .aura-orb-1 {
             width: 260px;
             height: 260px;
-            background: rgba(124, 58, 237, .20);
-            top: -80px;
+            background: #7c3aed;
+            top: -90px;
             left: -80px;
         }
 
-        .orb-two {
-            width: 240px;
-            height: 240px;
-            background: rgba(6, 182, 212, .12);
-            right: -70px;
-            top: 20%;
+        .aura-orb-2 {
+            width: 250px;
+            height: 250px;
+            background: #06b6d4;
+            right: -100px;
+            top: 35%;
         }
 
-        .orb-three {
-            width: 260px;
-            height: 260px;
-            background: rgba(236, 72, 153, .10);
+        .aura-orb-3 {
+            width: 220px;
+            height: 220px;
+            background: #ec4899;
             bottom: -100px;
-            left: 20%;
+            left: 25%;
         }
 
-        /* =====================================================
-           STARTUP LOADER
-        ===================================================== */
-
-        #startupLoader {
-            position: fixed;
-            inset: 0;
-            z-index: 30000;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: #050816;
-            transition: opacity .45s ease, visibility .45s ease;
-        }
-
-        #startupLoader.hide {
-            opacity: 0;
-            visibility: hidden;
-        }
-
-        .loader-content {
-            text-align: center;
-        }
-
-        .loader-logo {
-            width: 92px;
-            height: 92px;
-            border-radius: 26px;
-            object-fit: cover;
-            animation: loaderPulse 1.5s ease-in-out infinite;
-            box-shadow: 0 0 45px rgba(124, 58, 237, .35);
-        }
-
-        @keyframes loaderPulse {
-            0%, 100% {
-                transform: scale(1);
-            }
-
-            50% {
-                transform: scale(1.08);
-            }
-        }
-
-        .loader-title {
-            margin-top: 18px;
-            font-size: 23px;
-            font-weight: 800;
-        }
-
-        .loader-subtitle {
-            margin-top: 5px;
-            color: #94a3b8;
-            font-size: 13px;
-        }
-
-        .loader-dots {
-            margin-top: 20px;
-            display: flex;
-            justify-content: center;
-            gap: 6px;
-        }
-
-        .loader-dots span {
-            width: 7px;
-            height: 7px;
-            border-radius: 50%;
-            background: #8b5cf6;
-            animation: loaderDot 1s infinite;
-        }
-
-        .loader-dots span:nth-child(2) {
-            animation-delay: .15s;
-        }
-
-        .loader-dots span:nth-child(3) {
-            animation-delay: .30s;
-        }
-
-        @keyframes loaderDot {
-            0%, 70%, 100% {
-                opacity: .25;
-                transform: translateY(0);
-            }
-
-            35% {
-                opacity: 1;
-                transform: translateY(-5px);
-            }
-        }
-
-        /* =====================================================
-           MAIN
-        ===================================================== */
-
-        .page {
+        .page-wrapper {
+            position: relative;
+            z-index: 2;
             min-height: 100vh;
+            min-height: 100dvh;
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 25px 16px;
+            padding: 24px 16px;
         }
 
         .login-card {
             width: 100%;
             max-width: 430px;
-            padding: 28px 22px 24px;
-            border: 1px solid rgba(255,255,255,.08);
-            border-radius: 28px;
-            background: rgba(9, 14, 32, .82);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            box-shadow:
-                0 30px 80px rgba(0,0,0,.45),
-                inset 0 1px 0 rgba(255,255,255,.04);
-        }
-
-        .brand {
-            text-align: center;
-            margin-bottom: 25px;
-        }
-
-        .brand-logo {
-            width: 82px;
-            height: 82px;
-            border-radius: 23px;
-            object-fit: cover;
-            box-shadow: 0 0 35px rgba(124,58,237,.25);
-        }
-
-        .brand-title {
-            margin-top: 14px;
-            font-size: 23px;
-            font-weight: 800;
-        }
-
-        .brand-subtitle {
-            margin-top: 5px;
-            color: #94a3b8;
-            font-size: 13px;
-        }
-
-        .input-group {
-            margin-bottom: 16px;
-        }
-
-        .input-label {
-            display: block;
-            margin-bottom: 7px;
-            color: #cbd5e1;
-            font-size: 13px;
-            font-weight: 600;
-        }
-
-        .input-wrap {
-            position: relative;
-        }
-
-        .input-icon {
-            position: absolute;
-            left: 14px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: #64748b;
-            pointer-events: none;
-        }
-
-        .input-wrap input {
-            width: 100%;
-            height: 50px;
-            padding: 0 45px;
-            border-radius: 15px;
-            border: 1px solid rgba(255,255,255,.08);
-            outline: none;
-            color: #fff;
-            background: rgba(255,255,255,.045);
-            transition: .2s;
-        }
-
-        .input-wrap input:focus {
-            border-color: rgba(139,92,246,.65);
-            box-shadow: 0 0 0 3px rgba(139,92,246,.10);
-        }
-
-        .password-toggle {
-            position: absolute;
-            right: 14px;
-            top: 50%;
-            transform: translateY(-50%);
-            border: 0;
-            background: none;
-            color: #64748b;
-            cursor: pointer;
-        }
-
-        .login-options {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin: 8px 0 18px;
-            font-size: 12px;
-        }
-
-        .remember {
-            display: flex;
-            align-items: center;
-            gap: 7px;
-            color: #94a3b8;
-        }
-
-        .remember input {
-            accent-color: #8b5cf6;
-        }
-
-        .forgot-btn {
-            border: 0;
-            background: transparent;
-            color: #a78bfa;
-            cursor: pointer;
-        }
-
-        .login-btn {
-            width: 100%;
-            height: 51px;
-            border: 0;
-            border-radius: 15px;
-            color: #fff;
-            font-size: 15px;
-            font-weight: 700;
-            cursor: pointer;
-            background: linear-gradient(
-                135deg,
-                #7c3aed,
-                #6366f1,
-                #8b5cf6
-            );
-            box-shadow: 0 12px 30px rgba(124,58,237,.22);
-            transition: .2s;
-        }
-
-        .login-btn:hover {
-            transform: translateY(-1px);
-        }
-
-        .login-btn:disabled {
-            opacity: .55;
-            cursor: not-allowed;
-            transform: none;
-        }
-
-        .register-text {
-            text-align: center;
-            margin-top: 19px;
-            color: #94a3b8;
-            font-size: 13px;
-        }
-
-        .register-text a {
-            color: #a78bfa;
-            font-weight: 700;
-            text-decoration: none;
-        }
-
-        .support-box {
-            margin-top: 18px;
-            padding: 13px;
-            border-radius: 15px;
-            border: 1px solid rgba(255,255,255,.06);
-            background: rgba(255,255,255,.025);
-            text-align: center;
-        }
-
-        .support-box p {
-            margin: 0 0 9px;
-            color: #94a3b8;
-            font-size: 11px;
-        }
-
-        .support-box a {
-            color: #22c55e;
-            text-decoration: none;
-            font-size: 13px;
-            font-weight: 700;
-        }
-
-        .footer {
-            margin-top: 18px;
-            text-align: center;
-            color: #475569;
-            font-size: 10px;
-        }
-
-        /* =====================================================
-           OVERLAYS
-        ===================================================== */
-
-        .overlay {
-            position: fixed;
-            inset: 0;
-            z-index: 18000;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            padding: 18px;
-            overflow-y: auto;
-        }
-
-        .overlay.show {
-            display: flex;
-        }
-
-        /* =====================================================
-           BAN SCREEN
-        ===================================================== */
-
-        #banScreen {
-            z-index: 19000;
-
-            background:
-                radial-gradient(
-                    circle at 50% 8%,
-                    rgba(239, 68, 68, .18),
-                    transparent 38%
-                ),
-                radial-gradient(
-                    circle at 10% 90%,
-                    rgba(124, 58, 237, .10),
-                    transparent 35%
-                ),
-                #050816;
-        }
-
-        .ban-card {
-            width: 100%;
-            max-width: 430px;
-            padding: 30px 22px 24px;
-            text-align: center;
-
             background:
                 linear-gradient(
                     145deg,
-                    rgba(15,23,42,.97),
-                    rgba(7,12,28,.97)
+                    rgba(15, 23, 42, .96),
+                    rgba(7, 12, 28, .96)
                 );
-
-            border: 1px solid rgba(239,68,68,.14);
+            border: 1px solid rgba(255, 255, 255, .08);
             border-radius: 28px;
-
+            padding: 28px 22px;
             box-shadow:
-                0 30px 90px rgba(0,0,0,.55),
-                0 0 55px rgba(239,68,68,.08);
-
+                0 25px 80px rgba(0, 0, 0, .45),
+                0 0 50px rgba(124, 58, 237, .10);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
-
-            animation: banCardIn .55s ease;
+            animation: cardIn .55s ease;
+            transition:
+                box-shadow .35s ease,
+                border-color .35s ease;
         }
 
-        @keyframes banCardIn {
+        .login-card:hover {
+            border-color: rgba(124, 58, 237, .20);
+            box-shadow:
+                0 25px 80px rgba(0, 0, 0, .48),
+                0 0 65px rgba(124, 58, 237, .14);
+        }
 
+        .login-card.card-glow {
+            animation: loginGlow 2s ease-in-out infinite;
+        }
+
+        @keyframes loginGlow {
+            0%, 100% {
+                box-shadow:
+                    0 25px 80px rgba(0, 0, 0, .45),
+                    0 0 45px rgba(124, 58, 237, .10);
+            }
+
+            50% {
+                box-shadow:
+                    0 25px 80px rgba(0, 0, 0, .45),
+                    0 0 65px rgba(124, 58, 237, .18);
+            }
+        }
+
+        @keyframes cardIn {
             from {
                 opacity: 0;
-                transform: translateY(22px) scale(.96);
+                transform: translateY(18px) scale(.98);
             }
 
             to {
@@ -452,430 +165,311 @@
             }
         }
 
-        /* Animated Logo */
-
-        .ban-logo-wrap {
-            position: relative;
-            width: 104px;
-            height: 104px;
-            margin: 0 auto 22px;
+        .logo-box {
+            width: 92px;
+            height: 92px;
+            margin: 0 auto 18px;
             padding: 4px;
-
-            border-radius: 30px;
-
-            background:
-                linear-gradient(
-                    135deg,
-                    #ef4444,
-                    #f97316,
-                    #ec4899,
-                    #7c3aed
-                );
-
-            box-shadow:
-                0 0 30px rgba(239,68,68,.28),
-                0 0 60px rgba(236,72,153,.12);
-
-            animation:
-                banLogoFloat 3s ease-in-out infinite,
-                banLogoGlow 2s ease-in-out infinite;
+            border-radius: 26px;
+            background: linear-gradient(135deg, #7c3aed, #06b6d4, #ec4899);
+            box-shadow: 0 0 35px rgba(124, 58, 237, .30);
+            animation: logoFloat 3s ease-in-out infinite;
         }
 
-        .ban-logo-wrap::before {
-            content: "";
-            position: absolute;
-            inset: -7px;
-
-            border-radius: 34px;
-            border: 1px solid rgba(239,68,68,.18);
-
-            animation: banLogoRing 2.2s linear infinite;
-        }
-
-        .ban-logo-wrap::after {
-            content: "";
-            position: absolute;
-            inset: -14px;
-
-            border-radius: 39px;
-            border: 1px solid rgba(236,72,153,.10);
-
-            animation: banLogoRing 3.2s linear infinite reverse;
-        }
-
-        .ban-logo {
+        .logo-box img {
             width: 100%;
             height: 100%;
             display: block;
-
             object-fit: cover;
-            border-radius: 26px;
-
+            border-radius: 22px;
             background: #050816;
+        }
 
+        @keyframes logoFloat {
+            0%, 100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-3px);
+            }
+        }
+
+        .input-group {
             position: relative;
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #8b9bb7;
+            pointer-events: none;
             z-index: 2;
+            transition: color .2s ease, transform .2s ease;
         }
 
-        @keyframes banLogoFloat {
-
-            0%, 100% {
-                transform: translateY(0) rotate(0deg);
-            }
-
-            50% {
-                transform: translateY(-7px) rotate(1deg);
-            }
+        .input-group:focus-within .input-icon {
+            color: #a78bfa;
+            transform: translateY(-50%) scale(1.06);
         }
 
-        @keyframes banLogoGlow {
-
-            0%, 100% {
-                box-shadow:
-                    0 0 30px rgba(239,68,68,.25);
-            }
-
-            50% {
-                box-shadow:
-                    0 0 48px rgba(239,68,68,.42);
-            }
-        }
-
-        @keyframes banLogoRing {
-
-            0% {
-                transform: rotate(0deg) scale(.95);
-                opacity: .25;
-            }
-
-            50% {
-                opacity: .8;
-            }
-
-            100% {
-                transform: rotate(360deg) scale(1.05);
-                opacity: .25;
-            }
-        }
-
-        .ban-title {
-            margin: 0;
-            font-size: 26px;
-            line-height: 1.2;
-            font-weight: 800;
-
-            background:
-                linear-gradient(
-                    90deg,
-                    #fff,
-                    #fecaca,
-                    #fff
-                );
-
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-        }
-
-        .ban-subtitle {
-            margin: 9px 0 0;
-            color: #94a3b8;
-            font-size: 13px;
-            line-height: 1.6;
-        }
-
-        .ban-status {
-            margin: 22px 0 15px;
-            padding: 12px 14px;
-
+        .aura-input {
+            width: 100%;
+            height: 54px;
+            padding: 0 46px;
+            color: #fff;
+            background: rgba(15, 23, 42, .75);
+            border: 1px solid rgba(148, 163, 184, .14);
             border-radius: 15px;
+            outline: none;
+            transition:
+                border-color .2s ease,
+                box-shadow .2s ease,
+                background .2s ease,
+                transform .2s ease;
+        }
 
-            border: 1px solid rgba(239,68,68,.13);
-            background: rgba(239,68,68,.055);
+        .aura-input::placeholder {
+            color: #64748b;
+        }
 
+        .aura-input:focus {
+            border-color: rgba(124, 58, 237, .8);
+            background: rgba(15, 23, 42, .95);
+            box-shadow:
+                0 0 0 3px rgba(124, 58, 237, .12),
+                0 0 25px rgba(124, 58, 237, .08);
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            border: 0;
+            background: transparent;
+            color: #718096;
+            cursor: pointer;
+            width: 32px;
+            height: 32px;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 9px;
+        }
 
-            color: #fca5a5;
-            font-size: 12px;
+        .password-toggle:hover {
+            color: #fff;
+        }
+
+        .login-btn {
+            width: 100%;
+            min-height: 54px;
+            border: 0;
+            border-radius: 15px;
+            color: #fff;
+            font-size: 15px;
             font-weight: 700;
+            cursor: pointer;
+            background: linear-gradient(135deg, #7c3aed, #5b21b6);
+            box-shadow: 0 12px 30px rgba(124, 58, 237, .24);
+            transition:
+                transform .15s ease,
+                box-shadow .2s ease,
+                opacity .2s ease;
         }
 
-        .ban-status-dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: #ef4444;
-
-            box-shadow:
-                0 0 0 5px rgba(239,68,68,.08),
-                0 0 14px rgba(239,68,68,.7);
-
-            animation: banDotPulse 1.5s infinite;
+        .login-btn:hover {
+            box-shadow: 0 15px 35px rgba(124, 58, 237, .35);
         }
 
-        @keyframes banDotPulse {
-
-            0%, 100% {
-                transform: scale(1);
-                opacity: 1;
-            }
-
-            50% {
-                transform: scale(.75);
-                opacity: .55;
-            }
+        .login-btn:active {
+            transform: scale(.98);
         }
 
-        .ban-message {
-            color: #cbd5e1;
-            font-size: 13px;
-            line-height: 1.75;
-            margin: 0;
+        .login-btn:disabled {
+            opacity: .65;
+            cursor: not-allowed;
+            transform: none;
         }
 
-        .reason-box {
-            margin-top: 17px;
-            padding: 15px;
-            border-radius: 17px;
-
-            text-align: left;
-
-            background: rgba(255,255,255,.035);
-            border: 1px solid rgba(255,255,255,.07);
-        }
-
-        .reason-label {
+        .remember-box {
             display: flex;
             align-items: center;
-            gap: 7px;
-
-            color: #fca5a5;
-            font-size: 12px;
-            font-weight: 800;
-            margin-bottom: 7px;
-        }
-
-        .reason-text {
-            color: #e2e8f0;
-            font-size: 13px;
-            line-height: 1.6;
-            word-break: break-word;
-        }
-
-        /* =====================================================
-           LIVE COUNTDOWN
-        ===================================================== */
-
-        .countdown-box {
-            margin-top: 17px;
-            padding: 16px;
-
-            border-radius: 18px;
-
-            background:
-                linear-gradient(
-                    135deg,
-                    rgba(124,58,237,.08),
-                    rgba(239,68,68,.055)
-                );
-
-            border: 1px solid rgba(124,58,237,.14);
-        }
-
-        .countdown-label {
+            gap: 8px;
             color: #94a3b8;
-            font-size: 11px;
-            margin-bottom: 12px;
-        }
-
-        .countdown-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 7px;
-        }
-
-        .time-box {
-            min-width: 0;
-            padding: 10px 4px;
-
-            border-radius: 12px;
-
-            background: rgba(255,255,255,.045);
-            border: 1px solid rgba(255,255,255,.06);
-        }
-
-        .time-value {
-            display: block;
-            color: #fff;
-            font-size: 18px;
-            font-weight: 800;
-            line-height: 1.2;
-        }
-
-        .time-label {
-            display: block;
-            margin-top: 4px;
-            color: #64748b;
-            font-size: 8px;
-            text-transform: uppercase;
-            letter-spacing: .5px;
-        }
-
-        .permanent-box {
-            margin-top: 17px;
-            padding: 15px;
-
-            border-radius: 17px;
-
-            background:
-                linear-gradient(
-                    135deg,
-                    rgba(239,68,68,.08),
-                    rgba(127,29,29,.08)
-                );
-
-            border: 1px solid rgba(239,68,68,.13);
-
-            color: #fecaca;
             font-size: 13px;
-            line-height: 1.7;
         }
 
-        .ban-buttons {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 9px;
-            margin-top: 19px;
+        .remember-box input {
+            width: 16px;
+            height: 16px;
+            accent-color: #7c3aed;
         }
 
-        .ban-btn {
-            height: 46px;
-            border-radius: 13px;
-            border: 1px solid rgba(255,255,255,.07);
-            cursor: pointer;
+        .aura-link {
+            color: #a78bfa;
+            text-decoration: none;
+            font-weight: 600;
+        }
 
-            color: #fff;
-            font-size: 12px;
+        .aura-link:hover {
+            color: #c4b5fd;
+        }
+
+        .connection-status {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 7px;
+            width: fit-content;
+            margin: 14px auto 0;
+            padding: 6px 11px;
+            border-radius: 999px;
+            font-size: 10px;
             font-weight: 700;
-
-            background: rgba(255,255,255,.045);
-            transition: .2s;
+            border: 1px solid rgba(255,255,255,.07);
+            background: rgba(255,255,255,.03);
+            color: #94a3b8;
+            transition: .25s ease;
         }
 
-        .ban-btn:hover {
-            transform: translateY(-1px);
-            background: rgba(255,255,255,.07);
+        .connection-status.online {
+            color: #34d399;
+            background: rgba(16,185,129,.07);
+            border-color: rgba(16,185,129,.12);
         }
 
-        .ban-support {
-            background:
-                linear-gradient(
-                    135deg,
-                    rgba(124,58,237,.85),
-                    rgba(99,102,241,.85)
-                );
-
-            border-color: transparent;
+        .connection-status.offline {
+            color: #fb7185;
+            background: rgba(244,63,94,.08);
+            border-color: rgba(244,63,94,.15);
         }
 
-        .ban-footer {
-            margin-top: 17px;
+        .connection-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: currentColor;
+        }
+
+        .welcome-box {
+            display: none;
+            margin-top: 12px;
+            padding: 9px 12px;
+            border-radius: 12px;
+            background: rgba(124,58,237,.07);
+            border: 1px solid rgba(124,58,237,.12);
+            color: #c4b5fd;
+            font-size: 11px;
+            text-align: center;
+        }
+
+        .security-warning {
+            display: none;
+            margin-top: 10px;
+            padding: 10px 12px;
+            border-radius: 12px;
+            background: rgba(245,158,11,.07);
+            border: 1px solid rgba(245,158,11,.14);
+            color: #fbbf24;
+            font-size: 11px;
+            line-height: 1.5;
+            text-align: center;
+        }
+
+        .support-row {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 14px;
+            margin-top: 16px;
+            font-size: 11px;
+        }
+
+        .support-row a,
+        .support-row button {
+            color: #64748b;
+            text-decoration: none;
+            background: transparent;
+            border: 0;
+            padding: 0;
+            cursor: pointer;
+            font-size: 11px;
+        }
+
+        .support-row a:hover,
+        .support-row button:hover {
+            color: #a78bfa;
+        }
+
+        .legal-row {
+            text-align: center;
             color: #475569;
             font-size: 9px;
-        }
-
-        /* =====================================================
-           MAINTENANCE
-        ===================================================== */
-
-        #maintenanceScreen {
-            background: #050816;
-        }
-
-        .simple-overlay-card {
-            width: 100%;
-            max-width: 400px;
-            padding: 28px 22px;
-            text-align: center;
-            border-radius: 25px;
-            background: rgba(9,14,32,.95);
-            border: 1px solid rgba(255,255,255,.08);
-            box-shadow: 0 30px 80px rgba(0,0,0,.5);
-        }
-
-        .simple-overlay-icon {
-            width: 70px;
-            height: 70px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 18px;
-            border-radius: 22px;
-            background: rgba(124,58,237,.12);
-            color: #a78bfa;
-            font-size: 28px;
-        }
-
-        .simple-overlay-card h2 {
-            margin: 0;
-            font-size: 21px;
-            font-weight: 800;
-        }
-
-        .simple-overlay-card p {
-            margin: 10px 0 0;
-            color: #94a3b8;
-            font-size: 13px;
             line-height: 1.7;
+            margin-top: 12px;
         }
 
-        /* =====================================================
-           UPDATE
-        ===================================================== */
-
-        #updateScreen {
-            background: #050816;
+        .legal-row a {
+            color: #64748b;
+            text-decoration: none;
         }
 
-        /* =====================================================
-           NOTIFICATION
-        ===================================================== */
+        .legal-row a:hover {
+            color: #a78bfa;
+        }
 
         #customNotifBanner {
             position: fixed;
-            left: 14px;
-            right: 14px;
-            bottom: 14px;
-            z-index: 17000;
+            left: 50%;
+            bottom: 18px;
+            transform: translateX(-50%) translateY(20px);
+            width: calc(100% - 24px);
+            max-width: 460px;
+            z-index: 9998;
+            opacity: 0;
             display: none;
-
-            max-width: 430px;
-            margin: auto;
-
-            padding: 14px;
-
-            border-radius: 17px;
-            border: 1px solid rgba(255,255,255,.08);
-            background: rgba(15,23,42,.96);
-
-            box-shadow: 0 20px 60px rgba(0,0,0,.4);
-            backdrop-filter: blur(15px);
+            transition: opacity .25s ease, transform .25s ease;
         }
 
-        #customNotifBanner.show {
-            display: block;
+        .notif-inner {
+            background: linear-gradient(
+                135deg,
+                rgba(15, 23, 42, .98),
+                rgba(30, 27, 75, .98)
+            );
+            border: 1px solid rgba(124, 58, 237, .35);
+            border-radius: 20px;
+            padding: 15px;
+            box-shadow:
+                0 20px 60px rgba(0, 0, 0, .50),
+                0 0 35px rgba(124, 58, 237, .12);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+        }
+
+        .notif-icon {
+            width: 44px;
+            height: 44px;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 14px;
+            background: linear-gradient(135deg, #7c3aed, #ec4899);
+            box-shadow: 0 8px 22px rgba(124, 58, 237, .25);
         }
 
         .notif-title {
+            font-size: 14px;
             font-weight: 700;
-            font-size: 13px;
+            color: #fff;
         }
 
-        .notif-text {
-            margin-top: 4px;
+        .notif-subtitle {
+            margin-top: 3px;
             color: #94a3b8;
             font-size: 11px;
             line-height: 1.5;
@@ -884,79 +478,65 @@
         .notif-actions {
             display: flex;
             gap: 8px;
-            margin-top: 11px;
-        }
-
-        .notif-actions button {
-            flex: 1;
-            height: 38px;
-            border: 0;
-            border-radius: 10px;
-            cursor: pointer;
-            font-size: 11px;
-            font-weight: 700;
+            margin-top: 12px;
         }
 
         .notif-allow {
+            flex: 1;
+            height: 40px;
+            border: 0;
+            border-radius: 11px;
             color: #fff;
-            background: #7c3aed;
+            font-size: 12px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #7c3aed, #6d28d9);
+            cursor: pointer;
         }
 
         .notif-close {
-            color: #cbd5e1;
-            background: rgba(255,255,255,.05);
+            width: 42px;
+            height: 40px;
+            border: 1px solid rgba(255, 255, 255, .08);
+            border-radius: 11px;
+            color: #94a3b8;
+            background: rgba(255, 255, 255, .04);
+            cursor: pointer;
         }
 
-        /* =====================================================
-           TOAST
-        ===================================================== */
+        .notif-close:hover {
+            color: #fff;
+        }
 
         #toastContainer {
             position: fixed;
-            top: 15px;
-            left: 15px;
+            top: 18px;
             right: 15px;
-            z-index: 25000;
-
+            width: calc(100% - 30px);
+            max-width: 380px;
+            z-index: 10000;
             display: flex;
             flex-direction: column;
-            align-items: center;
-            gap: 8px;
-
+            gap: 10px;
             pointer-events: none;
         }
 
-        .toast {
-            width: max-content;
-            max-width: 92%;
-            padding: 11px 15px;
-
-            border-radius: 13px;
-
-            color: #fff;
-            background: rgba(15,23,42,.95);
-
-            border: 1px solid rgba(255,255,255,.08);
-
-            box-shadow: 0 15px 40px rgba(0,0,0,.35);
-
-            font-size: 12px;
+        .aura-toast {
+            pointer-events: auto;
+            display: flex;
+            align-items: flex-start;
+            gap: 11px;
+            padding: 13px 14px;
+            background: rgba(15, 23, 42, .97);
+            border: 1px solid rgba(255, 255, 255, .08);
+            border-radius: 15px;
+            box-shadow: 0 15px 45px rgba(0, 0, 0, .4);
             animation: toastIn .25s ease;
         }
 
-        .toast.error {
-            border-color: rgba(239,68,68,.2);
-        }
-
-        .toast.success {
-            border-color: rgba(34,197,94,.2);
-        }
-
         @keyframes toastIn {
-
             from {
                 opacity: 0;
-                transform: translateY(-10px);
+                transform: translateY(-8px);
             }
 
             to {
@@ -965,230 +545,3371 @@
             }
         }
 
-        /* =====================================================
-           MOBILE
-        ===================================================== */
+        .toast-icon {
+            width: 28px;
+            height: 28px;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 9px;
+            background: rgba(124, 58, 237, .15);
+            color: #a78bfa;
+        }
 
-        @media(max-width: 380px) {
+        .toast-text {
+            flex: 1;
+            color: #e2e8f0;
+            font-size: 13px;
+            line-height: 1.5;
+        }
 
-            .ban-card {
-                padding: 26px 17px 20px;
+        .full-screen-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 9000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            background:
+                radial-gradient(
+                    circle at top,
+                    rgba(124, 58, 237, .16),
+                    transparent 40%
+                ),
+                #050816;
+        }
+
+        .overlay-card {
+            width: 100%;
+            max-width: 430px;
+            padding: 28px 22px;
+            text-align: center;
+            background: rgba(15, 23, 42, .92);
+            border: 1px solid rgba(255, 255, 255, .08);
+            border-radius: 26px;
+            box-shadow: 0 30px 90px rgba(0, 0, 0, .5);
+        }
+
+        /* BAN SCREEN */
+        #banScreen {
+            z-index: 19000;
+            background:
+                radial-gradient(
+                    circle at top,
+                    rgba(239, 68, 68, .14),
+                    transparent 42%
+                ),
+                #050816;
+        }
+
+        .ban-icon {
+            width: 76px;
+            height: 76px;
+            margin: 0 auto;
+            border-radius: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(239,68,68,.10);
+            color: #fb7185;
+            border: 1px solid rgba(239,68,68,.18);
+            font-size: 30px;
+        }
+
+        .ban-reason {
+            margin-top: 16px;
+            padding: 13px 14px;
+            border-radius: 14px;
+            background: rgba(239,68,68,.06);
+            border: 1px solid rgba(239,68,68,.12);
+            color: #cbd5e1;
+            font-size: 13px;
+            line-height: 1.6;
+            word-break: break-word;
+        }
+
+        .ban-time {
+            margin-top: 10px;
+            color: #fbbf24;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .support-ban-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            min-height: 50px;
+            margin-top: 18px;
+            border-radius: 14px;
+            background: linear-gradient(135deg, #22c55e, #15803d);
+            color: #fff;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 700;
+            box-shadow: 0 12px 30px rgba(34,197,94,.18);
+        }
+
+        .support-ban-btn:active {
+            transform: scale(.98);
+        }
+
+        #startupLoader {
+            position: fixed;
+            inset: 0;
+            z-index: 20000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #050816;
+            transition: opacity .25s ease, visibility .25s ease;
+        }
+
+        #startupLoader.hide {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .loader-logo {
+            width: 88px;
+            height: 88px;
+            padding: 3px;
+            border-radius: 25px;
+            background: linear-gradient(135deg, #7c3aed, #06b6d4, #ec4899);
+            margin: 0 auto 20px;
+            animation: loaderPulse 1.5s infinite;
+        }
+
+        .loader-logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 22px;
+        }
+
+        @keyframes loaderPulse {
+            0%, 100% {
+                transform: scale(1);
             }
 
-            .ban-logo-wrap {
-                width: 92px;
-                height: 92px;
-            }
-
-            .ban-title {
-                font-size: 23px;
-            }
-
-            .time-value {
-                font-size: 16px;
+            50% {
+                transform: scale(1.05);
             }
         }
 
+        .loader-spinner {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            border: 2px solid rgba(255, 255, 255, .10);
+            border-top-color: #8b5cf6;
+            animation: spin .8s linear infinite;
+            margin: 18px auto 0;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        #forgotModal {
+            position: fixed;
+            inset: 0;
+            z-index: 15000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 18px;
+            background: rgba(2, 6, 23, .78);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+        }
+
+        .forgot-card {
+            width: 100%;
+            max-width: 400px;
+            padding: 24px;
+            background: linear-gradient(145deg, #0f172a, #080d1d);
+            border: 1px solid rgba(255, 255, 255, .08);
+            border-radius: 24px;
+            box-shadow: 0 30px 90px rgba(0, 0, 0, .55);
+            animation: cardIn .25s ease;
+        }
+
+        .reset-success {
+            display: none;
+            text-align: center;
+        }
+
+        .success-icon {
+            width: 70px;
+            height: 70px;
+            margin: 0 auto;
+            border-radius: 22px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(16, 185, 129, .10);
+            color: #34d399;
+            border: 1px solid rgba(16, 185, 129, .18);
+            font-size: 30px;
+        }
+
+        .success-login {
+            animation: successLogin .65s ease forwards;
+        }
+
+        @keyframes successLogin {
+            0% {
+                transform: scale(1);
+                opacity: 1;
+            }
+
+            45% {
+                transform: scale(1.015);
+            }
+
+            100% {
+                transform: scale(.98);
+                opacity: .88;
+            }
+        }
+
+        @media (max-width: 420px) {
+            .page-wrapper {
+                padding: 18px 12px;
+            }
+
+            .login-card {
+                padding: 24px 17px;
+                border-radius: 24px;
+            }
+
+            .logo-box {
+                width: 82px;
+                height: 82px;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: .01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: .01ms !important;
+            }
+        }
     </style>
 </head>
 
 <body>
 
-    <!-- Background -->
-    <div class="bg-orb orb-one"></div>
-    <div class="bg-orb orb-two"></div>
-    <div class="bg-orb orb-three"></div>
+<div class="aura-bg">
+    <div class="aura-orb aura-orb-1"></div>
+    <div class="aura-orb aura-orb-2"></div>
+    <div class="aura-orb aura-orb-3"></div>
+</div>
 
-
-    <!-- =====================================================
-         STARTUP LOADER
-    ====================================================== -->
-
-    <div id="startupLoader">
-
-        <div class="loader-content">
-
+<!-- STARTUP -->
+<div id="startupLoader">
+    <div class="text-center">
+        <div class="loader-logo">
             <img
-                class="loader-logo"
                 src="https://videotourl.com/images/1789792991627-2a906ffa-fbc0-4f79-9d9b-8dddb80ca667.jpg"
-                alt="AURA ARMAN TOUR"
-            >
+                alt="AURA">
+        </div>
 
-            <div class="loader-title">
-                AURA SKILL
+        <h1 class="text-xl font-bold text-white">AURA SKILL</h1>
+        <p class="text-sm text-slate-400 mt-1">Play &amp; Earn</p>
+
+        <div class="loader-spinner"></div>
+    </div>
+</div>
+
+<!-- MAINTENANCE -->
+<div id="maintenanceScreen" class="full-screen-overlay">
+    <div class="overlay-card">
+
+        <div class="w-16 h-16 mx-auto rounded-2xl bg-violet-500/10 flex items-center justify-center text-violet-400 text-2xl">
+            <i class="fa-solid fa-screwdriver-wrench"></i>
+        </div>
+
+        <h2 class="text-xl font-bold mt-5">
+            সাইট মেইনটেন্যান্সে আছে
+        </h2>
+
+        <p id="maintenanceReason"
+           class="text-sm text-slate-400 mt-3 leading-6">
+            কিছু সময়ের জন্য সাইটটি বন্ধ রাখা হয়েছে।
+        </p>
+
+        <div class="mt-5 text-xs text-slate-500">
+            অনুগ্রহ করে কিছুক্ষণ পরে আবার চেষ্টা করুন।
+        </div>
+    </div>
+</div>
+
+<!-- UPDATE -->
+<div id="updateScreen" class="full-screen-overlay">
+    <div class="overlay-card">
+
+        <div class="w-16 h-16 mx-auto rounded-2xl bg-cyan-500/10 flex items-center justify-center text-cyan-400 text-2xl">
+            <i class="fa-solid fa-cloud-arrow-down"></i>
+        </div>
+
+        <h2 class="text-xl font-bold mt-5">
+            নতুন আপডেট এসেছে
+        </h2>
+
+        <p class="text-sm text-slate-400 mt-3 leading-6">
+            অ্যাপটি ব্যবহার করতে নতুন ভার্সনে আপডেট করুন।
+        </p>
+
+        <a id="updateLink"
+           href="#"
+           target="_blank"
+           rel="noopener noreferrer"
+           class="block w-full mt-6">
+
+            <button type="button" class="login-btn">
+                <i class="fa-solid fa-download mr-2"></i>
+                আপডেট করুন
+            </button>
+
+        </a>
+    </div>
+</div>
+
+<!-- BAN SCREEN -->
+<div id="banScreen" class="full-screen-overlay">
+
+    <div class="overlay-card">
+
+        <div class="ban-icon">
+            <i class="fa-solid fa-user-lock"></i>
+        </div>
+
+        <h2 class="text-xl font-bold mt-5">
+            Account Temporarily Banned
+        </h2>
+
+        <p class="text-sm text-slate-400 mt-3 leading-6">
+            আপনার account বর্তমানে ব্যবহার করা যাচ্ছে না।
+        </p>
+
+        <div id="banReasonBox" class="ban-reason">
+            Ban reason এখানে দেখাবে।
+        </div>
+
+        <div id="banTimeBox" class="ban-time">
+            Ban status checking...
+        </div>
+
+        <a
+            id="banSupportLink"
+            class="support-ban-btn"
+            href="https://chat.whatsapp.com/DCxfqldDvbl8wOtk7PzCP9?s=cl&p=a&mlu=4&ilr=4"
+            target="_blank"
+            rel="noopener noreferrer">
+
+            <i class="fa-brands fa-whatsapp mr-2"></i>
+            Support এ যোগাযোগ করুন
+
+        </a>
+
+        <button
+            id="banCloseBtn"
+            type="button"
+            class="w-full mt-3 h-11 rounded-xl border border-white/5 bg-white/[.03] text-slate-400 text-sm font-semibold">
+
+            ফিরে যান
+
+        </button>
+
+    </div>
+</div>
+
+<!-- NOTIFICATION -->
+<div id="customNotifBanner">
+
+    <div class="notif-inner">
+
+        <div class="flex items-center gap-3">
+
+            <div class="notif-icon">
+                <i class="fa-solid fa-bell text-white"></i>
             </div>
 
-            <div class="loader-subtitle">
-                Play & Earn
+            <div class="flex-1">
+
+                <div class="notif-title">
+                    নোটিফিকেশন চালু করুন
+                </div>
+
+                <div class="notif-subtitle">
+                    নতুন আপডেট ও গুরুত্বপূর্ণ খবর সবার আগে পেতে
+                    নোটিফিকেশন চালু রাখুন।
+                </div>
+
             </div>
 
-            <div class="loader-dots">
-                <span></span>
-                <span></span>
-                <span></span>
+        </div>
+
+        <div class="notif-actions">
+
+            <button
+                type="button"
+                id="allowNotifBtn"
+                class="notif-allow">
+
+                <i class="fa-solid fa-bell mr-1"></i>
+                চালু করুন
+
+            </button>
+
+            <button
+                type="button"
+                id="closeNotifBtn"
+                class="notif-close"
+                aria-label="Close">
+
+                <i class="fa-solid fa-xmark"></i>
+
+            </button>
+
+        </div>
+
+    </div>
+</div>
+
+<!-- TOAST -->
+<div id="toastContainer"></div>
+
+<!-- LOGIN -->
+<main class="page-wrapper">
+
+    <section id="loginCard" class="login-card">
+
+        <div class="logo-box">
+            <img
+                src="https://videotourl.com/images/1789792991627-2a906ffa-fbc0-4f79-9d9b-8dddb80ca667.jpg"
+                alt="AURA ARMAN TOUR">
+        </div>
+
+        <div class="text-center">
+
+            <h1 class="text-2xl font-extrabold tracking-tight text-white">
+                Welcome Back
+            </h1>
+
+            <p id="welcomeSubtitle"
+               class="text-sm text-slate-400 mt-2">
+                চালিয়ে যেতে লগইন করুন
+            </p>
+
+            <div id="welcomeBox" class="welcome-box"></div>
+
+        </div>
+
+        <div id="connectionStatus"
+             class="connection-status online">
+
+            <span class="connection-dot"></span>
+
+            <span id="connectionText">
+                Internet Connected
+            </span>
+
+        </div>
+
+        <form id="loginForm"
+              class="mt-7 space-y-4"
+              autocomplete="on">
+
+            <div>
+
+                <label
+                    for="loginIdentifier"
+                    class="block text-xs font-semibold text-slate-400 mb-2">
+
+                    Username অথবা Gmail
+
+                </label>
+
+                <div class="input-group">
+
+                    <i class="fa-solid fa-user input-icon"></i>
+
+                    <input
+                        id="loginIdentifier"
+                        name="username"
+                        type="text"
+                        class="aura-input"
+                        placeholder="Username অথবা Gmail লিখুন"
+                        autocomplete="username"
+                        required
+                        spellcheck="false"
+                        autocapitalize="none">
+
+                </div>
+
+            </div>
+
+            <div>
+
+                <label
+                    for="loginPassword"
+                    class="block text-xs font-semibold text-slate-400 mb-2">
+
+                    Password
+
+                </label>
+
+                <div class="input-group">
+
+                    <i class="fa-solid fa-lock input-icon"></i>
+
+                    <input
+                        id="loginPassword"
+                        name="password"
+                        type="password"
+                        class="aura-input"
+                        placeholder="Password লিখুন"
+                        autocomplete="current-password"
+                        required>
+
+                    <button
+                        type="button"
+                        id="togglePassword"
+                        class="password-toggle"
+                        aria-label="Show password">
+
+                        <i id="passwordEye"
+                           class="fa-solid fa-eye"></i>
+
+                    </button>
+
+                </div>
+
+            </div>
+
+            <div id="securityWarning"
+                 class="security-warning">
+
+                <i class="fa-solid fa-shield-halved mr-1"></i>
+
+                <span id="securityWarningText"></span>
+
+            </div>
+
+            <div class="flex items-center justify-between gap-3 pt-1">
+
+                <label class="remember-box">
+
+                    <input
+                        type="checkbox"
+                        id="rememberMe">
+
+                    <span>
+                        মনে রাখুন
+                    </span>
+
+                </label>
+
+                <button
+                    type="button"
+                    id="forgotPasswordBtn"
+                    class="text-xs font-semibold text-violet-400 hover:text-violet-300">
+
+                    Password ভুলে গেছেন?
+
+                </button>
+
+            </div>
+
+            <button
+                type="submit"
+                id="loginBtn"
+                class="login-btn mt-2">
+
+                <span id="loginBtnText">
+
+                    <i class="fa-solid fa-right-to-bracket mr-2"></i>
+
+                    লগইন করুন
+
+                </span>
+
+            </button>
+
+            <div class="text-center text-sm text-slate-500 pt-2">
+
+                অ্যাকাউন্ট নেই?
+
+                <a
+                    href="register.html"
+                    class="aura-link ml-1">
+
+                    রেজিস্টার করুন
+
+                </a>
+
+            </div>
+
+        </form>
+
+        <div class="support-row">
+
+            <a href="https://chat.whatsapp.com/DCxfqldDvbl8wOtk7PzCP9?s=cl&p=a&mlu=4&ilr=4"
+               target="_blank"
+               rel="noopener noreferrer">
+
+                <i class="fa-solid fa-headset mr-1"></i>
+                Support
+
+            </a>
+
+            <span class="text-slate-700">•</span>
+
+            <a href="terms.html">
+                Terms
+            </a>
+
+            <span class="text-slate-700">•</span>
+
+            <a href="private.html">
+                Privacy
+            </a>
+
+        </div>
+
+        <div class="legal-row">
+
+            লগইন করে আপনি আমাদের
+
+            <a href="terms.html">
+                Terms &amp; Conditions
+            </a>
+
+            এবং
+
+            <a href="private.html">
+                Privacy Policy
+            </a>
+
+            মেনে নিচ্ছেন।
+
+        </div>
+
+        <div class="text-center text-[10px] text-slate-600 mt-5">
+            © 2026 AURA ARMAN TOUR
+        </div>
+
+    </section>
+
+</main>
+
+<!-- FORGOT PASSWORD -->
+<div id="forgotModal">
+
+    <div class="forgot-card">
+
+        <div id="resetFormArea">
+
+            <div class="w-12 h-12 rounded-xl bg-violet-500/10 text-violet-400 flex items-center justify-center text-lg">
+                <i class="fa-solid fa-key"></i>
+            </div>
+
+            <h2 class="text-xl font-bold mt-4">
+                Password Reset
+            </h2>
+
+            <p class="text-sm text-slate-400 mt-2 leading-6">
+                Username অথবা Gmail দিন।
+                আমরা আপনার Gmail-এ password reset করার জন্য link পাঠাবো।
+            </p>
+
+            <form id="forgotForm" class="mt-5">
+
+                <div class="input-group">
+
+                    <i class="fa-solid fa-envelope input-icon"></i>
+
+                    <input
+                        id="forgotEmail"
+                        type="text"
+                        class="aura-input"
+                        placeholder="Username অথবা Gmail"
+                        autocomplete="email"
+                        required
+                        spellcheck="false"
+                        autocapitalize="none">
+
+                </div>
+
+                <button
+                    type="submit"
+                    id="resetPasswordBtn"
+                    class="login-btn mt-4">
+
+                    <span id="resetBtnText">
+
+                        <i class="fa-solid fa-paper-plane mr-2"></i>
+
+                        Reset Link পাঠান
+
+                    </span>
+
+                </button>
+
+                <button
+                    type="button"
+                    id="closeForgotModal"
+                    class="w-full mt-3 h-11 rounded-xl border border-white/5 bg-white/[.03] text-slate-400 text-sm font-semibold hover:text-white">
+
+                    বন্ধ করুন
+
+                </button>
+
+            </form>
+
+        </div>
+
+        <div id="resetSuccessArea"
+             class="reset-success">
+
+            <div class="success-icon">
+
+                <i class="fa-solid fa-envelope-circle-check"></i>
+
+            </div>
+
+            <h2 class="text-xl font-bold mt-5">
+                Email পাঠানো হয়েছে
+            </h2>
+
+            <p id="resetSuccessText"
+               class="text-sm text-slate-400 mt-3 leading-6">
+
+                আপনার Gmail inbox check করুন।
+
+            </p>
+
+            <div class="mt-4 text-xs text-slate-500">
+                Gmail-এর Spam/Junk folder-ও check করতে পারেন।
+            </div>
+
+            <button
+                type="button"
+                id="resetCloseSuccess"
+                class="login-btn mt-6">
+
+                <i class="fa-solid fa-check mr-2"></i>
+                ঠিক আছে
+
+            </button>
+
+            <button
+                type="button"
+                id="resendResetBtn"
+                class="w-full mt-3 h-11 rounded-xl border border-white/5 bg-white/[.03] text-slate-400 text-sm font-semibold">
+
+                আবার পাঠান
+
+            </button>
+
+            <div id="resendCountdown"
+                 class="text-[10px] text-slate-600 mt-2">
             </div>
 
         </div>
 
     </div>
 
+</div>
 
-    <!-- =====================================================
-         LOGIN PAGE
-    ====================================================== -->
+<script type="module">
 
-    <main class="page">
+import {
+    auth,
+    db,
+    isMedianApp,
+    getOneSignalInfo,
+    linkOneSignalUser
+} from "./firebase.js";
 
-        <section class="login-card">
+import {
+    onAuthStateChanged,
+    signInWithEmailAndPassword,
+    sendPasswordResetEmail,
+    setPersistence,
+    browserLocalPersistence,
+    browserSessionPersistence,
+    signOut
+} from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
-            <div class="brand">
-
-                <img
-                    class="brand-logo"
-                    src="https://videotourl.com/images/1789792991627-2a906ffa-fbc0-4f79-9d9b-8dddb80ca667.jpg"
-                    alt="AURA ARMAN TOUR"
-                >
-
-                <div class="brand-title">
-                    AURA ARMAN TOUR
-                </div>
-
-                <div class="brand-subtitle">
-                    Login to continue your tournament journey
-                </div>
-
-            </div>
-
-
-            <form id="loginForm">
-
-                <div class="input-group">
-
-                    <label class="input-label">
-                        Username অথবা Gmail
-                    </label>
-
-                    <div class="input-wrap">
-
-                        <i class="fa-solid fa-user input-icon"></i>
-
-                        <input
-                            id="loginIdentifier"
-                            type="text"
-                            autocomplete="username"
-                            placeholder="Username / Gmail"
-                            required
-                        >
-
-                    </div>
-
-                </div>
+import {
+    collection,
+    query,
+    where,
+    getDocs,
+    doc,
+    getDoc,
+    onSnapshot,
+    updateDoc
+} from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
 
-                <div class="input-group">
+/* =====================================================
+   ELEMENTS
+===================================================== */
 
-                    <label class="input-label">
-                        Password
-                    </label>
+const startupLoader = document.getElementById("startupLoader");
 
-                    <div class="input-wrap">
+const maintenanceScreen =
+    document.getElementById("maintenanceScreen");
 
-                        <i class="fa-solid fa-lock input-icon"></i>
+const maintenanceReason =
+    document.getElementById("maintenanceReason");
 
-                        <input
-                            id="loginPassword"
-                            type="password"
-                            autocomplete="current-password"
-                            placeholder="Your password"
-                            required
-                        >
+const updateScreen =
+    document.getElementById("updateScreen");
 
-                        <button
-                            type="button"
-                            class="password-toggle"
-                            id="passwordToggle"
-                        >
-                            <i class="fa-solid fa-eye"></i>
-                        </button>
+const updateLink =
+    document.getElementById("updateLink");
 
-                    </div>
+const banScreen =
+    document.getElementById("banScreen");
 
-                </div>
+const banReasonBox =
+    document.getElementById("banReasonBox");
+
+const banTimeBox =
+    document.getElementById("banTimeBox");
+
+const banSupportLink =
+    document.getElementById("banSupportLink");
+
+const banCloseBtn =
+    document.getElementById("banCloseBtn");
+
+const loginCard =
+    document.getElementById("loginCard");
+
+const loginForm =
+    document.getElementById("loginForm");
+
+const loginIdentifier =
+    document.getElementById("loginIdentifier");
+
+const loginPassword =
+    document.getElementById("loginPassword");
+
+const loginBtn =
+    document.getElementById("loginBtn");
+
+const loginBtnText =
+    document.getElementById("loginBtnText");
+
+const rememberMe =
+    document.getElementById("rememberMe");
+
+const togglePassword =
+    document.getElementById("togglePassword");
+
+const passwordEye =
+    document.getElementById("passwordEye");
+
+const forgotPasswordBtn =
+    document.getElementById("forgotPasswordBtn");
+
+const forgotModal =
+    document.getElementById("forgotModal");
+
+const forgotForm =
+    document.getElementById("forgotForm");
+
+const forgotEmail =
+    document.getElementById("forgotEmail");
+
+const closeForgotModal =
+    document.getElementById("closeForgotModal");
+
+const resetPasswordBtn =
+    document.getElementById("resetPasswordBtn");
+
+const resetBtnText =
+    document.getElementById("resetBtnText");
+
+const resetFormArea =
+    document.getElementById("resetFormArea");
+
+const resetSuccessArea =
+    document.getElementById("resetSuccessArea");
+
+const resetSuccessText =
+    document.getElementById("resetSuccessText");
+
+const resetCloseSuccess =
+    document.getElementById("resetCloseSuccess");
+
+const resendResetBtn =
+    document.getElementById("resendResetBtn");
+
+const resendCountdown =
+    document.getElementById("resendCountdown");
+
+const toastContainer =
+    document.getElementById("toastContainer");
+
+const notifBanner =
+    document.getElementById("customNotifBanner");
+
+const allowNotifBtn =
+    document.getElementById("allowNotifBtn");
+
+const closeNotifBtn =
+    document.getElementById("closeNotifBtn");
+
+const connectionStatus =
+    document.getElementById("connectionStatus");
+
+const connectionText =
+    document.getElementById("connectionText");
+
+const welcomeBox =
+    document.getElementById("welcomeBox");
+
+const welcomeSubtitle =
+    document.getElementById("welcomeSubtitle");
+
+const securityWarning =
+    document.getElementById("securityWarning");
+
+const securityWarningText =
+    document.getElementById("securityWarningText");
 
 
-                <div class="login-options">
+/* =====================================================
+   CONFIG
+===================================================== */
 
-                    <label class="remember">
+const SUPPORT_LINK =
+    "https://chat.whatsapp.com/DCxfqldDvbl8wOtk7PzCP9?s=cl&p=a&mlu=4&ilr=4";
 
-                        <input
-                            type="checkbox"
-                            id="rememberMe"
-                        >
+const LOGIN_MAX_ATTEMPTS = 5;
+const LOGIN_COOLDOWN_SECONDS = 30;
 
-                        <span>
-                            Remember me
-                        </span>
-
-                    </label>
+const RESET_COOLDOWN_SECONDS = 30;
 
 
-                    <button
-                        type="button"
-                        class="forgot-btn"
-                        id="forgotPasswordBtn"
-                    >
-                        Forgot password?
-                    </button>
+/* =====================================================
+   STATE
+===================================================== */
 
-                </div>
+let loginBusy = false;
+let notificationBusy = false;
+let resetBusy = false;
 
+let resetCooldownTimer = null;
+let lastResetEmail = "";
 
-                <button
-                    type="submit"
-                    class="login-btn"
-                    id="loginBtn"
-                >
-                    <i class="fa-solid fa-right-to-bracket"></i>
-                    Login
-                </button>
-
-            </form>
+let authStateResolved = false;
+let redirecting = false;
 
 
-            <div class="register-text">
+/* =====================================================
+   TIMEOUT
+===================================================== */
 
-                Don't have an account?
+function withTimeout(promise, milliseconds = 7000) {
 
-                <a href="register.html">
-                    Create Account
-                </a>
+    return Promise.race([
 
-            </div>
+        promise,
 
+        new Promise((_, reject) => {
 
-            <div class="support-box">
+            setTimeout(() => {
+                reject(new Error("REQUEST_TIMEOUT"));
+            }, milliseconds);
 
-                <p>
-                    Need help with your account?
-                </p>
+        })
 
-                <a
-                    href="https://chat.whatsapp.com/DCxfqldDvbl8wOtk7PzCP9?s=cl&p=a&mlu=4&ilr=4"
-                    target="_blank"
-                    rel="noopener"
-                >
-                    <i class="fa-brands fa-whatsapp"></i>
-                    Contact Support
-                </a>
+    ]);
 
-            </div>
+}
 
 
-            <div class="footer">
+/* =====================================================
+   HTML ESCAPE
+===================================================== */
 
-                By continuing, you agree to our
-                <a
-                    href="terms.html"
-                    style="color:#64748b;"
-                >
-                   
+function escapeHTML(value) {
+
+    return String(value)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+
+}
+
+
+/* =====================================================
+   TOAST
+===================================================== */
+
+function showToast(message, type = "info") {
+
+    if (!toastContainer) return;
+
+    const toast =
+        document.createElement("div");
+
+    toast.className = "aura-toast";
+
+    let icon = "fa-circle-info";
+
+    if (type === "success")
+        icon = "fa-circle-check";
+
+    if (type === "error")
+        icon = "fa-circle-exclamation";
+
+    if (type === "warning")
+        icon = "fa-triangle-exclamation";
+
+    toast.innerHTML = `
+        <div class="toast-icon">
+            <i class="fa-solid ${icon}"></i>
+        </div>
+
+        <div class="toast-text">
+            ${escapeHTML(message)}
+        </div>
+    `;
+
+    toastContainer.appendChild(toast);
+
+    setTimeout(() => {
+
+        toast.style.opacity = "0";
+        toast.style.transform = "translateY(-6px)";
+        toast.style.transition =
+            "opacity .25s ease, transform .25s ease";
+
+        setTimeout(() => toast.remove(), 250);
+
+    }, 3500);
+
+}
+
+
+/* =====================================================
+   LOADER
+===================================================== */
+
+function hideStartupLoader() {
+
+    if (!startupLoader) return;
+
+    startupLoader.classList.add("hide");
+
+    setTimeout(() => {
+        startupLoader.style.display = "none";
+    }, 280);
+
+}
+
+
+/*
+ * Loader খুব বেশি সময় ধরে থাকবে না।
+ * Auth check আলাদাভাবে চলবে।
+ */
+setTimeout(hideStartupLoader, 1800);
+
+
+/* =====================================================
+   CONNECTION
+===================================================== */
+
+function updateConnectionStatus() {
+
+    if (!connectionStatus) return;
+
+    if (navigator.onLine) {
+
+        connectionStatus.classList.remove("offline");
+        connectionStatus.classList.add("online");
+
+        connectionText.textContent =
+            "Internet Connected";
+
+    } else {
+
+        connectionStatus.classList.remove("online");
+        connectionStatus.classList.add("offline");
+
+        connectionText.textContent =
+            "No Internet Connection";
+
+    }
+
+}
+
+window.addEventListener("online", () => {
+
+    updateConnectionStatus();
+
+    showToast(
+        "Internet connection ফিরে এসেছে।",
+        "success"
+    );
+
+});
+
+window.addEventListener("offline", () => {
+
+    updateConnectionStatus();
+
+    showToast(
+        "No Internet Connection।",
+        "error"
+    );
+
+});
+
+updateConnectionStatus();
+
+
+/* =====================================================
+   PASSWORD
+===================================================== */
+
+togglePassword.addEventListener("click", () => {
+
+    const isPassword =
+        loginPassword.type === "password";
+
+    loginPassword.type =
+        isPassword ? "text" : "password";
+
+    passwordEye.className =
+        isPassword
+            ? "fa-solid fa-eye-slash"
+            : "fa-solid fa-eye";
+
+});
+
+
+/* =====================================================
+   SAVED LOGIN
+===================================================== */
+
+try {
+
+    const savedIdentifier =
+        localStorage.getItem("auraSavedLogin");
+
+    if (savedIdentifier) {
+
+        loginIdentifier.value =
+            savedIdentifier;
+
+        rememberMe.checked = true;
+
+        showWelcome(savedIdentifier);
+
+    }
+
+} catch (error) {
+    console.warn("Remember me unavailable:", error);
+}
+
+
+/* =====================================================
+   WELCOME
+===================================================== */
+
+function showWelcome(value) {
+
+    if (!value) return;
+
+    const clean = value.trim();
+
+    if (!clean) return;
+
+    let name = clean;
+
+    if (clean.includes("@")) {
+        name = clean.split("@")[0];
+    }
+
+    name =
+        name
+            .replace(/[._-]+/g, " ")
+            .trim();
+
+    if (!name) return;
+
+    name =
+        name.charAt(0).toUpperCase() +
+        name.slice(1);
+
+    welcomeBox.innerHTML = `
+        <i class="fa-solid fa-hand-wave mr-1"></i>
+        Welcome back, ${escapeHTML(name)}
+    `;
+
+    welcomeBox.style.display = "block";
+
+    welcomeSubtitle.textContent =
+        "আপনাকে আবার দেখে ভালো লাগছে ❤️";
+
+}
+
+loginIdentifier.addEventListener("input", () => {
+
+    showWelcome(loginIdentifier.value);
+
+});
+
+
+/* =====================================================
+   USERNAME -> EMAIL
+===================================================== */
+
+async function getEmailFromUsername(username) {
+
+    const usernameLower =
+        username.toLowerCase().trim();
+
+
+    try {
+
+        const q1 =
+            query(
+                collection(db, "users"),
+                where(
+                    "usernameLower",
+                    "==",
+                    usernameLower
+                )
+            );
+
+        const snap1 =
+            await getDocs(q1);
+
+        if (!snap1.empty) {
+
+            const data =
+                snap1.docs[0].data();
+
+            if (data.email) {
+                return data.email.trim();
+            }
+
+        }
+
+    } catch (error) {
+
+        console.warn(
+            "usernameLower lookup:",
+            error
+        );
+
+    }
+
+
+    try {
+
+        const q2 =
+            query(
+                collection(db, "users"),
+                where(
+                    "username",
+                    "==",
+                    username.trim()
+                )
+            );
+
+        const snap2 =
+            await getDocs(q2);
+
+        if (!snap2.empty) {
+
+            const data =
+                snap2.docs[0].data();
+
+            if (data.email) {
+                return data.email.trim();
+            }
+
+        }
+
+    } catch (error) {
+
+        console.warn(
+            "username lookup:",
+            error
+        );
+
+    }
+
+    return null;
+
+}
+
+
+/* =====================================================
+   USER PROFILE
+===================================================== */
+
+async function getUserProfile(uid) {
+
+    try {
+
+        const userRef =
+            doc(db, "users", uid);
+
+        const snapshot =
+            await withTimeout(
+                getDoc(userRef),
+                6000
+            );
+
+        if (!snapshot.exists()) {
+            return null;
+        }
+
+        return snapshot.data() || {};
+
+    } catch (error) {
+
+        console.warn(
+            "Profile check failed:",
+            error
+        );
+
+        return null;
+
+    }
+
+}
+
+
+/* =====================================================
+   BAN DATE PARSER
+===================================================== */
+
+function getBanDate(value) {
+
+    if (!value) return null;
+
+    try {
+
+        /*
+         * Firestore Timestamp
+         */
+        if (
+            typeof value === "object" &&
+            typeof value.toDate === "function"
+        ) {
+            return value.toDate();
+        }
+
+
+        /*
+         * Firestore Timestamp raw
+         */
+        if (
+            typeof value === "object" &&
+            typeof value.seconds === "number"
+        ) {
+
+            return new Date(
+                value.seconds * 1000
+            );
+
+        }
+
+
+        /*
+         * JavaScript Date
+         */
+        if (value instanceof Date) {
+            return value;
+        }
+
+
+        /*
+         * Number milliseconds
+         */
+        if (typeof value === "number") {
+
+            /*
+             * seconds হলে milliseconds-এ convert
+             */
+            if (value < 100000000000) {
+                return new Date(value * 1000);
+            }
+
+            return new Date(value);
+
+        }
+
+
+        /*
+         * String / ISO
+         */
+        if (typeof value === "string") {
+
+            const date =
+                new Date(value);
+
+            if (!isNaN(date.getTime())) {
+                return date;
+            }
+
+        }
+
+    } catch (error) {
+
+        console.warn(
+            "Ban date parse failed:",
+            error
+        );
+
+    }
+
+    return null;
+
+}
+
+
+/* =====================================================
+   BAN CHECK
+===================================================== */
+
+function getBanInfo(profile) {
+
+    if (!profile) {
+
+        return {
+            banned: false,
+            expired: false,
+            reason: "",
+            until: null
+        };
+
+    }
+
+
+    const rawBanned =
+        profile.banned === true ||
+        profile.isBanned === true ||
+        profile.blocked === true;
+
+
+    const until =
+        getBanDate(profile.banUntil);
+
+
+    /*
+     * banUntil পার হয়ে গেলে automatic expired
+     */
+    if (
+        rawBanned &&
+        until &&
+        until.getTime() <= Date.now()
+    ) {
+
+        return {
+            banned: false,
+            expired: true,
+            reason: "",
+            until
+        };
+
+    }
+
+
+    const reason =
+        profile.banReason ||
+        profile.reason ||
+        profile.blockReason ||
+        "আপনার account সাময়িকভাবে বন্ধ করা হয়েছে।";
+
+
+    return {
+        banned: rawBanned,
+        expired: false,
+        reason,
+        until,
+        supportLink:
+            profile.supportLink || SUPPORT_LINK
+    };
+
+}
+
+
+/* =====================================================
+   BAN REMAINING TEXT
+===================================================== */
+
+function getRemainingText(until) {
+
+    if (!until) {
+        return "Ban-এর সময় নির্ধারিত নেই।";
+    }
+
+    const difference =
+        until.getTime() - Date.now();
+
+    if (difference <= 0) {
+        return "Ban-এর সময় শেষ হয়েছে।";
+    }
+
+    const totalSeconds =
+        Math.ceil(
+            difference / 1000
+        );
+
+    const days =
+        Math.floor(
+            totalSeconds / 86400
+        );
+
+    const hours =
+        Math.floor(
+            (totalSeconds % 86400) / 3600
+        );
+
+    const minutes =
+        Math.floor(
+            (totalSeconds % 3600) / 60
+        );
+
+    const seconds =
+        totalSeconds % 60;
+
+
+    const parts = [];
+
+    if (days > 0)
+        parts.push(`${days} দিন`);
+
+    if (hours > 0)
+        parts.push(`${hours} ঘণ্টা`);
+
+    if (minutes > 0)
+        parts.push(`${minutes} মিনিট`);
+
+    if (
+        seconds > 0 &&
+        parts.length < 2
+    )
+        parts.push(`${seconds} সেকেন্ড`);
+
+
+    return `${parts.join(" ")} বাকি আছে।`;
+
+}
+
+
+/* =====================================================
+   SHOW BAN SCREEN
+===================================================== */
+
+let banCountdownTimer = null;
+
+function showBanScreen(profile) {
+
+    const info =
+        getBanInfo(profile);
+
+
+    banReasonBox.textContent =
+        info.reason;
+
+
+    banSupportLink.href =
+        info.supportLink || SUPPORT_LINK;
+
+
+    function updateBanTime() {
+
+        const current =
+            getBanInfo(profile);
+
+        if (!current.banned) {
+
+            clearInterval(
+                banCountdownTimer
+            );
+
+            hideBanScreen();
+
+            showToast(
+                "Ban-এর সময় শেষ হয়েছে। এখন আবার লগইন করতে পারবেন।",
+                "success"
+            );
+
+            return;
+
+        }
+
+        banTimeBox.textContent =
+            getRemainingText(
+                current.until
+            );
+
+    }
+
+
+    updateBanTime();
+
+
+    if (banCountdownTimer) {
+        clearInterval(
+            banCountdownTimer
+        );
+    }
+
+
+    banCountdownTimer =
+        setInterval(
+            updateBanTime,
+            1000
+        );
+
+
+    banScreen.style.display =
+        "flex";
+
+}
+
+
+/* =====================================================
+   HIDE BAN
+===================================================== */
+
+function hideBanScreen() {
+
+    banScreen.style.display =
+        "none";
+
+}
+
+
+/* =====================================================
+   BAN CLOSE
+===================================================== */
+
+banCloseBtn.addEventListener(
+    "click",
+    async () => {
+
+        hideBanScreen();
+
+        loginPassword.value = "";
+
+        /*
+         * Ban screen থেকে ফিরে আসার সময়
+         * Firebase session থাকলে sign out করা হবে।
+         */
+        try {
+            if (auth.currentUser) {
+                await signOut(auth);
+            }
+        } catch (error) {}
+
+    }
+);
+
+
+/* =====================================================
+   LOGIN ATTEMPTS
+===================================================== */
+
+function getAttemptCount() {
+
+    try {
+
+        return Number(
+            sessionStorage.getItem(
+                "auraLoginAttempts"
+            ) || 0
+        );
+
+    } catch (error) {
+
+        return 0;
+
+    }
+
+}
+
+
+function setAttemptCount(count) {
+
+    try {
+
+        sessionStorage.setItem(
+            "auraLoginAttempts",
+            String(count)
+        );
+
+    } catch (error) {}
+
+}
+
+
+function clearLoginAttempts() {
+
+    try {
+
+        sessionStorage.removeItem(
+            "auraLoginAttempts"
+        );
+
+        sessionStorage.removeItem(
+            "auraLoginCooldown"
+        );
+
+    } catch (error) {}
+
+    securityWarning.style.display =
+        "none";
+
+}
+
+
+function getLoginCooldown() {
+
+    try {
+
+        const until =
+            Number(
+                sessionStorage.getItem(
+                    "auraLoginCooldown"
+                ) || 0
+            );
+
+        if (until > Date.now()) {
+
+            return Math.ceil(
+                (until - Date.now()) / 1000
+            );
+
+        }
+
+    } catch (error) {}
+
+    return 0;
+
+}
+
+
+function startLoginCooldown() {
+
+    const until =
+        Date.now() +
+        LOGIN_COOLDOWN_SECONDS * 1000;
+
+    try {
+
+        sessionStorage.setItem(
+            "auraLoginCooldown",
+            String(until)
+        );
+
+    } catch (error) {}
+
+    loginBtn.disabled = true;
+
+    let remaining =
+        LOGIN_COOLDOWN_SECONDS;
+
+    securityWarning.style.display =
+        "block";
+
+
+    const update = () => {
+
+        securityWarningText.textContent =
+            `নিরাপত্তার জন্য ${remaining} সেকেন্ড অপেক্ষা করুন।`;
+
+        loginBtnText.innerHTML = `
+            <i class="fa-solid fa-lock mr-2"></i>
+            ${remaining}s অপেক্ষা করুন
+        `;
+
+    };
+
+
+    update();
+
+
+    const timer =
+        setInterval(() => {
+
+            remaining--;
+
+            if (remaining <= 0) {
+
+                clearInterval(timer);
+
+                try {
+                    sessionStorage.removeItem(
+                        "auraLoginCooldown"
+                    );
+                } catch (error) {}
+
+                securityWarning.style.display =
+                    "none";
+
+                loginBtn.disabled =
+                    false;
+
+                loginBtnText.innerHTML = `
+                    <i class="fa-solid fa-right-to-bracket mr-2"></i>
+                    লগইন করুন
+                `;
+
+                return;
+
+            }
+
+            update();
+
+        }, 1000);
+
+}
+
+
+/* =====================================================
+   LOGIN
+===================================================== */
+
+loginForm.addEventListener(
+    "submit",
+    async event => {
+
+        event.preventDefault();
+
+        if (loginBusy) return;
+
+
+        if (!navigator.onLine) {
+
+            showToast(
+                "No Internet Connection।",
+                "error"
+            );
+
+            return;
+
+        }
+
+
+        const cooldown =
+            getLoginCooldown();
+
+        if (cooldown > 0) {
+
+            showToast(
+                `নিরাপত্তার জন্য ${cooldown} সেকেন্ড অপেক্ষা করুন।`,
+                "warning"
+            );
+
+            return;
+
+        }
+
+
+        const identifier =
+            loginIdentifier.value.trim();
+
+        const password =
+            loginPassword.value;
+
+
+        if (!identifier) {
+
+            showToast(
+                "Username অথবা Gmail দিন।",
+                "warning"
+            );
+
+            loginIdentifier.focus();
+
+            return;
+
+        }
+
+
+        if (!password) {
+
+            showToast(
+                "Password দিন।",
+                "warning"
+            );
+
+            loginPassword.focus();
+
+            return;
+
+        }
+
+
+        loginBusy = true;
+        loginBtn.disabled = true;
+
+
+        loginBtnText.innerHTML = `
+            <i class="fa-solid fa-spinner fa-spin mr-2"></i>
+            লগইন হচ্ছে...
+        `;
+
+
+        try {
+
+            let email = identifier;
+
+
+            /*
+             * Username -> Email
+             */
+            if (!identifier.includes("@")) {
+
+                email =
+                    await withTimeout(
+                        getEmailFromUsername(
+                            identifier
+                        ),
+                        7000
+                    );
+
+                if (!email) {
+
+                    throw new Error(
+                        "USERNAME_NOT_FOUND"
+                    );
+
+                }
+
+            }
+
+
+            /*
+             * Remember Me
+             */
+            await setPersistence(
+                auth,
+                rememberMe.checked
+                    ? browserLocalPersistence
+                    : browserSessionPersistence
+            );
+
+
+            /*
+             * Firebase login
+             */
+            const credential =
+                await withTimeout(
+                    signInWithEmailAndPassword(
+                        auth,
+                        email,
+                        password
+                    ),
+                    12000
+                );
+
+
+            /*
+             * IMPORTANT:
+             * Remember Me থাকলেও এখানে ban check হবে।
+             */
+            const profile =
+                await getUserProfile(
+                    credential.user.uid
+                );
+
+
+            const banInfo =
+                getBanInfo(profile);
+
+
+            /*
+             * Ban active
+             */
+            if (banInfo.banned) {
+
+                await signOut(auth);
+
+                showBanScreen(profile);
+
+                throw new Error(
+                    "ACCOUNT_BANNED"
+                );
+
+            }
+
+
+            /*
+             * Expired ban হলে optional cleanup
+             */
+            if (
+                banInfo.expired &&
+                profile &&
+                profile.banned === true
+            ) {
+
+                try {
+
+                    await updateDoc(
+                        doc(
+                            db,
+                            "users",
+                            credential.user.uid
+                        ),
+                        {
+                            banned: false
+                        }
+                    );
+
+                } catch (error) {
+
+                    console.warn(
+                        "Expired ban cleanup skipped:",
+                        error
+                    );
+
+                }
+
+            }
+
+
+            clearLoginAttempts();
+
+
+            /*
+             * Remember Me local username
+             */
+            try {
+
+                if (rememberMe.checked) {
+
+                    localStorage.setItem(
+                        "auraSavedLogin",
+                        identifier
+                    );
+
+                } else {
+
+                    localStorage.removeItem(
+                        "auraSavedLogin"
+                    );
+
+                }
+
+            } catch (error) {}
+
+
+            /*
+             * OneSignal background
+             */
+            linkOneSignalUser(
+                credential.user
+            )
+            .catch(() => {});
+
+
+            loginBtnText.innerHTML = `
+                <i class="fa-solid fa-circle-check mr-2"></i>
+                লগইন সফল হয়েছে
+            `;
+
+
+            loginCard.classList.remove(
+                "card-glow"
+            );
+
+            loginCard.classList.add(
+                "success-login"
+            );
+
+
+            showToast(
+                "লগইন সফল হয়েছে! স্বাগতম ❤️",
+                "success"
+            );
+
+
+            setTimeout(() => {
+
+                if (redirecting) return;
+
+                redirecting = true;
+
+                window.location.replace(
+                    "index.html"
+                );
+
+            }, 450);
+
+
+        } catch (error) {
+
+            console.error(
+                "Login error:",
+                error
+            );
+
+
+            /*
+             * Ban screen already shown.
+             */
+            if (
+                error?.message ===
+                "ACCOUNT_BANNED"
+            ) {
+                return;
+            }
+
+
+            let message =
+                "লগইন করা যায়নি। আবার চেষ্টা করুন।";
+
+
+            if (
+                error?.message ===
+                "USERNAME_NOT_FOUND"
+            ) {
+
+                message =
+                    "এই Username পাওয়া যায়নি।";
+
+                showToast(
+                    message,
+                    "error"
+                );
+
+            }
+
+
+            else if (
+                error?.code ===
+                "auth/invalid-credential" ||
+                error?.code ===
+                "auth/wrong-password"
+            ) {
+
+                const attempts =
+                    getAttemptCount() + 1;
+
+                setAttemptCount(
+                    attempts
+                );
+
+
+                if (
+                    attempts >=
+                    LOGIN_MAX_ATTEMPTS
+                ) {
+
+                    showToast(
+                        "অনেকবার ভুল password দেওয়া হয়েছে।",
+                        "warning"
+                    );
+
+                    startLoginCooldown();
+
+                } else {
+
+                    const left =
+                        LOGIN_MAX_ATTEMPTS -
+                        attempts;
+
+                    message =
+                        `Password ভুল। আরও ${left} বার চেষ্টা করা যাবে।`;
+
+                    securityWarning.style.display =
+                        "block";
+
+                    securityWarningText.textContent =
+                        `ভুল password: ${attempts}/${LOGIN_MAX_ATTEMPTS} — ${left} বার বাকি।`;
+
+                    showToast(
+                        message,
+                        "error"
+                    );
+
+                }
+
+            }
+
+
+            else if (
+                error?.code ===
+                "auth/user-not-found"
+            ) {
+
+                showToast(
+                    "এই Gmail দিয়ে কোনো account পাওয়া যায়নি।",
+                    "error"
+                );
+
+            }
+
+
+            else if (
+                error?.code ===
+                "auth/too-many-requests"
+            ) {
+
+                showToast(
+                    "অনেকবার চেষ্টা করা হয়েছে। কিছুক্ষণ পরে আবার চেষ্টা করুন।",
+                    "warning"
+                );
+
+                startLoginCooldown();
+
+            }
+
+
+            else if (
+                error?.code ===
+                "auth/network-request-failed"
+            ) {
+
+                showToast(
+                    "Internet connection check করুন।",
+                    "error"
+                );
+
+            }
+
+
+            else if (
+                error?.message ===
+                "REQUEST_TIMEOUT"
+            ) {
+
+                showToast(
+                    "Server response পেতে বেশি সময় লাগছে। Internet check করুন।",
+                    "error"
+                );
+
+            }
+
+
+            else {
+
+                showToast(
+                    message,
+                    "error"
+                );
+
+            }
+
+
+            if (
+                getLoginCooldown() <= 0
+            ) {
+
+                loginBtnText.innerHTML = `
+                    <i class="fa-solid fa-right-to-bracket mr-2"></i>
+                    লগইন করুন
+                `;
+
+            }
+
+        } finally {
+
+            loginBusy = false;
+
+            if (
+                getLoginCooldown() <= 0 &&
+                !redirecting
+            ) {
+
+                loginBtn.disabled = false;
+
+            }
+
+        }
+
+    }
+);
+
+
+/* =====================================================
+   FORGOT PASSWORD
+===================================================== */
+
+forgotPasswordBtn.addEventListener(
+    "click",
+    () => {
+
+        const currentValue =
+            loginIdentifier.value.trim();
+
+        if (currentValue) {
+            forgotEmail.value =
+                currentValue;
+        }
+
+        resetFormArea.style.display =
+            "block";
+
+        resetSuccessArea.style.display =
+            "none";
+
+        forgotModal.style.display =
+            "flex";
+
+        setTimeout(() => {
+            forgotEmail.focus();
+        }, 100);
+
+    }
+);
+
+
+function closeForgot() {
+
+    forgotModal.style.display =
+        "none";
+
+    resetFormArea.style.display =
+        "block";
+
+    resetSuccessArea.style.display =
+        "none";
+
+}
+
+
+closeForgotModal.addEventListener(
+    "click",
+    closeForgot
+);
+
+resetCloseSuccess.addEventListener(
+    "click",
+    closeForgot
+);
+
+forgotModal.addEventListener(
+    "click",
+    event => {
+
+        if (
+            event.target ===
+            forgotModal
+        ) {
+            closeForgot();
+        }
+
+    }
+);
+
+
+/* =====================================================
+   RESET COOLDOWN
+===================================================== */
+
+function startResetCooldown() {
+
+    let remaining =
+        RESET_COOLDOWN_SECONDS;
+
+    resendResetBtn.disabled =
+        true;
+
+    resendResetBtn.classList.add(
+        "opacity-50",
+        "cursor-not-allowed"
+    );
+
+    resendCountdown.textContent =
+        `${remaining} সেকেন্ড পরে আবার পাঠাতে পারবেন।`;
+
+
+    if (resetCooldownTimer) {
+        clearInterval(
+            resetCooldownTimer
+        );
+    }
+
+
+    resetCooldownTimer =
+        setInterval(() => {
+
+            remaining--;
+
+            if (remaining <= 0) {
+
+                clearInterval(
+                    resetCooldownTimer
+                );
+
+                resendResetBtn.disabled =
+                    false;
+
+                resendResetBtn.classList.remove(
+                    "opacity-50",
+                    "cursor-not-allowed"
+                );
+
+                resendCountdown.textContent =
+                    "আবার পাঠাতে চাইলে নিচের button চাপুন।";
+
+                return;
+
+            }
+
+            resendCountdown.textContent =
+                `${remaining} সেকেন্ড পরে আবার পাঠাতে পারবেন।`;
+
+        }, 1000);
+
+}
+
+
+/* =====================================================
+   RESET EMAIL
+===================================================== */
+
+async function resolveResetEmail(value) {
+
+    const clean =
+        value.trim();
+
+    if (!clean) return null;
+
+    if (clean.includes("@")) {
+        return clean;
+    }
+
+    return await withTimeout(
+        getEmailFromUsername(clean),
+        7000
+    );
+
+}
+
+
+async function sendResetEmail() {
+
+    if (resetBusy) return;
+
+
+    if (!navigator.onLine) {
+
+        showToast(
+            "No Internet Connection।",
+            "error"
+        );
+
+        return;
+
+    }
+
+
+    const value =
+        forgotEmail.value.trim();
+
+
+    if (!value) {
+
+        showToast(
+            "Username অথবা Gmail দিন।",
+            "warning"
+        );
+
+        forgotEmail.focus();
+
+        return;
+
+    }
+
+
+    resetBusy = true;
+
+    resetPasswordBtn.disabled =
+        true;
+
+
+    resetBtnText.innerHTML = `
+        <i class="fa-solid fa-spinner fa-spin mr-2"></i>
+        যাচাই হচ্ছে...
+    `;
+
+
+    try {
+
+        const email =
+            await resolveResetEmail(
+                value
+            );
+
+
+        if (!email) {
+
+            throw new Error(
+                "RESET_USER_NOT_FOUND"
+            );
+
+        }
+
+
+        lastResetEmail =
+            email;
+
+
+        resetBtnText.innerHTML = `
+            <i class="fa-solid fa-spinner fa-spin mr-2"></i>
+            Email পাঠানো হচ্ছে...
+        `;
+
+
+        await withTimeout(
+            sendPasswordResetEmail(
+                auth,
+                email
+            ),
+            12000
+        );
+
+
+        resetFormArea.style.display =
+            "none";
+
+        resetSuccessArea.style.display =
+            "block";
+
+
+        resetSuccessText.innerHTML = `
+            <b class="text-white">
+                ${escapeHTML(email)}
+            </b>
+            <br>
+            এই Gmail-এ password reset link পাঠানো হয়েছে।
+        `;
+
+
+        startResetCooldown();
+
+
+        showToast(
+            "Password reset link পাঠানো হয়েছে।",
+            "success"
+        );
+
+
+    } catch (error) {
+
+        console.error(
+            "Password reset error:",
+            error
+        );
+
+
+        let message =
+            "Reset link পাঠানো যায়নি।";
+
+
+        if (
+            error?.message ===
+            "RESET_USER_NOT_FOUND"
+        ) {
+
+            message =
+                "এই Username/Gmail দিয়ে কোনো account পাওয়া যায়নি।";
+
+        }
+
+        else if (
+            error?.code ===
+            "auth/invalid-email"
+        ) {
+
+            message =
+                "সঠিক Gmail দিন।";
+
+        }
+
+        else if (
+            error?.code ===
+            "auth/too-many-requests"
+        ) {
+
+            message =
+                "অনেকবার reset request করা হয়েছে। কিছুক্ষণ পরে আবার চেষ্টা করুন।";
+
+        }
+
+        else if (
+            error?.message ===
+            "REQUEST_TIMEOUT"
+        ) {
+
+            message =
+                "Server response পেতে বেশি সময় লাগছে।";
+
+        }
+
+
+        showToast(
+            message,
+            "error"
+        );
+
+
+    } finally {
+
+        resetBusy = false;
+
+        resetPasswordBtn.disabled =
+            false;
+
+        resetBtnText.innerHTML = `
+            <i class="fa-solid fa-paper-plane mr-2"></i>
+            Reset Link পাঠান
+        `;
+
+    }
+
+}
+
+
+forgotForm.addEventListener(
+    "submit",
+    async event => {
+
+        event.preventDefault();
+
+        await sendResetEmail();
+
+    }
+);
+
+
+resendResetBtn.addEventListener(
+    "click",
+    async () => {
+
+        if (
+            resendResetBtn.disabled ||
+            !lastResetEmail
+        ) {
+            return;
+        }
+
+        forgotEmail.value =
+            lastResetEmail;
+
+        resetFormArea.style.display =
+            "block";
+
+        resetSuccessArea.style.display =
+            "none";
+
+        await sendResetEmail();
+
+    }
+);
+
+
+/* =====================================================
+   MAINTENANCE
+===================================================== */
+
+function setupMaintenanceListener() {
+
+    try {
+
+        const maintenanceRef =
+            doc(
+                db,
+                "settings",
+                "siteMaintenance"
+            );
+
+
+        onSnapshot(
+            maintenanceRef,
+            snapshot => {
+
+                if (!snapshot.exists()) {
+
+                    maintenanceScreen.style.display =
+                        "none";
+
+                    return;
+
+                }
+
+
+                const data =
+                    snapshot.data();
+
+
+                if (
+                    data.enabled === true
+                ) {
+
+                    maintenanceReason.textContent =
+                        data.reason ||
+                        "কিছু সময়ের জন্য সাইটটি বন্ধ রাখা হয়েছে।";
+
+                    maintenanceScreen.style.display =
+                        "flex";
+
+                } else {
+
+                    maintenanceScreen.style.display =
+                        "none";
+
+                }
+
+            },
+            error => {
+
+                console.warn(
+                    "Maintenance listener:",
+                    error
+                );
+
+            }
+        );
+
+    } catch (error) {
+
+        console.warn(
+            "Maintenance setup:",
+            error
+        );
+
+    }
+
+}
+
+
+/* =====================================================
+   UPDATE
+===================================================== */
+
+function setupUpdateListener() {
+
+    try {
+
+        const updateRef =
+            doc(
+                db,
+                "settings",
+                "appUpdate"
+            );
+
+
+        onSnapshot(
+            updateRef,
+            snapshot => {
+
+                if (!snapshot.exists()) {
+
+                    updateScreen.style.display =
+                        "none";
+
+                    return;
+
+                }
+
+
+                const data =
+                    snapshot.data();
+
+
+                const url =
+                    data.url ||
+                    data.link ||
+                    "";
+
+
+                if (
+                    data.enabled === true &&
+                    isValidURL(url)
+                ) {
+
+                    updateLink.href =
+                        url;
+
+                    updateScreen.style.display =
+                        "flex";
+
+                } else {
+
+                    updateScreen.style.display =
+                        "none";
+
+                }
+
+            },
+            error => {
+
+                console.warn(
+                    "Update listener:",
+                    error
+                );
+
+            }
+        );
+
+    } catch (error) {
+
+        console.warn(
+            "Update setup:",
+            error
+        );
+
+    }
+
+}
+
+
+function isValidURL(url) {
+
+    try {
+
+        const parsed =
+            new URL(url);
+
+        return (
+            parsed.protocol === "http:" ||
+            parsed.protocol === "https:"
+        );
+
+    } catch (error) {
+
+        return false;
+
+    }
+
+}
+
+
+/* =====================================================
+   NOTIFICATION
+===================================================== */
+
+function hideNotificationBanner() {
+
+    if (!notifBanner) return;
+
+    notifBanner.style.opacity = "0";
+
+    notifBanner.style.transform =
+        "translateX(-50%) translateY(20px)";
+
+    setTimeout(() => {
+
+        notifBanner.style.display =
+            "none";
+
+    }, 250);
+
+}
+
+
+function showNotificationBanner() {
+
+    if (!notifBanner) return;
+
+    notifBanner.style.display =
+        "block";
+
+    requestAnimationFrame(() => {
+
+        notifBanner.style.opacity =
+            "1";
+
+        notifBanner.style.transform =
+            "translateX(-50%) translateY(0)";
+
+    });
+
+}
+
+
+async function checkNotificationStatus() {
+
+    if (!isMedianApp()) {
+
+        hideNotificationBanner();
+
+        return;
+
+    }
+
+
+    try {
+
+        const info =
+            await getOneSignalInfo();
+
+        if (
+            info?.subscription?.optedIn === true
+        ) {
+
+            hideNotificationBanner();
+
+            return;
+
+        }
+
+        setTimeout(
+            showNotificationBanner,
+            1500
+        );
+
+    } catch (error) {
+
+        setTimeout(
+            showNotificationBanner,
+            1500
+        );
+
+    }
+
+}
+
+
+if (allowNotifBtn) {
+
+    allowNotifBtn.addEventListener(
+        "click",
+        async () => {
+
+            if (notificationBusy) return;
+
+            notificationBusy = true;
+
+            const oldHTML =
+                allowNotifBtn.innerHTML;
+
+            allowNotifBtn.disabled =
+                true;
+
+            allowNotifBtn.innerHTML = `
+                <i class="fa-solid fa-spinner fa-spin mr-1"></i>
+                চালু হচ্ছে...
+            `;
+
+
+            try {
+
+                if (!isMedianApp()) {
+
+                    hideNotificationBanner();
+
+                    showToast(
+                        "Notification feature APK-তে ব্যবহার করুন।",
+                        "info"
+                    );
+
+                    return;
+
+                }
+
+
+                let info = null;
+
+
+                try {
+
+                    info =
+                        await getOneSignalInfo();
+
+                } catch (error) {}
+
+
+                if (
+                    info?.subscription?.optedIn === true
+                ) {
+
+                    hideNotificationBanner();
+
+                    if (auth.currentUser) {
+
+                        linkOneSignalUser(
+                            auth.currentUser
+                        ).catch(() => {});
+
+                    }
+
+                    showToast(
+                        "নোটিফিকেশন ইতোমধ্যে চালু আছে ✅",
+                        "success"
+                    );
+
+                    return;
+
+                }
+
+
+                await new Promise(
+                    resolve =>
+                        setTimeout(
+                            resolve,
+                            500
+                        )
+                );
+
+
+                info =
+                    await getOneSignalInfo();
+
+
+                if (
+                    info?.subscription?.optedIn === true
+                ) {
+
+                    hideNotificationBanner();
+
+                    showToast(
+                        "নোটিফিকেশন সফলভাবে চালু হয়েছে 🔔",
+                        "success"
+                    );
+
+                } else {
+
+                    showToast(
+                        "Permission এখনো চালু হয়নি। ফোনের notification permission থেকে Allow করুন।",
+                        "warning"
+                    );
+
+                }
+
+
+            } catch (error) {
+
+                showToast(
+                    "Notification চালু করা যায়নি।",
+                    "error"
+                );
+
+
+            } finally {
+
+                notificationBusy =
+                    false;
+
+                allowNotifBtn.disabled =
+                    false;
+
+                allowNotifBtn.innerHTML =
+                    oldHTML;
+
+            }
+
+        }
+    );
+
+}
+
+
+if (closeNotifBtn) {
+
+    closeNotifBtn.addEventListener(
+        "click",
+        () => {
+
+            hideNotificationBanner();
+
+            try {
+
+                sessionStorage.setItem(
+                    "auraNotifBannerClosed",
+                    "1"
+                );
+
+            } catch (error) {}
+
+        }
+    );
+
+}
+
+
+async function initNotificationUI() {
+
+    if (!isMedianApp()) {
+
+        hideNotificationBanner();
+
+        return;
+
+    }
+
+
+    try {
+
+        if (
+            sessionStorage.getItem(
+                "auraNotifBannerClosed"
+            ) === "1"
+        ) {
+
+            hideNotificationBanner();
+
+            return;
+
+        }
+
+    } catch (error) {}
+
+
+    await checkNotificationStatus();
+
+}
+
+
+/* =====================================================
+   AUTH STATE
+   IMPORTANT:
+   Remember Me থাকলেও এই check চলবে।
+===================================================== */
+
+onAuthStateChanged(
+    auth,
+    async user => {
+
+        authStateResolved = true;
+
+        /*
+         * Loader দ্রুত hide
+         */
+        hideStartupLoader();
+
+
+        if (!user) {
+            return;
+        }
+
+
+        if (redirecting) {
+            return;
+        }
+
+
+        /*
+         * Login page-এ already logged in থাকলে
+         * Firestore ban check না করে সরাসরি index-এ যাবে না।
+         */
+        try {
+
+            const profile =
+                await getUserProfile(
+                    user.uid
+                );
+
+
+            const banInfo =
+                getBanInfo(profile);
+
+
+            /*
+             * REMEMBER ME থাকলেও ACTIVE BAN CHECK
+             */
+            if (banInfo.banned) {
+
+                await signOut(auth);
+
+                showBanScreen(profile);
+
+                return;
+
+            }
+
+
+            /*
+             * Expired ban automatically remove
+             */
+            if (
+                banInfo.expired &&
+                profile?.banned === true
+            ) {
+
+                try {
+
+                    await updateDoc(
+                        doc(
+                            db,
+                            "users",
+                            user.uid
+                        ),
+                        {
+                            banned: false
+                        }
+                    );
+
+                } catch (error) {}
+
+            }
+
+
+            const path =
+                window.location.pathname
+                    .split("/")
+                    .pop()
+                    .toLowerCase();
+
+
+            if (
+                path === "login.html" ||
+                path === ""
+            ) {
+
+                redirecting = true;
+
+                window.location.replace(
+                    "index.html"
+                );
+
+                return;
+
+            }
+
+
+            if (isMedianApp()) {
+
+                linkOneSignalUser(user)
+                    .catch(() => {});
+
+            }
+
+        } catch (error) {
+
+            /*
+             * Security-এর জন্য Firestore ban check
+             * fail হলে automatic login bypass করানো হচ্ছে না।
+             */
+            console.warn(
+                "Auth ban check failed:",
+                error
+            );
+
+            showToast(
+                "Account status check করা যায়নি। আবার চেষ্টা করুন।",
+                "warning"
+            );
+
+        }
+
+    }
+);
+
+
+/* =====================================================
+   VISIBILITY
+===================================================== */
+
+document.addEventListener(
+    "visibilitychange",
+    async () => {
+
+        if (
+            document.visibilityState !==
+            "visible"
+        ) {
+            return;
+        }
+
+
+        if (!isMedianApp()) return;
+
+
+        setTimeout(
+            async () => {
+
+                try {
+
+                    const info =
+                        await getOneSignalInfo();
+
+
+                    if (
+                        info?.subscription?.optedIn === true
+                    ) {
+
+                        hideNotificationBanner();
+
+                        if (auth.currentUser) {
+
+                            linkOneSignalUser(
+                                auth.currentUser
+                            ).catch(() => {});
+
+                        }
+
+                    }
+
+                } catch (error) {}
+
+            },
+            300
+        );
+
+    }
+);
+
+
+/* =====================================================
+   ENTER KEY
+===================================================== */
+
+loginIdentifier.addEventListener(
+    "keydown",
+    event => {
+
+        if (event.key === "Enter") {
+
+            event.preventDefault();
+
+            loginPassword.focus();
+
+        }
+
+    }
+);
+
+
+/* =====================================================
+   INIT
+===================================================== */
+
+setupMaintenanceListener();
+
+setupUpdateListener();
+
+initNotificationUI();
+
+
+console.log(
+    "AURA ARMAN TOUR login system loaded successfully."
+);
+
+</script>
+
+</body>
+</html>
