@@ -1,547 +1,2898 @@
 <!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
+<html lang="bn">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DEVLOPER RS RAKIB - RS Web Studio</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        * { font-family: 'Poppins', sans-serif; }
-        body { background-color: #0b0f19; color: #f3f4f6; overflow-x: hidden; }
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: #0b0f19; }
-        ::-webkit-scrollbar-thumb { background: #3b82f6; border-radius: 4px; }
-        @keyframes floatImage {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-12px); }
-        }
-        .floating-img { animation: floatImage 4s ease-in-out infinite; }
-        @keyframes slideIn {
-            from { transform: translateX(100%); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
-        }
-        .toast-slide { animation: slideIn 0.3s ease-out forwards; }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>RS RAKIB — Web Developer</title>
+
+<meta name="description"
+content="RS RAKIB — Professional Web Developer. Modern websites, web applications, dashboards and digital solutions.">
+
+<script src="https://cdn.tailwindcss.com"></script>
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800;900&display=swap"
+rel="stylesheet">
+
+<style>
+
+:root{
+    --bg:#06120e;
+    --bg2:#091a14;
+    --card:rgba(13,38,29,.72);
+    --green:#19e68c;
+    --green2:#0fcf78;
+    --gold:#f4c95d;
+    --gold2:#d9a928;
+    --text:#f5fff9;
+    --muted:#a9c4b7;
+    --border:rgba(25,230,140,.16);
+    --shadow:0 20px 60px rgba(0,0,0,.35);
+}
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    scroll-behavior:smooth;
+}
+
+html{
+    scroll-behavior:smooth;
+}
+
+body{
+    background:
+        radial-gradient(circle at 10% 10%,rgba(25,230,140,.08),transparent 28%),
+        radial-gradient(circle at 90% 20%,rgba(244,201,93,.07),transparent 25%),
+        linear-gradient(135deg,var(--bg),var(--bg2));
+    color:var(--text);
+    font-family:'Inter','Hind Siliguri',sans-serif;
+    overflow-x:hidden;
+}
+
+body::before{
+    content:"";
+    position:fixed;
+    inset:0;
+    pointer-events:none;
+    background-image:
+        linear-gradient(rgba(255,255,255,.015) 1px,transparent 1px),
+        linear-gradient(90deg,rgba(255,255,255,.015) 1px,transparent 1px);
+    background-size:50px 50px;
+    mask-image:linear-gradient(to bottom,black,transparent);
+    z-index:-1;
+}
+
+/* =========================
+   LOADER
+========================= */
+
+#loader{
+    position:fixed;
+    inset:0;
+    z-index:99999;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:#06120e;
+    transition:opacity .5s ease,visibility .5s ease;
+}
+
+#loader.hide{
+    opacity:0;
+    visibility:hidden;
+}
+
+.loader-box{
+    text-align:center;
+}
+
+.loader-ring{
+    width:115px;
+    height:115px;
+    border-radius:50%;
+    padding:4px;
+    background:conic-gradient(
+        var(--green),
+        var(--gold),
+        var(--green),
+        transparent,
+        var(--green)
+    );
+    animation:loaderSpin 1.3s linear infinite;
+    margin:auto;
+}
+
+.loader-ring-inner{
+    width:100%;
+    height:100%;
+    border-radius:50%;
+    background:#06120e;
+    padding:7px;
+}
+
+.loader-ring-inner img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    border-radius:50%;
+    display:block;
+}
+
+.loader-text{
+    margin-top:18px;
+    color:var(--green);
+    font-size:14px;
+    letter-spacing:3px;
+    font-weight:700;
+}
+
+@keyframes loaderSpin{
+    to{
+        transform:rotate(360deg);
+    }
+}
+
+/* =========================
+   NAVBAR
+========================= */
+
+.navbar{
+    position:fixed;
+    top:0;
+    left:0;
+    right:0;
+    z-index:1000;
+    backdrop-filter:blur(18px);
+    -webkit-backdrop-filter:blur(18px);
+    background:rgba(6,18,14,.78);
+    border-bottom:1px solid rgba(25,230,140,.08);
+}
+
+.nav-container{
+    max-width:1200px;
+    margin:auto;
+    height:76px;
+    padding:0 22px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+}
+
+.brand{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    text-decoration:none;
+    color:#fff;
+    font-weight:800;
+    letter-spacing:.5px;
+}
+
+.brand-dot{
+    width:12px;
+    height:12px;
+    border-radius:50%;
+    background:var(--green);
+    box-shadow:0 0 18px rgba(25,230,140,.8);
+}
+
+.nav-links{
+    display:flex;
+    align-items:center;
+    gap:27px;
+    list-style:none;
+}
+
+.nav-links a{
+    text-decoration:none;
+    color:#c8d9d1;
+    font-size:14px;
+    font-weight:600;
+    transition:.25s ease;
+}
+
+.nav-links a:hover{
+    color:var(--green);
+}
+
+.nav-actions{
+    display:flex;
+    align-items:center;
+    gap:10px;
+}
+
+/* LANGUAGE */
+
+.lang-toggle{
+    position:relative;
+    width:76px;
+    height:36px;
+    border:1px solid rgba(25,230,140,.25);
+    background:rgba(255,255,255,.035);
+    border-radius:30px;
+    display:flex;
+    align-items:center;
+    justify-content:space-around;
+    cursor:pointer;
+    overflow:hidden;
+    color:#b7ccc2;
+    font-size:12px;
+    font-weight:700;
+}
+
+.lang-slider{
+    position:absolute;
+    top:3px;
+    left:3px;
+    width:34px;
+    height:28px;
+    border-radius:20px;
+    background:linear-gradient(135deg,var(--green),#0da861);
+    transition:.3s ease;
+    box-shadow:0 4px 12px rgba(25,230,140,.25);
+}
+
+.lang-toggle.en .lang-slider{
+    transform:translateX(36px);
+}
+
+.lang-toggle span{
+    position:relative;
+    z-index:2;
+    transition:.25s ease;
+}
+
+.nav-wa{
+    display:flex;
+    align-items:center;
+    gap:7px;
+    padding:10px 15px;
+    border-radius:12px;
+    text-decoration:none;
+    background:linear-gradient(135deg,#16d77e,#0eaa62);
+    color:#04130d;
+    font-size:13px;
+    font-weight:800;
+    box-shadow:0 8px 22px rgba(25,230,140,.18);
+    transition:.25s ease;
+}
+
+.nav-wa:hover{
+    transform:translateY(-2px);
+}
+
+/* =========================
+   HERO
+========================= */
+
+.hero{
+    min-height:100vh;
+    padding:140px 22px 80px;
+    display:flex;
+    align-items:center;
+}
+
+.hero-container{
+    width:100%;
+    max-width:1200px;
+    margin:auto;
+    display:grid;
+    grid-template-columns:1.15fr .85fr;
+    gap:60px;
+    align-items:center;
+}
+
+.hero-badge{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    padding:8px 13px;
+    border:1px solid rgba(25,230,140,.2);
+    background:rgba(25,230,140,.06);
+    color:var(--green);
+    border-radius:30px;
+    font-size:12px;
+    font-weight:700;
+    margin-bottom:20px;
+}
+
+.hero-badge i{
+    font-size:8px;
+}
+
+.hero h1{
+    font-size:clamp(42px,7vw,78px);
+    line-height:1;
+    font-weight:900;
+    letter-spacing:-3px;
+}
+
+/* =========================
+   ANIMATED RS RAKIB
+========================= */
+
+.animated-name{
+    display:flex;
+    flex-wrap:wrap;
+    gap:14px;
+    align-items:center;
+}
+
+.name-word{
+    display:inline-block;
+    color:#fff;
+    animation:nameReveal 1.8s ease-in-out infinite;
+    will-change:transform,opacity,text-shadow;
+}
+
+.name-word:nth-child(2){
+    color:var(--green);
+    animation-delay:.25s;
+}
+
+@keyframes nameReveal{
+
+    0%,100%{
+        transform:translateY(0);
+        opacity:1;
+        text-shadow:0 0 0 transparent;
+    }
+
+    50%{
+        transform:translateY(-7px);
+        opacity:.88;
+        text-shadow:
+            0 0 18px rgba(25,230,140,.35),
+            0 0 35px rgba(25,230,140,.12);
+    }
+
+}
+
+.hero-subtitle{
+    margin-top:20px;
+    color:var(--gold);
+    font-size:clamp(18px,2.5vw,27px);
+    font-weight:700;
+}
+
+.hero-description{
+    max-width:650px;
+    margin-top:18px;
+    color:var(--muted);
+    line-height:1.8;
+    font-size:16px;
+}
+
+.hero-buttons{
+    display:flex;
+    flex-wrap:wrap;
+    gap:13px;
+    margin-top:28px;
+}
+
+.btn-primary,
+.btn-secondary{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:9px;
+    min-height:48px;
+    padding:0 20px;
+    border-radius:13px;
+    text-decoration:none;
+    font-size:14px;
+    font-weight:800;
+    transition:.25s ease;
+}
+
+.btn-primary{
+    background:linear-gradient(135deg,var(--green),#0eae66);
+    color:#03120c;
+    box-shadow:0 12px 30px rgba(25,230,140,.17);
+}
+
+.btn-secondary{
+    color:#e5fff2;
+    border:1px solid rgba(25,230,140,.18);
+    background:rgba(255,255,255,.035);
+}
+
+.btn-primary:hover,
+.btn-secondary:hover{
+    transform:translateY(-3px);
+}
+
+/* =========================
+   PROFILE
+========================= */
+
+.hero-image-wrap{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
+
+.profile-orbit{
+    width:310px;
+    height:310px;
+    border-radius:50%;
+    padding:6px;
+
+    background:conic-gradient(
+        var(--green),
+        transparent 25%,
+        var(--gold),
+        transparent 65%,
+        var(--green)
+    );
+
+    animation:orbitSpin 8s linear infinite;
+
+    box-shadow:
+        0 0 70px rgba(25,230,140,.09);
+
+    will-change:transform;
+}
+
+.profile-orbit-inner{
+    width:100%;
+    height:100%;
+    border-radius:50%;
+    background:#07150f;
+    padding:9px;
+}
+
+.profile-orbit img{
+    width:100%;
+    height:100%;
+    border-radius:50%;
+    object-fit:cover;
+    display:block;
+
+    /* ছবি একদম স্থির থাকবে */
+    animation:none;
+    transform:none;
+}
+
+@keyframes orbitSpin{
+    to{
+        transform:rotate(360deg);
+    }
+}
+
+/* =========================
+   GENERAL
+========================= */
+
+section{
+    scroll-margin-top:90px;
+}
+
+.section{
+    padding:100px 22px;
+}
+
+.container{
+    max-width:1200px;
+    margin:auto;
+}
+
+.section-head{
+    max-width:700px;
+    margin:0 auto 50px;
+    text-align:center;
+}
+
+.section-label{
+    color:var(--green);
+    font-size:12px;
+    font-weight:800;
+    letter-spacing:3px;
+    text-transform:uppercase;
+}
+
+.section-title{
+    margin-top:10px;
+    font-size:clamp(30px,5vw,48px);
+    font-weight:900;
+    letter-spacing:-1.5px;
+}
+
+.section-description{
+    margin-top:14px;
+    color:var(--muted);
+    line-height:1.8;
+}
+
+/* =========================
+   SERVICES
+========================= */
+
+.services-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:18px;
+}
+
+.service-card{
+    position:relative;
+    padding:28px;
+    min-height:230px;
+    border:1px solid var(--border);
+    border-radius:20px;
+    background:linear-gradient(
+        145deg,
+        rgba(16,48,36,.72),
+        rgba(7,25,18,.65)
+    );
+    box-shadow:var(--shadow);
+    overflow:hidden;
+    transition:.3s ease;
+}
+
+.service-card::before{
+    content:"";
+    position:absolute;
+    width:100px;
+    height:100px;
+    right:-40px;
+    top:-40px;
+    border-radius:50%;
+    background:rgba(25,230,140,.08);
+}
+
+.service-card:hover{
+    transform:translateY(-7px);
+    border-color:rgba(25,230,140,.35);
+}
+
+.service-icon{
+    width:52px;
+    height:52px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    border-radius:15px;
+    background:rgba(25,230,140,.09);
+    border:1px solid rgba(25,230,140,.15);
+    color:var(--green);
+    font-size:20px;
+}
+
+.service-card h3{
+    margin-top:20px;
+    font-size:18px;
+    font-weight:800;
+}
+
+.service-card p{
+    margin-top:9px;
+    color:var(--muted);
+    line-height:1.7;
+    font-size:14px;
+}
+
+/* =========================
+   PROJECTS
+========================= */
+
+.projects-section{
+    position:relative;
+}
+
+.projects-grid{
+    display:grid;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:22px;
+}
+
+.project-card{
+    position:relative;
+    overflow:hidden;
+    border:1px solid rgba(25,230,140,.16);
+    border-radius:24px;
+    background:
+        linear-gradient(145deg,
+        rgba(17,53,39,.78),
+        rgba(7,24,17,.86));
+    box-shadow:0 25px 70px rgba(0,0,0,.28);
+    transition:.3s ease;
+}
+
+.project-card:hover{
+    transform:translateY(-7px);
+    border-color:rgba(25,230,140,.4);
+    box-shadow:
+        0 30px 80px rgba(0,0,0,.38),
+        0 0 35px rgba(25,230,140,.05);
+}
+
+.project-preview{
+    min-height:250px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    position:relative;
+    padding:35px;
+    background:
+        radial-gradient(circle at 50% 50%,
+        rgba(25,230,140,.12),
+        transparent 45%);
+    border-bottom:1px solid rgba(25,230,140,.1);
+}
+
+.project-preview::before{
+    content:"";
+    position:absolute;
+    width:180px;
+    height:180px;
+    border-radius:50%;
+    border:1px solid rgba(244,201,93,.14);
+    animation:projectPulse 4s ease-in-out infinite;
+}
+
+.project-preview::after{
+    content:"";
+    position:absolute;
+    width:240px;
+    height:240px;
+    border-radius:50%;
+    border:1px dashed rgba(25,230,140,.1);
+}
+
+.project-logo{
+    position:relative;
+    z-index:2;
+    width:125px;
+    height:125px;
+    border-radius:28px;
+    object-fit:cover;
+    background:#07150f;
+    padding:5px;
+    border:1px solid rgba(25,230,140,.28);
+    box-shadow:
+        0 20px 45px rgba(0,0,0,.35),
+        0 0 35px rgba(25,230,140,.08);
+    transition:.35s ease;
+}
+
+.project-card:hover .project-logo{
+    transform:scale(1.05);
+}
+
+@keyframes projectPulse{
+
+    0%,100%{
+        transform:scale(.95);
+        opacity:.45;
+    }
+
+    50%{
+        transform:scale(1.05);
+        opacity:.8;
+    }
+
+}
+
+.project-content{
+    padding:25px;
+}
+
+.project-top{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:15px;
+}
+
+.project-top h3{
+    font-size:22px;
+    font-weight:900;
+}
+
+.project-status{
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    padding:6px 10px;
+    border-radius:30px;
+    background:rgba(25,230,140,.08);
+    color:var(--green);
+    border:1px solid rgba(25,230,140,.14);
+    font-size:11px;
+    font-weight:800;
+    white-space:nowrap;
+}
+
+.project-status i{
+    font-size:7px;
+}
+
+.project-description{
+    margin-top:12px;
+    color:var(--muted);
+    line-height:1.75;
+    font-size:14px;
+}
+
+.project-meta{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+    margin-top:17px;
+}
+
+.project-tag{
+    padding:6px 10px;
+    border-radius:8px;
+    background:rgba(255,255,255,.035);
+    border:1px solid rgba(255,255,255,.07);
+    color:#bcd3c8;
+    font-size:11px;
+}
+
+.project-btn{
+    width:100%;
+    margin-top:20px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:9px;
+    min-height:48px;
+    border-radius:13px;
+    background:linear-gradient(135deg,var(--green),#0eae66);
+    color:#03120c;
+    text-decoration:none;
+    font-size:14px;
+    font-weight:900;
+    transition:.25s ease;
+}
+
+.project-btn:hover{
+    transform:translateY(-2px);
+    box-shadow:0 12px 30px rgba(25,230,140,.18);
+}
+
+/* =========================
+   EXPERTISE
+========================= */
+
+.expertise-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:16px;
+}
+
+.expertise-item{
+    padding:21px;
+    border:1px solid rgba(25,230,140,.12);
+    background:rgba(255,255,255,.025);
+    border-radius:17px;
+    transition:.25s ease;
+}
+
+.expertise-item:hover{
+    background:rgba(25,230,140,.045);
+    transform:translateY(-4px);
+}
+
+.expertise-number{
+    color:var(--gold);
+    font-size:12px;
+    font-weight:900;
+}
+
+.expertise-item h3{
+    margin-top:9px;
+    font-size:15px;
+}
+
+/* =========================
+   SKILLS
+========================= */
+
+.skills-grid{
+    max-width:900px;
+    margin:auto;
+    display:grid;
+    gap:20px;
+}
+
+.skill-item{
+    padding:18px 20px;
+    border-radius:16px;
+    border:1px solid rgba(25,230,140,.1);
+    background:rgba(255,255,255,.025);
+}
+
+.skill-head{
+    display:flex;
+    justify-content:space-between;
+    margin-bottom:11px;
+    font-size:14px;
+    font-weight:700;
+}
+
+.skill-percent{
+    color:var(--green);
+}
+
+.skill-bar{
+    height:7px;
+    border-radius:10px;
+    background:rgba(255,255,255,.07);
+    overflow:hidden;
+}
+
+.skill-progress{
+    height:100%;
+    width:0;
+    border-radius:10px;
+    background:linear-gradient(90deg,var(--green),var(--gold));
+    transition:width 1.2s ease;
+}
+
+/* =========================
+   STATS
+========================= */
+
+.stats{
+    padding:25px 22px 90px;
+}
+
+.stats-grid{
+    max-width:1100px;
+    margin:auto;
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:15px;
+}
+
+.stat{
+    text-align:center;
+    padding:28px 15px;
+    border-radius:18px;
+    background:rgba(255,255,255,.025);
+    border:1px solid rgba(25,230,140,.1);
+}
+
+.stat-number{
+    color:var(--green);
+    font-size:35px;
+    font-weight:900;
+}
+
+.stat-label{
+    color:var(--muted);
+    margin-top:5px;
+    font-size:13px;
+}
+
+/* =========================
+   PROCESS
+========================= */
+
+.process-grid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:16px;
+}
+
+.process-card{
+    padding:25px 20px;
+    border-radius:18px;
+    border:1px solid rgba(25,230,140,.1);
+    background:rgba(255,255,255,.025);
+}
+
+.process-number{
+    color:var(--gold);
+    font-size:13px;
+    font-weight:900;
+}
+
+.process-card h3{
+    margin-top:12px;
+    font-size:17px;
+}
+
+.process-card p{
+    margin-top:8px;
+    color:var(--muted);
+    line-height:1.7;
+    font-size:13px;
+}
+
+/* =========================
+   CTA
+========================= */
+
+.cta{
+    padding:100px 22px;
+}
+
+.cta-box{
+    max-width:1050px;
+    margin:auto;
+    text-align:center;
+    padding:65px 25px;
+    border-radius:28px;
+    border:1px solid rgba(25,230,140,.18);
+    background:
+        radial-gradient(circle at 50% 0,
+        rgba(25,230,140,.1),
+        transparent 55%),
+        rgba(255,255,255,.025);
+    box-shadow:var(--shadow);
+}
+
+.cta-box h2{
+    font-size:clamp(30px,5vw,48px);
+    font-weight:900;
+}
+
+.cta-box p{
+    max-width:650px;
+    margin:15px auto 0;
+    color:var(--muted);
+    line-height:1.8;
+}
+
+/* =========================
+   FOOTER
+========================= */
+
+footer{
+    padding:35px 22px 45px;
+    border-top:1px solid rgba(25,230,140,.08);
+}
+
+.footer-container{
+    max-width:1200px;
+    margin:auto;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:20px;
+}
+
+.footer-text{
+    color:#8fa89d;
+    font-size:13px;
+    line-height:1.7;
+}
+
+.developed-by{
+    margin-top:8px;
+    font-size:11px;
+    letter-spacing:2px;
+    color:#78958a;
+}
+
+.developed-by strong{
+    color:var(--green);
+    margin-left:5px;
+    font-weight:900;
+    letter-spacing:1.5px;
+    animation:developerGlow 2s ease-in-out infinite;
+}
+
+@keyframes developerGlow{
+
+    0%,100%{
+        opacity:.75;
+        text-shadow:0 0 0 transparent;
+    }
+
+    50%{
+        opacity:1;
+        text-shadow:
+            0 0 12px rgba(25,230,140,.45);
+    }
+
+}
+
+.footer-social{
+    display:flex;
+    gap:9px;
+}
+
+.footer-social a{
+    width:38px;
+    height:38px;
+    border-radius:11px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:#bcd0c7;
+    border:1px solid rgba(25,230,140,.1);
+    background:rgba(255,255,255,.025);
+    text-decoration:none;
+    transition:.25s ease;
+}
+
+.footer-social a:hover{
+    color:var(--green);
+    transform:translateY(-2px);
+}
+
+/* =========================
+   WHATSAPP
+========================= */
+
+.whatsapp-float{
+    position:fixed;
+    right:20px;
+    bottom:20px;
+    z-index:900;
+    width:58px;
+    height:58px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    border-radius:50%;
+    background:#20d878;
+    color:#03120c;
+    text-decoration:none;
+    font-size:26px;
+    box-shadow:0 15px 35px rgba(0,0,0,.3);
+    transition:.25s ease;
+}
+
+.whatsapp-float:hover{
+    transform:translateY(-4px) scale(1.03);
+}
+
+/* =========================
+   REVEAL
+========================= */
+
+.reveal{
+    opacity:0;
+    transform:translateY(25px);
+    transition:opacity .7s ease,transform .7s ease;
+}
+
+.reveal.show{
+    opacity:1;
+    transform:translateY(0);
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+@media(max-width:1000px){
+
+    .nav-links{
+        gap:17px;
+    }
+
+    .hero-container{
+        grid-template-columns:1fr;
+        text-align:center;
+    }
+
+    .hero-description{
+        margin-left:auto;
+        margin-right:auto;
+    }
+
+    .hero-buttons{
+        justify-content:center;
+    }
+
+    .hero-image-wrap{
+        order:-1;
+    }
+
+    .profile-orbit{
+        width:260px;
+        height:260px;
+    }
+
+    .services-grid,
+    .expertise-grid{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+    .process-grid{
+        grid-template-columns:repeat(2,1fr);
+    }
+}
+
+@media(max-width:760px){
+
+    .nav-container{
+        height:68px;
+        padding:0 15px;
+    }
+
+    .nav-links{
+        display:none;
+    }
+
+    .nav-actions{
+        gap:7px;
+    }
+
+    .nav-wa{
+        padding:9px 11px;
+    }
+
+    .nav-wa span{
+        display:none;
+    }
+
+    .hero{
+        padding-top:120px;
+    }
+
+    .hero h1{
+        letter-spacing:-2px;
+    }
+
+    .animated-name{
+        justify-content:center;
+    }
+
+    .section{
+        padding:80px 17px;
+    }
+
+    .services-grid,
+    .expertise-grid,
+    .projects-grid,
+    .process-grid{
+        grid-template-columns:1fr;
+    }
+
+    .stats-grid{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+    .project-preview{
+        min-height:220px;
+    }
+
+    .project-top{
+        align-items:flex-start;
+        flex-direction:column;
+    }
+
+    .footer-container{
+        flex-direction:column;
+        text-align:center;
+    }
+
+    .footer-text{
+        text-align:center;
+    }
+}
+
+@media(max-width:420px){
+
+    .hero{
+        padding-left:15px;
+        padding-right:15px;
+    }
+
+    .profile-orbit{
+        width:220px;
+        height:220px;
+    }
+
+    .hero-buttons{
+        flex-direction:column;
+    }
+
+    .btn-primary,
+    .btn-secondary{
+        width:100%;
+    }
+
+    .stats-grid{
+        gap:10px;
+    }
+
+    .stat{
+        padding:22px 10px;
+    }
+
+    .stat-number{
+        font-size:29px;
+    }
+
+    .whatsapp-float{
+        right:15px;
+        bottom:15px;
+    }
+}
+
+@media(prefers-reduced-motion:reduce){
+
+    *,
+    *::before,
+    *::after{
+        animation-duration:.01ms!important;
+        animation-iteration-count:1!important;
+        scroll-behavior:auto!important;
+        transition-duration:.01ms!important;
+    }
+
+}
+
+</style>
 </head>
-<body class="selection:bg-blue-600 selection:text-white">
 
-    <!-- Custom Toast Notification Container -->
-    <div id="toastContainer" class="fixed top-24 right-6 z-50 flex flex-col gap-3 max-w-sm w-full pointer-events-none"></div>
+<body>
 
-    <header class="fixed top-0 left-0 w-full flex justify-between items-center px-6 lg:px-[8%] py-4 bg-[#0b0f19]/85 backdrop-blur-md z-40 border-b border-white/10">
-        <div class="text-lg lg:text-xl font-bold text-blue-500 tracking-wider">DEVLOPER RS RAKIB</div>
-        <nav class="hidden md:flex items-center space-x-8">
-            <a href="#" class="text-slate-300 hover:text-blue-500 font-medium transition">Home</a>
-            <a href="#services" class="text-slate-300 hover:text-blue-500 font-medium transition">Services</a>
-            <a href="#order-history" class="text-slate-300 hover:text-blue-500 font-medium transition">My Orders</a>
-            <a href="#custom-order" class="text-slate-300 hover:text-blue-500 font-medium transition">Order Project</a>
-            <a href="admin.html" target="_blank" class="bg-indigo-600 hover:bg-indigo-700 px-4 py-2 rounded-xl text-white text-sm font-semibold transition">Admin Panel</a>
+<!-- LOADER -->
+
+<div id="loader">
+
+    <div class="loader-box">
+
+        <div class="loader-ring">
+
+            <div class="loader-ring-inner">
+
+                <img
+                src="https://videotourl.com/images/1791379280718-c75cba00-3bbf-42f1-892e-e8bf3fa44209.png"
+                alt="RS RAKIB">
+
+            </div>
+
+        </div>
+
+        <div class="loader-text">
+            RS RAKIB
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- NAVBAR -->
+
+<header class="navbar">
+
+    <div class="nav-container">
+
+        <a href="#home" class="brand">
+
+            <span class="brand-dot"></span>
+
+            <span>RS RAKIB</span>
+
+        </a>
+
+
+        <nav>
+
+            <ul class="nav-links">
+
+                <li>
+                    <a href="#home"
+                    data-bn="হোম"
+                    data-en="Home">
+                    হোম
+                    </a>
+                </li>
+
+                <li>
+                    <a href="#services"
+                    data-bn="সার্ভিস"
+                    data-en="Services">
+                    সার্ভিস
+                    </a>
+                </li>
+
+                <li>
+                    <a href="#projects"
+                    data-bn="প্রজেক্ট"
+                    data-en="Projects">
+                    প্রজেক্ট
+                    </a>
+                </li>
+
+                <li>
+                    <a href="#expertise"
+                    data-bn="দক্ষতা"
+                    data-en="Expertise">
+                    দক্ষতা
+                    </a>
+                </li>
+
+                <li>
+                    <a href="#skills"
+                    data-bn="স্কিল"
+                    data-en="Skills">
+                    স্কিল
+                    </a>
+                </li>
+
+                <li>
+                    <a href="#contact"
+                    data-bn="যোগাযোগ"
+                    data-en="Contact">
+                    যোগাযোগ
+                    </a>
+                </li>
+
+            </ul>
+
         </nav>
-    </header>
 
-    <section class="min-h-screen flex flex-col lg:flex-row items-center justify-between px-6 lg:px-[8%] pt-32 pb-16 gap-12 bg-[radial-gradient(circle_at_20%_30%,rgba(59,130,246,0.15),transparent_40%),radial-gradient(circle_at_80%_70%,rgba(147,51,234,0.1),transparent_40%)]">
-        <div class="max-w-xl text-center lg:text-left" data-aos="fade-right" data-aos-duration="800">
-            <h3 class="text-xl text-purple-500 font-semibold mb-2">Hello, I'm</h3>
-            <h1 class="text-4xl sm:text-5xl font-bold mb-4 leading-tight">DEVLOPER <span class="text-blue-500">RS RAKIB</span></h1>
-            <p class="text-slate-400 text-sm sm:text-base mb-6 leading-relaxed">Passionate about creating modern, dynamic, and animated web experiences. Expert in Portfolio Websites, App Download Landings, E-commerce, Tournament Platforms & Bug Fixing.</p>
-            <div class="flex justify-center lg:justify-start gap-4 mb-8">
-                <a href="https://wa.link/3whxgj" target="_blank" class="w-11 h-11 flex items-center justify-center bg-white/5 border border-white/10 rounded-full text-slate-100 hover:bg-blue-600 hover:text-white transition"><i class="fab fa-whatsapp text-lg"></i></a>
-                <a href="https://www.tiktok.com/@rsrakib_19?_r=1&_t=ZS-99iv62WPP6t" target="_blank" class="w-11 h-11 flex items-center justify-center bg-white/5 border border-white/10 rounded-full text-slate-100 hover:bg-blue-600 hover:text-white transition"><i class="fab fa-tiktok text-lg"></i></a>
-                <a href="https://www.facebook.com/profile.php?id=61578791656727" target="_blank" class="w-11 h-11 flex items-center justify-center bg-white/5 border border-white/10 rounded-full text-slate-100 hover:bg-blue-600 hover:text-white transition"><i class="fab fa-facebook-f text-lg"></i></a>
+
+        <div class="nav-actions">
+
+            <div class="lang-toggle"
+            id="langToggle"
+            role="button"
+            tabindex="0">
+
+                <div class="lang-slider"></div>
+
+                <span>বাং</span>
+                <span>EN</span>
+
             </div>
-            <div class="flex flex-wrap justify-center lg:justify-start gap-4">
-                <a href="#services" class="bg-blue-600 hover:bg-blue-700 px-8 py-3.5 rounded-xl font-semibold transition shadow-lg shadow-blue-600/30 text-white">Explore Services</a>
-                <a href="#order-history" class="bg-slate-800 hover:bg-slate-700 px-8 py-3.5 rounded-xl font-semibold transition text-slate-200 border border-slate-700">Check My Orders</a>
-            </div>
+
+
+            <a
+            id="navWhatsapp"
+            class="nav-wa"
+            target="_blank"
+            rel="noopener noreferrer">
+
+                <i class="fab fa-whatsapp"></i>
+
+                <span
+                data-bn="কথা বলুন"
+                data-en="Let's Talk">
+                কথা বলুন
+                </span>
+
+            </a>
+
         </div>
-        <div class="relative w-[280px] h-[340px] sm:w-[340px] sm:h-[400px] rounded-2xl overflow-hidden shadow-2xl border-2 border-blue-500/30 floating-img" data-aos="fade-left" data-aos-duration="800">
-            <img src="https://videotourl.com/images/1789382393644-5135ec64-61da-4f7d-a575-46ea3a65d62a.png" alt="Developer RS Rakib" class="w-full h-full object-cover">
+
+    </div>
+
+</header>
+
+
+<main>
+
+<!-- HERO -->
+
+<section id="home" class="hero">
+
+    <div class="hero-container">
+
+        <div class="hero-content reveal">
+
+            <div class="hero-badge">
+
+                <i class="fas fa-circle"></i>
+
+                <span
+                data-bn="প্রফেশনাল ওয়েব ডেভেলপার"
+                data-en="Professional Web Developer">
+                প্রফেশনাল ওয়েব ডেভেলপার
+                </span>
+
+            </div>
+
+
+            <h1 class="animated-name">
+
+                <span class="name-word">
+                    RS
+                </span>
+
+                <span class="name-word">
+                    RAKIB
+                </span>
+
+            </h1>
+
+
+            <div
+            class="hero-subtitle"
+            data-bn="আধুনিক ওয়েবসাইট ও ওয়েব অ্যাপ্লিকেশন ডেভেলপার"
+            data-en="Modern Website & Web Application Developer">
+
+                আধুনিক ওয়েবসাইট ও ওয়েব অ্যাপ্লিকেশন ডেভেলপার
+
+            </div>
+
+
+            <p
+            class="hero-description"
+            data-bn="আমি দ্রুত, আধুনিক, মোবাইল-ফ্রেন্ডলি এবং প্রফেশনাল ওয়েবসাইট ও ওয়েব অ্যাপ্লিকেশন তৈরি করি। আপনার আইডিয়াকে একটি সুন্দর ও কার্যকর ডিজিটাল প্রোডাক্টে রূপ দিতে আমি কাজ করি।"
+            data-en="I build fast, modern, mobile-friendly and professional websites and web applications. I turn your ideas into beautiful and functional digital products.">
+
+                আমি দ্রুত, আধুনিক, মোবাইল-ফ্রেন্ডলি এবং প্রফেশনাল
+                ওয়েবসাইট ও ওয়েব অ্যাপ্লিকেশন তৈরি করি। আপনার আইডিয়াকে
+                একটি সুন্দর ও কার্যকর ডিজিটাল প্রোডাক্টে রূপ দিতে আমি কাজ করি।
+
+            </p>
+
+
+            <div class="hero-buttons">
+
+                <a href="#projects"
+                class="btn-primary">
+
+                    <i class="fas fa-code"></i>
+
+                    <span
+                    data-bn="আমার প্রজেক্ট"
+                    data-en="My Projects">
+                    আমার প্রজেক্ট
+                    </span>
+
+                </a>
+
+
+                <a
+                id="heroWhatsapp"
+                class="btn-secondary"
+                target="_blank"
+                rel="noopener noreferrer">
+
+                    <i class="fab fa-whatsapp"></i>
+
+                    <span
+                    data-bn="যোগাযোগ করুন"
+                    data-en="Contact Me">
+                    যোগাযোগ করুন
+                    </span>
+
+                </a>
+
+            </div>
+
         </div>
-    </section>
 
-    <section id="services" class="py-20 px-6 lg:px-[8%] bg-[#0e1626] border-t border-white/5">
-        <h2 class="text-3xl font-bold text-center mb-12" data-aos="fade-up">Our Professional <span>Services</span></h2>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
-            <div class="bg-slate-900 border border-slate-800 p-6 rounded-3xl transition hover:border-blue-500/50 flex flex-col justify-between">
-                <div>
-                    <div class="text-blue-500 text-3xl mb-4"><i class="fas fa-id-card"></i></div>
-                    <h3 class="text-lg font-bold mb-2">Portfolio Website</h3>
-                    <p class="text-slate-400 text-xs mb-4">Modern dark-themed animated personal portfolio websites.</p>
+
+        <div class="hero-image-wrap reveal">
+
+            <div class="profile-orbit">
+
+                <div class="profile-orbit-inner">
+
+                    <img
+                    src="https://videotourl.com/images/1791379280718-c75cba00-3bbf-42f1-892e-e8bf3fa44209.png"
+                    alt="RS RAKIB">
+
                 </div>
-                <div>
-                    <div class="text-xl font-extrabold text-blue-400 mb-4">price er jonno whatsapp koren</div>
-                    <button onclick="selectCategory('Portfolio Website')" class="w-full bg-blue-600 hover:bg-blue-700 py-2.5 rounded-xl font-semibold text-xs text-white transition">Order Portfolio</button>
-                </div>
+
             </div>
-            <div class="bg-slate-900 border border-slate-800 p-6 rounded-3xl transition hover:border-blue-500/50 flex flex-col justify-between">
-                <div>
-                    <div class="text-purple-500 text-3xl mb-4"><i class="fas fa-mobile-screen-button"></i></div>
-                    <h3 class="text-lg font-bold mb-2">App Download Website</h3>
-                    <p class="text-slate-400 text-xs mb-4">APK download landing page with admin panel controls.</p>
-                </div>
-                <div>
-                    <div class="text-xl font-extrabold text-purple-400 mb-4">Price via WhatsApp</div>
-                    <button onclick="selectCategory('App Download Website')" class="w-full bg-purple-600 hover:bg-purple-700 py-2.5 rounded-xl font-semibold text-xs text-white transition">Order App Website</button>
-                </div>
-            </div>
-            <div class="bg-slate-900 border border-slate-800 p-6 rounded-3xl transition hover:border-blue-500/50 flex flex-col justify-between">
-                <div>
-                    <div class="text-blue-500 text-3xl mb-4"><i class="fas fa-shopping-cart"></i></div>
-                    <h3 class="text-lg font-bold mb-2">E-commerce Website</h3>
-                    <p class="text-slate-400 text-xs mb-4">Complete online store with product management and cart.</p>
-                </div>
-                <div>
-                    <div class="text-xl font-extrabold text-blue-400 mb-4">Price via WhatsApp</div>
-                    <button onclick="selectCategory('E-commerce Website')" class="w-full bg-blue-600 hover:bg-blue-700 py-2.5 rounded-xl font-semibold text-xs text-white transition">Order E-commerce</button>
-                </div>
-            </div>
-            <div class="bg-slate-900 border border-slate-800 p-6 rounded-3xl transition hover:border-blue-500/50 flex flex-col justify-between">
-                <div>
-                    <div class="text-amber-500 text-3xl mb-4"><i class="fas fa-trophy"></i></div>
-                    <h3 class="text-lg font-bold mb-2">Tournament Website</h3>
-                    <p class="text-slate-400 text-xs mb-4">Professional esports tournament management platforms.</p>
-                </div>
-                <div>
-                    <div class="text-xl font-extrabold text-amber-400 mb-4">Price via WhatsApp</div>
-                    <button onclick="selectCategory('Tournament Website')" class="w-full bg-amber-500 hover:bg-amber-600 text-black py-2.5 rounded-xl font-bold text-xs transition">Order Tournament Site</button>
-                </div>
-            </div>
-            <div class="bg-slate-900 border border-slate-800 p-6 rounded-3xl transition hover:border-blue-500/50 flex flex-col justify-between">
-                <div>
-                    <div class="text-blue-500 text-3xl mb-4"><i class="fas fa-laptop-code"></i></div>
-                    <h3 class="text-lg font-bold mb-2">Custom Website Design</h3>
-                    <p class="text-slate-400 text-xs mb-4">Tailored UI/UX and custom web apps built for your needs.</p>
-                </div>
-                <div>
-                    <div class="text-xl font-extrabold text-blue-400 mb-4">Price via WhatsApp</div>
-                    <button onclick="selectCategory('Custom Website Design')" class="w-full bg-blue-600 hover:bg-blue-700 py-2.5 rounded-xl font-semibold text-xs text-white transition">Get Custom Quote</button>
-                </div>
-            </div>
-            <div class="bg-slate-900 border border-slate-800 p-6 rounded-3xl transition hover:border-blue-500/50 flex flex-col justify-between">
-                <div>
-                    <div class="text-blue-500 text-3xl mb-4"><i class="fas fa-bug"></i></div>
-                    <h3 class="text-lg font-bold mb-2">Bug Fix & Updates</h3>
-                    <p class="text-slate-400 text-xs mb-4">Fix errors or integrate brand new exciting features.</p>
-                </div>
-                <div>
-                    <div class="text-xl font-extrabold text-blue-400 mb-4">Price via WhatsApp</div>
-                    <button onclick="selectCategory('Existing Website Bug Fix')" class="w-full bg-blue-600 hover:bg-blue-700 py-2.5 rounded-xl font-semibold text-xs text-white transition">Fix Bugs / Update</button>
-                </div>
-            </div>
+
         </div>
-    </section>
 
-    <!-- Order History Section -->
-    <section id="order-history" class="py-20 px-4 max-w-4xl mx-auto">
-        <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 sm:p-10 shadow-2xl">
-            <h2 class="text-2xl font-bold mb-2 text-center text-blue-400"><i class="fas fa-history"></i> My Order History</h2>
-            <p class="text-slate-400 text-sm text-center mb-6">Track your submitted project orders and communicate with the admin.</p>
-            
-            <div id="noOrderContainer" class="text-center py-10">
-                <div class="w-16 h-16 bg-slate-800 rounded-full flex items-center justify-center mx-auto text-slate-500 text-2xl mb-4">
-                    <i class="fas fa-box-open"></i>
-                </div>
-                <p class="text-slate-400 text-sm mb-4">No recent orders found from this device.</p>
-                <a href="#custom-order" class="inline-block bg-blue-600 hover:bg-blue-700 px-6 py-2.5 rounded-xl text-white text-xs font-semibold transition">Place a New Order</a>
+    </div>
+
+</section>
+
+
+<!-- SERVICES -->
+
+<section id="services" class="section">
+
+    <div class="container">
+
+        <div class="section-head reveal">
+
+            <div
+            class="section-label"
+            data-bn="সার্ভিস"
+            data-en="SERVICES">
+            সার্ভিস
             </div>
 
-            <div id="ordersListContainer" class="hidden space-y-4"></div>
+            <h2
+            class="section-title"
+            data-bn="আমি যা তৈরি করি"
+            data-en="What I Build">
+            আমি যা তৈরি করি
+            </h2>
+
+            <p
+            class="section-description"
+            data-bn="আপনার ব্যবসা বা প্রজেক্টের জন্য আধুনিক এবং প্রফেশনাল ডিজিটাল সলিউশন।"
+            data-en="Modern and professional digital solutions for your business or project.">
+
+                আপনার ব্যবসা বা প্রজেক্টের জন্য আধুনিক এবং প্রফেশনাল ডিজিটাল সলিউশন।
+
+            </p>
+
         </div>
-    </section>
 
-    <!-- Custom Order & Live Chat Section -->
-    <section id="custom-order" class="py-20 px-4 max-w-3xl mx-auto">
-        <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 sm:p-10 shadow-2xl">
-            <h2 class="text-2xl font-bold mb-2 text-center">Place Project / Website Order</h2>
-            <p class="text-slate-400 text-sm text-center mb-8">Fill out the form below to submit your order and start live chat with admin.</p>
-            
-            <form id="orderForm" onsubmit="submitCustomOrder(event)" class="space-y-6">
-                <div>
-                    <label class="block text-sm font-medium mb-2">Your Name</label>
-                    <input type="text" id="clientName" required class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 focus:outline-none focus:border-blue-500 text-white text-sm" placeholder="Rakib Hossain">
-                </div>
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-sm font-medium mb-2">Gmail / Email</label>
-                        <input type="email" id="clientEmail" required class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 focus:outline-none focus:border-blue-500 text-white text-sm" placeholder="email@gmail.com">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium mb-2">WhatsApp Number (11 digits, 01...)</label>
-                        <input type="text" id="clientPhone" required maxlength="11" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 focus:outline-none focus:border-blue-500 text-white text-sm" placeholder="01712345678">
-                    </div>
-                </div>
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-sm font-medium mb-2">Service Category</label>
-                        <select id="clientCategory" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 focus:outline-none focus:border-blue-500 text-white text-sm">
-                            <option value="Portfolio Website">Portfolio Website</option>
-                            <option value="App Download Website">App Download Website</option>
-                            <option value="E-commerce Website">E-commerce Website</option>
-                            <option value="Tournament Website">Tournament Website</option>
-                            <option value="Custom Website Design">Custom Website Design</option>
-                            <option value="Existing Website Bug Fix">Existing Website Bug Fix</option>
-                            <option value="Add New Feature">Add New Feature Update</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium mb-2">Hosting & Domain Preference</label>
-                        <select id="clientDomain" onchange="toggleDomainInput()" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 focus:outline-none focus:border-blue-500 text-white text-sm">
-                            <option value="Don't need, I have my own domain">Don't need, I have my own domain</option>
-                            <option value="Need Custom domain and hosting setup">Need Custom domain and hosting setup</option>
-                            <option value="Normal Hosting / Google Publish">Normal Hosting / Google Publish</option>
-                        </select>
-                    </div>
+
+        <div class="services-grid">
+
+
+            <div class="service-card reveal">
+
+                <div class="service-icon">
+                    <i class="fas fa-cart-shopping"></i>
                 </div>
 
-                <div id="domainNameBox" class="hidden">
-                    <label class="block text-sm font-medium mb-2 text-blue-400">Desired Domain Name (e.g. rsweb)</label>
-                    <div class="flex gap-2">
-                        <input type="text" id="clientDomainName" oninput="validateDomainInput(this)" class="w-2/3 bg-slate-950 border border-blue-500/50 rounded-xl px-4 py-3 focus:outline-none focus:border-blue-500 text-white text-sm" placeholder="rsweb">
-                        <select id="clientDomainExt" class="w-1/3 bg-slate-950 border border-blue-500/50 rounded-xl px-3 py-3 focus:outline-none focus:border-blue-500 text-white text-sm"></select>
-                    </div>
-                </div>
+                <h3
+                data-bn="ই-কমার্স ওয়েবসাইট"
+                data-en="E-commerce Website">
+                ই-কমার্স ওয়েবসাইট
+                </h3>
 
-                <div>
-                    <div class="flex justify-between items-center mb-2">
-                        <label class="block text-sm font-medium">Project Details / Requirements</label>
-                        <span id="charCountDisplay" class="text-xs text-slate-400">0 / 1000 characters (Min: 20)</span>
-                    </div>
-                    <textarea id="clientDetails" rows="4" required minlength="20" maxlength="1000" oninput="updateCharCount(this)" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 focus:outline-none focus:border-blue-500 text-white text-sm" placeholder="Describe your project specifications (Minimum 20 characters)..."></textarea>
-                </div>
-                <button type="submit" id="submitBtn" class="w-full bg-blue-600 hover:bg-blue-700 py-4 rounded-xl font-semibold transition text-white shadow-lg shadow-blue-600/30 text-sm">Submit Order & Open Live Chat</button>
-            </form>
-            <div id="successMsg" class="hidden mt-6 p-4 bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-center rounded-xl font-medium text-xs">
-                Order submitted successfully! You can track it in your Order History.
+                <p
+                data-bn="আধুনিক ডিজাইনের সম্পূর্ণ ই-কমার্স ওয়েবসাইট তৈরি।"
+                data-en="Modern and complete e-commerce websites with professional design.">
+                আধুনিক ডিজাইনের সম্পূর্ণ ই-কমার্স ওয়েবসাইট তৈরি।
+                </p>
+
             </div>
 
-            <div id="userChatSection" class="hidden mt-10 border-t border-slate-800 pt-8">
-                <div class="flex justify-between items-center mb-4">
-                    <h3 id="chatSectionHeader" class="text-base font-bold text-blue-400"><i class="fas fa-comments"></i> Direct Chat with Admin</h3>
-                    <button onclick="closeUserChat()" class="text-slate-400 hover:text-white text-xs bg-slate-800 px-3 py-1 rounded-lg">Close Chat</button>
+
+            <div class="service-card reveal">
+
+                <div class="service-icon">
+                    <i class="fas fa-user-tie"></i>
                 </div>
-                <div id="chatMessagesBox" class="h-60 bg-slate-950 border border-slate-800 rounded-2xl p-4 overflow-y-auto space-y-3 mb-4 flex flex-col"></div>
-                <form id="chatForm" onsubmit="sendUserMessage(event)" class="flex gap-2">
-                    <input type="text" id="userMsgInput" required placeholder="Type your message..." class="flex-1 bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 focus:outline-none focus:border-blue-500 text-white text-sm">
-                    <button type="submit" class="bg-blue-600 hover:bg-blue-700 px-6 py-3 rounded-xl font-semibold text-sm transition text-white shadow-lg"><i class="fas fa-paper-plane"></i></button>
-                </form>
+
+                <h3
+                data-bn="ব্যবসায়িক পোর্টফোলিও"
+                data-en="Business Portfolio">
+                ব্যবসায়িক পোর্টফোলিও
+                </h3>
+
+                <p
+                data-bn="ব্র্যান্ড বা ব্যক্তিগত পরিচিতির জন্য প্রফেশনাল পোর্টফোলিও।"
+                data-en="Professional portfolios for brands and personal identities.">
+                ব্র্যান্ড বা ব্যক্তিগত পরিচিতির জন্য প্রফেশনাল পোর্টফোলিও।
+                </p>
+
             </div>
+
+
+            <div class="service-card reveal">
+
+                <div class="service-icon">
+                    <i class="fas fa-window-maximize"></i>
+                </div>
+
+                <h3
+                data-bn="কাস্টম ওয়েব অ্যাপ্লিকেশন"
+                data-en="Custom Web Application">
+                কাস্টম ওয়েব অ্যাপ্লিকেশন
+                </h3>
+
+                <p
+                data-bn="আপনার প্রয়োজন অনুযায়ী কাস্টম ফিচারসহ ওয়েব অ্যাপ।"
+                data-en="Custom web applications built around your requirements.">
+                আপনার প্রয়োজন অনুযায়ী কাস্টম ফিচারসহ ওয়েব অ্যাপ।
+                </p>
+
+            </div>
+
+
+            <div class="service-card reveal">
+
+                <div class="service-icon">
+                    <i class="fas fa-mobile-screen"></i>
+                </div>
+
+                <h3
+                data-bn="মোবাইল-ফ্রেন্ডলি ডিজাইন"
+                data-en="Mobile-Friendly Design">
+                মোবাইল-ফ্রেন্ডলি ডিজাইন
+                </h3>
+
+                <p
+                data-bn="সব ধরনের মোবাইল, ট্যাবলেট এবং ডেস্কটপে সুন্দরভাবে কাজ করে।"
+                data-en="Responsive interfaces that work beautifully across devices.">
+                সব ধরনের মোবাইল, ট্যাবলেট এবং ডেস্কটপে সুন্দরভাবে কাজ করে।
+                </p>
+
+            </div>
+
+
+            <div class="service-card reveal">
+
+                <div class="service-icon">
+                    <i class="fas fa-gauge-high"></i>
+                </div>
+
+                <h3
+                data-bn="অ্যাডমিন ড্যাশবোর্ড"
+                data-en="Admin Dashboard">
+                অ্যাডমিন ড্যাশবোর্ড
+                </h3>
+
+                <p
+                data-bn="ডাটা, ইউজার এবং সিস্টেম ম্যানেজমেন্টের জন্য কাস্টম ড্যাশবোর্ড।"
+                data-en="Custom dashboards for users, data and system management.">
+                ডাটা, ইউজার এবং সিস্টেম ম্যানেজমেন্টের জন্য কাস্টম ড্যাশবোর্ড।
+                </p>
+
+            </div>
+
+
+            <div class="service-card reveal">
+
+                <div class="service-icon">
+                    <i class="fas fa-credit-card"></i>
+                </div>
+
+                <h3
+                data-bn="পেমেন্ট ইন্টিগ্রেশন"
+                data-en="Payment Integration">
+                পেমেন্ট ইন্টিগ্রেশন
+                </h3>
+
+                <p
+                data-bn="প্রয়োজন অনুযায়ী বিভিন্ন পেমেন্ট সিস্টেম ইন্টিগ্রেশন।"
+                data-en="Payment system integrations based on your project requirements.">
+                প্রয়োজন অনুযায়ী বিভিন্ন পেমেন্ট সিস্টেম ইন্টিগ্রেশন।
+                </p>
+
+            </div>
+
         </div>
-    </section>
 
-    <footer class="text-center py-8 bg-[#060910] text-slate-500 text-xs border-t border-white/5">
-        <p>&copy; 2026 DEVLOPER RS RAKIB. All Rights Reserved.</p>
-    </footer>
+    </div>
 
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getDatabase, ref, push, onValue, get, child } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+</section>
 
-        const firebaseConfig = {
-            apiKey: "AIzaSyA7QKz2-6LCs3IcQ-4aWB8BGZo_i50lpB0",
-            authDomain: "diamond-top-up-571e4.firebaseapp.com",
-            databaseURL: "https://diamond-top-up-571e4-default-rtdb.firebaseio.com",
-            projectId: "diamond-top-up-571e4",
-            storageBucket: "diamond-top-up-571e4.firebasestorage.app",
-            messagingSenderId: "523646682095",
-            appId: "1:523646682095:web:9cc29b83ea1c6957416c1a",
-            measurementId: "G-7NHVVJVXCP"
-        };
 
-        const app = initializeApp(firebaseConfig);
-        const db = getDatabase(app);
-        
-        let myOrders = JSON.parse(localStorage.getItem('rs_my_orders') || '[]');
-        let activeChatOrderId = null;
+<!-- PROJECTS -->
 
-        window.showToast = function(message, type = 'info') {
-            const container = document.getElementById('toastContainer');
-            const toast = document.createElement('div');
-            toast.className = `pointer-events-auto toast-slide flex items-center justify-between gap-3 p-4 rounded-2xl shadow-2xl border text-xs font-medium backdrop-blur-md transition-all `;
-            
-            let icon = 'fa-info-circle text-blue-400';
-            if (type === 'error') {
-                toast.className += ' bg-red-950/90 border-red-500/40 text-red-200';
-                icon = 'fa-triangle-exclamation text-red-400';
-            } else if (type === 'success') {
-                toast.className += ' bg-emerald-950/90 border-emerald-500/40 text-emerald-200';
-                icon = 'fa-check-circle text-emerald-400';
-            } else {
-                toast.className += ' bg-slate-900/95 border-slate-700 text-slate-200';
-            }
+<section id="projects" class="section projects-section">
 
-            toast.innerHTML = `
-                <div class="flex items-center gap-2.5">
-                    <i class="fas ${icon} text-base"></i>
-                    <span>${message}</span>
+    <div class="container">
+
+        <div class="section-head reveal">
+
+            <div
+            class="section-label"
+            data-bn="আমার প্রজেক্ট"
+            data-en="MY PROJECTS">
+            আমার প্রজেক্ট
+            </div>
+
+            <h2
+            class="section-title"
+            data-bn="আমার তৈরি করা প্রজেক্ট"
+            data-en="Projects I Built">
+            আমার তৈরি করা প্রজেক্ট
+            </h2>
+
+            <p
+            class="section-description"
+            data-bn="আমার তৈরি করা বাস্তব ওয়েব প্রজেক্টগুলোর কিছু উদাহরণ।"
+            data-en="Some examples of real web projects I have built.">
+            আমার তৈরি করা বাস্তব ওয়েব প্রজেক্টগুলোর কিছু উদাহরণ।
+            </p>
+
+        </div>
+
+
+        <div class="projects-grid">
+
+            <article class="project-card reveal">
+
+                <div class="project-preview">
+
+                    <img
+                    class="project-logo"
+                    src="https://videotourl.com/images/1789792991627-2a906ffa-fbc0-4f79-9d9b-8dddb80ca667.jpg"
+                    alt="AURA ARMAN TOUR Logo"
+                    loading="lazy">
+
                 </div>
-                <button onclick="this.parentElement.remove()" class="text-slate-400 hover:text-white px-1 text-sm">&times;</button>
-            `;
-            
-            container.appendChild(toast);
-            setTimeout(() => {
-                toast.style.opacity = '0';
-                setTimeout(() => toast.remove(), 300);
-            }, 4000);
-        };
 
-        window.updateCharCount = function(textarea) {
-            const len = textarea.value.length;
-            const display = document.getElementById('charCountDisplay');
-            display.textContent = `${len} / 1000 characters (Min: 20)`;
-            if(len < 20) {
-                display.className = "text-xs text-amber-400 font-medium";
-            } else {
-                display.className = "text-xs text-emerald-400 font-medium";
-            }
-        };
 
-        onValue(ref(db, 'domainExtensions'), (snapshot) => {
-            const extSelect = document.getElementById('clientDomainExt');
-            if(!extSelect) return;
-            extSelect.innerHTML = '';
-            const data = snapshot.val();
-            if (data) {
-                Object.values(data).forEach(ext => {
-                    const opt = document.createElement('option');
-                    opt.value = ext; opt.textContent = ext;
-                    extSelect.appendChild(opt);
-                });
-            } else {
-                ['.com', '.org', '.net', '.xyz'].forEach(ext => {
-                    const opt = document.createElement('option');
-                    opt.value = ext; opt.textContent = ext;
-                    extSelect.appendChild(opt);
-                });
-            }
-        });
+                <div class="project-content">
 
-        window.toggleDomainInput = function() {
-            const domainOption = document.getElementById('clientDomain').value;
-            const domainBox = document.getElementById('domainNameBox');
-            const domainInput = document.getElementById('clientDomainName');
-            if(domainOption.includes('Need Custom domain') || domainOption.includes('own domain')) {
-                domainBox.classList.remove('hidden');
-                domainInput.required = true;
-            } else {
-                domainBox.classList.add('hidden');
-                domainInput.required = false;
-                domainInput.value = '';
-            }
-        };
+                    <div class="project-top">
 
-        window.validateDomainInput = function(input) {
-            if (input.value.includes('.')) {
-                input.value = input.value.replace(/\./g, '');
-                showToast("ডোমেইন নামের সাথে সরাসরি ডট (.) দেওয়া যাবে না। অনুগ্রহ করে এক্সটেনশন ড্রপডাউন থেকে সিলেক্ট করুন।", "error");
-            }
-        };
+                        <h3>
+                            AURA ARMAN TOUR
+                        </h3>
 
-        window.selectCategory = function(cat) {
-            document.getElementById('clientCategory').value = cat;
-            window.location.href = '#custom-order';
-        };
+                        <span class="project-status">
 
-        window.submitCustomOrder = async function(event) {
-            event.preventDefault();
-            const phone = document.getElementById('clientPhone').value.trim();
-            if (!/^01\d{9}$/.test(phone)) {
-                showToast("সঠিক ১১ ডিজিটের মোবাইল নম্বর দিন যা '01' দিয়ে শুরু (যেমন: 01712345678)", "error");
-                document.getElementById('clientPhone').focus();
-                return;
-            }
+                            <i class="fas fa-circle"></i>
 
-            const details = document.getElementById('clientDetails').value.trim();
-            if(details.length < 20) {
-                showToast("প্রজেক্ট ডিটেইলস কমপক্ষে ২০ অক্ষরের (Characters) হতে হবে!", "error");
-                document.getElementById('clientDetails').focus();
-                return;
-            }
+                            <span
+                            data-bn="লাইভ"
+                            data-en="LIVE">
+                            লাইভ
+                            </span>
 
-            const btn = document.getElementById('submitBtn');
-            const domainChoice = document.getElementById('clientDomain').value;
-            const domainInputName = document.getElementById('clientDomainName').value.trim().toLowerCase();
-            const domainExt = document.getElementById('clientDomainExt').value;
-            
-            let finalDomainText = domainChoice;
-            let fullDomainKey = "";
+                        </span>
 
-            if(domainInputName) {
-                fullDomainKey = `${domainInputName}${domainExt}`.toLowerCase();
-                finalDomainText = `${domainChoice} (${fullDomainKey})`;
-            }
+                    </div>
 
-            btn.disabled = true; 
-            btn.innerText = "Checking Domain...";
 
-            try {
-                if(fullDomainKey) {
-                    const dbRef = ref(db);
-                    const snapshot = await get(child(dbRef, 'customOrders'));
-                    if(snapshot.exists()) {
-                        let isDuplicate = false;
-                        snapshot.forEach((childSnapshot) => {
-                            const order = childSnapshot.val();
-                            if(order.status !== 'Cancelled' && order.domainOption && order.domainOption.toLowerCase().includes(fullDomainKey)) {
-                                isDuplicate = true;
-                            }
-                        });
+                    <p
+                    class="project-description"
+                    data-bn="AURA ARMAN TOUR একটি আধুনিক ও প্রফেশনাল ওয়েব প্রজেক্ট। এখানে সুন্দর UI, দ্রুত পারফরম্যান্স এবং ব্যবহারকারীর জন্য সহজ নেভিগেশনকে গুরুত্ব দেওয়া হয়েছে।"
+                    data-en="AURA ARMAN TOUR is a modern and professional web project focused on a clean UI, fast performance and an easy user experience.">
 
-                        if(isDuplicate) {
-                            showToast(`দুঃখিত! "${fullDomainKey}" ডোমেইনটি বর্তমানে একটিভ কোনো অর্ডারে বুক করা আছে।`, "error");
-                            btn.disabled = false; 
-                            btn.innerText = "Submit Order & Open Live Chat";
-                            return;
-                        }
-                    }
-                }
-            } catch (err) {
-                console.error(err);
-            }
+                        AURA ARMAN TOUR একটি আধুনিক ও প্রফেশনাল
+                        ওয়েব প্রজেক্ট। এখানে সুন্দর UI, দ্রুত পারফরম্যান্স
+                        এবং ব্যবহারকারীর জন্য সহজ নেভিগেশনকে গুরুত্ব দেওয়া হয়েছে।
 
-            btn.innerText = "Submitting...";
+                    </p>
 
-            const orderData = {
-                name: document.getElementById('clientName').value,
-                email: document.getElementById('clientEmail').value,
-                phone: phone,
-                category: document.getElementById('clientCategory').value,
-                domainOption: finalDomainText,
-                details: details,
-                status: "Pending",
-                timestamp: new Date().toLocaleString()
-            };
 
-            const newOrderRef = push(ref(db, 'customOrders'), orderData);
-            newOrderRef.then(() => {
-                const orderId = newOrderRef.key;
-                if(!myOrders.includes(orderId)) {
-                    myOrders.push(orderId);
-                    localStorage.setItem('rs_my_orders', JSON.stringify(myOrders));
-                }
-                document.getElementById('orderForm').reset();
-                document.getElementById('domainNameBox').classList.add('hidden');
-                document.getElementById('successMsg').classList.remove('hidden');
-                document.getElementById('charCountDisplay').textContent = "0 / 1000 characters (Min: 20)";
-                document.getElementById('charCountDisplay').className = "text-xs text-slate-400 font-medium";
-                btn.disabled = false; 
-                btn.innerText = "Submit Order & Open Live Chat";
-                loadOrderHistory();
-                openUserChat(orderId, orderData.category);
-                showToast("Order submitted successfully!", "success");
-                setTimeout(() => document.getElementById('successMsg').classList.add('hidden'), 4000);
-            }).catch(() => {
-                showToast("Database error occurred!", "error");
-                btn.disabled = false; 
-                btn.innerText = "Submit Order & Open Live Chat";
-            });
-        };
+                    <div class="project-meta">
 
-        function loadOrderHistory() {
-            const container = document.getElementById('ordersListContainer');
-            const noOrder = document.getElementById('noOrderContainer');
-            if(myOrders.length === 0) {
-                noOrder.classList.remove('hidden');
-                container.classList.add('hidden');
-                return;
-            }
+                        <span class="project-tag">
+                            HTML
+                        </span>
 
-            noOrder.classList.add('hidden');
-            container.classList.remove('hidden');
-            container.innerHTML = '';
+                        <span class="project-tag">
+                            CSS
+                        </span>
 
-            myOrders.forEach(orderId => {
-                onValue(ref(db, `customOrders/${orderId}`), (snapshot) => {
-                    const order = snapshot.val();
-                    if(!order) return;
+                        <span class="project-tag">
+                            JavaScript
+                        </span>
 
-                    if(order.status === 'Cancelled' && activeChatOrderId === orderId) {
-                        closeUserChat();
-                        showToast("Your order was cancelled by the admin. Chat closed.", "error");
-                    }
+                        <span class="project-tag">
+                            Responsive
+                        </span>
 
-                    let statusBadge = `<span class="bg-amber-500/10 border border-amber-500/20 text-amber-400 px-2.5 py-1 rounded-lg text-xs font-semibold">Pending</span>`;
-                    if(order.status === 'Completed') {
-                        statusBadge = `<span class="bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 px-2.5 py-1 rounded-lg text-xs font-semibold">Completed</span>`;
-                    } else if(order.status === 'Cancelled') {
-                        statusBadge = `<span class="bg-red-500/10 border border-red-500/20 text-red-400 px-2.5 py-1 rounded-lg text-xs font-semibold">Cancelled</span>`;
-                    }
+                    </div>
 
-                    let card = document.getElementById(`order-card-${orderId}`);
-                    if(!card) {
-                        card = document.createElement('div');
-                        card.id = `order-card-${orderId}`;
-                        card.className = "bg-slate-950 border border-slate-800 p-5 rounded-2xl flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 transition hover:border-blue-500/40";
-                        container.appendChild(card);
-                    }
 
-                    card.innerHTML = `
-                        <div class="space-y-1">
-                            <div class="flex items-center gap-2">
-                                <span class="text-xs text-slate-400">${order.timestamp}</span>
-                                ${statusBadge}
-                            </div>
-                            <h3 class="font-bold text-white text-base">${order.category}</h3>
-                            <p class="text-xs text-purple-300">Domain: ${order.domainOption}</p>
-                            <p class="text-xs text-slate-400 max-w-md truncate">Details: ${order.details}</p>
-                        </div>
-                        <div>
-                            <button onclick="openUserChat('${orderId}', '${order.category}')" class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-xl text-white text-xs font-semibold transition flex items-center gap-2 shadow-lg">
-                                <i class="fas fa-comments"></i> Open Chat
-                            </button>
-                        </div>
-                    `;
-                });
-            });
+                    <a
+                    href="https://auraskill.netlify.app/"
+                    class="project-btn"
+                    target="_blank"
+                    rel="noopener noreferrer">
+
+                        <i class="fas fa-arrow-up-right-from-square"></i>
+
+                        <span
+                        data-bn="লাইভ প্রজেক্ট দেখুন"
+                        data-en="View Live Project">
+                        লাইভ প্রজেক্ট দেখুন
+                        </span>
+
+                    </a>
+
+                </div>
+
+            </article>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- EXPERTISE -->
+
+<section id="expertise" class="section">
+
+    <div class="container">
+
+        <div class="section-head reveal">
+
+            <div
+            class="section-label"
+            data-bn="এক্সপার্টাইজ"
+            data-en="EXPERTISE">
+            এক্সপার্টাইজ
+            </div>
+
+            <h2
+            class="section-title"
+            data-bn="আমার বিশেষ দক্ষতা"
+            data-en="My Expertise">
+            আমার বিশেষ দক্ষতা
+            </h2>
+
+        </div>
+
+
+        <div class="expertise-grid">
+
+
+            <div class="expertise-item reveal">
+
+                <div class="expertise-number">
+                    01
+                </div>
+
+                <h3
+                data-bn="ডিজিটাল টপআপ ওয়েবসাইট"
+                data-en="Digital Top-up Website">
+                ডিজিটাল টপআপ ওয়েবসাইট
+                </h3>
+
+            </div>
+
+
+            <div class="expertise-item reveal">
+
+                <div class="expertise-number">
+                    02
+                </div>
+
+                <h3
+                data-bn="অটো টপআপ বট সিস্টেম"
+                data-en="Auto Top-up Bot System">
+                অটো টপআপ বট সিস্টেম
+                </h3>
+
+            </div>
+
+
+            <div class="expertise-item reveal">
+
+                <div class="expertise-number">
+                    03
+                </div>
+
+                <h3
+                data-bn="রিসেলার ম্যানেজমেন্ট"
+                data-en="Reseller Management">
+                রিসেলার ম্যানেজমেন্ট
+                </h3>
+
+            </div>
+
+
+            <div class="expertise-item reveal">
+
+                <div class="expertise-number">
+                    04
+                </div>
+
+                <h3
+                data-bn="রিয়েল-টাইম ট্রানজেকশন প্রসেসিং"
+                data-en="Real-time Transaction Processing">
+                রিয়েল-টাইম ট্রানজেকশন প্রসেসিং
+                </h3>
+
+            </div>
+
+
+            <div class="expertise-item reveal">
+
+                <div class="expertise-number">
+                    05
+                </div>
+
+                <h3
+                data-bn="মাল্টি-পেমেন্ট গেটওয়ে ইন্টিগ্রেশন"
+                data-en="Multi-Payment Gateway Integration">
+                মাল্টি-পেমেন্ট গেটওয়ে ইন্টিগ্রেশন
+                </h3>
+
+            </div>
+
+
+            <div class="expertise-item reveal">
+
+                <div class="expertise-number">
+                    06
+                </div>
+
+                <h3
+                data-bn="অটোমেটেড সার্ভিস ডেলিভারি"
+                data-en="Automated Service Delivery">
+                অটোমেটেড সার্ভিস ডেলিভারি
+                </h3>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- SKILLS -->
+
+<section id="skills" class="section">
+
+    <div class="container">
+
+        <div class="section-head reveal">
+
+            <div
+            class="section-label"
+            data-bn="স্কিল"
+            data-en="SKILLS">
+            স্কিল
+            </div>
+
+            <h2
+            class="section-title"
+            data-bn="আমার টেকনিক্যাল স্কিল"
+            data-en="Technical Skills">
+            আমার টেকনিক্যাল স্কিল
+            </h2>
+
+        </div>
+
+
+        <div class="skills-grid">
+
+
+            <div class="skill-item reveal">
+
+                <div class="skill-head">
+
+                    <span>
+                        HTML / CSS
+                    </span>
+
+                    <span class="skill-percent">
+                        95%
+                    </span>
+
+                </div>
+
+                <div class="skill-bar">
+
+                    <div
+                    class="skill-progress"
+                    data-width="95%">
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="skill-item reveal">
+
+                <div class="skill-head">
+
+                    <span>
+                        JavaScript
+                    </span>
+
+                    <span class="skill-percent">
+                        90%
+                    </span>
+
+                </div>
+
+                <div class="skill-bar">
+
+                    <div
+                    class="skill-progress"
+                    data-width="90%">
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="skill-item reveal">
+
+                <div class="skill-head">
+
+                    <span>
+                        Firebase
+                    </span>
+
+                    <span class="skill-percent">
+                        88%
+                    </span>
+
+                </div>
+
+                <div class="skill-bar">
+
+                    <div
+                    class="skill-progress"
+                    data-width="88%">
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="skill-item reveal">
+
+                <div class="skill-head">
+
+                    <span>
+                        Responsive UI
+                    </span>
+
+                    <span class="skill-percent">
+                        94%
+                    </span>
+
+                </div>
+
+                <div class="skill-bar">
+
+                    <div
+                    class="skill-progress"
+                    data-width="94%">
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="skill-item reveal">
+
+                <div class="skill-head">
+
+                    <span>
+                        Web Application
+                    </span>
+
+                    <span class="skill-percent">
+                        91%
+                    </span>
+
+                </div>
+
+                <div class="skill-bar">
+
+                    <div
+                    class="skill-progress"
+                    data-width="91%">
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- STATS -->
+
+<section class="stats">
+
+    <div class="stats-grid">
+
+
+        <div class="stat reveal">
+
+            <div
+            class="stat-number counter"
+            data-target="50"
+            data-suffix="+">
+            0
+            </div>
+
+            <div
+            class="stat-label"
+            data-bn="প্রজেক্ট"
+            data-en="Projects">
+            প্রজেক্ট
+            </div>
+
+        </div>
+
+
+        <div class="stat reveal">
+
+            <div
+            class="stat-number counter"
+            data-target="30"
+            data-suffix="+">
+            0
+            </div>
+
+            <div
+            class="stat-label"
+            data-bn="ক্লায়েন্ট"
+            data-en="Clients">
+            ক্লায়েন্ট
+            </div>
+
+        </div>
+
+
+        <div class="stat reveal">
+
+            <div
+            class="stat-number counter"
+            data-target="99"
+            data-suffix="%">
+            0
+            </div>
+
+            <div
+            class="stat-label"
+            data-bn="সন্তুষ্টি"
+            data-en="Satisfaction">
+            সন্তুষ্টি
+            </div>
+
+        </div>
+
+
+        <div class="stat reveal">
+
+            <div class="stat-number">
+                24/7
+            </div>
+
+            <div
+            class="stat-label"
+            data-bn="সাপোর্ট"
+            data-en="Support">
+            সাপোর্ট
+            </div>
+
+        </div>
+
+
+    </div>
+
+</section>
+
+
+<!-- PROCESS -->
+
+<section class="section">
+
+    <div class="container">
+
+        <div class="section-head reveal">
+
+            <div
+            class="section-label"
+            data-bn="ওয়ার্কফ্লো"
+            data-en="WORKFLOW">
+            ওয়ার্কফ্লো
+            </div>
+
+            <h2
+            class="section-title"
+            data-bn="আমি যেভাবে কাজ করি"
+            data-en="How I Work">
+            আমি যেভাবে কাজ করি
+            </h2>
+
+        </div>
+
+
+        <div class="process-grid">
+
+
+            <div class="process-card reveal">
+
+                <div class="process-number">
+                    STEP 01
+                </div>
+
+                <h3
+                data-bn="আলোচনা"
+                data-en="Discussion">
+                আলোচনা
+                </h3>
+
+                <p
+                data-bn="আপনার প্রজেক্টের প্রয়োজন ও আইডিয়া বুঝে নিই।"
+                data-en="I understand your project requirements and ideas.">
+                আপনার প্রজেক্টের প্রয়োজন ও আইডিয়া বুঝে নিই।
+                </p>
+
+            </div>
+
+
+            <div class="process-card reveal">
+
+                <div class="process-number">
+                    STEP 02
+                </div>
+
+                <h3
+                data-bn="ডিজাইন"
+                data-en="Design">
+                ডিজাইন
+                </h3>
+
+                <p
+                data-bn="প্রজেক্টের জন্য আধুনিক এবং ব্যবহারবান্ধব UI তৈরি করি।"
+                data-en="I create a modern and user-friendly interface for the project.">
+                প্রজেক্টের জন্য আধুনিক এবং ব্যবহারবান্ধব UI তৈরি করি।
+                </p>
+
+            </div>
+
+
+            <div class="process-card reveal">
+
+                <div class="process-number">
+                    STEP 03
+                </div>
+
+                <h3
+                data-bn="ডেভেলপমেন্ট"
+                data-en="Development">
+                ডেভেলপমেন্ট
+                </h3>
+
+                <p
+                data-bn="ডিজাইনকে দ্রুত ও কার্যকর ওয়েব প্রজেক্টে রূপ দিই।"
+                data-en="I turn the design into a fast and functional web project.">
+                ডিজাইনকে দ্রুত ও কার্যকর ওয়েব প্রজেক্টে রূপ দিই।
+                </p>
+
+            </div>
+
+
+            <div class="process-card reveal">
+
+                <div class="process-number">
+                    STEP 04
+                </div>
+
+                <h3
+                data-bn="ডেলিভারি"
+                data-en="Delivery">
+                ডেলিভারি
+                </h3>
+
+                <p
+                data-bn="টেস্টিং শেষে প্রজেক্ট সম্পূর্ণ করে ডেলিভারি করি।"
+                data-en="After testing, I complete and deliver the project.">
+                টেস্টিং শেষে প্রজেক্ট সম্পূর্ণ করে ডেলিভারি করি।
+                </p>
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- CTA -->
+
+<section id="contact" class="cta">
+
+    <div class="cta-box reveal">
+
+        <h2
+        data-bn="আপনার প্রজেক্ট নিয়ে কথা বলি?"
+        data-en="Let's Discuss Your Project">
+        আপনার প্রজেক্ট নিয়ে কথা বলি?
+        </h2>
+
+        <p
+        data-bn="আপনার ওয়েবসাইট বা ওয়েব অ্যাপ্লিকেশনের আইডিয়া নিয়ে সরাসরি আমার সাথে যোগাযোগ করুন।"
+        data-en="Contact me directly to discuss your website or web application idea.">
+        আপনার ওয়েবসাইট বা ওয়েব অ্যাপ্লিকেশনের আইডিয়া নিয়ে
+        সরাসরি আমার সাথে যোগাযোগ করুন।
+        </p>
+
+
+        <div
+        class="hero-buttons"
+        style="justify-content:center;">
+
+            <a
+            id="ctaWhatsapp"
+            class="btn-primary"
+            target="_blank"
+            rel="noopener noreferrer">
+
+                <i class="fab fa-whatsapp"></i>
+
+                <span
+                data-bn="WhatsApp-এ যোগাযোগ করুন"
+                data-en="Contact on WhatsApp">
+                WhatsApp-এ যোগাযোগ করুন
+                </span>
+
+            </a>
+
+
+            <a
+            href="mailto:rsrakib1947@gmail.com"
+            class="btn-secondary">
+
+                <i class="fas fa-envelope"></i>
+
+                <span>
+                    rsrakib1947@gmail.com
+                </span>
+
+            </a>
+
+        </div>
+
+    </div>
+
+</section>
+
+</main>
+
+
+<!-- FOOTER -->
+
+<footer>
+
+    <div class="footer-container">
+
+        <div class="footer-text">
+
+            <div>
+
+                © <span id="year"></span> RS RAKIB.
+
+                <span
+                data-bn="সকল অধিকার সংরক্ষিত।"
+                data-en="All rights reserved.">
+                সকল অধিকার সংরক্ষিত।
+                </span>
+
+            </div>
+
+
+            <div class="developed-by">
+
+                <span>
+                    DEVELOPED BY
+                </span>
+
+                <strong>
+                    RS RAKIB
+                </strong>
+
+            </div>
+
+        </div>
+
+
+        <div class="footer-social">
+
+            <a
+            id="footerWhatsapp"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="WhatsApp">
+
+                <i class="fab fa-whatsapp"></i>
+
+            </a>
+
+
+            <a
+            href="mailto:rsrakib1947@gmail.com"
+            aria-label="Email">
+
+                <i class="fas fa-envelope"></i>
+
+            </a>
+
+        </div>
+
+    </div>
+
+</footer>
+
+
+<!-- FLOATING WHATSAPP -->
+
+<a
+id="floatingWhatsapp"
+class="whatsapp-float"
+target="_blank"
+rel="noopener noreferrer"
+aria-label="WhatsApp">
+
+    <i class="fab fa-whatsapp"></i>
+
+</a>
+
+
+<script>
+
+/* =========================
+   WHATSAPP
+========================= */
+
+const whatsappNumber =
+    "8801871132039";
+
+
+const whatsappMessages = {
+
+    bn:
+    "আসসালামু আলাইকুম RS RAKIB, আপনার পোর্টফোলিওটি দেখেছি। আমি একটি ওয়েবসাইট / ওয়েব অ্যাপ্লিকেশন তৈরি করতে চাই। আমার প্রজেক্টের বিস্তারিত বিষয় নিয়ে আপনার সাথে কথা বলতে চাই।",
+
+    en:
+    "Assalamu Alaikum RS RAKIB, I visited your portfolio. I would like to build a website / web application. I would like to discuss the project details with you."
+
+};
+
+
+function updateWhatsAppLinks(lang){
+
+    const message =
+        encodeURIComponent(
+            whatsappMessages[lang]
+        );
+
+    const url =
+        `https://wa.me/${whatsappNumber}?text=${message}`;
+
+
+    const links = [
+
+        document.getElementById("navWhatsapp"),
+        document.getElementById("heroWhatsapp"),
+        document.getElementById("ctaWhatsapp"),
+        document.getElementById("footerWhatsapp"),
+        document.getElementById("floatingWhatsapp")
+
+    ];
+
+
+    links.forEach(link => {
+
+        if(link){
+            link.href = url;
         }
 
-        window.openUserChat = function(orderId, categoryName) {
-            activeChatOrderId = orderId;
-            const chatSec = document.getElementById('userChatSection');
-            chatSec.classList.remove('hidden');
-            document.getElementById('chatSectionHeader').innerHTML = `<i class="fas fa-comments"></i> Chat with Admin (${categoryName})`;
-            
-            chatSec.scrollIntoView({ behavior: 'smooth' });
+    });
 
-            onValue(ref(db, `chats/${orderId}`), (snapshot) => {
-                const box = document.getElementById('chatMessagesBox');
-                if(!box) return;
-                box.innerHTML = '';
-                const data = snapshot.val();
-                if(data) {
-                    Object.values(data).forEach(m => {
-                        const div = document.createElement('div');
-                        div.className = `max-w-[80%] p-3 rounded-2xl text-xs ${m.sender === 'user' ? 'bg-blue-600 text-white ml-auto rounded-br-none' : 'bg-slate-800 text-slate-200 mr-auto rounded-bl-none'}`;
-                        div.innerHTML = `<p class="font-bold text-[10px] opacity-75 mb-0.5">${m.sender === 'user' ? 'You' : 'Admin'}</p><p>${m.text}</p>`;
-                        box.appendChild(div);
-                    });
-                    box.scrollTop = box.scrollHeight;
-                } else {
-                    box.innerHTML = '<p class="text-slate-500 text-xs text-center my-auto">No messages yet. Start chatting with Admin.</p>';
+}
+
+
+/* =========================
+   LANGUAGE
+========================= */
+
+let currentLang =
+    localStorage.getItem("portfolioLanguage")
+    || "bn";
+
+
+const langToggle =
+    document.getElementById("langToggle");
+
+
+function applyLanguage(lang){
+
+    currentLang = lang;
+
+
+    document.documentElement.lang =
+        lang === "bn"
+        ? "bn"
+        : "en";
+
+
+    document
+    .querySelectorAll("[data-bn]")
+    .forEach(el => {
+
+        const text =
+            el.getAttribute(
+                `data-${lang}`
+            );
+
+        if(text !== null){
+
+            el.textContent = text;
+
+        }
+
+    });
+
+
+    if(lang === "en"){
+
+        langToggle.classList.add("en");
+
+    }else{
+
+        langToggle.classList.remove("en");
+
+    }
+
+
+    localStorage.setItem(
+        "portfolioLanguage",
+        lang
+    );
+
+
+    updateWhatsAppLinks(lang);
+
+}
+
+
+langToggle.addEventListener(
+    "click",
+    () => {
+
+        applyLanguage(
+            currentLang === "bn"
+            ? "en"
+            : "bn"
+        );
+
+    }
+);
+
+
+langToggle.addEventListener(
+    "keydown",
+    e => {
+
+        if(
+            e.key === "Enter" ||
+            e.key === " "
+        ){
+
+            e.preventDefault();
+
+            applyLanguage(
+                currentLang === "bn"
+                ? "en"
+                : "bn"
+            );
+
+        }
+
+    }
+);
+
+
+/* =========================
+   LOADER
+========================= */
+
+window.addEventListener(
+    "load",
+    () => {
+
+        setTimeout(
+            () => {
+
+                document
+                .getElementById("loader")
+                .classList.add("hide");
+
+            },
+            700
+        );
+
+    }
+);
+
+
+/* =========================
+   YEAR
+========================= */
+
+document.getElementById(
+    "year"
+).textContent =
+    new Date().getFullYear();
+
+
+/* =========================
+   REVEAL
+========================= */
+
+const revealObserver =
+    new IntersectionObserver(
+        entries => {
+
+            entries.forEach(
+                entry => {
+
+                    if(
+                        entry.isIntersecting
+                    ){
+
+                        entry.target
+                        .classList
+                        .add("show");
+
+                        revealObserver
+                        .unobserve(
+                            entry.target
+                        );
+
+                    }
+
                 }
-            });
-        };
+            );
 
-        window.closeUserChat = function() {
-            activeChatOrderId = null;
-            document.getElementById('userChatSection').classList.add('hidden');
-        };
+        },
+        {
+            threshold:.12
+        }
+    );
 
-        window.sendUserMessage = function(event) {
-            event.preventDefault();
-            const textInput = type = document.getElementById('userMsgInput');
-            const text = textInput.value.trim();
-            if(!text || !activeChatOrderId) return;
-            push(ref(db, `chats/${activeChatOrderId}`), {
-                sender: 'user', text: text, timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-            }).then(() => textInput.value = '');
-        };
 
-        loadOrderHistory();
-    </script>
-    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-    <script>AOS.init({ once: true });</script>
+document
+.querySelectorAll(".reveal")
+.forEach(el => {
+
+    revealObserver.observe(el);
+
+});
+
+
+/* =========================
+   SKILLS
+========================= */
+
+const skillObserver =
+    new IntersectionObserver(
+        entries => {
+
+            entries.forEach(
+                entry => {
+
+                    if(
+                        entry.isIntersecting
+                    ){
+
+                        const progress =
+                            entry.target;
+
+                        progress.style.width =
+                            progress.dataset.width;
+
+                        skillObserver
+                        .unobserve(
+                            progress
+                        );
+
+                    }
+
+                }
+            );
+
+        },
+        {
+            threshold:.3
+        }
+    );
+
+
+document
+.querySelectorAll(".skill-progress")
+.forEach(el => {
+
+    skillObserver.observe(el);
+
+});
+
+
+/* =========================
+   COUNTERS
+========================= */
+
+const counterObserver =
+    new IntersectionObserver(
+        entries => {
+
+            entries.forEach(
+                entry => {
+
+                    if(
+                        !entry.isIntersecting
+                    ){
+                        return;
+                    }
+
+
+                    const counter =
+                        entry.target;
+
+                    const target =
+                        Number(
+                            counter.dataset.target
+                        );
+
+                    const suffix =
+                        counter.dataset.suffix
+                        || "";
+
+
+                    const duration = 1000;
+
+                    const startTime =
+                        performance.now();
+
+
+                    function animate(time){
+
+                        const progress =
+                            Math.min(
+                                (time - startTime)
+                                / duration,
+                                1
+                            );
+
+
+                        const eased =
+                            1 -
+                            Math.pow(
+                                1 - progress,
+                                3
+                            );
+
+
+                        const value =
+                            Math.floor(
+                                eased * target
+                            );
+
+
+                        counter.textContent =
+                            value + suffix;
+
+
+                        if(progress < 1){
+
+                            requestAnimationFrame(
+                                animate
+                            );
+
+                        }else{
+
+                            counter.textContent =
+                                target + suffix;
+
+                        }
+
+                    }
+
+
+                    requestAnimationFrame(
+                        animate
+                    );
+
+
+                    counterObserver
+                    .unobserve(
+                        counter
+                    );
+
+                }
+            );
+
+        },
+        {
+            threshold:.6
+        }
+    );
+
+
+document
+.querySelectorAll(".counter")
+.forEach(el => {
+
+    counterObserver.observe(el);
+
+});
+
+
+/* =========================
+   ACTIVE NAV
+========================= */
+
+const navLinks =
+    document.querySelectorAll(
+        ".nav-links a"
+    );
+
+
+const sections =
+    document.querySelectorAll(
+        "main section[id]"
+    );
+
+
+function updateActiveNav(){
+
+    let current = "";
+
+
+    sections.forEach(
+        section => {
+
+            const top =
+                section.offsetTop - 150;
+
+
+            if(
+                window.scrollY >= top
+            ){
+
+                current =
+                    section.id;
+
+            }
+
+        }
+    );
+
+
+    navLinks.forEach(
+        link => {
+
+            if(
+                link.getAttribute("href")
+                === "#" + current
+            ){
+
+                link.style.color =
+                    "#19e68c";
+
+            }else{
+
+                link.style.color = "";
+
+            }
+
+        }
+    );
+
+}
+
+
+window.addEventListener(
+    "scroll",
+    updateActiveNav,
+    {
+        passive:true
+    }
+);
+
+
+/* =========================
+   INITIALIZE
+========================= */
+
+applyLanguage(
+    currentLang
+);
+
+updateActiveNav();
+
+</script>
+
 </body>
 </html>
