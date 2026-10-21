@@ -157,8 +157,21 @@
         }
 
         .success-icon {
-            animation: successPop .35s ease;
+            animation: successPop .55s cubic-bezier(.2,.9,.3,1.3);
+            box-shadow: 0 0 0 8px rgba(16,185,129,.06), 0 0 32px rgba(16,185,129,.16);
         }
+        .summary-panel { animation: summaryIn .55s ease both; }
+        .summary-label { display:flex; flex-direction:column; gap:2px; }
+        .summary-label-title { color:#cbd5e1; font-size:12px; font-weight:700; animation: labelGlow 2.8s ease-in-out infinite; }
+        .summary-label-help { color:#64748b; font-size:10px; line-height:1.4; }
+        .deduction-note { text-align:right; font-size:11px; font-weight:700; color:#fbbf24; padding:10px 11px; border:1px solid rgba(245,158,11,.18); background:rgba(245,158,11,.07); border-radius:12px; animation: labelGlow 2.8s ease-in-out infinite; }
+        .success-detail-row { display:flex; align-items:center; justify-content:space-between; gap:12px; padding:9px 0; border-bottom:1px solid rgba(51,65,85,.55); text-align:left; animation: summaryIn .45s ease both; }
+        .success-detail-row:last-child { border-bottom:0; }
+        .success-detail-label { color:#94a3b8; font-size:11px; }
+        .success-detail-value { color:#f8fafc; font-size:12px; font-weight:800; text-align:right; overflow-wrap:anywhere; }
+        .success-status-pill { display:inline-flex; align-items:center; gap:7px; padding:7px 11px; border-radius:999px; color:#fbbf24; background:rgba(245,158,11,.09); border:1px solid rgba(245,158,11,.2); font-size:10px; font-weight:800; }
+        @keyframes summaryIn { from {opacity:0; transform:translateY(9px)} to {opacity:1; transform:translateY(0)} }
+        @keyframes labelGlow { 0%,100% {opacity:1} 50% {opacity:.72} }
 
         @keyframes successPop {
             0% {
@@ -442,12 +455,13 @@
 
         </div>
 
-        <div class="glass-card rounded-2xl p-4 border border-slate-800 space-y-2.5">
+        <div class="glass-card rounded-2xl p-4 border border-slate-800 space-y-3 summary-panel">
 
             <div class="flex justify-between text-xs">
 
-                <span class="text-slate-400">
-                    Amount
+                <span class="summary-label">
+                    <span class="summary-label-title">Amount</span>
+                    <span class="summary-label-help">তুমি যত টাকা তুলতে চাও</span>
                 </span>
 
                 <span
@@ -460,8 +474,9 @@
 
             <div class="flex justify-between text-xs">
 
-                <span class="text-slate-400">
-                    Fee
+                <span class="summary-label">
+                    <span class="summary-label-title">Fee</span>
+                    <span class="summary-label-help">উত্তোলনের সার্ভিস চার্জ</span>
                 </span>
 
                 <span
@@ -474,8 +489,9 @@
 
             <div class="border-t border-slate-800 pt-2.5 flex justify-between">
 
-                <span class="text-xs font-bold text-slate-300">
-                    You'll Receive
+                <span class="summary-label">
+                    <span class="summary-label-title text-slate-200">তুমি পাবে</span>
+                    <span class="summary-label-help">ওয়ালেটে পাঠানো হবে</span>
                 </span>
 
                 <span
@@ -488,9 +504,10 @@
 
             <div
                 id="total-deduction"
-                class="text-[10px] text-slate-500 text-right">
+                class="deduction-note">
 
-                Balance থেকে কাটা হবে: ৳0
+                <i class="fa-solid fa-circle-info mr-1"></i>
+                Balance থেকে মোট কাটা হবে: ৳0
 
             </div>
 
@@ -572,7 +589,7 @@
         <p class="text-[11px] text-slate-300 leading-relaxed">
 
             সর্বনিম্ন উত্তোলন পরিমাণ টাকা ৫০ এবং সর্বোচ্চ উত্তোলন পরিমাণ টাকা ১,০০,০০০।
-            ৳৫০–৳৯৯ withdrawal fee ৳১০ এবং ৳১০০ বা তার বেশি withdrawal fee ৳৫।
+            ৳৫০–৳৯৯ উত্তোলনে ফি ৳১০, আর ৳১০০ বা তার বেশি উত্তোলনে ফি ৳৫। ফি-সহ মোট টাকা তোমার ব্যালেন্স থেকে কাটা হবে।
 
         </p>
 
@@ -694,7 +711,7 @@
             <div class="flex justify-between">
 
                 <span class="text-[11px] text-slate-500">
-                    Fee
+                    Fee / সার্ভিস চার্জ
                 </span>
 
                 <span
@@ -705,10 +722,18 @@
 
             </div>
 
+            <div class="rounded-xl border border-rose-500/30 bg-rose-500/10 p-3 flex items-center justify-between gap-3">
+                <div>
+                    <p class="text-[11px] font-extrabold text-rose-300">Balance থেকে মোট কাটা হবে</p>
+                    <p class="text-[9px] text-slate-400 mt-1">Amount + Fee (দুটোই ব্যালেন্স থেকে কাটা হবে)</p>
+                </div>
+                <span id="confirm-total-deduction" class="text-base font-black text-rose-300 whitespace-nowrap">৳0</span>
+            </div>
+
             <div class="border-t border-slate-800 pt-3 flex justify-between">
 
                 <span class="text-[11px] font-bold text-slate-300">
-                    You'll Receive
+                    তুমি পাবে (Fee বাদে)
                 </span>
 
                 <span
@@ -760,11 +785,42 @@
         </h3>
 
         <p class="text-xs text-slate-400 mt-2 leading-relaxed">
-
-            আপনার withdrawal request সফলভাবে জমা হয়েছে।
-            Admin review করার পর টাকা পাঠানো হবে।
-
+            তোমার উত্তোলনের আবেদন জমা হয়েছে। Admin যাচাই করার পর টাকা পাঠানো হবে।
         </p>
+
+        <div class="success-status-pill mt-4">
+            <i class="fa-solid fa-clock pending-pulse"></i>
+            <span>আবেদনের অবস্থা: Pending Review</span>
+        </div>
+
+        <div class="mt-4 rounded-2xl border border-slate-700/70 bg-[#0b1220] px-4 py-1">
+            <div class="success-detail-row">
+                <span class="success-detail-label">পেমেন্ট মাধ্যম</span>
+                <span id="success-method" class="success-detail-value">bKash</span>
+            </div>
+            <div class="success-detail-row">
+                <span class="success-detail-label">ওয়ালেট নম্বর</span>
+                <span id="success-number" class="success-detail-value">—</span>
+            </div>
+            <div class="success-detail-row">
+                <span class="success-detail-label">উত্তোলনের পরিমাণ</span>
+                <span id="success-amount" class="success-detail-value">৳0</span>
+            </div>
+            <div class="success-detail-row">
+                <span class="success-detail-label">সার্ভিস চার্জ (Fee)</span>
+                <span id="success-fee" class="success-detail-value text-amber-400">৳0</span>
+            </div>
+            <div class="success-detail-row">
+                <span class="success-detail-label">Balance থেকে মোট কাটা</span>
+                <span id="success-total" class="success-detail-value text-rose-300">৳0</span>
+            </div>
+            <div class="success-detail-row">
+                <span class="success-detail-label">ওয়ালেটে পাবে</span>
+                <span id="success-receive" class="success-detail-value text-emerald-400">৳0</span>
+            </div>
+        </div>
+
+        <p class="text-[10px] text-slate-500 mt-3">নোট: আবেদন জমা হয়েছে—এটি টাকা পাঠানো সম্পন্ন হওয়ার নিশ্চয়তা নয়।</p>
 
         <button
             onclick="closeSuccessModal()"
@@ -2098,6 +2154,15 @@ async function() {
     if (isProcessing)
         return;
 
+    isProcessing = true;
+    const submitButton = document.getElementById("withdraw-btn");
+    if (submitButton) {
+        submitButton.disabled = true;
+        submitButton.innerHTML = `<span class="spinner mr-2"></span> Checking...`;
+    }
+
+    try {
+
 
     if (!currentUser) {
 
@@ -2227,6 +2292,10 @@ async function() {
     ).innerText =
         money(fee);
 
+    document.getElementById(
+        "confirm-total-deduction"
+    ).innerText =
+        money(total);
 
     document.getElementById(
         "confirm-receive"
@@ -2235,6 +2304,10 @@ async function() {
 
 
     openConfirmModal();
+    } finally {
+        isProcessing = false;
+        updatePendingUI();
+    }
 };
 
 
@@ -2399,6 +2472,18 @@ async function() {
             );
 
 
+        // Firestore Web SDK transactions read document references, not queries.
+        // Check pending requests with getDocs before starting the balance transaction.
+        const pendingQuery = query(
+            collection(db, "withdraws"),
+            where("uid", "==", currentUser.uid),
+            where("status", "==", "pending")
+        );
+        const pendingSnap = await getDocs(pendingQuery);
+        if (!pendingSnap.empty) {
+            throw new Error("PENDING_WITHDRAWAL");
+        }
+
         await runTransaction(
             db,
             async (transaction) => {
@@ -2522,6 +2607,15 @@ async function() {
 
         await loadWithdrawalHistory();
 
+
+        document.getElementById("success-method").innerText =
+            selectedChannelName === "bkash" ? "bKash" : "Nagad";
+        document.getElementById("success-number").innerText =
+            displayWalletNumber(number);
+        document.getElementById("success-amount").innerText = money(amount);
+        document.getElementById("success-fee").innerText = money(fee);
+        document.getElementById("success-total").innerText = money(total);
+        document.getElementById("success-receive").innerText = money(receive);
 
         const successModal =
             document.getElementById(
