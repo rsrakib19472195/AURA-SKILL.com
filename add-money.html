@@ -611,7 +611,76 @@
         </div>
 
 
-        <!-- SECURITY NOTICE -->
+
+        <!-- PAYMENT METHOD CHOOSER -->
+        <div id="payment-choice-modal"
+             class="hidden fixed inset-0 z-[100] bg-black/80 backdrop-blur-sm
+                    px-5 flex items-center justify-center">
+            <div class="glass-card w-full max-w-sm rounded-3xl p-5
+                        border border-slate-700 shadow-2xl">
+                <div class="flex items-center justify-between mb-2">
+                    <h3 class="text-base font-black text-white">Choose Deposit Method</h3>
+                    <button type="button" onclick="closePaymentChoices()"
+                            class="w-8 h-8 rounded-xl bg-slate-800 text-slate-300"
+                            aria-label="Close">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
+                <p class="text-xs text-slate-400 mb-5">
+                    আপনি কীভাবে টাকা জমা দিতে চান, সেটি নির্বাচন করুন।
+                </p>
+
+                <div class="flex items-start gap-2 rounded-xl border border-amber-500/20
+                            bg-amber-500/[.07] px-3 py-2.5 mb-3">
+                    <i class="fa-solid fa-circle-info text-amber-400 text-xs mt-0.5"></i>
+                    <p class="text-[10px] leading-relaxed text-amber-200">
+                        নেটওয়ার্ক বা গেটওয়ে সমস্যার কারণে অটো পেমেন্ট সফল না হলে দয়া করে ম্যানুয়াল ডিপোজিট অপশন ব্যবহার করুন।
+                    </p>
+                </div>
+
+                <button type="button" onclick="continueAutomaticDeposit()"
+                        class="w-full flex items-center gap-3 rounded-2xl p-4 mb-3
+                               bg-emerald-500/10 border border-emerald-500/30
+                               hover:bg-emerald-500/20 text-left transition">
+                    <span class="w-11 h-11 rounded-xl bg-emerald-500/15
+                                 text-emerald-400 flex items-center justify-center">
+                        <i class="fa-solid fa-bolt text-lg"></i>
+                    </span>
+                    <span class="flex-1">
+                        <span class="block text-sm font-extrabold text-white">Automatic Deposit</span>
+                        <span class="block text-[10px] text-slate-400 mt-1">
+                            দ্রুত ও স্বয়ংক্রিয় পেমেন্ট
+                        </span>
+                    </span>
+                    <i class="fa-solid fa-chevron-right text-emerald-400 text-xs"></i>
+                </button>
+
+                <button type="button" onclick="continueManualDeposit()"
+                        class="w-full flex items-center gap-3 rounded-2xl p-4
+                               bg-blue-500/10 border border-blue-500/30
+                               hover:bg-blue-500/20 text-left transition">
+                    <span class="w-11 h-11 rounded-xl bg-blue-500/15
+                                 text-blue-300 flex items-center justify-center">
+                        <i class="fa-solid fa-hand-holding-dollar text-lg"></i>
+                    </span>
+                    <span class="flex-1">
+                        <span class="block text-sm font-extrabold text-white">Manual Deposit</span>
+                        <span class="block text-[10px] text-slate-400 mt-1">
+                            ম্যানুয়াল ডিপোজিট রিকোয়েস্ট পাঠানোর পর আমাদের টিম তথ্যগুলো যাচাই করবে। সাধারণত ৫-১০ মিনিটের মধ্যে আপনার ওয়ালেটে টাকা যুক্ত হয়ে যাবে।
+                        </span>
+                    </span>
+                    <i class="fa-solid fa-chevron-right text-blue-300 text-xs"></i>
+                </button>
+
+                <button type="button" onclick="closePaymentChoices()"
+                        class="w-full mt-2 py-3 rounded-xl text-xs font-bold
+                               text-slate-400 hover:text-white transition">
+                    Cancel
+                </button>
+            </div>
+        </div>
+
+                <!-- SECURITY NOTICE -->
 
         <div
             class="glass-card rounded-2xl p-4
@@ -1545,44 +1614,52 @@
 
                 if (!validateAmount()) {
 
-                    if (
-                        amountInput
-                    ) {
-
-                        amountInput.focus();
-
-                    }
-
+                    if (amountInput) amountInput.focus();
                     return false;
 
                 }
 
+                const amount = Number(amountInput.value.trim());
 
-                const amount =
-                    Number(
-                        amountInput.value.trim()
-                    );
-
-
-                if (
-                    !Number.isFinite(amount)
-                ) {
-
+                if (!Number.isFinite(amount) ||
+                    amount < MIN_DEPOSIT ||
+                    amount > MAX_DEPOSIT) {
                     return false;
-
                 }
 
-
-                window.location.href =
-                    'deposit.html?amount=' +
-                    encodeURIComponent(
-                        amount.toFixed(2)
-                    );
-
+                // Valid amount থাকলে আগে method chooser দেখাবে।
+                document.getElementById('payment-choice-modal')
+                    .classList.remove('hidden');
 
                 return true;
-
             };
+
+        window.closePaymentChoices = function() {
+            document.getElementById('payment-choice-modal')
+                .classList.add('hidden');
+        };
+
+        // আগের automatic gateway flow অপরিবর্তিত রাখা হয়েছে।
+        window.continueAutomaticDeposit = function() {
+            if (!validateAmount()) {
+                closePaymentChoices();
+                return;
+            }
+
+            const amount = Number(amountInput.value.trim());
+            window.location.href = 'deposit.html?amount=' +
+                encodeURIComponent(amount.toFixed(2));
+        };
+
+        // Add Money-তে নির্বাচিত একই Amount নিয়ে Manual Deposit page খুলবে।
+        window.continueManualDeposit = function() {
+            if (!validateAmount()) {
+                closePaymentChoices();
+                return;
+            }
+            const amount = Number(amountInput.value.trim());
+            window.location.href = 'manual.html?amount=' + encodeURIComponent(amount.toFixed(2));
+        };
 
 
         /* =========================================================

@@ -178,6 +178,18 @@ body{
 .back-method{width:100%;height:47px;margin-top:11px;border:1px solid rgba(255,255,255,.08);border-radius:13px;background:rgba(255,255,255,.035);color:#b7c6c0;font-family:inherit}
 
 /* SUCCESS PAGE */
+.success-brand{display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:22px}
+.success-brand img{width:54px;height:54px;border-radius:50%;object-fit:cover;border:2px solid rgba(0,255,136,.55);box-shadow:0 0 18px rgba(0,255,136,.2)}
+.success-brand-name{text-align:left;font-size:16px;font-weight:800;line-height:1.2}
+.success-brand-sub{font-size:10px;color:#91a59b;margin-top:4px}
+.redirect-panel{margin-top:18px;padding:14px;border-radius:15px;background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.07);text-align:center}
+.redirect-line{height:5px;border-radius:99px;background:rgba(255,255,255,.1);overflow:hidden;margin-top:12px}
+.redirect-line span{display:block;width:100%;height:100%;background:linear-gradient(90deg,#00ff88,#7657ff);transform-origin:left;animation:redirectShrink 5s linear forwards}
+@keyframes redirectShrink{from{transform:scaleX(1)}to{transform:scaleX(0)}}
+.developed-by{text-align:center;color:#82968d;font-size:11px;margin:24px 0 8px;letter-spacing:.4px}
+.developed-by a{font-weight:800;text-decoration:none;color:#00ff88}
+.developed-by a span{color:#a78bfa}
+
 .success-card{
     padding:28px 18px;border-radius:22px;text-align:center;
     background:linear-gradient(145deg,rgba(0,255,136,.10),rgba(255,255,255,.02));
@@ -207,6 +219,21 @@ body{
 .toast-success{border-color:rgba(0,255,136,.3)!important}
 .toast-error{border-color:rgba(255,70,70,.3)!important}
 .toast-warning{border-color:rgba(255,205,50,.3)!important}
+
+/* APPROVAL / REJECTION CELEBRATION EFFECTS */
+#paymentFxLayer{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:999998;display:none}
+#paymentFxLayer.active{display:block}
+.fx-confetti{position:absolute;top:-18px;width:9px;height:14px;opacity:.95;animation:confettiFall var(--dur,3s) linear forwards;transform:rotate(var(--rot,0deg));border-radius:2px}
+@keyframes confettiFall{0%{transform:translate3d(0,-20px,0) rotate(0deg);opacity:1}100%{transform:translate3d(var(--drift,30px),110vh,0) rotate(760deg);opacity:.2}}
+.fx-particle{position:absolute;bottom:-20px;width:7px;height:7px;border-radius:50%;background:var(--particle,#ff6038);box-shadow:0 0 12px var(--particle,#ff6038);animation:particleRise var(--dur,2.4s) ease-out forwards}
+@keyframes particleRise{0%{transform:translate3d(0,0,0) scale(.6);opacity:0}15%{opacity:1}100%{transform:translate3d(var(--drift,20px),-105vh,0) scale(0);opacity:0}}
+.success-card{animation:successCardEnter .65s cubic-bezier(.2,.9,.25,1.25) both}
+@keyframes successCardEnter{0%{opacity:0;transform:translateY(28px) scale(.88)}70%{opacity:1;transform:translateY(-4px) scale(1.02)}100%{transform:translateY(0) scale(1)}}
+#statusView.rejected-shake .status-card{animation:rejectShake .48s ease-in-out}
+@keyframes rejectShake{0%,100%{transform:translateX(0)}20%,60%{transform:translateX(-7px)}40%,80%{transform:translateX(7px)}}
+#statusView.rejected-shake .status-card{border-color:rgba(255,100,55,.4);box-shadow:0 0 28px rgba(255,80,50,.1)}
+@media(prefers-reduced-motion:reduce){.fx-confetti,.fx-particle,.success-card,#statusView.rejected-shake .status-card{animation-duration:.01ms!important;animation-iteration-count:1!important}}
+
 @media(max-width:360px){
     .gateway-grid{grid-template-columns:1fr}
     .loading-logo-wrap{width:135px;height:135px}
@@ -368,7 +395,7 @@ body{
                     <div id="rejectReason" class="reason"><strong>কারণ:</strong> <span id="reasonText">—</span></div>
 
                     <div id="rejectedActions" style="display:none;margin-top:15px;gap:10px">
-                        <button class="verify-btn" onclick="retryPayment()"><i class="fa-solid fa-rotate-right"></i> Retry Payment</button>
+                        <button id="retryVerifyBtn" class="verify-btn" onclick="retryPayment()"><i class="fa-solid fa-shield-check"></i> Verify Again (0/3)</button>
                         <button class="support-btn" style="background:rgba(255,180,0,.1);border-color:rgba(255,180,0,.3);color:#ffd45c" onclick="sendToAdminReview()"><i class="fa-solid fa-user-shield"></i> Send to Admin Review</button>
                     </div>
 
@@ -380,6 +407,10 @@ body{
             <!-- NEW SUCCESS VIEW -->
             <section id="successView">
                 <div class="success-card">
+                    <div class="success-brand">
+                        <img src="https://videotourl.com/images/1789792991627-2a906ffa-fbc0-4f79-9d9b-8dddb80ca667.jpg" alt="Aura Skill Logo" onerror="this.style.display='none'">
+                        <div><div class="success-brand-name">AURA SKILL</div><div class="success-brand-sub"><i class="fa-solid fa-shield-halved"></i> Verified · Secure Payment</div></div>
+                    </div>
                     <div class="success-icon"><i class="fa-solid fa-check"></i></div>
                     <div class="success-title">Deposit Successful!</div>
                     <div class="success-subtitle">আপনার ডিপোজিট সফলভাবে অনুমোদিত হয়েছে।</div>
@@ -400,16 +431,19 @@ body{
                         <i class="fa-solid fa-wallet"></i> Go to Wallet
                     </button>
 
-                    <button type="button" class="success-action success-back-btn" onclick="backFromSuccess()">
-                        <i class="fa-solid fa-arrow-left"></i> Back to Payment
-                    </button>
+                    <div class="redirect-panel">
+                        <div><i class="fa-solid fa-circle-notch fa-spin" style="color:#00ff88;margin-right:7px"></i> Redirecting to Wallet in <strong><span id="redirectSeconds">5</span> seconds</strong></div>
+                        <div class="redirect-line"><span></span></div>
+                    </div>
                 </div>
             </section>
 
         </div>
     </main>
+    <div class="developed-by">Developed by <a href="https://rs.auraarmantour.shop" target="_blank" rel="noopener noreferrer"><span>RS</span> RAKIB</a></div>
 </div>
 
+<div id="paymentFxLayer" aria-hidden="true"></div>
 <div id="toast"></div>
 
 <script type="module">
@@ -525,6 +559,62 @@ function showBrowserNotification(title, bodyText) {
     }
 }
 
+/* CELEBRATION FX + DISTINCT AUDIO */
+function stopPaymentFx(){
+    const layer = $('paymentFxLayer');
+    if(layer){ layer.classList.remove('active'); layer.innerHTML=''; }
+    clearTimeout(fxCleanupTimer);
+}
+function launchPaymentFx(kind){
+    const layer = $('paymentFxLayer');
+    if(!layer) return;
+    stopPaymentFx();
+    layer.classList.add('active');
+    const count = kind === 'success' ? 100 : 42;
+    for(let i=0;i<count;i++){
+        const particle = document.createElement('span');
+        if(kind === 'success'){
+            particle.className='fx-confetti';
+            const colors=['#00ff88','#ffdf4d','#ff5ca8','#61d8ff','#b58cff','#ffffff','#ff8a3d'];
+            particle.style.left=(Math.random()*100)+'%';
+            particle.style.background=colors[i%colors.length];
+            particle.style.setProperty('--dur',(2.1+Math.random()*2.2)+'s');
+            particle.style.setProperty('--drift',((Math.random()-.5)*190)+'px');
+            particle.style.setProperty('--rot',(Math.random()*360)+'deg');
+            particle.style.animationDelay=(Math.random()*.8)+'s';
+        }else{
+            particle.className='fx-particle';
+            const colors=['#ff493d','#ff7b24','#ffb13b','#ff5d55'];
+            particle.style.left=(Math.random()*100)+'%';
+            particle.style.setProperty('--particle',colors[i%colors.length]);
+            particle.style.setProperty('--dur',(1.5+Math.random()*1.7)+'s');
+            particle.style.setProperty('--drift',((Math.random()-.5)*140)+'px');
+            particle.style.animationDelay=(Math.random()*.7)+'s';
+        }
+        layer.appendChild(particle);
+    }
+    fxCleanupTimer=setTimeout(stopPaymentFx,kind==='success'?5200:3000);
+}
+function playRejectSound(){
+    try{
+        const Ctx=window.AudioContext||window.webkitAudioContext;
+        if(!Ctx) return;
+        const ctx=new Ctx();
+        const now=ctx.currentTime;
+        [[440,0],[330,.16],[220,.34]].forEach(([freq,delay])=>{
+            const osc=ctx.createOscillator(),gain=ctx.createGain();
+            osc.type='triangle';
+            osc.frequency.setValueAtTime(freq,now+delay);
+            gain.gain.setValueAtTime(.0001,now+delay);
+            gain.gain.exponentialRampToValueAtTime(.12,now+delay+.025);
+            gain.gain.exponentialRampToValueAtTime(.0001,now+delay+.19);
+            osc.connect(gain);gain.connect(ctx.destination);
+            osc.start(now+delay);osc.stop(now+delay+.21);
+        });
+        setTimeout(()=>ctx.close().catch(()=>{}),900);
+    }catch(e){console.warn('Reject sound error:',e);}
+}
+
 /* SUCCESS SOUND */
 function playSuccessSound() {
     try {
@@ -577,6 +667,10 @@ let currentTransactionId = '';
 let currentTransactionData = null;
 let statusUnsubscribe = null;
 let loadingHidden = false;
+let rejectedVerifyAttempts = 0;
+let redirectInterval = null;
+let lastEffectStatus = '';
+let fxCleanupTimer = null;
 
 const $ = id => document.getElementById(id);
 
@@ -734,6 +828,8 @@ async function loadSettings() {
 
 /* SELECT PAYMENT METHOD */
 window.selectMethod = function(name, number) {
+    lastEffectStatus = '';
+    stopPaymentFx();
     selectedGateway = name;
     selectedNumber = number;
     requestNotificationPermission();
@@ -1103,7 +1199,6 @@ window.verifyTransaction = async function() {
                 }
             });
 
-            playSuccessSound();
             showBrowserNotification('ডিপোজিট সফল!',`আপনার ৳${currentAmount} ডিপোজিট সফলভাবে অনুমোদিত হয়েছে।`);
             sendOneSignalPush(currentUser.uid,'ডিপোজিট সফল! 🎉',`আপনার ৳${currentAmount} ডিপোজিট সফলভাবে অনুমোদিত হয়েছে এবং ওয়ালেটে যোগ হয়েছে।`);
 
@@ -1116,7 +1211,7 @@ window.verifyTransaction = async function() {
             showSuccessScreen(currentTransactionData);
 
         } else {
-            const reason = 'অ্যামাউন্ট অথবা মেসেজ ডাটার সাথে মিলেনি!';
+            const reason = 'আপনার পেমেন্টের তথ্য যাচাই করা যায়নি। অনুগ্রহ করে Transaction ID ও পেমেন্টের পরিমাণ পুনরায় পরীক্ষা করুন। প্রয়োজন হলে Admin Review-এ অনুরোধ পাঠান।';
             await updateDoc(doc(db,'transactions',currentTransactionId),{status:'rejected',rejectReason:reason});
             showToast("অ্যামাউন্ট অথবা মেসেজ ডাটার সাথে মিলেনি, ট্রানজেকশন রিজেক্ট করা হয়েছে!","error");
 
@@ -1132,14 +1227,20 @@ window.verifyTransaction = async function() {
     } catch(error) {
         console.error('Deposit submit error:',error);
         showToast('Deposit request submit করা যায়নি। আবার চেষ্টা করুন।','error');
-        btn.disabled = false;
-        btn.innerHTML = originalHTML;
+    } finally {
+        // Always clear the loading label, including early returns after verification finishes.
+        if (btn) {
+            btn.innerHTML = originalHTML;
+            const latestTrx = $('trxIdInput')?.value.trim() || '';
+            btn.disabled = !selectedGateway || latestTrx.length < 4 || latestTrx.length > 100;
+        }
     }
 };
 
 /* NEW SUCCESS SCREEN — NO AUTO REDIRECT */
 function showSuccessScreen(tx) {
     clearInterval(countdownTimerInterval);
+    clearInterval(redirectInterval);
 
     const loadingEl = $('paymentLoading');
     if (loadingEl) loadingEl.classList.add('hide');
@@ -1153,22 +1254,36 @@ function showSuccessScreen(tx) {
     if ($('instructionView')) $('instructionView').style.display = 'none';
     if ($('statusView')) $('statusView').style.display = 'none';
     if ($('successView')) $('successView').style.display = 'block';
+    if (lastEffectStatus !== 'approved') { launchPaymentFx('success'); playSuccessSound(); }
+    lastEffectStatus = 'approved';
 
     if ($('successAmount')) $('successAmount').textContent = '৳' + Number(tx.amount || 0).toLocaleString('en-BD');
     if ($('successInvoice')) $('successInvoice').textContent = tx.invoice || '—';
     if ($('successGateway')) $('successGateway').textContent = configs[tx.gateway]?.label || tx.gateway || '—';
     if ($('successTrx')) $('successTrx').textContent = tx.trxId || tx.transactionId || '—';
 
+    let seconds = 5;
+    if ($('redirectSeconds')) $('redirectSeconds').textContent = seconds;
+    redirectInterval = setInterval(() => {
+        seconds--;
+        if ($('redirectSeconds')) $('redirectSeconds').textContent = Math.max(0,seconds);
+        if (seconds <= 0) {
+            clearInterval(redirectInterval);
+            window.location.href = 'wallet.html';
+        }
+    },1000);
     updateStepper(3);
 }
 
 /* WALLET NAVIGATION ONLY WHEN BUTTON IS CLICKED */
 window.goToWallet = function() {
+    clearInterval(redirectInterval);
     window.location.href = 'wallet.html';
 };
 
 /* BACK FROM SUCCESS */
 window.backFromSuccess = function() {
+    clearInterval(redirectInterval);
     if (statusUnsubscribe) {
         statusUnsubscribe();
         statusUnsubscribe = null;
@@ -1188,7 +1303,14 @@ function showStatusScreen(tx) {
     if ($('methodSelectionView')) $('methodSelectionView').style.display = 'none';
     if ($('instructionView')) $('instructionView').style.display = 'none';
     if ($('successView')) $('successView').style.display = 'none';
-    if ($('statusView')) $('statusView').style.display = 'block';
+    if ($('statusView')) {
+        $('statusView').style.display = 'block';
+        $('statusView').classList.remove('rejected-shake');
+        if (['rejected','reject','failed','declined'].includes(normalizeStatus(tx.status))) {
+            void $('statusView').offsetWidth;
+            $('statusView').classList.add('rejected-shake');
+        }
+    }
 
     if ($('statusInvoice')) $('statusInvoice').textContent = tx.invoice || '—';
     if ($('statusAmount')) $('statusAmount').textContent = '৳' + Number(tx.amount || 0).toLocaleString('en-BD');
@@ -1214,6 +1336,7 @@ function applyStatusUI(status,tx) {
     icon.className = 'status-icon';
     if (reasonBox) reasonBox.style.display = 'none';
     if (rejectedActions) rejectedActions.style.display = 'none';
+    if ($('retryVerifyBtn')) { $('retryVerifyBtn').disabled = rejectedVerifyAttempts >= 3; $('retryVerifyBtn').innerHTML = `<i class="fa-solid fa-shield-check"></i> Verify Again (${rejectedVerifyAttempts}/3)`; }
 
     if (['approved','success','completed','complete','paid'].includes(normalized)) {
         showSuccessScreen(tx);
@@ -1221,6 +1344,8 @@ function applyStatusUI(status,tx) {
     }
 
     if (['rejected','reject','failed','declined'].includes(normalized)) {
+        if (lastEffectStatus !== 'rejected') { launchPaymentFx('reject'); playRejectSound(); }
+        lastEffectStatus = 'rejected';
         icon.classList.add('status-rejected');
         icon.innerHTML = '<i class="fa-solid fa-circle-xmark"></i>';
         if (title) title.textContent = 'Deposit Rejected';
@@ -1241,29 +1366,67 @@ function applyStatusUI(status,tx) {
     if (value) value.textContent = 'Under Review';
 }
 
-/* RETRY PAYMENT */
-window.retryPayment = function() {
-    if (statusUnsubscribe) {
-        statusUnsubscribe();
-        statusUnsubscribe = null;
+/* VERIFY AGAIN AFTER REJECTION — MAX 3 ATTEMPTS */
+window.retryPayment = async function() {
+    if (rejectedVerifyAttempts >= 3) {
+        showToast('৩ বার Verify করা হয়েছে। এখন Admin Review ব্যবহার করুন।','error');
+        const retryBtn = $('retryVerifyBtn');
+        if (retryBtn) retryBtn.disabled = true;
+        return;
     }
-
-    if ($('statusView')) $('statusView').style.display = 'none';
-    if ($('successView')) $('successView').style.display = 'none';
-    if ($('instructionView')) $('instructionView').style.display = 'block';
-
-    const trxInput = $('trxIdInput');
-    if (trxInput) trxInput.value = '';
-
-    const verifyBtn = $('verifyBtn');
-    if (verifyBtn) {
-        verifyBtn.disabled = true;
-        verifyBtn.innerHTML = '<i class="fa-solid fa-shield-check"></i> Verify &amp; Submit';
+    if (!currentTransactionId || !currentTransactionData || !currentUser) {
+        showToast('আগের transaction পাওয়া যায়নি।','error');
+        return;
     }
-
-    updateStepper(2);
-    validateTrx();
-    startCountdownTimer();
+    rejectedVerifyAttempts++;
+    const retryBtn = $('retryVerifyBtn');
+    if (retryBtn) {
+        retryBtn.disabled = true;
+        retryBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Verifying...';
+    }
+    try {
+        const trx = String(currentTransactionData.trxId || currentTransactionData.transactionId || '').toUpperCase().replace(/\s+/g,'');
+        const twixoSnap = await getDocs(query(collection(db,'twixoMessages'),where('trx_id','==',trx)));
+        let valid = false;
+        twixoSnap.forEach(ds => {
+            const data = ds.data() || {};
+            const amountMatch = Number(data.amount) === Number(currentTransactionData.amount || currentAmount);
+            const message = String(data.message || '');
+            const gatewayMatch = String(currentTransactionData.gateway || selectedGateway).toLowerCase() === 'nagad'
+                ? message.includes('Nagad Transaction') : message.includes('Bkash Transaction');
+            if (amountMatch && gatewayMatch && data.consent === true && String(data.type || '').toLowerCase() === 'sms') valid = true;
+        });
+        const txRef = doc(db,'transactions',currentTransactionId);
+        if (valid) {
+            const userRef = doc(db,'users',currentUser.uid);
+            await runTransaction(db,async transaction => {
+                const snap = await transaction.get(txRef);
+                if (!snap.exists()) throw new Error('Transaction not found');
+                const data = snap.data();
+                if (normalizeStatus(data.status) === 'approved' || data.balanceAdded) return;
+                transaction.update(txRef,{status:'approved',balanceAdded:true,retryVerifyAttempts:rejectedVerifyAttempts});
+                transaction.update(userRef,{balance:increment(Number(data.amount || currentAmount))});
+            });
+            currentTransactionData.status = 'approved';
+            currentTransactionData.balanceAdded = true;
+            showToast('Payment verified successfully!','success');
+            showSuccessScreen(currentTransactionData);
+        } else {
+            await updateDoc(txRef,{status:'rejected',rejectReason:'আপনার পেমেন্টের তথ্য যাচাই করা যায়নি। অনুগ্রহ করে Transaction ID ও পেমেন্টের পরিমাণ পুনরায় পরীক্ষা করুন। প্রয়োজন হলে Admin Review-এ অনুরোধ পাঠান।',retryVerifyAttempts:rejectedVerifyAttempts});
+            currentTransactionData.status = 'rejected';
+            currentTransactionData.retryVerifyAttempts = rejectedVerifyAttempts;
+            showToast(`Verify ব্যর্থ হয়েছে (${rejectedVerifyAttempts}/3)।`,'error');
+            showStatusScreen(currentTransactionData);
+        }
+    } catch(err) {
+        console.error('Retry verify error:',err);
+        showToast('Verify করা যায়নি। আবার চেষ্টা করুন।','error');
+    } finally {
+        if (retryBtn) {
+            retryBtn.innerHTML = `<i class="fa-solid fa-shield-check"></i> Verify Again (${rejectedVerifyAttempts}/3)`;
+            retryBtn.disabled = rejectedVerifyAttempts >= 3;
+        }
+    }
 };
 
 /* SEND TO ADMIN REVIEW */
