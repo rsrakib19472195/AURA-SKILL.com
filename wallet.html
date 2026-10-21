@@ -2510,7 +2510,8 @@ function(type){
     title.textContent = guideTitles[type] || "How to Guide";
     modal.classList.add("active");
     document.body.style.overflow = "hidden";
-    iframe.src = "https://www.youtube-nocookie.com/embed/UO7HJCRrJDU?autoplay=1&rel=0";
+    // Requests 1080p when available; YouTube may still choose quality automatically.
+    iframe.src = "https://www.youtube-nocookie.com/embed/UO7HJCRrJDU?autoplay=1&rel=0&vq=hd1080";
 };
 
 window.closeGuideVideo =
