@@ -171,8 +171,98 @@ body{
     letter-spacing:4px;
 }
 
-.stat-card{
+ .stat-card{
     min-width:0;
+}
+
+/* Animated wallet dashboard: keeps the existing layout and colors */
+main > div{
+    animation:walletEnter .65s cubic-bezier(.2,.75,.25,1) both;
+}
+main > div:nth-child(1){animation-delay:.04s}
+main > div:nth-child(2){animation-delay:.12s}
+main > div:nth-child(3){animation-delay:.20s}
+main > div:nth-child(4){animation-delay:.28s}
+main > div:nth-child(5){animation-delay:.36s}
+main > div:nth-child(6){animation-delay:.44s}
+
+@keyframes walletEnter{
+    from{opacity:0;transform:translateY(18px) scale(.985);filter:blur(3px)}
+    to{opacity:1;transform:translateY(0) scale(1);filter:blur(0)}
+}
+
+.glass-card{
+    transition:transform .28s ease, border-color .28s ease, box-shadow .28s ease;
+}
+
+.glass-card:hover{
+    border-color:rgba(71,85,105,.85);
+    box-shadow:0 12px 32px rgba(0,0,0,.18);
+}
+
+main a[href="add-money.html"],
+main a[href="withdraw.html"],
+#apply-gift-btn{
+    position:relative;
+    overflow:hidden;
+    transform:translateZ(0);
+    transition:transform .22s ease, filter .22s ease, box-shadow .22s ease;
+}
+
+main a[href="add-money.html"]::after,
+main a[href="withdraw.html"]::after,
+#apply-gift-btn::after{
+    content:"";
+    position:absolute;
+    top:-60%;left:-75%;width:45%;height:220%;
+    transform:rotate(22deg);
+    background:linear-gradient(90deg,transparent,rgba(255,255,255,.22),transparent);
+    transition:left .55s ease;
+    pointer-events:none;
+}
+
+main a[href="add-money.html"]:hover::after,
+main a[href="withdraw.html"]:hover::after,
+#apply-gift-btn:hover::after{left:140%}
+
+main a[href="add-money.html"]:hover,
+main a[href="withdraw.html"]:hover,
+#apply-gift-btn:hover{transform:translateY(-2px);filter:brightness(1.08)}
+
+main a[href="add-money.html"]:active,
+main a[href="withdraw.html"]:active,
+#apply-gift-btn:active{transform:scale(.97)}
+
+.stat-card{animation:statFloatIn .7s cubic-bezier(.2,.75,.25,1) both}
+.stat-card:nth-child(1){animation-delay:.18s}
+.stat-card:nth-child(2){animation-delay:.27s}
+.stat-card i{transition:transform .35s ease}
+.stat-card:hover i{transform:translateY(-3px) rotate(-7deg)}
+
+#wallet-balance,.stat-card p[id^="total-"]{
+    display:inline-block;
+    font-variant-numeric:tabular-nums;
+}
+
+.number-pop{animation:numberPop .42s cubic-bezier(.2,.8,.2,1)}
+@keyframes numberPop{
+    0%{transform:translateY(5px) scale(.96);opacity:.45}
+    65%{transform:translateY(-1px) scale(1.025);opacity:1}
+    100%{transform:translateY(0) scale(1)}
+}
+
+@keyframes statFloatIn{
+    from{opacity:0;transform:translateY(12px)}
+    to{opacity:1;transform:translateY(0)}
+}
+
+@media (prefers-reduced-motion:reduce){
+    *,*::before,*::after{
+        animation-duration:.01ms!important;
+        animation-iteration-count:1!important;
+        scroll-behavior:auto!important;
+        transition-duration:.01ms!important;
+    }
 }
 
 </style>
@@ -874,6 +964,60 @@ function getNumber(
 
 
 /* =========================================
+   ANIMATED DASHBOARD NUMBERS
+========================================= */
+
+function animateMoneyValue(element, targetValue, prefix = "৳"){
+
+    if(!element) return;
+
+    const target = Number(targetValue) || 0;
+    const reducedMotion = window.matchMedia &&
+        window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    if(reducedMotion){
+        element.textContent = prefix + target.toLocaleString("en-US");
+        return;
+    }
+
+    if(element._moneyAnimationFrame){
+        cancelAnimationFrame(element._moneyAnimationFrame);
+    }
+
+    const startValue = Number(element.dataset.numericValue || 0);
+    const difference = target - startValue;
+    const duration = 650;
+    const startTime = performance.now();
+
+    element.dataset.numericValue = String(target);
+    element.classList.remove("number-pop");
+    void element.offsetWidth;
+    element.classList.add("number-pop");
+
+    if(Math.abs(difference) < 0.001){
+        element.textContent = prefix + target.toLocaleString("en-US");
+        return;
+    }
+
+    const step = now => {
+        const progress = Math.min((now - startTime) / duration, 1);
+        const eased = 1 - Math.pow(1 - progress, 3);
+        const value = startValue + difference * eased;
+        element.textContent = prefix + Math.round(value).toLocaleString("en-US");
+
+        if(progress < 1){
+            element._moneyAnimationFrame = requestAnimationFrame(step);
+        }else{
+            element.textContent = prefix + target.toLocaleString("en-US");
+            element._moneyAnimationFrame = null;
+        }
+    };
+
+    element._moneyAnimationFrame = requestAnimationFrame(step);
+}
+
+
+/* =========================================
    TIME
 ========================================= */
 
@@ -1010,16 +1154,22 @@ function displayBalance(){
 
     if(balanceVisible){
 
-        balanceElement.textContent =
-            currentBalance.toLocaleString(
-                "en-US"
-            );
+        animateMoneyValue(
+            balanceElement,
+            currentBalance,
+            ""
+        );
 
         balanceElement.classList.remove(
             "balance-hidden"
         );
 
     }else{
+
+        if(balanceElement._moneyAnimationFrame){
+            cancelAnimationFrame(balanceElement._moneyAnimationFrame);
+            balanceElement._moneyAnimationFrame = null;
+        }
 
         balanceElement.textContent =
             "••••";
@@ -1502,22 +1652,22 @@ async function loadWalletActivity(){
 
         if(depositElement){
 
-            depositElement.textContent =
-                "৳" +
-                totalDeposit.toLocaleString(
-                    "en-US"
-                );
+            animateMoneyValue(
+                depositElement,
+                totalDeposit,
+                "৳"
+            );
 
         }
 
 
         if(withdrawElement){
 
-            withdrawElement.textContent =
-                "৳" +
-                totalWithdraw.toLocaleString(
-                    "en-US"
-                );
+            animateMoneyValue(
+                withdrawElement,
+                totalWithdraw,
+                "৳"
+            );
 
         }
 
@@ -1962,6 +2112,50 @@ async function(){
                     giftSnap.data();
 
 
+                // Reject codes disabled by the admin.
+                if (
+                    giftData.active === false ||
+                    giftData.isActive === false ||
+                    ["inactive", "disabled", "expired", "blocked"].includes(
+                        String(giftData.status || "").trim().toLowerCase()
+                    )
+                ) {
+                    throw new Error(
+                        "এই গিফট কোডটি বর্তমানে নিষ্ক্রিয়।"
+                    );
+                }
+
+
+                // Support common expiry fields without changing the stored schema.
+                const expiryValue =
+                    giftData.expiresAt ??
+                    giftData.expiryDate ??
+                    giftData.expiresOn ??
+                    giftData.expiry;
+
+                if (expiryValue !== undefined && expiryValue !== null && expiryValue !== "") {
+                    let expiryTime = NaN;
+
+                    if (typeof expiryValue?.toDate === "function") {
+                        expiryTime = expiryValue.toDate().getTime();
+                    } else if (expiryValue instanceof Date) {
+                        expiryTime = expiryValue.getTime();
+                    } else if (typeof expiryValue === "number") {
+                        expiryTime = expiryValue < 1000000000000
+                            ? expiryValue * 1000
+                            : expiryValue;
+                    } else {
+                        expiryTime = new Date(expiryValue).getTime();
+                    }
+
+                    if (Number.isFinite(expiryTime) && Date.now() > expiryTime) {
+                        throw new Error(
+                            "এই গিফট কোডটির মেয়াদ শেষ হয়ে গেছে।"
+                        );
+                    }
+                }
+
+
                 const amount =
                     Number(
                         giftData.amount || 0
@@ -2021,10 +2215,12 @@ async function(){
                 }
 
 
+                // Codes without a valid use limit default to one-time use.
+                const configuredMaxUses = Number(giftData.maxUses);
                 const maxUses =
-                    Number(
-                        giftData.maxUses || 0
-                    );
+                    Number.isFinite(configuredMaxUses) && configuredMaxUses > 0
+                        ? Math.floor(configuredMaxUses)
+                        : 1;
 
 
                 const currentUses =
