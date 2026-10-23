@@ -38,11 +38,69 @@
             border:1px solid rgba(30,41,59,.9);
         }
 
-        .glow-effect:hover {
-            box-shadow:0 0 25px rgba(59,130,246,.2);
-            border-color:rgba(59,130,246,.5);
-            transform:translateY(-2px);
-            transition:all .25s ease-in-out;
+        .glow-effect {
+            transition: border-color .18s ease, box-shadow .18s ease;
+        }
+
+        @media (hover:hover) and (pointer:fine) {
+            .glow-effect:hover {
+                box-shadow:0 0 18px rgba(59,130,246,.14);
+                border-color:rgba(59,130,246,.5);
+                transform:translateY(-1px);
+            }
+        }
+
+        @media (max-width: 640px) {
+            .glass-card,
+            #toast-container .toast,
+            header,
+            nav {
+                -webkit-backdrop-filter:none;
+                backdrop-filter:none;
+            }
+        }
+
+        /* Notice board */
+        #notice-modal {
+            position:fixed;
+            inset:0;
+            z-index:100000;
+            display:none;
+            align-items:center;
+            justify-content:center;
+            padding:18px;
+            background:rgba(2,6,23,.82);
+            -webkit-backdrop-filter:blur(8px);
+            backdrop-filter:blur(8px);
+        }
+        #notice-card {
+            width:100%;
+            max-width:390px;
+            max-height:min(82vh,680px);
+            overflow:hidden;
+            border:1px solid rgba(96,165,250,.35);
+            border-radius:24px;
+            background:linear-gradient(155deg,#111c32 0%,#080d19 70%);
+            box-shadow:0 24px 80px rgba(0,0,0,.55);
+            animation:noticePop .2s ease-out;
+        }
+        #notice-message {
+            white-space:pre-wrap;
+            overflow-wrap:anywhere;
+            line-height:1.75;
+            max-height:42vh;
+            overflow-y:auto;
+        }
+        @keyframes noticePop {
+            from { opacity:0; transform:translateY(10px) scale(.98); }
+            to { opacity:1; transform:translateY(0) scale(1); }
+        }
+        @media (max-width:640px) {
+            #notice-modal { -webkit-backdrop-filter:none; backdrop-filter:none; }
+        }
+
+        #app-loader {
+            transition: opacity .15s ease;
         }
 
         @keyframes pulseLive {
@@ -190,15 +248,48 @@
 </div>
 
 
+<!-- FIRESTORE NOTICE BOARD -->
+<div id="notice-modal" role="dialog" aria-modal="true" aria-labelledby="notice-title">
+    <div id="notice-card">
+        <div class="px-5 pt-5 pb-4 border-b border-blue-400/15 bg-blue-500/5">
+            <div class="flex items-center gap-3">
+                <div class="w-11 h-11 rounded-2xl flex items-center justify-center bg-blue-500/15 border border-blue-400/25 text-blue-300 text-xl shrink-0">
+                    <i class="fa-solid fa-bullhorn"></i>
+                </div>
+                <div class="min-w-0 flex-1">
+                    <p class="text-[10px] uppercase tracking-[.22em] font-extrabold text-blue-300">Important Notice</p>
+                    <h2 id="notice-title" class="text-lg font-extrabold text-white break-words">Notice Board</h2>
+                </div>
+                <button type="button" onclick="closeNoticeBoard(false)" aria-label="Close notice" class="w-9 h-9 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-slate-300 flex items-center justify-center shrink-0">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+        </div>
+        <div class="p-5">
+            <div id="notice-message" class="text-sm text-slate-200"></div>
+            <label class="mt-5 flex items-center gap-3 text-xs text-slate-400 cursor-pointer select-none">
+                <input id="notice-today-check" type="checkbox" class="w-4 h-4 accent-blue-500">
+                <span>আজ আর দেখাবে না</span>
+            </label>
+            <button type="button" onclick="closeNoticeBoard()" class="mt-5 w-full rounded-xl py-3 px-4 bg-blue-600 hover:bg-blue-500 active:scale-[.99] text-white text-sm font-extrabold shadow-lg shadow-blue-900/30 transition">
+                ঠিক আছে, Close করুন
+            </button>
+        </div>
+    </div>
+</div>
+
 <!-- LOADER -->
 <div id="app-loader"
      class="fixed inset-0 z-50 flex flex-col items-center justify-center bg-[#050811] space-y-4">
 
-    <div class="w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
-
-    <p class="text-xs tracking-widest text-slate-400 font-semibold uppercase">
-        লোড হচ্ছে...
-    </p>
+    <div class="relative w-16 h-16 flex items-center justify-center">
+        <div class="absolute inset-0 rounded-full border-2 border-blue-500/30 border-t-blue-400 animate-spin"></div>
+        <img src="https://videotourl.com/images/1789792991627-2a906ffa-fbc0-4f79-9d9b-8dddb80ca667.jpg"
+             alt="Aura Skill"
+             class="w-11 h-11 rounded-full object-cover"
+             fetchpriority="high">
+    </div>
+    <p class="text-xs tracking-widest text-slate-400 font-semibold uppercase">লোড হচ্ছে...</p>
 
 </div>
 
@@ -346,8 +437,14 @@
 
         </div>
 
-        <div id="sections-grid"
-             class="space-y-3">
+        <div id="sections-grid" class="space-y-3">
+            <div id="home-content-loader" class="flex flex-col items-center justify-center py-10 gap-3" role="status" aria-live="polite">
+                <div class="relative w-12 h-12 flex items-center justify-center">
+                    <div class="absolute inset-0 rounded-full border-2 border-blue-500/30 border-t-blue-400 animate-spin"></div>
+                    <img src="https://videotourl.com/images/1789792991627-2a906ffa-fbc0-4f79-9d9b-8dddb80ca667.jpg" alt="Aura Skill" class="w-8 h-8 rounded-full object-cover" loading="eager">
+                </div>
+                <p class="text-xs font-semibold tracking-wide text-slate-400">Tournaments loading...</p>
+            </div>
         </div>
 
     </div>
@@ -454,6 +551,19 @@
     </a>
 
 
+    <a href="shop.html"
+       class="flex flex-col items-center text-slate-400 hover:text-blue-400 transition space-y-1"
+       aria-label="Shop">
+
+        <i class="fa-solid fa-store text-base"></i>
+
+        <span class="text-[10px] font-semibold">
+            SHOP
+        </span>
+
+    </a>
+
+
     <a href="wallet.html"
        class="flex flex-col items-center text-slate-400 hover:text-blue-400 transition space-y-1">
 
@@ -479,6 +589,19 @@
 
 </nav>
 
+
+<script>
+/* Keep the loader until primary home content is ready; use a safety timeout only. */
+(() => {
+    window.__hideAppLoader = function() {
+        const loader = document.getElementById("app-loader");
+        if (!loader) return;
+        loader.style.display = "none";
+        loader.setAttribute("aria-hidden", "true");
+    };
+    window.setTimeout(() => window.__hideAppLoader?.(), 1800);
+})();
+</script>
 
 <script type="module">
 
@@ -1165,13 +1288,15 @@ onAuthStateChanged(
     auth,
     async (user) => {
 
-        const blocked =
-            await initialStartupPromise;
-
+        /*
+         * Wait for the maintenance/update decision before redirecting
+         * unauthenticated users, so a maintenance screen is not skipped.
+         * The loader has its own one-second cutoff and does not wait here.
+         */
+        const blocked = await initialStartupPromise;
         if (blocked) {
             return;
         }
-
 
         /*
          * No Firebase user
@@ -1202,94 +1327,119 @@ onAuthStateChanged(
          * =========================================
          */
 
-        const allowedToContinue =
-            await checkGlobalLogoutBeforeAppStart();
+        currentUserUid = user.uid;
 
+        /*
+         * Start tournament rendering immediately in parallel with the
+         * global-session security check. This avoids waiting for an extra
+         * Firestore round-trip before the first home content appears.
+         * If the session check rejects the user, its redirect still wins.
+         */
+        const firstTournamentRender = loadAllData().catch(err => {
+            console.error("Tournament-first load error:", err);
+        });
+        const sessionCheck = checkGlobalLogoutBeforeAppStart();
 
+        /* Non-critical user data and permissions are background work. */
+        Promise.resolve().then(() => requestNotificationPermission()).catch(() => {});
+        fetchUserData(user.uid).catch(err => console.error("User data load error:", err));
+
+        const allowedToContinue = await sessionCheck;
         if (!allowedToContinue) {
+            window.__hideAppLoader?.();
             return;
         }
 
-
-        /*
-         * Live global logout listener
-         */
         startGlobalLogoutListener();
 
-
-        currentUserUid =
-            user.uid;
-
-
-        requestNotificationPermission();
-
-
-        const safetyTimer =
-            setTimeout(() => {
-
-                const loader =
-                    document.getElementById(
-                        "app-loader"
-                    );
-
-                if (
-                    loader &&
-                    loader.style.display !==
-                    "none"
-                ) {
-
-                    loader.style.display =
-                        "none";
-                }
-
-            }, 6000);
-
-
         try {
-
-            await Promise.all([
-                fetchUserData(user.uid),
-                loadAllData()
+            // Wait briefly for tournament data; the page remains usable if Firebase is slow.
+            await Promise.race([
+                firstTournamentRender,
+                new Promise(resolve => window.setTimeout(resolve, 1800))
             ]);
-
-
-            if (
-                !globalLogoutHandled
-            ) {
-
-                initRealtimeListeners(
-                    user.uid
-                );
-            }
-
-
-        } catch (err) {
-
-            console.error(
-                "Initialization error:",
-                err
-            );
-
         } finally {
-
-            clearTimeout(
-                safetyTimer
-            );
-
-            const loader =
-                document.getElementById(
-                    "app-loader"
-                );
-
-            if (loader) {
-
-                loader.style.display =
-                    "none";
-            }
+            window.__hideAppLoader?.();
         }
+
+        // Realtime subscriptions and notice are deliberately started after first paint.
+        if (!globalLogoutHandled) {
+            initRealtimeListeners(user.uid);
+        }
+        loadAndShowNoticeBoard().catch(err => console.error("Notice load error:", err));
 
     }
 );
+
+
+/* =========================================================
+   FIRESTORE NOTICE BOARD
+   ========================================================= */
+function getNoticeTodayKey() {
+    const now = new Date();
+    const date = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
+    return `aura_notice_hidden_${date}`;
+}
+
+window.closeNoticeBoard = function() {
+    const modal = document.getElementById("notice-modal");
+    const hideToday = document.getElementById("notice-today-check")?.checked;
+    if (hideToday) {
+        try { localStorage.setItem(getNoticeTodayKey(), "1"); } catch (_) {}
+    }
+    if (modal) modal.style.display = "none";
+    document.body.style.overflow = (siteMaintenanceActive || appUpdateActive) ? "hidden" : "";
+};
+
+async function loadAndShowNoticeBoard() {
+    try {
+        // If the user selected "don't show today", skip the network read and modal.
+        try {
+            if (localStorage.getItem(getNoticeTodayKey()) === "1") return;
+        } catch (_) {}
+
+        const snap = await getDocs(collection(db, "notice"));
+        const notices = [];
+        snap.forEach(docSnap => {
+            const data = docSnap.data() || {};
+            if (data.enabled === false || data.isActive === false || data.active === false || data.show === false || data.published === false) return;
+
+            const title = String(data.title || data.heading || data.subject || "Notice Board").trim();
+            const message = String(
+                data.message ?? data.noticeText ?? data.notice ?? data.content ?? data.description ?? data.text ?? data.details ?? data.body ?? ""
+            ).trim();
+            if (!message && !data.title && !data.heading && !data.subject) return;
+
+            let created = 0;
+            const stamp = data.createdAt || data.updatedAt || data.timestamp;
+            if (stamp && typeof stamp.toMillis === "function") created = stamp.toMillis();
+            else if (stamp instanceof Date) created = stamp.getTime();
+            else if (typeof stamp === "number") created = stamp;
+            else if (typeof stamp === "string") created = Date.parse(stamp) || 0;
+
+            notices.push({ title, message, created, id: docSnap.id });
+        });
+
+        if (!notices.length) return;
+        notices.sort((a, b) => b.created - a.created);
+        const notice = notices[0];
+
+        const titleEl = document.getElementById("notice-title");
+        const messageEl = document.getElementById("notice-message");
+        const modal = document.getElementById("notice-modal");
+        const todayCheck = document.getElementById("notice-today-check");
+        if (!modal || !titleEl || !messageEl) return;
+
+        titleEl.textContent = notice.title || "Notice Board";
+        messageEl.textContent = notice.message || "";
+        if (todayCheck) todayCheck.checked = false;
+        modal.style.display = "flex";
+        document.body.style.overflow = "hidden";
+    } catch (error) {
+        // Notice is optional; a missing collection must not block the home screen.
+        console.warn("Could not load Firestore notice collection:", error);
+    }
+}
 
 
 /* =========================================================
@@ -1766,70 +1916,16 @@ async function loadAllData() {
 
     try {
 
-        const [
-            homePageSnap,
-            oldSecSnap,
-            newSecSnap,
-            oldGroupSnap,
-            newGroupSnap,
-            tourSnap
-        ] = await Promise.all([
-
-            getDoc(
-                doc(
-                    db,
-                    "settings",
-                    "homePage"
-                )
-            ).catch(() => ({
-                exists:() => false
-            })),
-
-            getDocs(
-                collection(
-                    db,
-                    "sections"
-                )
-            ).catch(() => ({
-                forEach:() => {}
-            })),
-
-            getDocs(
-                collection(
-                    db,
-                    "tournamentSections"
-                )
-            ).catch(() => ({
-                forEach:() => {}
-            })),
-
-            getDocs(
-                collection(
-                    db,
-                    "groups"
-                )
-            ).catch(() => ({
-                forEach:() => {}
-            })),
-
-            getDocs(
-                collection(
-                    db,
-                    "tournamentGroups"
-                )
-            ).catch(() => ({
-                forEach:() => {}
-            })),
-
-            getDocs(
-                collection(
-                    db,
-                    "tournaments"
-                )
-            ).catch(() => ({
-                forEach:() => {}
-            }))
+        // Priority requests: banners + tournaments only. Category/group data is fetched afterward.
+        const [homePageSnap, tourSnap] = await Promise.all([
+            getDoc(doc(db, "settings", "homePage")).catch(() => ({ exists:() => false })),
+            getDocs(collection(db, "tournaments")).catch(() => ({ forEach:() => {} }))
         ]);
+        const emptySnapshot = { forEach:() => {} };
+        const oldSecSnap = emptySnapshot;
+        const newSecSnap = emptySnapshot;
+        const oldGroupSnap = emptySnapshot;
+        const newGroupSnap = emptySnapshot;
 
 
         /* -----------------------------------------
@@ -2204,7 +2300,16 @@ async function loadAllData() {
 
 
         renderBanners();
-        renderSections();
+
+        // Keep a small branded loader visible instead of an empty category area.
+        // Category/group data loads in the background and renderSections() replaces the loader.
+        loadSecondarySectionsAndGroups().catch(err => {
+            console.error("Secondary home data error:", err);
+            const grid = document.getElementById("sections-grid");
+            if (grid && !globalSections.length) {
+                grid.innerHTML = '<div class="flex flex-col items-center justify-center py-8 gap-2"><img src="https://videotourl.com/images/1789792991627-2a906ffa-fbc0-4f79-9d9b-8dddb80ca667.jpg" alt="Aura Skill" class="w-10 h-10 rounded-full object-cover"><p class="text-xs text-slate-500">Category load হচ্ছে না। আবার চেষ্টা করুন।</p><button onclick="loadSecondarySectionsAndGroups()" class="text-xs text-blue-400 font-bold">Retry</button></div>';
+            }
+        });
 
     } catch (e) {
 
@@ -2218,6 +2323,61 @@ async function loadAllData() {
             "error"
         );
     }
+}
+
+
+/* =========================================================
+   SECONDARY HOME DATA (BACKGROUND)
+   ========================================================= */
+async function loadSecondarySectionsAndGroups() {
+    if (siteMaintenanceActive || appUpdateActive) return;
+
+    const [oldSecSnap, newSecSnap, oldGroupSnap, newGroupSnap] = await Promise.all([
+        getDocs(collection(db, "sections")).catch(() => ({ forEach:() => {} })),
+        getDocs(collection(db, "tournamentSections")).catch(() => ({ forEach:() => {} })),
+        getDocs(collection(db, "groups")).catch(() => ({ forEach:() => {} })),
+        getDocs(collection(db, "tournamentGroups")).catch(() => ({ forEach:() => {} }))
+    ]);
+
+    const sectionMap = new Map();
+    [oldSecSnap, newSecSnap].forEach(snap => {
+        if (!snap || typeof snap.forEach !== "function") return;
+        snap.forEach(d => {
+            const data = d.data() || {};
+            if (data.active === false) return;
+            sectionMap.set(d.id, { id:d.id, ...data });
+        });
+    });
+    globalSections = Array.from(sectionMap.values()).map(sec => ({
+        ...sec,
+        name: sec.name || sec.title || "Tournament Section",
+        icon: sec.icon || "fa-solid fa-gamepad"
+    }));
+
+    const groupMap = new Map();
+    [oldGroupSnap, newGroupSnap].forEach(snap => {
+        if (!snap || typeof snap.forEach !== "function") return;
+        snap.forEach(d => {
+            const data = d.data() || {};
+            if (data.active === false) return;
+            groupMap.set(d.id, { id:d.id, ...data });
+        });
+    });
+    globalGroups = Array.from(groupMap.values()).map(g => ({
+        ...g,
+        sectionId: g.sectionId || g.section || g.sectionID || g.parentSectionId || "",
+        name: g.name || g.groupName || g.title || "Tournament Group",
+        logo: g.logo || g.logoUrl || g.image || g.imageUrl || ""
+    }));
+
+    globalTournaments.forEach(t => {
+        if (!t.groupId && t.groupName) {
+            const wanted = String(t.groupName).trim().toLowerCase();
+            const found = globalGroups.find(g => String(g.name || "").trim().toLowerCase() === wanted);
+            if (found) t.groupId = found.id;
+        }
+    });
+    renderSections();
 }
 
 

@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#050811">
+<meta name="description" content="Aura Skill Shop — Free Fire Diamond Top-Up শীঘ্রই আসছে।">
+<title>Aura Skill — Shop</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+<style>
+:root{
+  --bg:#050811;
+  --panel:#0f172a;
+  --panel2:#111c31;
+  --line:rgba(100,116,139,.25);
+  --blue:#2563eb;
+  --blue2:#3b82f6;
+  --cyan:#38bdf8;
+  --text:#f8fafc;
+  --muted:#94a3b8;
+  --green:#10b981;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{scroll-behavior:smooth}
+body{
+  margin:0;min-height:100vh;background:
+  radial-gradient(ellipse at 50% -10%,rgba(37,99,235,.18),transparent 48%),
+  radial-gradient(ellipse at 100% 45%,rgba(14,165,233,.06),transparent 35%),
+  var(--bg);
+  color:var(--text);font-family:'Hind Siliguri',sans-serif;
+  padding-bottom:95px;overflow-x:hidden
+}
+button,a{-webkit-tap-highlight-color:transparent}
+a{color:inherit;text-decoration:none}
+button{font:inherit}
+.topbar{
+  position:sticky;top:0;z-index:50;display:flex;align-items:center;
+  justify-content:space-between;gap:10px;padding:12px 15px;
+  background:rgba(5,8,17,.88);backdrop-filter:blur(18px);
+  border-bottom:1px solid rgba(51,65,85,.55)
+}
+.brand{display:flex;align-items:center;gap:10px;min-width:0}
+.brand-logo{
+  width:42px;height:42px;object-fit:cover;border-radius:13px;
+  border:1px solid rgba(96,165,250,.5);background:#111c31;
+  box-shadow:0 0 18px rgba(37,99,235,.18)
+}
+.brand-fallback{
+  width:42px;height:42px;display:none;align-items:center;justify-content:center;
+  border-radius:13px;background:linear-gradient(145deg,#2563eb,#0f172a);
+  border:1px solid rgba(96,165,250,.5);font-size:20px;color:white
+}
+.brand-name{font-size:15px;line-height:1.15;font-weight:800;letter-spacing:.4px}
+.brand-sub{font-size:10px;color:#93c5fd;margin-top:4px;letter-spacing:1.1px}
+.wallet{
+  display:flex;align-items:center;gap:7px;background:#111c31;
+  border:1px solid var(--line);padding:8px 11px;border-radius:13px;
+  color:#93c5fd;font-size:12px;font-weight:700;white-space:nowrap
+}
+.wallet i{color:#60a5fa}
+main{max-width:480px;margin:0 auto;padding:19px 15px 25px}
+.breadcrumb{display:flex;align-items:center;gap:8px;color:var(--muted);font-size:12px;margin:2px 2px 17px}
+.breadcrumb a{color:#93c5fd}
+.hero{
+  position:relative;isolation:isolate;overflow:hidden;border-radius:27px;
+  padding:25px 20px 23px;border:1px solid rgba(59,130,246,.32);
+  background:linear-gradient(145deg,rgba(30,58,138,.40),rgba(15,23,42,.96) 58%,rgba(8,15,30,.98));
+  box-shadow:0 18px 50px rgba(0,0,0,.28)
+}
+.hero:before{
+  content:"";position:absolute;z-index:-1;width:220px;height:220px;border-radius:50%;
+  right:-90px;top:-90px;background:rgba(59,130,246,.17);filter:blur(2px)
+}
+.hero:after{
+  content:"";position:absolute;z-index:-1;width:140px;height:140px;border-radius:50%;
+  left:-85px;bottom:-90px;background:rgba(56,189,248,.11);filter:blur(3px)
+}
+.eyebrow{
+  display:inline-flex;align-items:center;gap:7px;padding:6px 10px;border-radius:999px;
+  color:#bfdbfe;background:rgba(37,99,235,.16);border:1px solid rgba(96,165,250,.25);
+  font-size:10px;font-weight:700;letter-spacing:.7px
+}
+.eyebrow .dot{width:6px;height:6px;background:#60a5fa;border-radius:50%;box-shadow:0 0 10px #60a5fa}
+.diamond-stage{height:145px;display:flex;align-items:center;justify-content:center;position:relative}
+.diamond-halo{
+  position:absolute;width:125px;height:125px;border-radius:50%;
+  border:1px solid rgba(96,165,250,.2);box-shadow:0 0 45px rgba(37,99,235,.17),inset 0 0 30px rgba(37,99,235,.1);
+  animation:halo 3s ease-in-out infinite
+}
+.diamond-icon{
+  position:relative;font-size:78px;color:#7dd3fc;
+  filter:drop-shadow(0 0 12px rgba(56,189,248,.5));
+  animation:float 3s ease-in-out infinite
+}
+.spark{position:absolute;color:#bfdbfe;font-size:13px;animation:twinkle 2s infinite}
+.spark.one{top:26px;left:25%}.spark.two{top:43px;right:23%;animation-delay:.6s}.spark.three{bottom:20px;right:30%;animation-delay:1s}
+h1{font-size:27px;line-height:1.25;margin:0 0 10px;font-weight:800;letter-spacing:-.3px}
+.hero-copy{font-size:13px;line-height:1.85;color:#cbd5e1;margin:0}
+.status-row{display:flex;align-items:center;gap:8px;margin-top:19px}
+.status-pill{
+  display:inline-flex;align-items:center;gap:7px;padding:7px 11px;border-radius:10px;
+  background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.27);
+  color:#fcd34d;font-size:11px;font-weight:700
+}
+.status-pill i{font-size:11px}
+.progress-box{margin-top:20px;padding:14px;background:rgba(2,6,23,.38);border:1px solid rgba(100,116,139,.2);border-radius:16px}
+.progress-head{display:flex;justify-content:space-between;align-items:center;gap:10px;font-size:11px;color:#cbd5e1;margin-bottom:10px}
+.progress-head strong{color:#93c5fd}
+.progress-track{height:6px;background:#1e293b;border-radius:99px;overflow:hidden}
+.progress-fill{height:100%;width:68%;border-radius:99px;background:linear-gradient(90deg,#2563eb,#38bdf8);animation:progressGlow 2s ease-in-out infinite alternate}
+.progress-note{font-size:10px;color:#64748b;margin-top:8px}
+.section-title{font-size:15px;font-weight:800;margin:25px 2px 12px;display:flex;align-items:center;gap:9px}
+.section-title i{color:#60a5fa}
+.info-card{
+  border:1px solid var(--line);border-radius:18px;padding:15px;
+  background:linear-gradient(145deg,rgba(15,23,42,.94),rgba(9,15,29,.96));
+  display:flex;gap:12px;align-items:flex-start;margin-bottom:10px
+}
+.info-icon{
+  width:42px;height:42px;flex-shrink:0;border-radius:13px;display:flex;
+  align-items:center;justify-content:center;background:rgba(37,99,235,.14);
+  color:#60a5fa;border:1px solid rgba(59,130,246,.22);font-size:17px
+}
+.info-card h3{font-size:13px;font-weight:700;margin:0 0 4px}
+.info-card p{font-size:11px;line-height:1.7;color:var(--muted);margin:0}
+.notice{
+  margin-top:16px;padding:14px;border-radius:15px;
+  background:rgba(16,185,129,.07);border:1px solid rgba(16,185,129,.2);
+  display:flex;gap:10px;color:#a7f3d0;font-size:11px;line-height:1.8
+}
+.notice i{margin-top:4px;color:#34d399}
+.support-btn{
+  margin-top:18px;width:100%;display:flex;align-items:center;justify-content:center;gap:9px;
+  padding:13px;border-radius:14px;color:white;font-size:13px;font-weight:700;
+  background:linear-gradient(110deg,#166534,#15803d);border:1px solid rgba(74,222,128,.25);
+  box-shadow:0 8px 24px rgba(22,101,52,.16);transition:transform .2s
+}
+.support-btn:active{transform:scale(.98)}
+.footer-note{text-align:center;font-size:10px;color:#64748b;margin-top:20px;line-height:1.8}
+
+/* Updated Bottom Navigation Styling based on Screenshot */
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 45;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  max-width: 480px;
+  margin: 0 auto;
+  padding: 12px 10px calc(12px + env(safe-area-inset-bottom));
+  background: #0b0f19;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.nav-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  color: #8fa0b5;
+  font-size: 11px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.nav-item i {
+  font-size: 20px;
+}
+
+.nav-item.active,
+.nav-item.shop-active {
+  color: #3b82f6;
+}
+
+@keyframes float{0%,100%{transform:translateY(0) rotate(-4deg)}50%{transform:translateY(-8px) rotate(4deg)}}
+@keyframes halo{0%,100%{transform:scale(.94);opacity:.7}50%{transform:scale(1.06);opacity:1}}
+@keyframes twinkle{0%,100%{opacity:.35;transform:scale(.8)}50%{opacity:1;transform:scale(1.2)}}
+@keyframes progressGlow{from{filter:brightness(.9)}to{filter:brightness(1.25)}}
+@media(min-width:600px){main{padding-top:26px}.hero{padding:30px 25px}h1{font-size:30px}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div class="brand">
+    <img class="brand-logo" id="brandLogo"
+      src="https://videotourl.com/images/1789792991627-2a906ffa-fbc0-4f79-9d9b-8dddb80ca667.jpg"
+      alt="Aura Skill Logo" onerror="this.style.display='none';document.getElementById('brandFallback').style.display='flex'">
+    <div class="brand-fallback" id="brandFallback"><i class="fa-solid fa-bolt"></i></div>
+    <div>
+      <div class="brand-name">AURA SKILL</div>
+      <div class="brand-sub">OFFICIAL SHOP</div>
+    </div>
+  </div>
+  <a class="wallet" href="wallet.html" aria-label="ওয়ালেট">
+    <i class="fa-solid fa-wallet"></i><span>৳ <span id="walletBalance">--</span></span>
+  </a>
+</header>
+
+<main>
+  <div class="breadcrumb"><a href="index.html"><i class="fa-solid fa-house"></i> হোম</a><i class="fa-solid fa-chevron-right" style="font-size:9px"></i><span>শপ</span></div>
+
+  <section class="hero">
+    <span class="eyebrow"><span class="dot"></span> AURA SKILL SHOP</span>
+    <div class="diamond-stage" aria-hidden="true">
+      <div class="diamond-halo"></div>
+      <i class="fa-solid fa-gem diamond-icon"></i>
+      <i class="fa-solid fa-star spark one"></i>
+      <i class="fa-solid fa-sparkles spark two"></i>
+      <i class="fa-solid fa-star spark three"></i>
+    </div>
+    <h1>ফ্রি ফায়ার ডায়মন্ড<br><span style="color:#7dd3fc">টপ-আপ খুব শীঘ্রই!</span></h1>
+    <p class="hero-copy">
+      আমাদের ডায়মন্ড টপ-আপ সার্ভিসটি চালু করার কাজ চলছে।
+      আপনাদের জন্য আরও সুন্দর, দ্রুত ও নির্ভরযোগ্য অভিজ্ঞতা তৈরি করতে আমরা কাজ করছি।
+    </p>
+    <div class="status-row">
+      <span class="status-pill"><i class="fa-solid fa-clock"></i> আপাতত বন্ধ</span>
+    </div>
+    <div class="progress-box">
+      <div class="progress-head"><span>সার্ভিস প্রস্তুতির কাজ চলছে</span><strong>Coming Soon</strong></div>
+      <div class="progress-track"><div class="progress-fill"></div></div>
+      <div class="progress-note">চালু হলে এখানেই আপডেট জানানো হবে।</div>
+    </div>
+  </section>
+
+  <h2 class="section-title"><i class="fa-solid fa-circle-info"></i> গুরুত্বপূর্ণ তথ্য</h2>
+  <div class="info-card">
+    <div class="info-icon"><i class="fa-solid fa-screwdriver-wrench"></i></div>
+    <div><h3>সার্ভিস প্রস্তুত করা হচ্ছে</h3><p>Free Fire Diamond Top-Up অপশনটি এখনো চালু হয়নি। সিস্টেমের কাজ শেষ হলে সার্ভিসটি এখানে যুক্ত করা হবে।</p></div>
+  </div>
+  <div class="info-card">
+    <div class="info-icon"><i class="fa-solid fa-bell"></i></div>
+    <div><h3>আপডেটের জন্য চোখ রাখুন</h3><p>টপ-আপ চালু হওয়ার খবর পেতে Aura Skill অ্যাপের নোটিফিকেশন ও অফিসিয়াল আপডেটগুলো দেখুন।</p></div>
+  </div>
+  <div class="info-card">
+    <div class="info-icon"><i class="fa-solid fa-shield-halved"></i></div>
+    <div><h3>নিরাপদ লেনদেন আমাদের অগ্রাধিকার</h3><p>সার্ভিস চালু হওয়ার আগে কাউকে ডায়মন্ড টপ-আপের নামে টাকা পাঠাবেন না।</p></div>
+  </div>
+
+  <div class="notice">
+    <i class="fa-solid fa-circle-check"></i>
+    <div><strong>চিন্তা করবেন না!</strong><br>ডায়মন্ড টপ-আপ খুব শিগগিরই যুক্ত করার চেষ্টা চলছে। চালু হওয়ার আগে এই পেজে কোনো অর্ডার বা পেমেন্ট অপশন দেখানো হবে না।</div>
+  </div>
+
+  <a class="support-btn" href="https://chat.whatsapp.com/DCxfqldDvbl8wOtk7PzCP9?s=cl&amp;p=a&amp;mlu=4&amp;ilr=4" target="_blank" rel="noopener noreferrer">
+    <i class="fa-brands fa-whatsapp" style="font-size:18px"></i> সাপোর্টের সঙ্গে যোগাযোগ করুন
+  </a>
+  <div class="footer-note">© Aura Skill · আপনার গেমি অভিজ্ঞতা আরও ভালো করতে আমরা কাজ করছি।</div>
+</main>
+
+<!-- Updated Bottom Nav as per Screenshot -->
+<nav class="bottom-nav" aria-label="প্রধান নেভিগেশন">
+  <a class="nav-item" href="index.html">
+    <i class="fa-solid fa-house"></i>
+    <span>Home</span>
+  </a>
+  <a class="nav-item shop-active" href="shop.html" aria-current="page">
+    <i class="fa-solid fa-store"></i>
+    <span>SHOP</span>
+  </a>
+  <a class="nav-item" href="wallet.html">
+    <i class="fa-solid fa-wallet"></i>
+    <span>Wallet</span>
+  </a>
+  <a class="nav-item" href="profile.html">
+    <i class="fa-solid fa-user"></i>
+    <span>Profile</span>
+  </a>
+</nav>
+
+<script>
+/* Wallet balance is read from the existing app's local display when available.
+   This page intentionally does not create orders or accept payments while top-up is unavailable. */
+(function(){
+  const params = new URLSearchParams(location.search);
+  const balance = params.get('balance');
+  if (balance !== null && /^\d+(\.\d+)?$/.test(balance)) {
+    document.getElementById('walletBalance').textContent = Number(balance).toLocaleString('en-US');
+  }
+})();
+</script>
+</body>
+</html>
